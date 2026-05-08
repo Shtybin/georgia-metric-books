@@ -34,7 +34,7 @@ function EmbedPage() {
         <Mounted
           embed
           lang={lang as Lang}
-          onLangChange={(l) => navigate({ search: (p) => ({ ...p, lang: l }) })}
+          onLangChange={(l) => navigate({ search: (p: any) => ({ ...p, lang: l }) })}
         />
       )}
     </main>

@@ -37,7 +37,7 @@ function MapPage() {
       {Mounted ? (
         <Mounted
           lang={lang as Lang}
-          onLangChange={(l) => navigate({ search: (p) => ({ ...p, lang: l }) })}
+          onLangChange={(l) => navigate({ search: (p: any) => ({ ...p, lang: l }) })}
         />
       ) : (
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
