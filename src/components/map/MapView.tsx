@@ -482,7 +482,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </span>
             </dd>
             <dt className="text-muted-foreground">{T.missing}</dt>
-            <dd className="tabular-nums text-xs">{sel.missingRaw[lang] || sel.missingRaw.en || "—"}</dd>
+            <dd className="tabular-nums text-xs">
+              {sel.missingRaw[lang] || sel.missingRaw.en
+                ? (sel.missingRaw[lang] || sel.missingRaw.en)
+                : sel.missingCount === 0
+                  ? T.noGaps
+                  : "—"}
+            </dd>
           </dl>
 
           <div className="mt-4 flex items-center justify-between gap-2">
