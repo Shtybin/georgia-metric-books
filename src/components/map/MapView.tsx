@@ -444,6 +444,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
+          <button
+            onClick={() => setUnlocatedOpen(true)}
+            title={T.unlocatedTitle}
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+          >
+            <ListX className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{T.unlocatedButton}</span>
+            {stats?.withoutCoords ? (
+              <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
+                {stats.withoutCoords.toLocaleString()}
+              </span>
+            ) : null}
+          </button>
           <div className="flex overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
             {(["ru", "en"] as const).map(l => (
               <button
@@ -463,6 +476,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
         </div>
       </div>
+
+      <UnlocatedPanel
+        open={unlocatedOpen}
+        onOpenChange={setUnlocatedOpen}
+        lang={lang}
+        locatedIndex={locatedIndex}
+        onJumpToFeature={jumpToFeature}
+      />
+
 
       {/* Bottom-left: detail card */}
       {selected && sel && (() => {
