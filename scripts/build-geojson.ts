@@ -213,12 +213,60 @@ const outDir = join(root, "public/data");
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "parishes.geojson"),
   JSON.stringify({ type: "FeatureCollection", features }));
+
+// Group unlocated by settlementRu|uezdRu (fallback to en if ru empty)
+const unlocatedGroups = new Map<string, UnlocatedRaw[]>();
+for (const r of unlocatedRaw) {
+  const sKey = (r.settlementRu || r.settlementEn || "").toLocaleLowerCase();
+  const uKey = (r.uezdRu || r.uezdEn || "").toLocaleLowerCase();
+  const key = `${sKey}|${uKey}`;
+  const arr = unlocatedGroups.get(key);
+  if (arr) arr.push(r); else unlocatedGroups.set(key, [r]);
+}
+const unlocated = [...unlocatedGroups.values()].map((rows) => {
+  const yearsSet = new Set<number>();
+  for (const r of rows) for (const y of parseYears(r.yearsStr)) yearsSet.add(y);
+  const yearsArr = [...yearsSet].sort((a, b) => a - b);
+  const startYears = rows.map(r => r.startYear).filter(y => y > 0);
+  return {
+    settlement: {
+      en: firstNonEmpty(rows.map(r => r.settlementEn)),
+      ru: firstNonEmpty(rows.map(r => r.settlementRu)),
+    },
+    church: {
+      en: joinUnique(rows.map(r => r.churchEn)),
+      ru: joinUnique(rows.map(r => r.churchRu)),
+    },
+    region: {
+      en: firstNonEmpty(rows.map(r => r.regionEn)),
+      ru: firstNonEmpty(rows.map(r => r.regionRu)),
+    },
+    uezd: {
+      en: firstNonEmpty(rows.map(r => r.uezdEn)),
+      ru: firstNonEmpty(rows.map(r => r.uezdRu)),
+    },
+    years: compactYears(yearsArr),
+    startYear: startYears.length ? Math.min(...startYears) : null,
+    endYear: yearsArr.length ? yearsArr[yearsArr.length - 1] : null,
+    count: rows.length,
+  };
+}).sort((a, b) => {
+  const au = (a.uezd.ru || a.uezd.en || "").toLocaleLowerCase();
+  const bu = (b.uezd.ru || b.uezd.en || "").toLocaleLowerCase();
+  if (au !== bu) return au.localeCompare(bu);
+  const as = (a.settlement.ru || a.settlement.en || "").toLocaleLowerCase();
+  const bs = (b.settlement.ru || b.settlement.en || "").toLocaleLowerCase();
+  return as.localeCompare(bs);
+});
+writeFileSync(join(outDir, "unlocated.json"), JSON.stringify(unlocated));
+
 const stats = {
   total,
   withCoords,
   withoutCoords: total - withCoords,
   uniqueLocations: features.length,
+  unlocatedGroups: unlocated.length,
   geocodingConfidence: total ? withCoords / total : 0,
 };
 writeFileSync(join(outDir, "stats.json"), JSON.stringify(stats, null, 2));
-console.log("Done", { features: features.length, ...stats });
+console.log("Done", { features: features.length, unlocated: unlocated.length, ...stats });
