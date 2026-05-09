@@ -50,7 +50,7 @@ export const STRINGS = {
     region: "Region",
     uezd: "Uezd",
     years: "Years",
-    missing: "Missing",
+    missing: "Missing Years",
     coverage: "years of data",
     showRadius: "Show within 50 km",
     nearbyCount: (n: number) => `Within 50 km: ${n}`,
