@@ -1,7 +1,7 @@
 {
-  "total": 5102,
-  "withCoords": 2607,
-  "withoutCoords": 2495,
-  "uniqueLocations": 1391,
-  "geocodingConfidence": 0.5109760878087025
+  "total": 5101,
+  "withCoords": 2461,
+  "withoutCoords": 2640,
+  "uniqueLocations": 1353,
+  "geocodingConfidence": 0.48245442070182315
 }
