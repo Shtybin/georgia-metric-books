@@ -179,10 +179,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady || !data) return;
-    if (map.getSource("parishes")) {
-      (map.getSource("parishes") as any).setData(data);
-      return;
-    }
+    ["cluster-count", "clusters", "points"].forEach((layerId) => {
+      if (map.getLayer(layerId)) map.removeLayer(layerId);
+    });
+    if (map.getSource("parishes")) map.removeSource("parishes");
 
     map.addSource("parishes", {
       type: "geojson",
@@ -277,15 +277,6 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       if (!orig) return;
       e.preventDefault();
       selectFeature(orig);
-    });
-    map.on("click", "clusters", (e) => {
-      const f = e.features?.[0];
-      if (!f) return;
-      const clusterId = (f.properties as any).cluster_id;
-      const src = map.getSource("parishes") as any;
-      src.getClusterExpansionZoom(clusterId).then((zoom: number) => {
-        map.easeTo({ center: (f.geometry as any).coordinates, zoom });
-      });
     });
     map.on("mouseenter", "points", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "points", () => { map.getCanvas().style.cursor = ""; });
