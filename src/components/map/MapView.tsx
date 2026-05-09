@@ -543,7 +543,36 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         lang={lang}
         locatedIndex={locatedIndex}
         onJumpToFeature={jumpToFeature}
+        excludeKeys={userPinnedKeys}
+        onAddCoords={handleAddCoords}
       />
+
+      {userCoords.lastAction && (
+        <div className="pointer-events-auto absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur">
+          <span className="text-muted-foreground">
+            {userCoords.lastAction.type === "add" &&
+              T.coordsAdded(
+                userCoords.records[userCoords.lastAction.key]?.item.settlement[lang] ||
+                userCoords.records[userCoords.lastAction.key]?.item.settlement.en ||
+                "—",
+              )}
+          </span>
+          <button
+            onClick={userCoords.undo}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            <Undo2 className="h-3 w-3" />
+            {T.undo}
+          </button>
+          <button
+            onClick={userCoords.dismissUndo}
+            aria-label={T.clear}
+            className="rounded-full p-1 text-muted-foreground hover:bg-accent"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      )}
 
 
       {/* Bottom-left: detail card */}
