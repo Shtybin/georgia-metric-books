@@ -243,14 +243,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const [styleReady, setStyleReady] = useState(false);
 
-  // Effect B: attach parishes source/layers once both style and data are ready
+  const parishesSetupRef = useRef(false);
+
+  // Effect B: attach parishes source/layers ONCE when style and data are first ready
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady || !data) return;
-    ["cluster-count", "clusters", "points"].forEach((layerId) => {
-      if (map.getLayer(layerId)) map.removeLayer(layerId);
-    });
-    if (map.getSource("parishes")) map.removeSource("parishes");
+    if (parishesSetupRef.current) return;
+    parishesSetupRef.current = true;
 
     map.addSource("parishes", {
       type: "geojson",
@@ -306,10 +306,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
     const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
+      const fc = dataRef.current;
+      if (!fc) return;
       const [lon, lat] = (f.geometry as any).coordinates as [number, number];
       return (
-        data.features.find((x) => (x.id as number) === (f.id as number)) ??
-        data.features.find((x) => {
+        fc.features.find((x) => (x.id as number) === (f.id as number)) ??
+        fc.features.find((x) => {
           const [xlon, xlat] = x.geometry.coordinates;
           return Math.abs(xlon - lon) < 1e-6 && Math.abs(xlat - lat) < 1e-6;
         })
@@ -317,9 +319,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     };
 
     const findNearestFeature = (point: { x: number; y: number }, maxDistance: number) => {
+      const fc = dataRef.current;
+      if (!fc) return undefined;
       let nearest: Feature | undefined;
       let nearestDistance = maxDistance * maxDistance;
-      data.features.forEach((feature) => {
+      fc.features.forEach((feature) => {
         const projected = map.project(feature.geometry.coordinates as [number, number]);
         const dx = projected.x - point.x;
         const dy = projected.y - point.y;
@@ -349,6 +353,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.on("mouseenter", "points", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "points", () => { map.getCanvas().style.cursor = ""; });
   }, [data, styleReady]);
+
+  // Push subsequent data updates (e.g. user-added coords) into the source.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !data) return;
+    const src = map.getSource("parishes") as any;
+    if (src && typeof src.setData === "function") {
+      src.setData(data);
+    }
+  }, [data]);
 
   // Bucket filter
   useEffect(() => {
