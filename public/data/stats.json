@@ -2,5 +2,6 @@
   "total": 5102,
   "withCoords": 2607,
   "withoutCoords": 2495,
+  "uniqueLocations": 1391,
   "geocodingConfidence": 0.5109760878087025
 }
