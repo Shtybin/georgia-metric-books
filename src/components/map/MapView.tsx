@@ -23,6 +23,8 @@ interface Stats {
   total: number;
   withCoords: number;
   withoutCoords: number;
+  uniqueLocations?: number;
+  unlocatedGroups?: number;
   geocodingConfidence: number;
 }
 
