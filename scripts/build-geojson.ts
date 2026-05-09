@@ -85,6 +85,15 @@ type RawRow = {
 };
 
 const raw: RawRow[] = [];
+type UnlocatedRaw = {
+  settlementEn: string; settlementRu: string;
+  churchEn: string; churchRu: string;
+  regionEn: string; regionRu: string;
+  uezdEn: string; uezdRu: string;
+  yearsStr: string;
+  startYear: number;
+};
+const unlocatedRaw: UnlocatedRaw[] = [];
 let total = 0;
 let withCoords = 0;
 
@@ -97,10 +106,24 @@ for (let i = 0; i < len; i++) {
 
   const lat = parseFloat(en[7] || ru[7] || "");
   const lon = parseFloat(en[8] || ru[8] || "");
-  if (!isFinite(lat) || !isFinite(lon)) continue;
+  const hasCoords = isFinite(lat) && isFinite(lon);
+
+  const startYearParsed = parseInt(en[5] || ru[5] || "", 10);
+
+  if (!hasCoords) {
+    unlocatedRaw.push({
+      settlementEn: (en[0] || "").trim(), settlementRu: (ru[0] || "").trim(),
+      churchEn: (en[1] || "").trim(),     churchRu: (ru[1] || "").trim(),
+      regionEn: (en[2] || "").trim(),     regionRu: (ru[2] || "").trim(),
+      uezdEn: (en[3] || "").trim(),       uezdRu: (ru[3] || "").trim(),
+      yearsStr: en[4] || ru[4] || "",
+      startYear: isFinite(startYearParsed) ? startYearParsed : 0,
+    });
+    continue;
+  }
   withCoords++;
 
-  const startYear = parseInt(en[5] || ru[5] || "", 10);
+  const startYear = startYearParsed;
   if (!isFinite(startYear)) continue;
 
   raw.push({
@@ -190,12 +213,60 @@ const outDir = join(root, "public/data");
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "parishes.geojson"),
   JSON.stringify({ type: "FeatureCollection", features }));
+
+// Group unlocated by settlementRu|uezdRu (fallback to en if ru empty)
+const unlocatedGroups = new Map<string, UnlocatedRaw[]>();
+for (const r of unlocatedRaw) {
+  const sKey = (r.settlementRu || r.settlementEn || "").toLocaleLowerCase();
+  const uKey = (r.uezdRu || r.uezdEn || "").toLocaleLowerCase();
+  const key = `${sKey}|${uKey}`;
+  const arr = unlocatedGroups.get(key);
+  if (arr) arr.push(r); else unlocatedGroups.set(key, [r]);
+}
+const unlocated = [...unlocatedGroups.values()].map((rows) => {
+  const yearsSet = new Set<number>();
+  for (const r of rows) for (const y of parseYears(r.yearsStr)) yearsSet.add(y);
+  const yearsArr = [...yearsSet].sort((a, b) => a - b);
+  const startYears = rows.map(r => r.startYear).filter(y => y > 0);
+  return {
+    settlement: {
+      en: firstNonEmpty(rows.map(r => r.settlementEn)),
+      ru: firstNonEmpty(rows.map(r => r.settlementRu)),
+    },
+    church: {
+      en: joinUnique(rows.map(r => r.churchEn)),
+      ru: joinUnique(rows.map(r => r.churchRu)),
+    },
+    region: {
+      en: firstNonEmpty(rows.map(r => r.regionEn)),
+      ru: firstNonEmpty(rows.map(r => r.regionRu)),
+    },
+    uezd: {
+      en: firstNonEmpty(rows.map(r => r.uezdEn)),
+      ru: firstNonEmpty(rows.map(r => r.uezdRu)),
+    },
+    years: compactYears(yearsArr),
+    startYear: startYears.length ? Math.min(...startYears) : null,
+    endYear: yearsArr.length ? yearsArr[yearsArr.length - 1] : null,
+    count: rows.length,
+  };
+}).sort((a, b) => {
+  const au = (a.uezd.ru || a.uezd.en || "").toLocaleLowerCase();
+  const bu = (b.uezd.ru || b.uezd.en || "").toLocaleLowerCase();
+  if (au !== bu) return au.localeCompare(bu);
+  const as = (a.settlement.ru || a.settlement.en || "").toLocaleLowerCase();
+  const bs = (b.settlement.ru || b.settlement.en || "").toLocaleLowerCase();
+  return as.localeCompare(bs);
+});
+writeFileSync(join(outDir, "unlocated.json"), JSON.stringify(unlocated));
+
 const stats = {
   total,
   withCoords,
   withoutCoords: total - withCoords,
   uniqueLocations: features.length,
+  unlocatedGroups: unlocated.length,
   geocodingConfidence: total ? withCoords / total : 0,
 };
 writeFileSync(join(outDir, "stats.json"), JSON.stringify(stats, null, 2));
-console.log("Done", { features: features.length, ...stats });
+console.log("Done", { features: features.length, unlocated: unlocated.length, ...stats });

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info } from "lucide-react";
+import { Search, X, Globe2, MapPin, Info, ListX } from "lucide-react";
+import { UnlocatedPanel } from "./UnlocatedPanel";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import {
   BASEMAP_STYLE,
@@ -22,6 +23,8 @@ interface Stats {
   total: number;
   withCoords: number;
   withoutCoords: number;
+  uniqueLocations?: number;
+  unlocatedGroups?: number;
   geocodingConfidence: number;
 }
 
@@ -44,7 +47,26 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   );
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [unlocatedOpen, setUnlocatedOpen] = useState(false);
   const T = t(lang);
+
+  // Index for "find on map" jumps from the unlocated panel
+  const locatedIndex = useMemo(() => {
+    const m = new Map<string, number>();
+    if (!data) return m;
+    for (const f of data.features) {
+      const p: any = f.properties;
+      const s = (p.settlement?.ru || p.settlement?.en || "").toLocaleLowerCase();
+      const u = (p.uezd?.ru || p.uezd?.en || "").toLocaleLowerCase();
+      if (s) m.set(`${s}|${u}`, f.id as number);
+    }
+    return m;
+  }, [data]);
+
+  const jumpToFeature = (id: number) => {
+    const f = data?.features.find((x) => (x.id as number) === id);
+    if (f) selectFeature(f as Feature);
+  };
 
   // Load data once
   useEffect(() => {
@@ -422,6 +444,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
+          <button
+            onClick={() => setUnlocatedOpen(true)}
+            title={T.unlocatedTitle}
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+          >
+            <ListX className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{T.unlocatedButton}</span>
+            {stats?.withoutCoords ? (
+              <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
+                {stats.withoutCoords.toLocaleString()}
+              </span>
+            ) : null}
+          </button>
           <div className="flex overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
             {(["ru", "en"] as const).map(l => (
               <button
@@ -441,6 +476,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
         </div>
       </div>
+
+      <UnlocatedPanel
+        open={unlocatedOpen}
+        onOpenChange={setUnlocatedOpen}
+        lang={lang}
+        locatedIndex={locatedIndex}
+        onJumpToFeature={jumpToFeature}
+      />
+
 
       {/* Bottom-left: detail card */}
       {selected && sel && (() => {
