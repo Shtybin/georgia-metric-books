@@ -33,6 +33,7 @@ export const STRINGS = {
     home: "На главную",
     embed: "Встроить",
     notFoundTitle: "Ничего не найдено",
+    churches: "Церкви",
   },
   en: {
     title: "Georgian Parish Registers",
