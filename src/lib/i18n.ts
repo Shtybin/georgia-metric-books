@@ -77,6 +77,15 @@ export const STRINGS = {
     embed: "Embed",
     notFoundTitle: "No matches",
     churches: "Churches",
+    unlocatedButton: "No coordinates",
+    unlocatedTitle: "Settlements without coordinates",
+    unlocatedHint: "Records whose coordinates could not be established. Search and filter by uezd.",
+    unlocatedSearch: "Search settlement, church, uezd…",
+    unlocatedAllUezds: "All uezds",
+    unlocatedEmpty: "No matches",
+    unlocatedShowingFirst: (n: number, total: number) => `Showing first ${n} of ${total}. Refine your query.`,
+    findOnMap: "Find on map",
+    noCoordsTooltip: "Coordinates unknown",
   },
 } as const;
 
