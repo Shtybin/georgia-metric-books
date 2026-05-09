@@ -96,22 +96,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const handleAddCoords = (item: UnlocatedItem, lat: number, lon: number) => {
     userCoords.add(item, lat, lon);
-    // After state updates the merged data, jump to the new feature.
-    setTimeout(() => {
-      const id = locatedIndex.get(unlocatedKey(item));
-      // The new id won't yet be in locatedIndex (it's stale). Recompute.
-      const fc = dataRef.current;
-      if (!fc) return;
-      const target = fc.features.find((f: any) => {
-        const p = f.properties;
-        const s = (p.settlement?.ru || p.settlement?.en || "").toLocaleLowerCase();
-        const u = (p.uezd?.ru || p.uezd?.en || "").toLocaleLowerCase();
-        return `${s}|${u}` === unlocatedKey(item);
-      }) as Feature | undefined;
-      if (target) selectFeature(target);
-      void id;
-    }, 80);
     setUnlocatedOpen(false);
+    // Build a synthetic feature now so we can fly there immediately,
+    // before React re-renders with the merged dataset.
+    const tempId = 1_000_000 + Date.now();
+    const feat = userRecordToFeature(
+      { key: unlocatedKey(item), lat, lon, item, addedAt: Date.now() },
+      tempId,
+    ) as Feature;
+    setTimeout(() => selectFeature(feat), 60);
   };
 
   // Load data once
