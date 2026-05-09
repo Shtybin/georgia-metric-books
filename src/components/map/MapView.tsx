@@ -47,7 +47,26 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   );
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [unlocatedOpen, setUnlocatedOpen] = useState(false);
   const T = t(lang);
+
+  // Index for "find on map" jumps from the unlocated panel
+  const locatedIndex = useMemo(() => {
+    const m = new Map<string, number>();
+    if (!data) return m;
+    for (const f of data.features) {
+      const p: any = f.properties;
+      const s = (p.settlement?.ru || p.settlement?.en || "").toLocaleLowerCase();
+      const u = (p.uezd?.ru || p.uezd?.en || "").toLocaleLowerCase();
+      if (s) m.set(`${s}|${u}`, f.id as number);
+    }
+    return m;
+  }, [data]);
+
+  const jumpToFeature = (id: number) => {
+    const f = data?.features.find((x) => (x.id as number) === id);
+    if (f) selectFeature(f as Feature);
+  };
 
   // Load data once
   useEffect(() => {
