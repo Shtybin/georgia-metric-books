@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import maplibregl, { Map as MLMap, Popup } from "maplibre-gl";
+import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
 import { Search, X, Globe2, MapPin, Info } from "lucide-react";
@@ -236,16 +236,31 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       },
     });
 
-    map.on("click", "points", (e) => {
-      const f = e.features?.[0];
+    const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
       const [lon, lat] = (f.geometry as any).coordinates as [number, number];
-      const orig =
+      return (
         data.features.find((x) => (x.id as number) === (f.id as number)) ??
         data.features.find((x) => {
           const [xlon, xlat] = x.geometry.coordinates;
           return Math.abs(xlon - lon) < 1e-6 && Math.abs(xlat - lat) < 1e-6;
-        });
+        })
+      );
+    };
+
+    map.on("click", (e) => {
+      const hitbox = 10;
+      const features = map.queryRenderedFeatures(
+        [
+          [e.point.x - hitbox, e.point.y - hitbox],
+          [e.point.x + hitbox, e.point.y + hitbox],
+        ],
+        { layers: ["points"] },
+      );
+      const f = features[0];
+      if (!f) return;
+      e.preventDefault();
+      const orig = findOriginalFeature(f);
       if (orig) selectFeature(orig);
     });
     map.on("click", "clusters", (e) => {
