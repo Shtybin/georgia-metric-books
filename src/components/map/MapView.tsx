@@ -2,9 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX } from "lucide-react";
-import { UnlocatedPanel } from "./UnlocatedPanel";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2 } from "lucide-react";
+import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
 import { Lang, t, compactYears } from "@/lib/i18n";
+import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import {
   BASEMAP_STYLE,
   BUCKET_COLORS,
@@ -38,7 +39,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
-  const [data, setData] = useState<FC | null>(null);
+  const [baseData, setBaseData] = useState<FC | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [selected, setSelected] = useState<Feature | null>(null);
   const [neighborIds, setNeighborIds] = useState<Set<number>>(new Set());
@@ -48,7 +49,26 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
+  const userCoords = useUserCoords();
   const T = t(lang);
+
+  // Merge base GeoJSON with user-pinned features.
+  const data: FC | null = useMemo(() => {
+    if (!baseData) return null;
+    const userKeys = Object.keys(userCoords.records);
+    if (userKeys.length === 0) return baseData;
+    const baseLen = baseData.features.length;
+    const userFeatures = Object.values(userCoords.records).map((rec, i) =>
+      userRecordToFeature(rec, 1_000_000 + i + baseLen),
+    );
+    return {
+      ...baseData,
+      features: [...baseData.features, ...userFeatures],
+    };
+  }, [baseData, userCoords.records]);
+
+  const dataRef = useRef<FC | null>(null);
+  useEffect(() => { dataRef.current = data; }, [data]);
 
   // Index for "find on map" jumps from the unlocated panel
   const locatedIndex = useMemo(() => {
@@ -63,14 +83,33 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return m;
   }, [data]);
 
+  // Hide already-pinned items from the unlocated list
+  const userPinnedKeys = useMemo(
+    () => new Set(Object.keys(userCoords.records)),
+    [userCoords.records],
+  );
+
   const jumpToFeature = (id: number) => {
     const f = data?.features.find((x) => (x.id as number) === id);
     if (f) selectFeature(f as Feature);
   };
 
+  const handleAddCoords = (item: UnlocatedItem, lat: number, lon: number) => {
+    userCoords.add(item, lat, lon);
+    setUnlocatedOpen(false);
+    // Build a synthetic feature now so we can fly there immediately,
+    // before React re-renders with the merged dataset.
+    const tempId = 1_000_000 + Date.now();
+    const feat = userRecordToFeature(
+      { key: unlocatedKey(item), lat, lon, item, addedAt: Date.now() },
+      tempId,
+    ) as Feature;
+    setTimeout(() => selectFeature(feat), 60);
+  };
+
   // Load data once
   useEffect(() => {
-    fetch("/data/parishes.geojson").then(r => r.json()).then(setData);
+    fetch("/data/parishes.geojson").then(r => r.json()).then(setBaseData);
     fetch("/data/stats.json").then(r => r.json()).then(setStats);
   }, []);
 
@@ -197,14 +236,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const [styleReady, setStyleReady] = useState(false);
 
-  // Effect B: attach parishes source/layers once both style and data are ready
+  const parishesSetupRef = useRef(false);
+
+  // Effect B: attach parishes source/layers ONCE when style and data are first ready
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady || !data) return;
-    ["cluster-count", "clusters", "points"].forEach((layerId) => {
-      if (map.getLayer(layerId)) map.removeLayer(layerId);
-    });
-    if (map.getSource("parishes")) map.removeSource("parishes");
+    if (parishesSetupRef.current) return;
+    parishesSetupRef.current = true;
 
     map.addSource("parishes", {
       type: "geojson",
@@ -260,10 +299,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
     const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
+      const fc = dataRef.current;
+      if (!fc) return;
       const [lon, lat] = (f.geometry as any).coordinates as [number, number];
       return (
-        data.features.find((x) => (x.id as number) === (f.id as number)) ??
-        data.features.find((x) => {
+        fc.features.find((x) => (x.id as number) === (f.id as number)) ??
+        fc.features.find((x) => {
           const [xlon, xlat] = x.geometry.coordinates;
           return Math.abs(xlon - lon) < 1e-6 && Math.abs(xlat - lat) < 1e-6;
         })
@@ -271,9 +312,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     };
 
     const findNearestFeature = (point: { x: number; y: number }, maxDistance: number) => {
+      const fc = dataRef.current;
+      if (!fc) return undefined;
       let nearest: Feature | undefined;
       let nearestDistance = maxDistance * maxDistance;
-      data.features.forEach((feature) => {
+      fc.features.forEach((feature) => {
         const projected = map.project(feature.geometry.coordinates as [number, number]);
         const dx = projected.x - point.x;
         const dy = projected.y - point.y;
@@ -303,6 +346,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.on("mouseenter", "points", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "points", () => { map.getCanvas().style.cursor = ""; });
   }, [data, styleReady]);
+
+  // Push subsequent data updates (e.g. user-added coords) into the source.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !data) return;
+    const src = map.getSource("parishes") as any;
+    if (src && typeof src.setData === "function") {
+      src.setData(data);
+    }
+  }, [data]);
 
   // Bucket filter
   useEffect(() => {
@@ -483,7 +536,36 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         lang={lang}
         locatedIndex={locatedIndex}
         onJumpToFeature={jumpToFeature}
+        excludeKeys={userPinnedKeys}
+        onAddCoords={handleAddCoords}
       />
+
+      {userCoords.lastAction && (
+        <div className="pointer-events-auto absolute left-1/2 top-16 z-20 flex max-w-[92vw] -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur sm:top-20">
+          <span className="text-muted-foreground">
+            {userCoords.lastAction.type === "add" &&
+              T.coordsAdded(
+                userCoords.records[userCoords.lastAction.key]?.item.settlement[lang] ||
+                userCoords.records[userCoords.lastAction.key]?.item.settlement.en ||
+                "—",
+              )}
+          </span>
+          <button
+            onClick={userCoords.undo}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            <Undo2 className="h-3 w-3" />
+            {T.undo}
+          </button>
+          <button
+            onClick={userCoords.dismissUndo}
+            aria-label={T.clear}
+            className="rounded-full p-1 text-muted-foreground hover:bg-accent"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      )}
 
 
       {/* Bottom-left: detail card */}
