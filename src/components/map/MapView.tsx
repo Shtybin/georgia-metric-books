@@ -2,9 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX } from "lucide-react";
-import { UnlocatedPanel } from "./UnlocatedPanel";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2 } from "lucide-react";
+import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
 import { Lang, t, compactYears } from "@/lib/i18n";
+import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import {
   BASEMAP_STYLE,
   BUCKET_COLORS,
