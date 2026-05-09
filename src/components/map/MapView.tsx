@@ -240,8 +240,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
 
     map.on("click", "points", (e) => {
-      const f = e.features?.[0] as Feature | undefined;
-      if (f) selectFeature(f);
+      const f = e.features?.[0];
+      if (!f) return;
+      const id = (f.id ?? (f.properties as any)?.id) as number;
+      const orig = data.features.find((x) => (x.id as number) === id);
+      if (orig) selectFeature(orig);
     });
     map.on("click", "clusters", (e) => {
       const f = e.features?.[0];
