@@ -39,7 +39,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
-  const [data, setData] = useState<FC | null>(null);
+  const [baseData, setBaseData] = useState<FC | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [selected, setSelected] = useState<Feature | null>(null);
   const [neighborIds, setNeighborIds] = useState<Set<number>>(new Set());
@@ -49,7 +49,26 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
+  const userCoords = useUserCoords();
   const T = t(lang);
+
+  // Merge base GeoJSON with user-pinned features.
+  const data: FC | null = useMemo(() => {
+    if (!baseData) return null;
+    const userKeys = Object.keys(userCoords.records);
+    if (userKeys.length === 0) return baseData;
+    const baseLen = baseData.features.length;
+    const userFeatures = Object.values(userCoords.records).map((rec, i) =>
+      userRecordToFeature(rec, 1_000_000 + i + baseLen),
+    );
+    return {
+      ...baseData,
+      features: [...baseData.features, ...userFeatures],
+    };
+  }, [baseData, userCoords.records]);
+
+  const dataRef = useRef<FC | null>(null);
+  useEffect(() => { dataRef.current = data; }, [data]);
 
   // Index for "find on map" jumps from the unlocated panel
   const locatedIndex = useMemo(() => {
@@ -64,14 +83,40 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return m;
   }, [data]);
 
+  // Hide already-pinned items from the unlocated list
+  const userPinnedKeys = useMemo(
+    () => new Set(Object.keys(userCoords.records)),
+    [userCoords.records],
+  );
+
   const jumpToFeature = (id: number) => {
     const f = data?.features.find((x) => (x.id as number) === id);
     if (f) selectFeature(f as Feature);
   };
 
+  const handleAddCoords = (item: UnlocatedItem, lat: number, lon: number) => {
+    userCoords.add(item, lat, lon);
+    // After state updates the merged data, jump to the new feature.
+    setTimeout(() => {
+      const id = locatedIndex.get(unlocatedKey(item));
+      // The new id won't yet be in locatedIndex (it's stale). Recompute.
+      const fc = dataRef.current;
+      if (!fc) return;
+      const target = fc.features.find((f: any) => {
+        const p = f.properties;
+        const s = (p.settlement?.ru || p.settlement?.en || "").toLocaleLowerCase();
+        const u = (p.uezd?.ru || p.uezd?.en || "").toLocaleLowerCase();
+        return `${s}|${u}` === unlocatedKey(item);
+      }) as Feature | undefined;
+      if (target) selectFeature(target);
+      void id;
+    }, 80);
+    setUnlocatedOpen(false);
+  };
+
   // Load data once
   useEffect(() => {
-    fetch("/data/parishes.geojson").then(r => r.json()).then(setData);
+    fetch("/data/parishes.geojson").then(r => r.json()).then(setBaseData);
     fetch("/data/stats.json").then(r => r.json()).then(setStats);
   }, []);
 
