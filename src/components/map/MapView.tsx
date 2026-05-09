@@ -333,8 +333,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const nearbyCount = Math.max(0, neighborIds.size - 1);
 
   return (
-    <div className="relative h-full w-full">
-      <div ref={containerRef} className="absolute inset-0" />
+    <div className="relative" style={{ width: "100%", height: "100%", minHeight: "100vh" }}>
+      <div
+        ref={containerRef}
+        className="absolute inset-0"
+        style={{ position: "absolute", inset: 0 }}
+      />
 
       {/* Top bar: search + lang */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-3 sm:p-4">
