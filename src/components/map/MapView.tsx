@@ -505,8 +505,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
       )}
 
-      {/* Bottom-right: legend + stats */}
-      <div className="pointer-events-auto absolute bottom-3 right-3 z-10 w-[min(92vw,260px)] rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
+      {/* Bottom-right: legend + stats. On small screens, hide when a point card is open to avoid overlap. */}
+      <div
+        className={cn(
+          "pointer-events-auto absolute bottom-3 right-3 z-10 w-[min(92vw,260px)] rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur",
+          selected && "hidden sm:block",
+        )}
+      >
         <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {T.legend}
         </div>
