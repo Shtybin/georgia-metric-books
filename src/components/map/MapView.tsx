@@ -443,67 +443,90 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       </div>
 
       {/* Bottom-left: detail card */}
-      {selected && sel && (
-        <div className="pointer-events-auto absolute bottom-3 left-3 z-10 w-[min(92vw,360px)] rounded-2xl border border-border bg-card/98 p-4 shadow-2xl backdrop-blur">
-          <div className="flex items-start justify-between gap-2">
+      {selected && sel && (() => {
+        const churchStr: string = sel.church[lang] || sel.church.en || "";
+        const churchList = churchStr ? churchStr.split("|").map((s: string) => s.trim()).filter(Boolean) : [];
+        const manyChurches = churchList.length > 3;
+        return (
+        <div className="pointer-events-auto absolute bottom-3 left-3 z-10 flex w-[min(92vw,360px)] max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur">
+          {/* Sticky header */}
+          <div className="flex items-start justify-between gap-2 border-b border-border px-4 pb-2 pt-4">
             <div className="min-w-0">
               <h3 className="font-serif text-lg font-semibold leading-tight">
                 {sel.settlement[lang] || sel.settlement.en || "—"}
               </h3>
-              {(sel.church[lang] || sel.church.en) && (
+              {!manyChurches && churchList.length > 0 && (
                 <p className="mt-0.5 text-sm italic text-muted-foreground">
-                  {sel.church[lang] || sel.church.en}
+                  {churchList.join(" · ")}
                 </p>
               )}
             </div>
             <button
               onClick={clearSelection}
-              className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+              className="shrink-0 rounded-md p-1 text-muted-foreground hover:bg-accent"
               aria-label={T.clear}
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
-            {(sel.region[lang] || sel.region.en) && (<>
-              <dt className="text-muted-foreground">{T.region}</dt>
-              <dd className="tabular-nums">{sel.region[lang] || sel.region.en}</dd>
-            </>)}
-            {(sel.uezd[lang] || sel.uezd.en) && (<>
-              <dt className="text-muted-foreground">{T.uezd}</dt>
-              <dd>{sel.uezd[lang] || sel.uezd.en}</dd>
-            </>)}
-            <dt className="text-muted-foreground">{T.years}</dt>
-            <dd className="tabular-nums">
-              {sel.startYear}–{sel.endYear}
-              <span className="ml-1 text-muted-foreground">
-                ({sel.coverage} {T.coverage})
-              </span>
-            </dd>
-            <dt className="text-muted-foreground">{T.missing}</dt>
-            <dd className="tabular-nums text-xs">
-              {sel.missingRaw[lang] || sel.missingRaw.en
-                ? (sel.missingRaw[lang] || sel.missingRaw.en)
-                : sel.missingCount === 0
-                  ? T.noGaps
-                  : "—"}
-            </dd>
-          </dl>
+          {/* Scrollable body */}
+          <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-3">
+            <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
+              {(sel.region[lang] || sel.region.en) && (<>
+                <dt className="text-muted-foreground">{T.region}</dt>
+                <dd className="tabular-nums">{sel.region[lang] || sel.region.en}</dd>
+              </>)}
+              {(sel.uezd[lang] || sel.uezd.en) && (<>
+                <dt className="text-muted-foreground">{T.uezd}</dt>
+                <dd>{sel.uezd[lang] || sel.uezd.en}</dd>
+              </>)}
+              <dt className="text-muted-foreground">{T.years}</dt>
+              <dd className="tabular-nums">
+                {sel.startYear}–{sel.endYear}
+                <span className="ml-1 text-muted-foreground">
+                  ({sel.coverage} {T.coverage})
+                </span>
+              </dd>
+              <dt className="text-muted-foreground">{T.missing}</dt>
+              <dd className="tabular-nums text-xs">
+                {sel.missingRaw[lang] || sel.missingRaw.en
+                  ? (sel.missingRaw[lang] || sel.missingRaw.en)
+                  : sel.missingCount === 0
+                    ? T.noGaps
+                    : "—"}
+              </dd>
+            </dl>
 
-          <div className="mt-4 flex items-center justify-between gap-2">
-            <Button size="sm" onClick={showRadius} className="flex-1">
+            {manyChurches && (
+              <div className="mt-3">
+                <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {T.churches} ({churchList.length})
+                </div>
+                <ul className="max-h-48 space-y-0.5 overflow-y-auto overscroll-contain rounded-md border border-border bg-background/50 p-2 text-sm">
+                  {churchList.map((c: string, i: number) => (
+                    <li key={i} className="leading-snug">{c}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Sticky footer */}
+          <div className="border-t border-border px-4 py-3">
+            <Button size="sm" onClick={showRadius} className="w-full">
               <MapPin className="mr-1.5 h-4 w-4" />
               {T.showRadius}
             </Button>
+            {neighborIds.size > 0 && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {T.nearbyCount(nearbyCount)}
+              </p>
+            )}
           </div>
-          {neighborIds.size > 0 && (
-            <p className="mt-2 text-xs text-muted-foreground">
-              {T.nearbyCount(nearbyCount)}
-            </p>
-          )}
         </div>
-      )}
+        );
+      })()}
 
       {/* Mobile: compact horizontal legend along the bottom. Hidden when a card is open. */}
       {!selected && (

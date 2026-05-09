@@ -186,58 +186,10 @@ for (const rows of groups.values()) {
   });
 }
 
-// Split features with very large church lists into a few nearby points so the
-// detail card stays usable. Years/coverage/missing stay identical across splits.
-const SPLIT_THRESHOLD = 40;     // split when a single point has more churches than this
-const SPLIT_CHUNK = 35;          // churches per resulting point
-const SPLIT_OFFSET_DEG = 0.006;  // ~600m at this latitude — visually distinct, still co-located
-
-function splitChurchString(s: string, parts: number): string[] {
-  if (!s) return Array(parts).fill("");
-  const items = s.split("|").map(x => x.trim()).filter(Boolean);
-  const per = Math.ceil(items.length / parts);
-  const out: string[] = [];
-  for (let i = 0; i < parts; i++) {
-    out.push(items.slice(i * per, (i + 1) * per).join(" | "));
-  }
-  return out;
-}
-
-const splitFeatures: any[] = [];
-for (const f of features) {
-  const churchRu = f.properties.church.ru || "";
-  const count = churchRu ? churchRu.split("|").length : 0;
-  if (count <= SPLIT_THRESHOLD) { splitFeatures.push(f); continue; }
-  const parts = Math.min(4, Math.max(2, Math.ceil(count / SPLIT_CHUNK)));
-  const [lon, lat] = f.geometry.coordinates;
-  const ruParts = splitChurchString(f.properties.church.ru, parts);
-  const enParts = splitChurchString(f.properties.church.en, parts);
-  for (let i = 0; i < parts; i++) {
-    const angle = (2 * Math.PI * i) / parts;
-    const dx = Math.cos(angle) * SPLIT_OFFSET_DEG;
-    const dy = Math.sin(angle) * SPLIT_OFFSET_DEG;
-    splitFeatures.push({
-      ...f,
-      id: splitFeatures.length,
-      geometry: { type: "Point", coordinates: [lon + dx, lat + dy] },
-      properties: {
-        ...f.properties,
-        settlement: {
-          en: f.properties.settlement.en ? `${f.properties.settlement.en} (${i + 1}/${parts})` : "",
-          ru: f.properties.settlement.ru ? `${f.properties.settlement.ru} (${i + 1}/${parts})` : "",
-        },
-        church: { en: enParts[i], ru: ruParts[i] },
-      },
-    });
-  }
-}
-// Reassign sequential ids
-splitFeatures.forEach((f, i) => { f.id = i; });
-
 const outDir = join(root, "public/data");
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "parishes.geojson"),
-  JSON.stringify({ type: "FeatureCollection", features: splitFeatures }));
+  JSON.stringify({ type: "FeatureCollection", features }));
 const stats = {
   total,
   withCoords,
