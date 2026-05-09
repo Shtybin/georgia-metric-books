@@ -142,3 +142,13 @@
     color: var(--color-foreground);
   }
 }
+
+/* Push MapLibre top-right controls below the language switcher / search bar */
+.maplibregl-ctrl-top-right {
+  top: 64px;
+}
+@media (min-width: 640px) {
+  .maplibregl-ctrl-top-right {
+    top: 72px;
+  }
+}
