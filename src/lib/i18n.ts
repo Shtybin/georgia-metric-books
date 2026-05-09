@@ -67,6 +67,7 @@ export const STRINGS = {
     home: "Home",
     embed: "Embed",
     notFoundTitle: "No matches",
+    churches: "Churches",
   },
 } as const;
 
