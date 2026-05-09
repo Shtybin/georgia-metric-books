@@ -143,12 +143,15 @@
   }
 }
 
-/* Push MapLibre top-right controls below the language switcher / search bar */
-.maplibregl-ctrl-top-right {
-  top: 64px;
+/* Push MapLibre top-right controls below the language switcher. */
+.maplibregl-map .maplibregl-ctrl-top-right {
+  top: 76px;
+  right: 12px;
 }
+
 @media (min-width: 640px) {
-  .maplibregl-ctrl-top-right {
-    top: 72px;
+  .maplibregl-map .maplibregl-ctrl-top-right {
+    top: 96px;
+    right: 16px;
   }
 }
