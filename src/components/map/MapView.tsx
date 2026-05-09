@@ -249,7 +249,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     };
 
     map.on("click", (e) => {
-      const hitbox = 10;
+      const hitbox = 14;
       const features = map.queryRenderedFeatures(
         [
           [e.point.x - hitbox, e.point.y - hitbox],
@@ -257,11 +257,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         ],
         { layers: ["points"] },
       );
-      const f = features[0];
-      if (!f) return;
+      const orig = features[0] ? findOriginalFeature(features[0]) : findNearestFeature(e.point, hitbox);
+      if (!orig) return;
       e.preventDefault();
-      const orig = findOriginalFeature(f);
-      if (orig) selectFeature(orig);
+      selectFeature(orig);
     });
     map.on("click", "clusters", (e) => {
       const f = e.features?.[0];
