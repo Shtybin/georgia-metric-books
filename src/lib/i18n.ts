@@ -19,6 +19,7 @@ export const STRINGS = {
     uezd: "Уезд",
     years: "Годы",
     missing: "Пропущенные годы",
+    noGaps: "Нет пропусков",
     coverage: "лет данных",
     showRadius: "Показать в радиусе 50 км",
     nearbyCount: (n: number) => `Найдено в радиусе 50 км: ${n}`,
