@@ -187,10 +187,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.addSource("parishes", {
       type: "geojson",
       data: data as any,
-      promoteId: "id",
-      cluster: true,
-      clusterRadius: 45,
-      clusterMaxZoom: 9,
+      cluster: false,
     });
 
     map.addLayer({
