@@ -4,7 +4,6 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 function parseCSV(text: string): string[][] {
-  // Strip BOM
   text = text.replace(/^\uFEFF/, "");
   const rows: string[][] = [];
   let cur: string[] = [];
@@ -46,11 +45,19 @@ function parseYears(s: string): number[] {
   return [...out].sort((a, b) => a - b);
 }
 
-function endYear(yearsStr: string, startYear: number, missing: number[]): number {
-  const ys = parseYears(yearsStr);
-  if (ys.length) return ys[ys.length - 1];
-  if (missing.length) return missing[missing.length - 1];
-  return startYear;
+function compactYears(years: number[]): string {
+  if (!years.length) return "";
+  const sorted = [...years].sort((a, b) => a - b);
+  const parts: string[] = [];
+  let start = sorted[0], prev = sorted[0];
+  for (let i = 1; i < sorted.length; i++) {
+    const y = sorted[i];
+    if (y === prev + 1) { prev = y; continue; }
+    parts.push(start === prev ? `${start}` : `${start}-${prev}`);
+    start = y; prev = y;
+  }
+  parts.push(start === prev ? `${start}` : `${start}-${prev}`);
+  return parts.join(", ");
 }
 
 function bucketOf(year: number): string {
@@ -65,10 +72,19 @@ const root = process.cwd();
 const enRows = parseCSV(readFileSync(join(root, "scripts/data/en.csv"), "utf8"));
 const ruRows = parseCSV(readFileSync(join(root, "scripts/data/ru.csv"), "utf8"));
 
-// drop headers
 enRows.shift(); ruRows.shift();
 
-const features: any[] = [];
+type RawRow = {
+  lat: number; lon: number;
+  settlementEn: string; settlementRu: string;
+  churchEn: string; churchRu: string;
+  regionEn: string; regionRu: string;
+  uezdEn: string; uezdRu: string;
+  yearsStr: string;
+  startYear: number;
+};
+
+const raw: RawRow[] = [];
 let total = 0;
 let withCoords = 0;
 
@@ -87,28 +103,84 @@ for (let i = 0; i < len; i++) {
   const startYear = parseInt(en[5] || ru[5] || "", 10);
   if (!isFinite(startYear)) continue;
 
-  const yearsStr = en[4] || ru[4] || "";
-  const missingStr = en[6] || ru[6] || "";
-  const missing = parseYears(missingStr);
-  const ey = endYear(yearsStr, startYear, missing);
-  const yearsArr = parseYears(yearsStr);
-  const coverage = Math.max(1, yearsArr.length || (ey - startYear + 1) - missing.length);
+  raw.push({
+    lat, lon,
+    settlementEn: (en[0] || "").trim(), settlementRu: (ru[0] || "").trim(),
+    churchEn: (en[1] || "").trim(),     churchRu: (ru[1] || "").trim(),
+    regionEn: (en[2] || "").trim(),     regionRu: (ru[2] || "").trim(),
+    uezdEn: (en[3] || "").trim(),       uezdRu: (ru[3] || "").trim(),
+    yearsStr: en[4] || ru[4] || "",
+    startYear,
+  });
+}
+
+// Group by rounded coordinates
+const groups = new Map<string, RawRow[]>();
+for (const r of raw) {
+  const key = `${r.lat.toFixed(6)}|${r.lon.toFixed(6)}`;
+  const arr = groups.get(key);
+  if (arr) arr.push(r); else groups.set(key, [r]);
+}
+
+const firstNonEmpty = (vals: string[]) => vals.find(v => v && v.length) || "";
+const joinUnique = (vals: string[]) => {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const v of vals) {
+    const t = v.trim();
+    if (!t || seen.has(t)) continue;
+    seen.add(t); out.push(t);
+  }
+  return out.join("; ");
+};
+
+const features: any[] = [];
+for (const rows of groups.values()) {
+  const lat = rows[0].lat, lon = rows[0].lon;
+
+  const yearsSet = new Set<number>();
+  for (const r of rows) for (const y of parseYears(r.yearsStr)) yearsSet.add(y);
+  const yearsArr = [...yearsSet].sort((a, b) => a - b);
+
+  let computedMissing: number[] = [];
+  if (yearsArr.length) {
+    const lo = yearsArr[0], hi = yearsArr[yearsArr.length - 1];
+    for (let y = lo; y <= hi; y++) if (!yearsSet.has(y)) computedMissing.push(y);
+  }
+
+  const startYear = Math.min(...rows.map(r => r.startYear));
+  const endYear = yearsArr.length ? yearsArr[yearsArr.length - 1] : startYear;
+
+  const yearsCompactRu = compactYears(yearsArr);
+  const missingCompact = compactYears(computedMissing);
 
   features.push({
     type: "Feature",
     id: features.length,
     geometry: { type: "Point", coordinates: [lon, lat] },
     properties: {
-      settlement: { en: en[0] || "", ru: ru[0] || "" },
-      church:     { en: en[1] || "", ru: ru[1] || "" },
-      region:     { en: en[2] || "", ru: ru[2] || "" },
-      uezd:       { en: en[3] || "", ru: ru[3] || "" },
-      yearsRaw:   { en: yearsStr,    ru: ru[4] || yearsStr },
-      missingRaw: { en: missingStr,  ru: ru[6] || missingStr },
+      settlement: {
+        en: firstNonEmpty(rows.map(r => r.settlementEn)),
+        ru: firstNonEmpty(rows.map(r => r.settlementRu)),
+      },
+      church: {
+        en: joinUnique(rows.map(r => r.churchEn)),
+        ru: joinUnique(rows.map(r => r.churchRu)),
+      },
+      region: {
+        en: firstNonEmpty(rows.map(r => r.regionEn)),
+        ru: firstNonEmpty(rows.map(r => r.regionRu)),
+      },
+      uezd: {
+        en: firstNonEmpty(rows.map(r => r.uezdEn)),
+        ru: firstNonEmpty(rows.map(r => r.uezdRu)),
+      },
+      yearsRaw:   { en: yearsCompactRu, ru: yearsCompactRu },
+      missingRaw: { en: missingCompact, ru: missingCompact },
       startYear,
-      endYear: ey,
-      coverage,
-      missingCount: missing.length,
+      endYear,
+      coverage: Math.max(1, yearsArr.length),
+      missingCount: computedMissing.length,
       bucket: bucketOf(startYear),
     },
   });
@@ -122,6 +194,7 @@ const stats = {
   total,
   withCoords,
   withoutCoords: total - withCoords,
+  uniqueLocations: features.length,
   geocodingConfidence: total ? withCoords / total : 0,
 };
 writeFileSync(join(outDir, "stats.json"), JSON.stringify(stats, null, 2));
