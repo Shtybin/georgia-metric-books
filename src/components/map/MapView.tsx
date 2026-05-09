@@ -505,11 +505,39 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
       )}
 
-      {/* Bottom-right: legend + stats. On small screens, hide when a point card is open to avoid overlap. */}
+      {/* Mobile: compact horizontal legend along the bottom. Hidden when a card is open. */}
+      {!selected && (
+        <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
+          <div className="flex items-center gap-1 overflow-x-auto rounded-full border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
+            {BUCKET_ORDER.map((b) => {
+              const on = enabledBuckets.has(b);
+              return (
+                <button
+                  key={b}
+                  onClick={() => toggleBucket(b)}
+                  aria-pressed={on}
+                  className={cn(
+                    "flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] tabular-nums transition-opacity",
+                    on ? "opacity-100" : "opacity-40",
+                  )}
+                >
+                  <span
+                    className="h-2.5 w-2.5 rounded-full ring-1 ring-white"
+                    style={{ backgroundColor: BUCKET_COLORS[b] }}
+                  />
+                  {T.bucket[b]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Desktop: full legend + stats panel. */}
       <div
         className={cn(
           "pointer-events-auto absolute bottom-3 right-3 z-10 w-[min(92vw,260px)] rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur",
-          selected && "hidden sm:block",
+          "hidden sm:block",
         )}
       >
         <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
