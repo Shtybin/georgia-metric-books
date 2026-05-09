@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import maplibregl, { Map as MLMap, Popup } from "maplibre-gl";
+import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
 import { Search, X, Globe2, MapPin, Info } from "lucide-react";
@@ -179,18 +179,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady || !data) return;
-    if (map.getSource("parishes")) {
-      (map.getSource("parishes") as any).setData(data);
-      return;
-    }
+    ["cluster-count", "clusters", "points"].forEach((layerId) => {
+      if (map.getLayer(layerId)) map.removeLayer(layerId);
+    });
+    if (map.getSource("parishes")) map.removeSource("parishes");
 
     map.addSource("parishes", {
       type: "geojson",
       data: data as any,
-      promoteId: "id",
-      cluster: true,
-      clusterRadius: 45,
-      clusterMaxZoom: 9,
+      cluster: false,
     });
 
     map.addLayer({
@@ -239,26 +236,47 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       },
     });
 
-    map.on("click", "points", (e) => {
-      const f = e.features?.[0];
+    const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
       const [lon, lat] = (f.geometry as any).coordinates as [number, number];
-      const orig =
+      return (
         data.features.find((x) => (x.id as number) === (f.id as number)) ??
         data.features.find((x) => {
           const [xlon, xlat] = x.geometry.coordinates;
           return Math.abs(xlon - lon) < 1e-6 && Math.abs(xlat - lat) < 1e-6;
-        });
-      if (orig) selectFeature(orig);
-    });
-    map.on("click", "clusters", (e) => {
-      const f = e.features?.[0];
-      if (!f) return;
-      const clusterId = (f.properties as any).cluster_id;
-      const src = map.getSource("parishes") as any;
-      src.getClusterExpansionZoom(clusterId).then((zoom: number) => {
-        map.easeTo({ center: (f.geometry as any).coordinates, zoom });
+        })
+      );
+    };
+
+    const findNearestFeature = (point: { x: number; y: number }, maxDistance: number) => {
+      let nearest: Feature | undefined;
+      let nearestDistance = maxDistance * maxDistance;
+      data.features.forEach((feature) => {
+        const projected = map.project(feature.geometry.coordinates as [number, number]);
+        const dx = projected.x - point.x;
+        const dy = projected.y - point.y;
+        const distance = dx * dx + dy * dy;
+        if (distance <= nearestDistance) {
+          nearest = feature;
+          nearestDistance = distance;
+        }
       });
+      return nearest;
+    };
+
+    map.on("click", (e) => {
+      const hitbox = 14;
+      const features = map.queryRenderedFeatures(
+        [
+          [e.point.x - hitbox, e.point.y - hitbox],
+          [e.point.x + hitbox, e.point.y + hitbox],
+        ],
+        { layers: ["points"] },
+      );
+      const orig = features[0] ? findOriginalFeature(features[0]) : findNearestFeature(e.point, hitbox);
+      if (!orig) return;
+      e.preventDefault();
+      selectFeature(orig);
     });
     map.on("mouseenter", "points", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "points", () => { map.getCanvas().style.cursor = ""; });
