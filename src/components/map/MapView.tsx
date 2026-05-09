@@ -82,9 +82,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     }));
   }, [data]);
 
-  // Init map once
+  const styleLoadedRef = useRef(false);
+
+  // Effect A: create map once on mount, independent of data
   useEffect(() => {
-    if (!containerRef.current || mapRef.current || !data) return;
+    if (!containerRef.current || mapRef.current) return;
 
     const map = new maplibregl.Map({
       container: containerRef.current,
@@ -94,135 +96,165 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       attributionControl: { compact: true },
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-    mapRef.current = map;
-
+    map.on("error", (e) => {
+      // surface MapLibre errors instead of leaving a white canvas
+      // eslint-disable-next-line no-console
+      console.error("[maplibre]", e.error || e);
+    });
     map.on("load", () => {
-      map.addSource("parishes", {
-        type: "geojson",
-        data: data as any,
-        promoteId: "id",
-        cluster: true,
-        clusterRadius: 45,
-        clusterMaxZoom: 9,
-      });
-
-      map.addLayer({
-        id: "clusters",
-        type: "circle",
-        source: "parishes",
-        filter: ["has", "point_count"],
-        paint: {
-          "circle-color": "#475569",
-          "circle-opacity": 0.85,
-          "circle-stroke-color": "#fff",
-          "circle-stroke-width": 2,
-          "circle-radius": [
-            "step", ["get", "point_count"],
-            14, 10, 18, 50, 24, 200, 30,
-          ],
-        },
-      });
-      map.addLayer({
-        id: "cluster-count",
-        type: "symbol",
-        source: "parishes",
-        filter: ["has", "point_count"],
-        layout: {
-          "text-field": ["get", "point_count_abbreviated"],
-          "text-size": 12,
-          "text-font": ["Noto Sans Regular"],
-        },
-        paint: { "text-color": "#fff" },
-      });
-
-      map.addLayer({
-        id: "points",
-        type: "circle",
-        source: "parishes",
-        filter: ["!", ["has", "point_count"]],
-        paint: {
-          "circle-color": colorExpression,
-          "circle-radius": radiusExpression,
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 1.5,
-          "circle-opacity": [
-            "case",
-            ["boolean", ["feature-state", "dimmed"], false], 0.18,
-            0.95,
-          ],
-        },
-      });
-
-      // Selected halo (separate source so it bypasses clustering)
-      map.addSource("selected", {
-        type: "geojson",
-        data: { type: "FeatureCollection", features: [] } as any,
-      });
-      map.addLayer({
-        id: "selected-halo",
-        type: "circle",
-        source: "selected",
-        paint: {
-          "circle-color": "transparent",
-          "circle-radius": 22,
-          "circle-stroke-color": "#0f172a",
-          "circle-stroke-width": 3,
-          "circle-stroke-opacity": 0.9,
-        },
-      });
-      map.addLayer({
-        id: "selected-point",
-        type: "circle",
-        source: "selected",
-        paint: {
-          "circle-color": colorExpression,
-          "circle-radius": 9,
-          "circle-stroke-color": "#fff",
-          "circle-stroke-width": 2,
-        },
-      });
-
-      // Radius circle
-      map.addSource("radius", {
-        type: "geojson",
-        data: { type: "FeatureCollection", features: [] } as any,
-      });
-      map.addLayer({
-        id: "radius-fill",
-        type: "fill",
-        source: "radius",
-        paint: { "fill-color": "#0072B2", "fill-opacity": 0.06 },
-      }, "points");
-      map.addLayer({
-        id: "radius-line",
-        type: "line",
-        source: "radius",
-        paint: {
-          "line-color": "#0072B2",
-          "line-width": 1.5,
-          "line-dasharray": [2, 2],
-        },
-      });
-
-      map.on("click", "points", (e) => {
-        const f = e.features?.[0] as Feature | undefined;
-        if (f) selectFeature(f);
-      });
-      map.on("click", "clusters", (e) => {
-        const f = e.features?.[0];
-        if (!f) return;
-        const clusterId = (f.properties as any).cluster_id;
-        const src = map.getSource("parishes") as any;
-        src.getClusterExpansionZoom(clusterId).then((zoom: number) => {
-          map.easeTo({ center: (f.geometry as any).coordinates, zoom });
+      styleLoadedRef.current = true;
+      // Selected halo / radius sources are independent of parishes data — add them now.
+      if (!map.getSource("selected")) {
+        map.addSource("selected", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] } as any,
         });
-      });
-      map.on("mouseenter", "points", () => map.getCanvas().style.cursor = "pointer");
-      map.on("mouseleave", "points", () => map.getCanvas().style.cursor = "");
+        map.addLayer({
+          id: "selected-halo",
+          type: "circle",
+          source: "selected",
+          paint: {
+            "circle-color": "transparent",
+            "circle-radius": 22,
+            "circle-stroke-color": "#0f172a",
+            "circle-stroke-width": 3,
+            "circle-stroke-opacity": 0.9,
+          },
+        });
+        map.addLayer({
+          id: "selected-point",
+          type: "circle",
+          source: "selected",
+          paint: {
+            "circle-color": colorExpression,
+            "circle-radius": 9,
+            "circle-stroke-color": "#fff",
+            "circle-stroke-width": 2,
+          },
+        });
+      }
+      if (!map.getSource("radius")) {
+        map.addSource("radius", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] } as any,
+        });
+        map.addLayer({
+          id: "radius-fill",
+          type: "fill",
+          source: "radius",
+          paint: { "fill-color": "#0072B2", "fill-opacity": 0.06 },
+        });
+        map.addLayer({
+          id: "radius-line",
+          type: "line",
+          source: "radius",
+          paint: {
+            "line-color": "#0072B2",
+            "line-width": 1.5,
+            "line-dasharray": [2, 2],
+          },
+        });
+      }
+      // Trigger data effect by bumping a render
+      setStyleReady(true);
     });
 
-    return () => { map.remove(); mapRef.current = null; };
-  }, [data]);
+    mapRef.current = map;
+
+    // Resize observer guards against 0×0 init / late layout (SSR hydration, HMR)
+    const ro = new ResizeObserver(() => map.resize());
+    ro.observe(containerRef.current);
+
+    return () => {
+      ro.disconnect();
+      map.remove();
+      mapRef.current = null;
+      styleLoadedRef.current = false;
+    };
+  }, []);
+
+  const [styleReady, setStyleReady] = useState(false);
+
+  // Effect B: attach parishes source/layers once both style and data are ready
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady || !data) return;
+    if (map.getSource("parishes")) {
+      (map.getSource("parishes") as any).setData(data);
+      return;
+    }
+
+    map.addSource("parishes", {
+      type: "geojson",
+      data: data as any,
+      promoteId: "id",
+      cluster: true,
+      clusterRadius: 45,
+      clusterMaxZoom: 9,
+    });
+
+    map.addLayer({
+      id: "clusters",
+      type: "circle",
+      source: "parishes",
+      filter: ["has", "point_count"],
+      paint: {
+        "circle-color": "#475569",
+        "circle-opacity": 0.85,
+        "circle-stroke-color": "#fff",
+        "circle-stroke-width": 2,
+        "circle-radius": [
+          "step", ["get", "point_count"],
+          14, 10, 18, 50, 24, 200, 30,
+        ],
+      },
+    }, map.getLayer("radius-fill") ? "radius-fill" : undefined);
+    map.addLayer({
+      id: "cluster-count",
+      type: "symbol",
+      source: "parishes",
+      filter: ["has", "point_count"],
+      layout: {
+        "text-field": ["get", "point_count_abbreviated"],
+        "text-size": 12,
+        "text-font": ["Noto Sans Regular"],
+      },
+      paint: { "text-color": "#fff" },
+    });
+    map.addLayer({
+      id: "points",
+      type: "circle",
+      source: "parishes",
+      filter: ["!", ["has", "point_count"]],
+      paint: {
+        "circle-color": colorExpression,
+        "circle-radius": radiusExpression,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 1.5,
+        "circle-opacity": [
+          "case",
+          ["boolean", ["feature-state", "dimmed"], false], 0.18,
+          0.95,
+        ],
+      },
+    });
+
+    map.on("click", "points", (e) => {
+      const f = e.features?.[0] as Feature | undefined;
+      if (f) selectFeature(f);
+    });
+    map.on("click", "clusters", (e) => {
+      const f = e.features?.[0];
+      if (!f) return;
+      const clusterId = (f.properties as any).cluster_id;
+      const src = map.getSource("parishes") as any;
+      src.getClusterExpansionZoom(clusterId).then((zoom: number) => {
+        map.easeTo({ center: (f.geometry as any).coordinates, zoom });
+      });
+    });
+    map.on("mouseenter", "points", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "points", () => { map.getCanvas().style.cursor = ""; });
+  }, [data, styleReady]);
 
   // Bucket filter
   useEffect(() => {
