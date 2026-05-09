@@ -48,7 +48,15 @@ function Index() {
           </Link>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-3">
+        <div className="mt-16">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            Возможности карты · Map features
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Описание функций интерактивной карты. Сами инструменты доступны после её открытия — карточки ниже не кликабельны.
+          </p>
+        </div>
+        <div className="mt-4 grid gap-6 sm:grid-cols-3">
           {[
             { i: MapPin, t: "Анализ радиуса 50 км", d: "Кликните точку — увидите все приходы поблизости." },
             { i: Layers, t: "Цвет по периоду", d: "Okabe-Ito — палитра, дружелюбная к дальтоникам." },
