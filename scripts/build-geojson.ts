@@ -85,6 +85,15 @@ type RawRow = {
 };
 
 const raw: RawRow[] = [];
+type UnlocatedRaw = {
+  settlementEn: string; settlementRu: string;
+  churchEn: string; churchRu: string;
+  regionEn: string; regionRu: string;
+  uezdEn: string; uezdRu: string;
+  yearsStr: string;
+  startYear: number;
+};
+const unlocatedRaw: UnlocatedRaw[] = [];
 let total = 0;
 let withCoords = 0;
 
@@ -97,10 +106,24 @@ for (let i = 0; i < len; i++) {
 
   const lat = parseFloat(en[7] || ru[7] || "");
   const lon = parseFloat(en[8] || ru[8] || "");
-  if (!isFinite(lat) || !isFinite(lon)) continue;
+  const hasCoords = isFinite(lat) && isFinite(lon);
+
+  const startYearParsed = parseInt(en[5] || ru[5] || "", 10);
+
+  if (!hasCoords) {
+    unlocatedRaw.push({
+      settlementEn: (en[0] || "").trim(), settlementRu: (ru[0] || "").trim(),
+      churchEn: (en[1] || "").trim(),     churchRu: (ru[1] || "").trim(),
+      regionEn: (en[2] || "").trim(),     regionRu: (ru[2] || "").trim(),
+      uezdEn: (en[3] || "").trim(),       uezdRu: (ru[3] || "").trim(),
+      yearsStr: en[4] || ru[4] || "",
+      startYear: isFinite(startYearParsed) ? startYearParsed : 0,
+    });
+    continue;
+  }
   withCoords++;
 
-  const startYear = parseInt(en[5] || ru[5] || "", 10);
+  const startYear = startYearParsed;
   if (!isFinite(startYear)) continue;
 
   raw.push({
