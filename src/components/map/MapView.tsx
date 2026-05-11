@@ -731,8 +731,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             />
             {query && (
               <button
-                onClick={() => { setQuery(""); setShowResults(false); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:bg-accent"
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onTouchStart={(e) => e.preventDefault()}
+                onClick={() => {
+                  setQuery("");
+                  setShowResults(false);
+                  clearSelection();
+                }}
+                className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground hover:bg-accent active:bg-accent"
                 aria-label={T.clear}
               >
                 <X className="h-4 w-4" />
