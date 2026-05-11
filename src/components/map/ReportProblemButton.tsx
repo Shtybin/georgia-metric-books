@@ -100,7 +100,7 @@ export function ReportProblemButton({ lang }: Props) {
       </Dialog>
 
       {sentToast && (
-        <div className="pointer-events-none absolute bottom-14 left-1/2 z-30 -translate-x-1/2 rounded-full border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur">
+        <div className="pointer-events-none absolute bottom-12 right-3 z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur">
           {sentToast}
         </div>
       )}
