@@ -764,8 +764,43 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               onChange={(e) => { setQuery(e.target.value); setShowResults(true); }}
               onFocus={() => setShowResults(true)}
               onBlur={() => setTimeout(() => setShowResults(false), 200)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  if (searchResults[0]) {
+                    const f = searchResults[0];
+                    selectFeature(f);
+                    setQuery(f.properties.settlement[lang] || f.properties.settlement.en);
+                    setShowResults(false);
+                    (e.currentTarget as HTMLInputElement).blur();
+                  } else if (areaMatches.uezds[0]) {
+                    highlightArea(areaMatches.uezds[0].ids);
+                    setQuery(areaMatches.uezds[0].label);
+                    setShowResults(false);
+                    (e.currentTarget as HTMLInputElement).blur();
+                  } else if (areaMatches.regions[0]) {
+                    highlightArea(areaMatches.regions[0].ids);
+                    setQuery(areaMatches.regions[0].label);
+                    setShowResults(false);
+                    (e.currentTarget as HTMLInputElement).blur();
+                  }
+                } else if (e.key === "Escape") {
+                  setShowResults(false);
+                  (e.currentTarget as HTMLInputElement).blur();
+                }
+              }}
               placeholder={isMobile ? T.searchShort : T.search}
               aria-label={T.search}
+              aria-autocomplete="list"
+              aria-expanded={showResults && query.trim().length >= minQueryLen}
+              role="combobox"
+              type="search"
+              inputMode="search"
+              enterKeyHint="search"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
               className="w-full rounded-xl border border-border bg-card/95 py-2.5 pl-10 pr-9 text-sm shadow-lg backdrop-blur outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
             />
             {query && (
@@ -784,20 +819,25 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 <X className="h-4 w-4" />
               </button>
             )}
-            {showResults && query.trim().length >= 2 && (
-              <div className="absolute mt-2 max-h-[70vh] w-full overflow-y-auto overscroll-contain rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl">
+            {showResults && query.trim().length >= minQueryLen && (
+              <div
+                role="listbox"
+                className="absolute mt-2 w-full overflow-y-auto overscroll-contain rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl animate-fade-in max-h-[50vh] sm:max-h-[70vh]"
+              >
                 {(areaMatches.uezds.length > 0 || areaMatches.regions.length > 0) && (
                   <div className="border-b border-border bg-muted/40">
                     {areaMatches.uezds.map((u) => (
                       <button
                         key={"u-" + u.key}
-                        onMouseDown={(e) => {
+                        type="button"
+                        role="option"
+                        onPointerDown={(e) => {
                           e.preventDefault();
                           highlightArea(u.ids);
                           setQuery(u.label);
                           setShowResults(false);
                         }}
-                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-accent"
+                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-3 text-left text-sm last:border-b-0 hover:bg-accent active:bg-accent sm:py-2"
                       >
                         <span>
                           <span className="text-xs text-muted-foreground">{T.uezdLabel}</span>{" "}
@@ -811,13 +851,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     {areaMatches.regions.map((r) => (
                       <button
                         key={"r-" + r.key}
-                        onMouseDown={(e) => {
+                        type="button"
+                        role="option"
+                        onPointerDown={(e) => {
                           e.preventDefault();
                           highlightArea(r.ids);
                           setQuery(r.label);
                           setShowResults(false);
                         }}
-                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-accent"
+                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-3 text-left text-sm last:border-b-0 hover:bg-accent active:bg-accent sm:py-2"
                       >
                         <span>
                           <span className="text-xs text-muted-foreground">{T.regionLabel}</span>{" "}
@@ -837,13 +879,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   return (
                     <button
                       key={f.id as number}
-                      onMouseDown={(e) => {
+                      type="button"
+                      role="option"
+                      onPointerDown={(e) => {
                         e.preventDefault();
                         selectFeature(f);
                         setQuery(p.settlement[lang] || p.settlement.en);
                         setShowResults(false);
                       }}
-                      className="flex w-full flex-col items-start gap-0.5 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-accent"
+                      className="flex w-full flex-col items-start gap-0.5 border-b border-border px-3 py-3 text-left text-sm last:border-b-0 hover:bg-accent active:bg-accent sm:py-2"
                     >
                       <span className="font-medium">
                         {p.settlement[lang] || p.settlement.en || "—"}
