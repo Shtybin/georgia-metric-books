@@ -94,23 +94,6 @@ function Index() {
           </Link>
         </div>
 
-        <div className="mt-4 flex gap-2 text-xs">
-          {(["ru", "en", "ka"] as const).map((l) => (
-            <Link
-              key={l}
-              to="/"
-              search={{ lang: l }}
-              className={
-                "rounded-full border px-2.5 py-1 uppercase tracking-wide " +
-                (lang === l
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border text-muted-foreground hover:bg-accent")
-              }
-            >
-              {l === "ka" ? "ქარ" : l}
-            </Link>
-          ))}
-        </div>
 
         <div className="mt-12 rounded-2xl border border-border bg-card p-5 sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
