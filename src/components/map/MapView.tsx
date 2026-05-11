@@ -475,11 +475,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   function selectFeature(f: Feature) {
     setSelected(f);
+    // Selecting a new point should drop any prior area highlight; the user can
+    // re-invoke the 10 km radius from the card if needed.
+    setNeighborIds(new Set());
+    setHighlightMode(null);
     const map = mapRef.current;
     if (!map) return;
     (map.getSource("selected") as any)?.setData({
       type: "FeatureCollection", features: [f],
     });
+    (map.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
     map.flyTo({
       center: f.geometry.coordinates as [number, number],
       zoom: Math.max(map.getZoom(), 9),
