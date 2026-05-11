@@ -69,12 +69,13 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
     }
   }, [open]);
 
-  // ===== Collision-aware anchor =====
-  // Pure picker logic lives in src/lib/collision-anchor.ts (unit-tested).
-  // On mobile we pin the button to the top-right corner and skip the
-  // collision detector entirely so it never moves during zoom/filter/select.
+  // ===== Anchor =====
+  // The button is hard-pinned to the top-right on both mobile and desktop,
+  // tucked under the search bar / language switcher. The collision detector
+  // is intentionally disabled so the button never moves during zoom, filter,
+  // selection or card opening.
   const btnRef = useRef<HTMLButtonElement | null>(null);
-  const [anchor, setAnchor] = useState<Anchor>("tr");
+  const anchor: Anchor = "tr";
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -86,11 +87,13 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
     return () => mq.removeEventListener("change", apply);
   }, []);
 
+  // Collision detection is disabled — anchor is fixed top-right on all sizes.
+  // (Kept imports for pickAnchor in case we re-enable per-overlay avoidance.)
+  void pickAnchor;
   useLayoutEffect(() => {
-    if (isMobile) {
-      setAnchor("tr");
-      return;
-    }
+    return;
+    // eslint-disable-next-line no-unreachable
+    {
     const btn = btnRef.current;
     const parent = btn?.parentElement;
     if (!btn || !parent) return;
