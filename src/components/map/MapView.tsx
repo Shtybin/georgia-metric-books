@@ -339,10 +339,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       paint: {
         "circle-color": colorExpression,
         "circle-radius": [
-          "case",
-          ["boolean", ["feature-state", "highlighted"], false],
-          ["+", radiusExpression, 3],
-          radiusExpression,
+          "interpolate", ["linear"], ["zoom"],
+          4, [
+            "case",
+            ["boolean", ["feature-state", "highlighted"], false],
+            ["+", ["max", 3, ["*", ["sqrt", ["get", "coverage"]], 1.0]], 3],
+            ["max", 3, ["*", ["sqrt", ["get", "coverage"]], 1.0]],
+          ],
+          10, [
+            "case",
+            ["boolean", ["feature-state", "highlighted"], false],
+            ["+", ["max", 4, ["*", ["sqrt", ["get", "coverage"]], 1.6]], 3],
+            ["max", 4, ["*", ["sqrt", ["get", "coverage"]], 1.6]],
+          ],
         ],
         "circle-stroke-color": "#ffffff",
         "circle-stroke-width": [
