@@ -399,6 +399,18 @@ function AdminPage() {
               ))}
             </ul>
           )}
+          {!reportsLoading && reportsHasMore && (
+            <div className="mt-3 flex justify-center">
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={reportsLoadingMore}
+                onClick={() => loadReports({ append: true, offset: reports.length })}
+              >
+                {reportsLoadingMore ? "Загрузка…" : "Показать ещё"}
+              </Button>
+            </div>
+          )}
         </section>
       )}
     </main>
