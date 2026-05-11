@@ -187,21 +187,34 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!data) return null;
     return new Fuse(data.features, {
       keys: [
-        "properties.settlement.ru", "properties.settlement.en",
-        "properties.church.ru", "properties.church.en",
-        "properties.uezd.ru", "properties.uezd.en",
-        "properties.region.ru", "properties.region.en",
+        { name: "properties.settlement.ru", weight: 1.0 },
+        { name: "properties.settlement.en", weight: 1.0 },
+        { name: "properties.settlement.ka", weight: 1.0 },
+        { name: "properties.church.ru", weight: 0.9 },
+        { name: "properties.church.en", weight: 0.9 },
+        { name: "properties.church.ka", weight: 0.9 },
+        { name: "properties.uezd.ru", weight: 0.6 },
+        { name: "properties.uezd.en", weight: 0.6 },
+        { name: "properties.uezd.ka", weight: 0.6 },
+        { name: "properties.region.ru", weight: 0.5 },
+        { name: "properties.region.en", weight: 0.5 },
+        { name: "properties.region.ka", weight: 0.5 },
       ],
       threshold: 0.35,
-      minMatchCharLength: 2,
+      minMatchCharLength: 1,
+      ignoreLocation: true,
       includeScore: true,
+      includeMatches: true,
     });
   }, [data]);
 
   const minQueryLen = isMobile ? 1 : 2;
   const searchResults = useMemo(() => {
     if (!fuse || query.trim().length < minQueryLen) return [];
-    return fuse.search(query.trim()).slice(0, isMobile ? 12 : 8).map(r => r.item as Feature);
+    return fuse.search(query.trim()).slice(0, isMobile ? 12 : 8).map((r) => ({
+      feature: r.item as Feature,
+      churchMatch: (r.matches ?? []).some((m) => m.key?.startsWith("properties.church")),
+    }));
   }, [fuse, query, minQueryLen, isMobile]);
 
   // Build uezd/region → feature ids index for "highlight all in area" search
@@ -768,7 +781,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 if (e.key === "Enter") {
                   e.preventDefault();
                   if (searchResults[0]) {
-                    const f = searchResults[0];
+                    const f = searchResults[0].feature;
                     selectFeature(f);
                     setQuery(f.properties.settlement[lang] || f.properties.settlement.en);
                     setShowResults(false);
@@ -874,8 +887,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 )}
                 {searchResults.length === 0 && areaMatches.uezds.length === 0 && areaMatches.regions.length === 0 ? (
                   <div className="p-3 text-sm text-muted-foreground">{T.notFoundTitle}</div>
-                ) : searchResults.map((f) => {
+                ) : searchResults.map(({ feature: f, churchMatch }) => {
                   const p = f.properties;
+                  const settlementName = p.settlement[lang] || p.settlement.en || "—";
+                  const churchName = p.church[lang] || p.church.en;
                   return (
                     <button
                       key={f.id as number}
@@ -884,17 +899,26 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                       onPointerDown={(e) => {
                         e.preventDefault();
                         selectFeature(f);
-                        setQuery(p.settlement[lang] || p.settlement.en);
+                        setQuery(settlementName);
                         setShowResults(false);
                       }}
                       className="flex w-full flex-col items-start gap-0.5 border-b border-border px-3 py-3 text-left text-sm last:border-b-0 hover:bg-accent active:bg-accent sm:py-2"
                     >
-                      <span className="font-medium">
-                        {p.settlement[lang] || p.settlement.en || "—"}
+                      <span className="flex w-full items-center justify-between gap-2">
+                        <span className="font-medium">
+                          {churchMatch && churchName ? churchName : settlementName}
+                        </span>
+                        {churchMatch && churchName && (
+                          <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+                            {T.church}
+                          </span>
+                        )}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {[p.church[lang] || p.church.en, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
-                          .filter(Boolean).join(" · ")}
+                        {(churchMatch && churchName
+                          ? [settlementName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                          : [churchName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                        ).filter(Boolean).join(" · ")}
                       </span>
                     </button>
                   );
