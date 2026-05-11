@@ -174,6 +174,11 @@ export const STRINGS = {
     reportSent: "Thank you! Your report was sent.",
     reportEmpty: "Please enter a message.",
     reportError: "Could not send. Please try again later.",
+    captchaLabel: (a: number, b: number) => `Check: what is ${a} + ${b}?`,
+    captchaError: "Wrong answer to the check question.",
+    cooldownError: (s: number) => `Please wait ${s}s before sending again.`,
+    tooFastError: "Submitted too fast — please fill in the form carefully.",
+    floodError: "Message limit reached. Please try again later.",
     landing: {
       eyebrow: "Архивный атлас · Archival Atlas · არქივის ატლასი",
       h1: "Georgian Parish Registers",
