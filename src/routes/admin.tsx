@@ -640,3 +640,108 @@ function AdminPage() {
     </main>
   );
 }
+
+function DiagnosticsPanel({
+  open,
+  onToggle,
+  isAdmin,
+  diagnostics,
+  onRefresh,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  isAdmin: boolean;
+  diagnostics: Diagnostics | null;
+  onRefresh: () => void | Promise<void>;
+}) {
+  const [refreshing, setRefreshing] = useState(false);
+  const sessionOk = !!diagnostics?.sessionPresent;
+  const expiresInMs = diagnostics?.expiresAt
+    ? new Date(diagnostics.expiresAt).getTime() - Date.now()
+    : null;
+  const expiresLabel =
+    expiresInMs == null
+      ? "—"
+      : expiresInMs <= 0
+        ? "истекла"
+        : `через ${Math.round(expiresInMs / 60000)} мин`;
+
+  return (
+    <div className="rounded-lg border border-border bg-muted/30 text-xs">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left"
+      >
+        <span className="flex items-center gap-2">
+          <Activity className="h-3.5 w-3.5 text-muted-foreground" />
+          <span className="font-medium">Диагностика</span>
+          <Badge ok={sessionOk} label={sessionOk ? "сессия" : "нет сессии"} />
+          <Badge ok={isAdmin} label={isAdmin ? "admin" : "не admin"} />
+        </span>
+        {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+      </button>
+      {open && (
+        <div className="space-y-2 border-t border-border/60 px-3 py-2">
+          <dl className="grid grid-cols-[140px_1fr] gap-x-3 gap-y-1 font-mono text-[11px]">
+            <dt className="text-muted-foreground">email</dt>
+            <dd className="break-all">{diagnostics?.email ?? "—"}</dd>
+            <dt className="text-muted-foreground">user id</dt>
+            <dd className="break-all">{diagnostics?.userId ?? "—"}</dd>
+            <dt className="text-muted-foreground">провайдер</dt>
+            <dd>{diagnostics?.provider ?? "—"}</dd>
+            <dt className="text-muted-foreground">истекает</dt>
+            <dd>
+              {diagnostics?.expiresAt ?? "—"}
+              <span className="ml-1 text-muted-foreground">({expiresLabel})</span>
+            </dd>
+            <dt className="text-muted-foreground">has_role rpc</dt>
+            <dd>
+              {diagnostics?.rpcOk ? "ok" : "ошибка"} → {String(diagnostics?.rpcResult ?? "null")}
+              {diagnostics?.rpcError && (
+                <span className="ml-1 text-destructive">({diagnostics.rpcError})</span>
+              )}
+            </dd>
+            <dt className="text-muted-foreground">проверено</dt>
+            <dd>{diagnostics?.checkedAt ?? "—"}</dd>
+          </dl>
+          <div className="flex justify-end">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={refreshing}
+              onClick={async () => {
+                setRefreshing(true);
+                try {
+                  await onRefresh();
+                } finally {
+                  setRefreshing(false);
+                }
+              }}
+            >
+              <RefreshCw className={"mr-1 h-3.5 w-3.5 " + (refreshing ? "animate-spin" : "")} />
+              Обновить
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Badge({ ok, label }: { ok: boolean; label: string }) {
+  return (
+    <span
+      className={
+        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium " +
+        (ok
+          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+          : "bg-destructive/10 text-destructive")
+      }
+    >
+      <span className={"h-1.5 w-1.5 rounded-full " + (ok ? "bg-emerald-500" : "bg-destructive")} />
+      {label}
+    </span>
+  );
+}
+
