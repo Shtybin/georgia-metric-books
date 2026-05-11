@@ -9,6 +9,7 @@ import {
 import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
+import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
 import {
   BASEMAP_STYLE,
   BUCKET_COLORS,
