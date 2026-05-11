@@ -725,7 +725,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               onChange={(e) => { setQuery(e.target.value); setShowResults(true); }}
               onFocus={() => setShowResults(true)}
               onBlur={() => setTimeout(() => setShowResults(false), 200)}
-              placeholder={T.search}
+              placeholder={isMobile ? T.searchShort : T.search}
               aria-label={T.search}
               className="w-full rounded-xl border border-border bg-card/95 py-2.5 pl-10 pr-9 text-sm shadow-lg backdrop-blur outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
             />
