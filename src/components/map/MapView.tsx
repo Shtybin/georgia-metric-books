@@ -9,6 +9,7 @@ import {
 import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
+import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
 import {
   BASEMAP_STYLE,
   BUCKET_COLORS,
@@ -54,22 +55,26 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
   const userCoords = useUserCoords();
+  const approved = useApprovedSuggestions();
+  const [submitToast, setSubmitToast] = useState<string | null>(null);
   const T = t(lang);
 
-  // Merge base GeoJSON with user-pinned features.
+  // Merge base GeoJSON with community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
     if (!baseData) return null;
-    const userKeys = Object.keys(userCoords.records);
-    if (userKeys.length === 0) return baseData;
     const baseLen = baseData.features.length;
     const userFeatures = Object.values(userCoords.records).map((rec, i) =>
       userRecordToFeature(rec, 1_000_000 + i + baseLen),
     );
+    const approvedFeatures = approved.map((s, i) =>
+      approvedToFeature(s, 2_000_000 + i + baseLen),
+    );
+    if (userFeatures.length === 0 && approvedFeatures.length === 0) return baseData;
     return {
       ...baseData,
-      features: [...baseData.features, ...userFeatures],
+      features: [...baseData.features, ...approvedFeatures, ...userFeatures],
     };
-  }, [baseData, userCoords.records]);
+  }, [baseData, userCoords.records, approved]);
 
   const dataRef = useRef<FC | null>(null);
   useEffect(() => { dataRef.current = data; }, [data]);
@@ -101,6 +106,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const handleAddCoords = (item: UnlocatedItem, lat: number, lon: number) => {
     userCoords.add(item, lat, lon);
     setUnlocatedOpen(false);
+    // Fire-and-forget submission to community moderation queue.
+    submitSuggestion(item, lat, lon)
+      .then(() => setSubmitToast(T.suggestionSent))
+      .catch((e) => console.error("[submitSuggestion]", e));
     // Build a synthetic feature now so we can fly there immediately,
     // before React re-renders with the merged dataset.
     const tempId = 1_000_000 + Date.now();
@@ -110,6 +119,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     ) as Feature;
     setTimeout(() => selectFeature(feat), 60);
   };
+
+  useEffect(() => {
+    if (!submitToast) return;
+    const id = setTimeout(() => setSubmitToast(null), 4000);
+    return () => clearTimeout(id);
+  }, [submitToast]);
 
   // Load data once
   useEffect(() => {
@@ -137,6 +152,44 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!fuse || query.trim().length < 2) return [];
     return fuse.search(query.trim()).slice(0, 8).map(r => r.item as Feature);
   }, [fuse, query]);
+
+  // Build uezd/region → feature ids index for "highlight all in area" search
+  const areaIndex = useMemo(() => {
+    type Entry = { label: string; ids: number[] };
+    const uezdMap = new Map<string, Entry>();
+    const regionMap = new Map<string, Entry>();
+    if (!data) return { uezds: [] as Array<{ key: string } & Entry>, regions: [] as Array<{ key: string } & Entry> };
+    for (const f of data.features) {
+      const p: any = f.properties;
+      const id = f.id as number;
+      const uLabel: string | undefined = p.uezd?.[lang] || p.uezd?.en || p.uezd?.ru;
+      if (uLabel) {
+        const key = uLabel.toLocaleLowerCase();
+        const entry: Entry = uezdMap.get(key) || { label: uLabel, ids: [] };
+        entry.ids.push(id);
+        uezdMap.set(key, entry);
+      }
+      const rLabel: string | undefined = p.region?.[lang] || p.region?.en || p.region?.ru;
+      if (rLabel) {
+        const key = rLabel.toLocaleLowerCase();
+        const entry: Entry = regionMap.get(key) || { label: rLabel, ids: [] };
+        entry.ids.push(id);
+        regionMap.set(key, entry);
+      }
+    }
+    return {
+      uezds: [...uezdMap.entries()].map(([k, v]) => ({ key: k, ...v })),
+      regions: [...regionMap.entries()].map(([k, v]) => ({ key: k, ...v })),
+    };
+  }, [data, lang]);
+
+  const areaMatches = useMemo(() => {
+    const q = query.trim().toLocaleLowerCase();
+    if (q.length < 2) return { uezds: [] as typeof areaIndex.uezds, regions: [] as typeof areaIndex.regions };
+    const filt = (arr: typeof areaIndex.uezds) =>
+      arr.filter((x) => x.key.includes(q)).slice(0, 3);
+    return { uezds: filt(areaIndex.uezds), regions: filt(areaIndex.regions) };
+  }, [areaIndex, query]);
 
   const points = useMemo(() => {
     if (!data) return [];
@@ -417,13 +470,36 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function showRadius() {
     if (!selected) return;
     const [lon, lat] = selected.geometry.coordinates;
-    const ids = new Set(neighborsWithin(points, lon, lat, 50));
+    const ids = new Set(neighborsWithin(points, lon, lat, 10));
     setNeighborIds(ids);
     const map = mapRef.current;
     (map?.getSource("radius") as any)?.setData({
       type: "FeatureCollection",
-      features: [circlePolygon(lon, lat, 50)],
+      features: [circlePolygon(lon, lat, 10)],
     });
+  }
+
+  function highlightArea(ids: number[]) {
+    setNeighborIds(new Set(ids));
+    const map = mapRef.current;
+    (map?.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
+    (map?.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
+    setSelected(null);
+    if (data && ids.length > 0 && map) {
+      const idSet = new Set(ids);
+      let minLon = 180, maxLon = -180, minLat = 90, maxLat = -90;
+      for (const f of data.features) {
+        if (!idSet.has(f.id as number)) continue;
+        const [lo, la] = f.geometry.coordinates;
+        if (lo < minLon) minLon = lo;
+        if (lo > maxLon) maxLon = lo;
+        if (la < minLat) minLat = la;
+        if (la > maxLat) maxLat = la;
+      }
+      if (minLon <= maxLon && minLat <= maxLat) {
+        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 10 });
+      }
+    }
   }
 
   function toggleBucket(b: string) {
@@ -473,7 +549,51 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             )}
             {showResults && query.trim().length >= 2 && (
               <div className="absolute mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl">
-                {searchResults.length === 0 ? (
+                {(areaMatches.uezds.length > 0 || areaMatches.regions.length > 0) && (
+                  <div className="border-b border-border bg-muted/40">
+                    {areaMatches.uezds.map((u) => (
+                      <button
+                        key={"u-" + u.key}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          highlightArea(u.ids);
+                          setQuery(u.label);
+                          setShowResults(false);
+                        }}
+                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-accent"
+                      >
+                        <span>
+                          <span className="text-xs text-muted-foreground">{T.uezdLabel}</span>{" "}
+                          <span className="font-medium">{u.label}</span>
+                        </span>
+                        <span className="rounded-full bg-background px-2 py-0.5 text-[10px] tabular-nums text-muted-foreground">
+                          {u.ids.length}
+                        </span>
+                      </button>
+                    ))}
+                    {areaMatches.regions.map((r) => (
+                      <button
+                        key={"r-" + r.key}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          highlightArea(r.ids);
+                          setQuery(r.label);
+                          setShowResults(false);
+                        }}
+                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-accent"
+                      >
+                        <span>
+                          <span className="text-xs text-muted-foreground">{T.regionLabel}</span>{" "}
+                          <span className="font-medium">{r.label}</span>
+                        </span>
+                        <span className="rounded-full bg-background px-2 py-0.5 text-[10px] tabular-nums text-muted-foreground">
+                          {r.ids.length}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {searchResults.length === 0 && areaMatches.uezds.length === 0 && areaMatches.regions.length === 0 ? (
                   <div className="p-3 text-sm text-muted-foreground">{T.notFoundTitle}</div>
                 ) : searchResults.map((f) => {
                   const p = f.properties;
@@ -574,6 +694,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
       )}
 
+      {submitToast && (
+        <div className="pointer-events-auto absolute left-1/2 top-28 z-20 max-w-[92vw] -translate-x-1/2 rounded-full border border-border bg-card/98 px-3 py-1.5 text-xs text-muted-foreground shadow-2xl backdrop-blur sm:top-32">
+          {submitToast}
+        </div>
+      )}
 
       {/* Bottom-left: detail card */}
       {selected && sel && (() => {
