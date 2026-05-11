@@ -694,6 +694,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
       )}
 
+      {submitToast && (
+        <div className="pointer-events-auto absolute left-1/2 top-28 z-20 max-w-[92vw] -translate-x-1/2 rounded-full border border-border bg-card/98 px-3 py-1.5 text-xs text-muted-foreground shadow-2xl backdrop-blur sm:top-32">
+          {submitToast}
+        </div>
+      )}
 
       {/* Bottom-left: detail card */}
       {selected && sel && (() => {
