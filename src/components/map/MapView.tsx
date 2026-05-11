@@ -554,8 +554,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
   }
 
+  // When the user clears the search input, also drop any area highlight.
+  useEffect(() => {
+    if (query.trim().length === 0 && highlightMode === "area") {
+      clearSelection();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   const sel = selected?.properties;
   const nearbyCount = Math.max(0, neighborIds.size - 1);
+  const mapLoading = !styleReady || !data;
 
   return (
     <div
@@ -567,6 +576,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         className="absolute inset-0"
         style={{ position: "absolute", inset: 0 }}
       />
+
+      {mapLoading && (
+        <div className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center bg-muted/30 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card/95 px-4 py-2 text-sm text-muted-foreground shadow-lg">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            {T.loadingMap}
+          </div>
+        </div>
+      )}
 
       {/* Top bar: search + lang */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-3 sm:p-4">
