@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle } from "lucide-react";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
@@ -47,6 +47,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [stats, setStats] = useState<Stats | null>(null);
   const [selected, setSelected] = useState<Feature | null>(null);
   const [neighborIds, setNeighborIds] = useState<Set<number>>(new Set());
+  const [highlightMode, setHighlightMode] = useState<"radius" | "area" | null>(null);
   const [enabledBuckets, setEnabledBuckets] = useState<Set<string>>(
     new Set(BUCKET_ORDER),
   );
@@ -305,7 +306,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.addSource("parishes", {
       type: "geojson",
       data: data as any,
-      cluster: false,
+      cluster: true,
+      clusterRadius: 38,
+      clusterMaxZoom: 7,
+      promoteId: undefined,
+      generateId: false,
     });
 
     map.addLayer({
@@ -343,16 +348,39 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       filter: ["!", ["has", "point_count"]],
       paint: {
         "circle-color": colorExpression,
-        "circle-radius": radiusExpression,
+        "circle-radius": [
+          "case",
+          ["boolean", ["feature-state", "highlighted"], false],
+          ["+", radiusExpression, 3],
+          radiusExpression,
+        ],
         "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": 1.5,
+        "circle-stroke-width": [
+          "case",
+          ["boolean", ["feature-state", "highlighted"], false], 2.5,
+          1.5,
+        ],
         "circle-opacity": [
           "case",
-          ["boolean", ["feature-state", "dimmed"], false], 0.18,
+          ["boolean", ["feature-state", "dimmed"], false], 0.10,
           0.95,
         ],
       },
     });
+
+    map.on("click", "clusters", (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
+      const clusterId = features[0]?.properties?.cluster_id;
+      const src = map.getSource("parishes") as any;
+      if (clusterId == null || !src?.getClusterExpansionZoom) return;
+      src.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
+        if (err) return;
+        const coords = (features[0].geometry as any).coordinates as [number, number];
+        map.easeTo({ center: coords, zoom: zoom + 0.2, duration: 600 });
+      });
+    });
+    map.on("mouseenter", "clusters", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "clusters", () => { map.getCanvas().style.cursor = ""; });
 
     const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
@@ -417,39 +445,46 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   // Bucket filter
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !styleReady) return;
     const filter: any = ["all",
       ["!", ["has", "point_count"]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
     ];
     if (map.getLayer("points")) map.setFilter("points", filter);
-  }, [enabledBuckets]);
+  }, [enabledBuckets, styleReady]);
 
-  // Apply neighbor dimming
+  // Apply neighbor dimming + (for area) highlighted boost
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !data) return;
     if (!map.getSource("parishes")) return;
     if (neighborIds.size === 0) {
       data.features.forEach(f => {
-        map.setFeatureState({ source: "parishes", id: f.id as number }, { dimmed: false });
+        map.setFeatureState({ source: "parishes", id: f.id as number }, { dimmed: false, highlighted: false });
       });
     } else {
+      const boost = highlightMode === "area";
       data.features.forEach(f => {
         const id = f.id as number;
+        const inSet = neighborIds.has(id);
         map.setFeatureState({ source: "parishes", id },
-          { dimmed: !neighborIds.has(id) });
+          { dimmed: !inSet, highlighted: boost && inSet });
       });
     }
-  }, [neighborIds, data]);
+  }, [neighborIds, data, highlightMode]);
 
   function selectFeature(f: Feature) {
     setSelected(f);
+    // Selecting a new point should drop any prior area highlight; the user can
+    // re-invoke the 10 km radius from the card if needed.
+    setNeighborIds(new Set());
+    setHighlightMode(null);
     const map = mapRef.current;
     if (!map) return;
     (map.getSource("selected") as any)?.setData({
       type: "FeatureCollection", features: [f],
     });
+    (map.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
     map.flyTo({
       center: f.geometry.coordinates as [number, number],
       zoom: Math.max(map.getZoom(), 9),
@@ -461,6 +496,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function clearSelection() {
     setSelected(null);
     setNeighborIds(new Set());
+    setHighlightMode(null);
     const map = mapRef.current;
     if (!map) return;
     (map.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
@@ -472,6 +508,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     const [lon, lat] = selected.geometry.coordinates;
     const ids = new Set(neighborsWithin(points, lon, lat, 10));
     setNeighborIds(ids);
+    setHighlightMode("radius");
     const map = mapRef.current;
     (map?.getSource("radius") as any)?.setData({
       type: "FeatureCollection",
@@ -481,6 +518,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   function highlightArea(ids: number[]) {
     setNeighborIds(new Set(ids));
+    setHighlightMode("area");
     const map = mapRef.current;
     (map?.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
     (map?.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
@@ -497,8 +535,23 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         if (la > maxLat) maxLat = la;
       }
       if (minLon <= maxLon && minLat <= maxLat) {
-        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 10 });
+        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 11 });
+        // Cluster ends at zoom 7. Ensure we go past it so highlights are visible.
+        map.once("moveend", () => {
+          if (map.getZoom() < 7.5) map.easeTo({ zoom: 8, duration: 400 });
+        });
       }
+    }
+  }
+
+  function resetView() {
+    clearSelection();
+    setQuery("");
+    setShowResults(false);
+    setEnabledBuckets(new Set(BUCKET_ORDER));
+    const map = mapRef.current;
+    if (map) {
+      map.easeTo({ center: [43.5, 42.0], zoom: 6.4, duration: 700 });
     }
   }
 
@@ -510,8 +563,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
   }
 
+  // When the user clears the search input, also drop any area highlight.
+  useEffect(() => {
+    if (query.trim().length === 0 && highlightMode === "area") {
+      clearSelection();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   const sel = selected?.properties;
   const nearbyCount = Math.max(0, neighborIds.size - 1);
+  const mapLoading = !styleReady || !data;
 
   return (
     <div
@@ -523,6 +585,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         className="absolute inset-0"
         style={{ position: "absolute", inset: 0 }}
       />
+
+      {mapLoading && (
+        <div className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center bg-muted/30 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card/95 px-4 py-2 text-sm text-muted-foreground shadow-lg">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            {T.loadingMap}
+          </div>
+        </div>
+      )}
 
       {/* Top bar: search + lang */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-3 sm:p-4">
@@ -548,7 +619,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </button>
             )}
             {showResults && query.trim().length >= 2 && (
-              <div className="absolute mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl">
+              <div className="absolute mt-2 max-h-[70vh] w-full overflow-y-auto overscroll-contain rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl">
                 {(areaMatches.uezds.length > 0 || areaMatches.regions.length > 0) && (
                   <div className="border-b border-border bg-muted/40">
                     {areaMatches.uezds.map((u) => (
@@ -624,6 +695,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
+          <button
+            onClick={resetView}
+            title={T.resetView}
+            aria-label={T.resetView}
+            className="hidden items-center justify-center rounded-lg border border-border bg-card/95 p-2 text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent sm:flex"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+          </button>
           <button
             onClick={() => setUnlocatedOpen(true)}
             title={T.unlocatedTitle}
@@ -776,9 +855,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <MapPin className="mr-1.5 h-4 w-4" />
               {T.showRadius}
             </Button>
-            {neighborIds.size > 0 && (
+            {neighborIds.size > 0 && highlightMode === "radius" && (
               <p className="mt-2 text-xs text-muted-foreground">
                 {T.nearbyCount(nearbyCount)}
+              </p>
+            )}
+            {neighborIds.size > 0 && highlightMode === "area" && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {T.areaSelectedCount(neighborIds.size)}
               </p>
             )}
           </div>
