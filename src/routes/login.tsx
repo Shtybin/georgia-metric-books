@@ -72,6 +72,8 @@ function LoginPage() {
             <span className="mb-1 block text-xs text-muted-foreground">Email</span>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -82,6 +84,8 @@ function LoginPage() {
             <span className="mb-1 block text-xs text-muted-foreground">Пароль</span>
             <input
               type="password"
+              name="password"
+              autoComplete="current-password"
               required
               minLength={6}
               value={password}
