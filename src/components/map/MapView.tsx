@@ -367,6 +367,27 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       },
     });
 
+    // Top layer: only highlighted points (filtered by id list). Rendered above
+    // the base "points" layer so the selected area visually stands out, even
+    // when neighbours are densely packed.
+    map.addLayer({
+      id: "points-top",
+      type: "circle",
+      source: "parishes",
+      filter: ["in", ["id"], ["literal", []]],
+      paint: {
+        "circle-color": colorExpression,
+        "circle-radius": [
+          "interpolate", ["linear"], ["zoom"],
+          4, ["+", ["max", 5, ["*", ["sqrt", ["get", "coverage"]], 1.4]], 2],
+          10, ["+", ["max", 7, ["*", ["sqrt", ["get", "coverage"]], 2.0]], 2],
+        ],
+        "circle-stroke-color": "#0f172a",
+        "circle-stroke-width": 2,
+        "circle-opacity": 1,
+      },
+    });
+
 
 
 
@@ -409,7 +430,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           [e.point.x - hitbox, e.point.y - hitbox],
           [e.point.x + hitbox, e.point.y + hitbox],
         ],
-        { layers: ["points"] },
+        { layers: ["points-top", "points"] },
       );
       const orig = features[0] ? findOriginalFeature(features[0]) : findNearestFeature(e.point, hitbox);
       if (!orig) return;
@@ -460,6 +481,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       });
     }
   }, [neighborIds, data, highlightMode]);
+
+  // Toggle the "points-top" layer filter so it only renders highlighted ids
+  // (area mode). Stays empty in radius / no-highlight mode.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    if (!map.getLayer("points-top")) return;
+    const ids = highlightMode === "area" ? [...neighborIds] : [];
+    map.setFilter("points-top", ["in", ["id"], ["literal", ids]]);
+  }, [neighborIds, highlightMode, styleReady]);
 
   function selectFeature(f: Feature) {
     setSelected(f);
