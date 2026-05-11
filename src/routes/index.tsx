@@ -29,8 +29,25 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { lang } = Route.useSearch();
+  const navigate = useNavigate({ from: "/" });
   const T = t(lang as Lang);
   const L = T.landing;
+
+  // Auto-detect browser language on first visit (when ?lang= is absent from
+  // the URL). Defaults to "ru" if the system language isn't ru/en/ka.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("lang")) return; // user (or our redirect) already set it
+    const raw = (navigator.language || "ru").toLowerCase();
+    const base = raw.split("-")[0];
+    const detected: Lang =
+      base === "en" ? "en" : base === "ka" ? "ka" : "ru";
+    if (detected !== lang) {
+      navigate({ search: { lang: detected }, replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const features = useMemo(
     () => [
