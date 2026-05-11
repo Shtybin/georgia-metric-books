@@ -338,19 +338,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       },
     });
 
-    map.on("click", "clusters", (e) => {
-      const features = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
-      const clusterId = features[0]?.properties?.cluster_id;
-      const src = map.getSource("parishes") as any;
-      if (clusterId == null || !src?.getClusterExpansionZoom) return;
-      src.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
-        if (err) return;
-        const coords = (features[0].geometry as any).coordinates as [number, number];
-        map.easeTo({ center: coords, zoom: zoom + 0.2, duration: 600 });
-      });
-    });
-    map.on("mouseenter", "clusters", () => { map.getCanvas().style.cursor = "pointer"; });
-    map.on("mouseleave", "clusters", () => { map.getCanvas().style.cursor = ""; });
+
+
 
     const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
