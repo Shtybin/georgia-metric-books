@@ -1,6 +1,6 @@
-// Builds public/data/parishes.geojson + stats.json from RU + EN CSVs.
+// Builds public/data/parishes.geojson + stats.json from RU + EN (+ optional KA) CSVs.
 // Run with: bun scripts/build-geojson.ts
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 function parseCSV(text: string): string[][] {
@@ -72,25 +72,29 @@ function bucketOf(year: number): string {
 const root = process.cwd();
 const enRows = parseCSV(readFileSync(join(root, "scripts/data/en.csv"), "utf8"));
 const ruRows = parseCSV(readFileSync(join(root, "scripts/data/ru.csv"), "utf8"));
+const kaPath = join(root, "scripts/data/ka.csv");
+const kaRows: string[][] = existsSync(kaPath) ? parseCSV(readFileSync(kaPath, "utf8")) : [];
+const HAS_KA = kaRows.length > 0;
 
 enRows.shift(); ruRows.shift();
+if (HAS_KA) kaRows.shift();
 
 type RawRow = {
   lat: number; lon: number;
-  settlementEn: string; settlementRu: string;
-  churchEn: string; churchRu: string;
-  regionEn: string; regionRu: string;
-  uezdEn: string; uezdRu: string;
+  settlementEn: string; settlementRu: string; settlementKa: string;
+  churchEn: string; churchRu: string; churchKa: string;
+  regionEn: string; regionRu: string; regionKa: string;
+  uezdEn: string; uezdRu: string; uezdKa: string;
   yearsStr: string;
   startYear: number;
 };
 
 const raw: RawRow[] = [];
 type UnlocatedRaw = {
-  settlementEn: string; settlementRu: string;
-  churchEn: string; churchRu: string;
-  regionEn: string; regionRu: string;
-  uezdEn: string; uezdRu: string;
+  settlementEn: string; settlementRu: string; settlementKa: string;
+  churchEn: string; churchRu: string; churchKa: string;
+  regionEn: string; regionRu: string; regionKa: string;
+  uezdEn: string; uezdRu: string; uezdKa: string;
   yearsStr: string;
   startYear: number;
 };
@@ -102,6 +106,7 @@ const len = Math.max(enRows.length, ruRows.length);
 for (let i = 0; i < len; i++) {
   const en = enRows[i] || [];
   const ru = ruRows[i] || [];
+  const ka = (HAS_KA && kaRows[i]) || [];
   if (en.every(c => !c?.trim()) && ru.every(c => !c?.trim())) continue;
   total++;
 
@@ -113,10 +118,10 @@ for (let i = 0; i < len; i++) {
 
   if (!hasCoords) {
     unlocatedRaw.push({
-      settlementEn: (en[0] || "").trim(), settlementRu: (ru[0] || "").trim(),
-      churchEn: (en[1] || "").trim(),     churchRu: (ru[1] || "").trim(),
-      regionEn: (en[2] || "").trim(),     regionRu: (ru[2] || "").trim(),
-      uezdEn: (en[3] || "").trim(),       uezdRu: (ru[3] || "").trim(),
+      settlementEn: (en[0] || "").trim(), settlementRu: (ru[0] || "").trim(), settlementKa: (ka[0] || "").trim(),
+      churchEn: (en[1] || "").trim(),     churchRu: (ru[1] || "").trim(),     churchKa: (ka[1] || "").trim(),
+      regionEn: (en[2] || "").trim(),     regionRu: (ru[2] || "").trim(),     regionKa: (ka[2] || "").trim(),
+      uezdEn: (en[3] || "").trim(),       uezdRu: (ru[3] || "").trim(),       uezdKa: (ka[3] || "").trim(),
       yearsStr: en[4] || ru[4] || "",
       startYear: isFinite(startYearParsed) ? startYearParsed : 0,
     });
@@ -129,10 +134,10 @@ for (let i = 0; i < len; i++) {
 
   raw.push({
     lat, lon,
-    settlementEn: (en[0] || "").trim(), settlementRu: (ru[0] || "").trim(),
-    churchEn: (en[1] || "").trim(),     churchRu: (ru[1] || "").trim(),
-    regionEn: (en[2] || "").trim(),     regionRu: (ru[2] || "").trim(),
-    uezdEn: (en[3] || "").trim(),       uezdRu: (ru[3] || "").trim(),
+    settlementEn: (en[0] || "").trim(), settlementRu: (ru[0] || "").trim(), settlementKa: (ka[0] || "").trim(),
+    churchEn: (en[1] || "").trim(),     churchRu: (ru[1] || "").trim(),     churchKa: (ka[1] || "").trim(),
+    regionEn: (en[2] || "").trim(),     regionRu: (ru[2] || "").trim(),     regionKa: (ka[2] || "").trim(),
+    uezdEn: (en[3] || "").trim(),       uezdRu: (ru[3] || "").trim(),       uezdKa: (ka[3] || "").trim(),
     yearsStr: en[4] || ru[4] || "",
     startYear,
   });
@@ -186,21 +191,25 @@ for (const rows of groups.values()) {
       settlement: {
         en: firstNonEmpty(rows.map(r => r.settlementEn)),
         ru: firstNonEmpty(rows.map(r => r.settlementRu)),
+        ka: firstNonEmpty(rows.map(r => r.settlementKa)),
       },
       church: {
         en: joinUnique(rows.map(r => r.churchEn)),
         ru: joinUnique(rows.map(r => r.churchRu)),
+        ka: joinUnique(rows.map(r => r.churchKa)),
       },
       region: {
         en: firstNonEmpty(rows.map(r => r.regionEn)),
         ru: firstNonEmpty(rows.map(r => r.regionRu)),
+        ka: firstNonEmpty(rows.map(r => r.regionKa)),
       },
       uezd: {
         en: firstNonEmpty(rows.map(r => r.uezdEn)),
         ru: firstNonEmpty(rows.map(r => r.uezdRu)),
+        ka: firstNonEmpty(rows.map(r => r.uezdKa)),
       },
-      yearsRaw:   { en: yearsCompactRu, ru: yearsCompactRu },
-      missingRaw: { en: missingCompact, ru: missingCompact },
+      yearsRaw:   { en: yearsCompactRu, ru: yearsCompactRu, ka: yearsCompactRu },
+      missingRaw: { en: missingCompact, ru: missingCompact, ka: missingCompact },
       startYear,
       endYear,
       coverage: Math.max(1, yearsArr.length),
@@ -233,18 +242,22 @@ const unlocated = [...unlocatedGroups.values()].map((rows) => {
     settlement: {
       en: firstNonEmpty(rows.map(r => r.settlementEn)),
       ru: firstNonEmpty(rows.map(r => r.settlementRu)),
+      ka: firstNonEmpty(rows.map(r => r.settlementKa)),
     },
     church: {
       en: joinUnique(rows.map(r => r.churchEn)),
       ru: joinUnique(rows.map(r => r.churchRu)),
+      ka: joinUnique(rows.map(r => r.churchKa)),
     },
     region: {
       en: firstNonEmpty(rows.map(r => r.regionEn)),
       ru: firstNonEmpty(rows.map(r => r.regionRu)),
+      ka: firstNonEmpty(rows.map(r => r.regionKa)),
     },
     uezd: {
       en: firstNonEmpty(rows.map(r => r.uezdEn)),
       ru: firstNonEmpty(rows.map(r => r.uezdRu)),
+      ka: firstNonEmpty(rows.map(r => r.uezdKa)),
     },
     years: compactYears(yearsArr),
     startYear: startYears.length ? Math.min(...startYears) : null,

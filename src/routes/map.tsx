@@ -5,7 +5,7 @@ import { MapView } from "@/components/map/MapView";
 import type { Lang } from "@/lib/i18n";
 
 const searchSchema = z.object({
-  lang: fallback(z.enum(["ru", "en"]), "ru").default("ru"),
+  lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
 });
 
 export const Route = createFileRoute("/map")({

@@ -24,6 +24,27 @@ import { cn } from "@/lib/utils";
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
 
+// Set basemap label fields based on current UI language.
+// ka → name:ka with fallback to English/latin; en/ru → English/latin per
+// international conventions (Sukhumi, Tskhinvali, etc.).
+function applyBasemapLabels(map: MLMap, lang: Lang) {
+  try {
+    const style = map.getStyle();
+    const expr: any = lang === "ka"
+      ? ["coalesce", ["get", "name:ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
+      : ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]];
+    for (const layer of style.layers || []) {
+      if (layer.type !== "symbol") continue;
+      const layout: any = (layer as any).layout;
+      if (!layout || !("text-field" in layout)) continue;
+      map.setLayoutProperty(layer.id, "text-field", expr);
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn("[maplibre] label localization failed", e);
+  }
+}
+
 interface Stats {
   total: number;
   withCoords: number;
@@ -86,6 +107,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const uezdFilterRef = useRef("");
   useEffect(() => { regionFilterRef.current = regionFilter; }, [regionFilter]);
   useEffect(() => { uezdFilterRef.current = uezdFilter; }, [uezdFilter]);
+  // Ref so the once-registered map "load" handler reads the current language.
+  const langRef = useRef<Lang>(lang);
+  useEffect(() => {
+    langRef.current = lang;
+    const map = mapRef.current;
+    if (map && styleLoadedRef.current) applyBasemapLabels(map, lang);
+  }, [lang]);
 
   // Index for "find on map" jumps from the unlocated panel
   const locatedIndex = useMemo(() => {
@@ -247,27 +275,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
     map.on("load", () => {
       styleLoadedRef.current = true;
-      // Перевести все подписи на английский (с фолбэком на латиницу и
-      // локальное имя). Это даёт международно принятые формы топонимов —
-      // в т.ч. для Абхазии и Южной Осетии (Sukhumi, Tskhinvali и т.п.).
-      try {
-        const style = map.getStyle();
-        for (const layer of style.layers || []) {
-          if (layer.type !== "symbol") continue;
-          const layout: any = (layer as any).layout;
-          if (!layout || !("text-field" in layout)) continue;
-          map.setLayoutProperty(layer.id, "text-field", [
-            "coalesce",
-            ["get", "name:en"],
-            ["get", "name:latin"],
-            ["get", "name_en"],
-            ["get", "name"],
-          ]);
-        }
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.warn("[maplibre] label localization failed", e);
-      }
+      applyBasemapLabels(map, langRef.current);
       // Selected halo / radius sources are independent of parishes data — add them now.
       if (!map.getSource("selected")) {
         map.addSource("selected", {
@@ -843,7 +851,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             ) : null}
           </button>
           <div className="flex overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
-            {(["ru", "en"] as const).map(l => (
+            {(["ru", "en", "ka"] as const).map(l => (
               <button
                 key={l}
                 onClick={() => onLangChange(l)}
@@ -855,7 +863,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 )}
                 aria-pressed={lang === l}
               >
-                <Globe2 className="mr-1 inline h-3 w-3" />{l}
+                <Globe2 className="mr-1 inline h-3 w-3" />
+                {l === "ka" ? "ქარ" : l}
               </button>
             ))}
           </div>

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-type LocaleStr = { en: string; ru: string };
+type LocaleStr = { en: string; ru: string; ka?: string };
 export type UnlocatedItem = {
   settlement: LocaleStr;
   church: LocaleStr;
