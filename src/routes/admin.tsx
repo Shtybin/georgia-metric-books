@@ -67,6 +67,11 @@ function AdminPage() {
   const [reportsTotal, setReportsTotal] = useState<number | null>(null);
   const [reportsLoadingMore, setReportsLoadingMore] = useState(false);
   const REPORTS_PAGE = 25;
+  const [notesDraft, setNotesDraft] = useState<Record<string, string>>({});
+  const [notesSaving, setNotesSaving] = useState<Record<string, boolean>>({});
+  const [historyOpen, setHistoryOpen] = useState<Record<string, boolean>>({});
+  const [historyData, setHistoryData] = useState<Record<string, ReportHistoryEntry[]>>({});
+  const [historyLoading, setHistoryLoading] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     let mounted = true;
