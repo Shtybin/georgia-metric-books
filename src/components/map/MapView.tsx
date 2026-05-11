@@ -502,7 +502,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     // Если активен фильтр по региону/уезду — сохраняем подсветку района,
     // чтобы выбор отдельной точки не сбрасывал контекст. Иначе сбрасываем
     // прежний радиус/районную подсветку, как и раньше.
-    if (!regionFilter && !uezdFilter) {
+    if (!regionFilterRef.current && !uezdFilterRef.current) {
       setNeighborIds(new Set());
       setHighlightMode(null);
     }
