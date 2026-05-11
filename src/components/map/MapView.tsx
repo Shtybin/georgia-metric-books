@@ -7,6 +7,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
 import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
+import { ReportProblemButton } from "./ReportProblemButton";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
@@ -880,6 +881,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         excludeKeys={userPinnedKeys}
         onAddCoords={handleAddCoords}
       />
+
+      {!embed && <ReportProblemButton lang={lang} />}
 
       {userCoords.lastAction && (
         <div className="pointer-events-auto absolute left-1/2 top-16 z-20 flex max-w-[92vw] -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur sm:top-20">

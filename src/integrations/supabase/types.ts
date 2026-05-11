@@ -83,6 +83,48 @@ export type Database = {
         }
         Relationships: []
       }
+      problem_reports: {
+        Row: {
+          admin_notes: string | null
+          contact: string | null
+          created_at: string
+          id: string
+          lang: string | null
+          message: string
+          page_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["report_status"]
+          user_agent: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          contact?: string | null
+          created_at?: string
+          id?: string
+          lang?: string | null
+          message: string
+          page_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          user_agent?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          contact?: string | null
+          created_at?: string
+          id?: string
+          lang?: string | null
+          message?: string
+          page_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -119,6 +161,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      report_status: "new" | "in_progress" | "resolved"
       suggestion_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -248,6 +291,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      report_status: ["new", "in_progress", "resolved"],
       suggestion_status: ["pending", "approved", "rejected"],
     },
   },

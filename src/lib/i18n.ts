@@ -66,6 +66,15 @@ export const STRINGS = {
     docsBodyHtml:
       'Метрические книги Грузии находятся в Национальном историческом архиве Грузии (фонд 489, опись 6). Списки метрических книг — на сайте <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">архива</a>. Как начать работу с архивом — читайте на <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">сайте</a>.',
     close: "Закрыть",
+    reportButton: "Сообщить о проблеме",
+    reportTitle: "Сообщить о проблеме",
+    reportHint: "Опишите проблему: ошибка на карте, неверные координаты, опечатка в названии, идея улучшения. Контакт — по желанию.",
+    reportPlaceholder: "Что не так? Что предлагаете?",
+    reportContactLabel: "Email или Telegram (по желанию)",
+    reportSend: "Отправить",
+    reportSent: "Спасибо! Сообщение отправлено.",
+    reportEmpty: "Введите текст сообщения.",
+    reportError: "Не удалось отправить. Попробуйте позже.",
     landing: {
       eyebrow: "Архивный атлас · Archival Atlas · არქივის ატლასი",
       h1: "Метрические книги Грузии",
@@ -151,6 +160,15 @@ export const STRINGS = {
     docsBodyHtml:
       'The parish registers of Georgia are kept at the National Historical Archive of Georgia (fund 489, inventory 6). A catalogue of the registers is available on the <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">archive</a> website. To learn how to start working with the archive, see the <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">website</a>.',
     close: "Close",
+    reportButton: "Report a problem",
+    reportTitle: "Report a problem",
+    reportHint: "Describe the issue: a map bug, wrong coordinates, a typo in a name, an idea for improvement. Contact is optional.",
+    reportPlaceholder: "What is wrong? What do you suggest?",
+    reportContactLabel: "Email or Telegram (optional)",
+    reportSend: "Send",
+    reportSent: "Thank you! Your report was sent.",
+    reportEmpty: "Please enter a message.",
+    reportError: "Could not send. Please try again later.",
     landing: {
       eyebrow: "Архивный атлас · Archival Atlas · არქივის ატლასი",
       h1: "Georgian Parish Registers",
@@ -236,6 +254,15 @@ export const STRINGS = {
     docsBodyHtml:
       'საქართველოს მეტრიკული წიგნები ინახება საქართველოს ეროვნულ ისტორიულ არქივში (ფონდი 489, აღწერა 6). მეტრიკული წიგნების სია — <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">არქივის</a> საიტზე. როგორ დავიწყოთ მუშაობა არქივში — იხილეთ <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">საიტზე</a>.',
     close: "დახურვა",
+    reportButton: "პრობლემის შეტყობინება",
+    reportTitle: "პრობლემის შეტყობინება",
+    reportHint: "აღწერეთ პრობლემა: შეცდომა რუკაზე, არასწორი კოორდინატები, ბეჭდური შეცდომა სახელში, გაუმჯობესების იდეა. კონტაქტი — სურვილისამებრ.",
+    reportPlaceholder: "რა არის არასწორად? რას გვთავაზობთ?",
+    reportContactLabel: "ელფოსტა ან Telegram (სურვილისამებრ)",
+    reportSend: "გაგზავნა",
+    reportSent: "გმადლობთ! შეტყობინება გაიგზავნა.",
+    reportEmpty: "გთხოვთ, შეიყვანოთ ტექსტი.",
+    reportError: "გაგზავნა ვერ მოხერხდა. სცადეთ მოგვიანებით.",
     landing: {
       eyebrow: "Архивный атлас · Archival Atlas · არქივის ატლასი",
       h1: "საქართველოს მეტრიკული წიგნები",
