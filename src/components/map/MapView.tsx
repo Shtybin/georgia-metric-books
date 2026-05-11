@@ -52,6 +52,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
+  const [docsOpen, setDocsOpen] = useState(false);
   const userCoords = useUserCoords();
   const T = t(lang);
 
