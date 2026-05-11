@@ -445,31 +445,33 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   // Bucket filter
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !styleReady) return;
     const filter: any = ["all",
       ["!", ["has", "point_count"]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
     ];
     if (map.getLayer("points")) map.setFilter("points", filter);
-  }, [enabledBuckets]);
+  }, [enabledBuckets, styleReady]);
 
-  // Apply neighbor dimming
+  // Apply neighbor dimming + (for area) highlighted boost
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !data) return;
     if (!map.getSource("parishes")) return;
     if (neighborIds.size === 0) {
       data.features.forEach(f => {
-        map.setFeatureState({ source: "parishes", id: f.id as number }, { dimmed: false });
+        map.setFeatureState({ source: "parishes", id: f.id as number }, { dimmed: false, highlighted: false });
       });
     } else {
+      const boost = highlightMode === "area";
       data.features.forEach(f => {
         const id = f.id as number;
+        const inSet = neighborIds.has(id);
         map.setFeatureState({ source: "parishes", id },
-          { dimmed: !neighborIds.has(id) });
+          { dimmed: !inSet, highlighted: boost && inSet });
       });
     }
-  }, [neighborIds, data]);
+  }, [neighborIds, data, highlightMode]);
 
   function selectFeature(f: Feature) {
     setSelected(f);
@@ -489,6 +491,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function clearSelection() {
     setSelected(null);
     setNeighborIds(new Set());
+    setHighlightMode(null);
     const map = mapRef.current;
     if (!map) return;
     (map.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
@@ -500,6 +503,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     const [lon, lat] = selected.geometry.coordinates;
     const ids = new Set(neighborsWithin(points, lon, lat, 10));
     setNeighborIds(ids);
+    setHighlightMode("radius");
     const map = mapRef.current;
     (map?.getSource("radius") as any)?.setData({
       type: "FeatureCollection",
@@ -509,6 +513,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   function highlightArea(ids: number[]) {
     setNeighborIds(new Set(ids));
+    setHighlightMode("area");
     const map = mapRef.current;
     (map?.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
     (map?.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
@@ -525,8 +530,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         if (la > maxLat) maxLat = la;
       }
       if (minLon <= maxLon && minLat <= maxLat) {
-        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 10 });
+        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 9 });
       }
+    }
+  }
+
+  function resetView() {
+    clearSelection();
+    setQuery("");
+    setShowResults(false);
+    setEnabledBuckets(new Set(BUCKET_ORDER));
+    const map = mapRef.current;
+    if (map) {
+      map.easeTo({ center: [43.5, 42.0], zoom: 6.4, duration: 700 });
     }
   }
 
