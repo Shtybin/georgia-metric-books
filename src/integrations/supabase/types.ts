@@ -83,6 +83,44 @@ export type Database = {
         }
         Relationships: []
       }
+      problem_report_history: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          new_status: Database["public"]["Enums"]["report_status"]
+          note: string | null
+          old_status: Database["public"]["Enums"]["report_status"] | null
+          report_id: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_status: Database["public"]["Enums"]["report_status"]
+          note?: string | null
+          old_status?: Database["public"]["Enums"]["report_status"] | null
+          report_id: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_status?: Database["public"]["Enums"]["report_status"]
+          note?: string | null
+          old_status?: Database["public"]["Enums"]["report_status"] | null
+          report_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "problem_report_history_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "problem_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       problem_reports: {
         Row: {
           admin_notes: string | null

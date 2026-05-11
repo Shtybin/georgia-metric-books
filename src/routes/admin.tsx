@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2 } from "lucide-react";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Админ — модерация" }] }),
@@ -21,6 +21,16 @@ interface ProblemReport {
   lat: number | null;
   lon: number | null;
   zoom: number | null;
+  admin_notes: string | null;
+}
+
+interface ReportHistoryEntry {
+  id: string;
+  changed_at: string;
+  changed_by: string | null;
+  old_status: "new" | "in_progress" | "resolved" | null;
+  new_status: "new" | "in_progress" | "resolved";
+  note: string | null;
 }
 
 interface Suggestion {
@@ -57,6 +67,11 @@ function AdminPage() {
   const [reportsTotal, setReportsTotal] = useState<number | null>(null);
   const [reportsLoadingMore, setReportsLoadingMore] = useState(false);
   const REPORTS_PAGE = 25;
+  const [notesDraft, setNotesDraft] = useState<Record<string, string>>({});
+  const [notesSaving, setNotesSaving] = useState<Record<string, boolean>>({});
+  const [historyOpen, setHistoryOpen] = useState<Record<string, boolean>>({});
+  const [historyData, setHistoryData] = useState<Record<string, ReportHistoryEntry[]>>({});
+  const [historyLoading, setHistoryLoading] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     let mounted = true;
@@ -108,7 +123,7 @@ function AdminPage() {
     else setReportsLoading(true);
     let q = supabase
       .from("problem_reports")
-      .select("id, created_at, message, contact, page_url, lang, user_agent, status, lat, lon, zoom", { count: "exact" })
+      .select("id, created_at, message, contact, page_url, lang, user_agent, status, lat, lon, zoom, admin_notes", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(offset, offset + REPORTS_PAGE - 1);
     if (reportFilter !== "all") q = q.eq("status", reportFilter);
@@ -140,12 +155,51 @@ function AdminPage() {
   }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
+    const { data: sess } = await supabase.auth.getSession();
+    const reviewer = sess.session?.user.id ?? null;
     const { error } = await supabase
       .from("problem_reports")
-      .update({ status, reviewed_at: new Date().toISOString() })
+      .update({ status, reviewed_at: new Date().toISOString(), reviewed_by: reviewer })
       .eq("id", id);
     if (error) { alert(error.message); return; }
     setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+    // If history panel is open, refresh it
+    if (historyOpen[id]) loadHistory(id);
+  }
+
+  async function saveNotes(id: string) {
+    const value = (notesDraft[id] ?? "").slice(0, 4000);
+    setNotesSaving((s) => ({ ...s, [id]: true }));
+    const { error } = await supabase
+      .from("problem_reports")
+      .update({ admin_notes: value || null })
+      .eq("id", id);
+    setNotesSaving((s) => ({ ...s, [id]: false }));
+    if (error) { alert(error.message); return; }
+    setReports((prev) => prev.map((r) => (r.id === id ? { ...r, admin_notes: value || null } : r)));
+    setNotesDraft((d) => {
+      const next = { ...d };
+      delete next[id];
+      return next;
+    });
+  }
+
+  async function loadHistory(id: string) {
+    setHistoryLoading((s) => ({ ...s, [id]: true }));
+    const { data, error } = await supabase
+      .from("problem_report_history")
+      .select("id, changed_at, changed_by, old_status, new_status, note")
+      .eq("report_id", id)
+      .order("changed_at", { ascending: false });
+    setHistoryLoading((s) => ({ ...s, [id]: false }));
+    if (error) { console.error(error); return; }
+    setHistoryData((h) => ({ ...h, [id]: (data as ReportHistoryEntry[]) || [] }));
+  }
+
+  function toggleHistory(id: string) {
+    const willOpen = !historyOpen[id];
+    setHistoryOpen((s) => ({ ...s, [id]: willOpen }));
+    if (willOpen && !historyData[id]) loadHistory(id);
   }
 
   async function deleteReport(id: string) {
@@ -434,6 +488,80 @@ function AdminPage() {
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </div>
+                  </div>
+
+                  <div className="mt-3 border-t border-border pt-3">
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Заметки модератора
+                    </label>
+                    <textarea
+                      value={notesDraft[r.id] ?? r.admin_notes ?? ""}
+                      onChange={(e) =>
+                        setNotesDraft((d) => ({ ...d, [r.id]: e.target.value.slice(0, 4000) }))
+                      }
+                      rows={2}
+                      maxLength={4000}
+                      placeholder="Внутренние заметки видны только администраторам…"
+                      className="w-full rounded-md border border-border bg-background p-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    <div className="mt-1 flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleHistory(r.id)}
+                        className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+                      >
+                        <History className="h-3 w-3" />
+                        {historyOpen[r.id] ? "Скрыть историю" : "История изменений"}
+                      </button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={
+                          notesSaving[r.id] ||
+                          notesDraft[r.id] === undefined ||
+                          (notesDraft[r.id] ?? "") === (r.admin_notes ?? "")
+                        }
+                        onClick={() => saveNotes(r.id)}
+                      >
+                        {notesSaving[r.id] ? "Сохранение…" : "Сохранить заметки"}
+                      </Button>
+                    </div>
+
+                    {historyOpen[r.id] && (
+                      <div className="mt-2 rounded-md bg-muted/40 p-2">
+                        {historyLoading[r.id] ? (
+                          <p className="text-[11px] text-muted-foreground">Загрузка истории…</p>
+                        ) : (historyData[r.id]?.length ?? 0) === 0 ? (
+                          <p className="text-[11px] text-muted-foreground">История пуста.</p>
+                        ) : (
+                          <ol className="space-y-1 text-[11px]">
+                            {historyData[r.id].map((h) => {
+                              const label = (s: ReportHistoryEntry["new_status"] | null) =>
+                                s === "new" ? "новое" : s === "in_progress" ? "в работе" : s === "resolved" ? "решено" : "—";
+                              return (
+                                <li key={h.id} className="flex flex-wrap items-baseline gap-x-2">
+                                  <span className="tabular-nums text-muted-foreground">
+                                    {new Date(h.changed_at).toLocaleString("ru-RU")}
+                                  </span>
+                                  <span>
+                                    {h.old_status ? (
+                                      <>
+                                        <span className="text-muted-foreground">{label(h.old_status)}</span>
+                                        {" → "}
+                                      </>
+                                    ) : (
+                                      <span className="text-muted-foreground">создано · </span>
+                                    )}
+                                    <span className="font-medium">{label(h.new_status)}</span>
+                                  </span>
+                                  {h.note && <span className="text-muted-foreground">«{h.note}»</span>}
+                                </li>
+                              );
+                            })}
+                          </ol>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </li>
               ))}
