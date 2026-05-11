@@ -272,6 +272,19 @@ function AdminPage() {
     return <main className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">Проверка доступа…</main>;
   }
 
+  const diagPanel = (
+    <DiagnosticsPanel
+      open={diagOpen}
+      onToggle={() => setDiagOpen((v) => !v)}
+      isAdmin={isAdmin}
+      diagnostics={diagnostics}
+      onRefresh={async () => {
+        const { admin } = await runDiagnostics();
+        setIsAdmin(admin);
+      }}
+    />
+  );
+
   if (!isAdmin) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
@@ -287,6 +300,7 @@ function AdminPage() {
             <Button size="sm" variant="ghost">На карту</Button>
           </Link>
         </div>
+        <div className="w-full max-w-xl text-left">{diagPanel}</div>
       </main>
     );
   }
@@ -310,6 +324,7 @@ function AdminPage() {
             </Button>
           </div>
         </div>
+        <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
           {(["coords", "reports"] as const).map((k) => (
             <button
