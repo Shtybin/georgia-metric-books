@@ -69,10 +69,7 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
   }, [open]);
 
   // ===== Collision-aware anchor =====
-  // The button picks among 4 corners and falls back to the corner with the
-  // smallest overlap against sibling overlays in the same map container.
-  type Anchor = "br" | "bl" | "tr" | "tl";
-  const ANCHOR_PRIORITY: Anchor[] = ["br", "bl", "tr", "tl"];
+  // Pure picker logic lives in src/lib/collision-anchor.ts (unit-tested).
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const [anchor, setAnchor] = useState<Anchor>("br");
 
@@ -81,13 +78,6 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
     const parent = btn?.parentElement;
     if (!btn || !parent) return;
 
-    const overlap = (a: { left: number; right: number; top: number; bottom: number }, b: DOMRect) =>
-      !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
-    const overlapArea = (a: { left: number; right: number; top: number; bottom: number }, b: DOMRect) => {
-      const x = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
-      const y = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
-      return x * y;
-    };
 
     // Portal selectors that may host tooltips/popovers/dropdowns outside the
     // map container (Radix, MapLibre popups, sonner toasts, …).
