@@ -106,6 +106,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const handleAddCoords = (item: UnlocatedItem, lat: number, lon: number) => {
     userCoords.add(item, lat, lon);
     setUnlocatedOpen(false);
+    // Fire-and-forget submission to community moderation queue.
+    submitSuggestion(item, lat, lon)
+      .then(() => setSubmitToast(T.suggestionSent))
+      .catch((e) => console.error("[submitSuggestion]", e));
     // Build a synthetic feature now so we can fly there immediately,
     // before React re-renders with the merged dataset.
     const tempId = 1_000_000 + Date.now();
@@ -115,6 +119,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     ) as Feature;
     setTimeout(() => selectFeature(feat), 60);
   };
+
+  useEffect(() => {
+    if (!submitToast) return;
+    const id = setTimeout(() => setSubmitToast(null), 4000);
+    return () => clearTimeout(id);
+  }, [submitToast]);
 
   // Load data once
   useEffect(() => {
