@@ -511,25 +511,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     (map?.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
     (map?.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
     setSelected(null);
-    if (data && ids.length > 0 && map) {
-      const idSet = new Set(ids);
-      let minLon = 180, maxLon = -180, minLat = 90, maxLat = -90;
-      for (const f of data.features) {
-        if (!idSet.has(f.id as number)) continue;
-        const [lo, la] = f.geometry.coordinates;
-        if (lo < minLon) minLon = lo;
-        if (lo > maxLon) maxLon = lo;
-        if (la < minLat) minLat = la;
-        if (la > maxLat) maxLat = la;
-      }
-      if (minLon <= maxLon && minLat <= maxLat) {
-        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 11 });
-        // Cluster ends at zoom 7. Ensure we go past it so highlights are visible.
-        map.once("moveend", () => {
-          if (map.getZoom() < 7.5) map.easeTo({ zoom: 8, duration: 400 });
-        });
-      }
-    }
+    // Карту намеренно не перемещаем при выборе уезда/региона —
+    // пользователь сам решит, приближать ли подсвеченный кластер.
   }
 
   function resetView() {
