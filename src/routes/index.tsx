@@ -44,7 +44,24 @@ function Index() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
-        <p className="font-serif text-sm uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="flex gap-2 text-xs">
+          {(["ru", "en", "ka"] as const).map((l) => (
+            <Link
+              key={l}
+              to="/"
+              search={{ lang: l }}
+              className={
+                "rounded-full border px-2.5 py-1 uppercase tracking-wide " +
+                (lang === l
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border text-muted-foreground hover:bg-accent")
+              }
+            >
+              {l === "ka" ? "ქარ" : l}
+            </Link>
+          ))}
+        </div>
+        <p className="mt-6 font-serif text-sm uppercase tracking-[0.2em] text-muted-foreground">
           {L.eyebrow}
         </p>
         <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight sm:text-6xl">
@@ -77,23 +94,6 @@ function Index() {
           </Link>
         </div>
 
-        <div className="mt-4 flex gap-2 text-xs">
-          {(["ru", "en", "ka"] as const).map((l) => (
-            <Link
-              key={l}
-              to="/"
-              search={{ lang: l }}
-              className={
-                "rounded-full border px-2.5 py-1 uppercase tracking-wide " +
-                (lang === l
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border text-muted-foreground hover:bg-accent")
-              }
-            >
-              {l === "ka" ? "ქარ" : l}
-            </Link>
-          ))}
-        </div>
 
         <div className="mt-12 rounded-2xl border border-border bg-card p-5 sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
