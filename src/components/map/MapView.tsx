@@ -927,14 +927,23 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </div>
             <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
               <dt className="text-muted-foreground">{T.total}</dt>
-              <dd className="tabular-nums">{stats.total.toLocaleString()}</dd>
+              <dd className="tabular-nums">{(stats.uniqueLocations ?? stats.total).toLocaleString()}</dd>
               <dt className="text-muted-foreground">{T.withCoords}</dt>
               <dd className="tabular-nums">
-                {stats.withCoords.toLocaleString()} ({Math.round(stats.withCoords / stats.total * 100)}%)
+                {(() => {
+                  const total = stats.uniqueLocations ?? stats.total;
+                  const without = stats.unlocatedGroups ?? stats.withoutCoords;
+                  const withC = Math.max(0, total - without);
+                  return `${withC.toLocaleString()} (${Math.round(withC / total * 100)}%)`;
+                })()}
               </dd>
               <dt className="text-muted-foreground">{T.withoutCoords}</dt>
               <dd className="tabular-nums">
-                {stats.withoutCoords.toLocaleString()} ({Math.round(stats.withoutCoords / stats.total * 100)}%)
+                {(() => {
+                  const total = stats.uniqueLocations ?? stats.total;
+                  const without = stats.unlocatedGroups ?? stats.withoutCoords;
+                  return `${without.toLocaleString()} (${Math.round(without / total * 100)}%)`;
+                })()}
               </dd>
               <dt className="text-muted-foreground">{T.confidence}</dt>
               <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
