@@ -186,9 +186,11 @@
   }
 }
 
-/* Prevent the page from scrolling / expanding past the viewport when
- * fixed-position overlays (sheets, dialogs, the report toast) mount. */
-html, body {
+/* Lock the viewport to full height ONLY on routes that need a fullscreen
+ * map canvas (the /map and /embed pages set body[data-fullscreen-map]).
+ * Other routes (landing, login, admin) must remain normally scrollable. */
+body[data-fullscreen-map="true"],
+html:has(body[data-fullscreen-map="true"]) {
   overflow: hidden;
   overscroll-behavior: none;
   height: 100%;

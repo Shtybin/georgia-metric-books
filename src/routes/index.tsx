@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, MapPin, Layers, Globe2 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { t, type Lang, STRINGS } from "@/lib/i18n";
@@ -29,8 +29,25 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { lang } = Route.useSearch();
+  const navigate = useNavigate({ from: "/" });
   const T = t(lang as Lang);
   const L = T.landing;
+
+  // Auto-detect browser language on first visit (when ?lang= is absent from
+  // the URL). Defaults to "ru" if the system language isn't ru/en/ka.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("lang")) return; // user (or our redirect) already set it
+    const raw = (navigator.language || "ru").toLowerCase();
+    const base = raw.split("-")[0];
+    const detected: Lang =
+      base === "en" ? "en" : base === "ka" ? "ka" : "ru";
+    if (detected !== lang) {
+      navigate({ search: { lang: detected }, replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const features = useMemo(
     () => [

@@ -117,6 +117,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const dataRef = useRef<FC | null>(null);
   useEffect(() => { dataRef.current = data; }, [data]);
+  // Lock html/body to viewport height only while the fullscreen map is mounted.
+  useEffect(() => {
+    document.body.dataset.fullscreenMap = "true";
+    return () => { delete document.body.dataset.fullscreenMap; };
+  }, []);
   // Refs so the (once-registered) map click handler reads up-to-date values.
   const regionFilterRef = useRef("");
   const uezdFilterRef = useRef("");
