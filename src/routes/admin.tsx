@@ -48,6 +48,12 @@ function AdminPage() {
   const [reportFilter, setReportFilter] = useState<"new" | "in_progress" | "resolved" | "all">("new");
   const [reports, setReports] = useState<ProblemReport[]>([]);
   const [reportsLoading, setReportsLoading] = useState(false);
+  const [reportSearch, setReportSearch] = useState("");
+  const [reportSearchDebounced, setReportSearchDebounced] = useState("");
+  const [reportsHasMore, setReportsHasMore] = useState(false);
+  const [reportsTotal, setReportsTotal] = useState<number | null>(null);
+  const [reportsLoadingMore, setReportsLoadingMore] = useState(false);
+  const REPORTS_PAGE = 25;
 
   useEffect(() => {
     let mounted = true;
@@ -88,25 +94,47 @@ function AdminPage() {
     setLoading(false);
   }
 
-  async function loadReports() {
-    setReportsLoading(true);
+  function escapeForOr(s: string) {
+    // Postgrest .or() uses commas/parens as separators; also escape % and _
+    return s.replace(/[(),%_*]/g, " ").trim();
+  }
+
+  async function loadReports(opts: { append?: boolean; offset?: number } = {}) {
+    const offset = opts.offset ?? 0;
+    if (opts.append) setReportsLoadingMore(true);
+    else setReportsLoading(true);
     let q = supabase
       .from("problem_reports")
-      .select("id, created_at, message, contact, page_url, lang, user_agent, status")
+      .select("id, created_at, message, contact, page_url, lang, user_agent, status", { count: "exact" })
       .order("created_at", { ascending: false })
-      .limit(500);
+      .range(offset, offset + REPORTS_PAGE - 1);
     if (reportFilter !== "all") q = q.eq("status", reportFilter);
-    const { data, error } = await q;
+    const term = escapeForOr(reportSearchDebounced);
+    if (term) {
+      const pat = `%${term}%`;
+      q = q.or(`message.ilike.${pat},contact.ilike.${pat}`);
+    }
+    const { data, error, count } = await q;
     if (error) console.error(error);
-    setReports((data as ProblemReport[]) || []);
-    setReportsLoading(false);
+    const rows = (data as ProblemReport[]) || [];
+    setReports((prev) => (opts.append ? [...prev, ...rows] : rows));
+    setReportsTotal(count ?? null);
+    setReportsHasMore(rows.length === REPORTS_PAGE && (count == null || offset + rows.length < count));
+    if (opts.append) setReportsLoadingMore(false);
+    else setReportsLoading(false);
   }
+
+  // Debounce search input
+  useEffect(() => {
+    const t = setTimeout(() => setReportSearchDebounced(reportSearch.trim()), 300);
+    return () => clearTimeout(t);
+  }, [reportSearch]);
 
   useEffect(() => {
     if (isAdmin && tab === "coords") load();
     if (isAdmin && tab === "reports") loadReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin, tab, filter, reportFilter]);
+  }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
     const { error } = await supabase
@@ -122,6 +150,7 @@ function AdminPage() {
     const { error } = await supabase.from("problem_reports").delete().eq("id", id);
     if (error) { alert(error.message); return; }
     setReports((prev) => prev.filter((r) => r.id !== id));
+    setReportsTotal((t) => (t != null ? Math.max(0, t - 1) : t));
   }
 
   async function setStatus(id: string, status: "approved" | "rejected") {
@@ -203,7 +232,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        <div className="mx-auto flex max-w-6xl gap-1 px-4 py-2 text-xs">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -217,18 +246,36 @@ function AdminPage() {
                   {s === "pending" ? "Ожидают" : s === "approved" ? "Одобрены" : s === "rejected" ? "Отклонены" : "Все"}
                 </button>
               ))
-            : (["new", "in_progress", "resolved", "all"] as const).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setReportFilter(s)}
-                  className={
-                    "rounded-md px-3 py-1 transition-colors " +
-                    (reportFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent")
-                  }
-                >
-                  {s === "new" ? "Новые" : s === "in_progress" ? "В работе" : s === "resolved" ? "Решено" : "Все"}
-                </button>
-              ))}
+            : (
+              <>
+                {(["new", "in_progress", "resolved", "all"] as const).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setReportFilter(s)}
+                    className={
+                      "rounded-md px-3 py-1 transition-colors " +
+                      (reportFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent")
+                    }
+                  >
+                    {s === "new" ? "Новые" : s === "in_progress" ? "В работе" : s === "resolved" ? "Решено" : "Все"}
+                  </button>
+                ))}
+                <div className="ml-auto flex items-center gap-2">
+                  <input
+                    type="search"
+                    value={reportSearch}
+                    onChange={(e) => setReportSearch(e.target.value)}
+                    placeholder="Поиск по тексту или контакту…"
+                    className="w-56 rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  {reportsTotal != null && (
+                    <span className="text-muted-foreground tabular-nums">
+                      {reports.length} / {reportsTotal}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
         </div>
       </header>
 
@@ -351,6 +398,18 @@ function AdminPage() {
                 </li>
               ))}
             </ul>
+          )}
+          {!reportsLoading && reportsHasMore && (
+            <div className="mt-3 flex justify-center">
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={reportsLoadingMore}
+                onClick={() => loadReports({ append: true, offset: reports.length })}
+              >
+                {reportsLoadingMore ? "Загрузка…" : "Показать ещё"}
+              </Button>
+            </div>
           )}
         </section>
       )}
