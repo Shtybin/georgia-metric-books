@@ -834,7 +834,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               aria-label={T.uezdLabel}
               className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <option value="">{T.allUezds}</option>
+              <option value="">{isMobile ? T.uezdLabel : T.allUezds}</option>
               {uezdsForRegion.map((u) => (
                 <option key={u.key} value={u.key}>{u.label}</option>
               ))}
