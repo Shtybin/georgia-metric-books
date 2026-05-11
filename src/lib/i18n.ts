@@ -107,6 +107,11 @@ export const STRINGS = {
     invalidCoords: "Enter latitude (-90…90) and longitude (-180…180)",
     coordsAdded: (name: string) => `Coordinates added: ${name}`,
     undo: "Undo",
+    docsButton: "Where to find documents?",
+    docsTitle: "Where to find the documents?",
+    docsBodyHtml:
+      'The parish registers of Georgia are kept at the National Historical Archive of Georgia (fund 489, inventory 6). A catalogue of the registers is available on the <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">archive</a> website. To learn how to start working with the archive, see the <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">website</a>.',
+    close: "Close",
   },
 } as const;
 
