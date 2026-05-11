@@ -687,6 +687,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
         <div className="pointer-events-auto flex items-center gap-2">
           <button
+            onClick={resetView}
+            title={T.resetView}
+            aria-label={T.resetView}
+            className="hidden items-center justify-center rounded-lg border border-border bg-card/95 p-2 text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent sm:flex"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+          </button>
+          <button
             onClick={() => setUnlocatedOpen(true)}
             title={T.unlocatedTitle}
             className="flex items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
