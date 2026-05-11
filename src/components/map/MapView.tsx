@@ -194,6 +194,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return { uezds: filt(areaIndex.uezds), regions: filt(areaIndex.regions) };
   }, [areaIndex, query]);
 
+  // Sorted region/uezd lists for the dropdown filters under the search bar.
+  const regionList = useMemo(
+    () => [...areaIndex.regions].sort((a, b) => a.label.localeCompare(b.label)),
+    [areaIndex],
+  );
+  const uezdList = useMemo(
+    () => [...areaIndex.uezds].sort((a, b) => a.label.localeCompare(b.label)),
+    [areaIndex],
+  );
+  // When a region is chosen, restrict the uezd dropdown to uezds inside it.
+  const uezdsForRegion = useMemo(() => {
+    if (!regionFilter) return uezdList;
+    const region = areaIndex.regions.find((r) => r.key === regionFilter);
+    if (!region) return uezdList;
+    const regionIds = new Set(region.ids);
+    return uezdList.filter((u) => u.ids.some((id) => regionIds.has(id)));
+  }, [uezdList, regionFilter, areaIndex]);
+
   const points = useMemo(() => {
     if (!data) return [];
     return data.features.map(f => ({
