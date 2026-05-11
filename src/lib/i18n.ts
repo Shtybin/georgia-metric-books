@@ -5,6 +5,7 @@ export const STRINGS = {
     title: "Метрические книги Грузии",
     subtitle: "Архивный атлас 1819–1930",
     search: "Поиск селения, церкви, уезда…",
+    searchShort: "Поиск",
     legend: "Период начала книги",
     bucket: {
       "pre-1820": "до 1820",
@@ -104,6 +105,7 @@ export const STRINGS = {
     title: "Georgian Parish Registers",
     subtitle: "Archival atlas 1819–1930",
     search: "Search settlement, church, uezd…",
+    searchShort: "Search",
     legend: "Start-year period",
     bucket: {
       "pre-1820": "before 1820",
@@ -203,6 +205,7 @@ export const STRINGS = {
     title: "საქართველოს მეტრიკული წიგნები",
     subtitle: "არქივის ატლასი 1819–1930",
     search: "სოფლის, ეკლესიის, მაზრის ძიება…",
+    searchShort: "ძიება",
     legend: "წიგნის დაწყების პერიოდი",
     bucket: {
       "pre-1820": "1820-მდე",
