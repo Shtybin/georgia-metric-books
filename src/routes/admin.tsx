@@ -82,12 +82,14 @@ function AdminPage() {
         return;
       }
       setEmail(sess.session.user.email ?? null);
-      const { data: roles, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", sess.session.user.id);
+      // Use the SECURITY DEFINER RPC so the check works regardless of RLS
+      // visibility on user_roles for the current session.
+      const { data: isAdminRpc, error } = await supabase.rpc("has_role", {
+        _user_id: sess.session.user.id,
+        _role: "admin",
+      });
       if (!mounted) return;
-      const admin = !error && (roles ?? []).some((r: any) => r.role === "admin");
+      const admin = !error && isAdminRpc === true;
       setIsAdmin(admin);
       setChecking(false);
     })();
