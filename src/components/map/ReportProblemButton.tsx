@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
@@ -13,14 +13,60 @@ interface Props {
   getMapState?: () => { lat: number; lon: number; zoom: number } | null;
 }
 
+const STORAGE_KEY = "pr_submits_v1";
+const MIN_FORM_MS = 3000;
+const COOLDOWN_MS = 30_000;
+const HOURLY_LIMIT = 5;
+
+function readHistory(): number[] {
+  if (typeof localStorage === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr.filter((n) => typeof n === "number") : [];
+  } catch {
+    return [];
+  }
+}
+function writeHistory(arr: number[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  } catch {
+    /* ignore */
+  }
+}
+
 export function ReportProblemButton({ lang, getMapState }: Props) {
   const T = t(lang);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState("");
+  const [honeypot, setHoneypot] = useState(""); // hidden field — bots fill it
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentToast, setSentToast] = useState<string | null>(null);
+  const openedAtRef = useRef<number>(0);
+  const [captchaSeed, setCaptchaSeed] = useState(0);
+
+  // Math captcha numbers; regenerate when dialog opens or seed changes
+  const captcha = useMemo(() => {
+    const a = 1 + Math.floor(Math.random() * 8);
+    const b = 1 + Math.floor(Math.random() * 8);
+    return { a, b, sum: a + b };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [captchaSeed, open]);
+
+  useEffect(() => {
+    if (open) {
+      openedAtRef.current = Date.now();
+      setCaptchaSeed((s) => s + 1);
+      setCaptchaAnswer("");
+      setHoneypot("");
+      setError(null);
+    }
+  }, [open]);
 
   async function submit() {
     setError(null);
@@ -29,6 +75,46 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       setError(T.reportEmpty);
       return;
     }
+
+    // 1. Honeypot — silent reject if filled (bots target hidden inputs)
+    if (honeypot.trim() !== "") {
+      // Pretend success to not give signal to bots
+      setMessage("");
+      setContact("");
+      setOpen(false);
+      setSentToast(T.reportSent);
+      setTimeout(() => setSentToast(null), 4000);
+      return;
+    }
+
+    // 2. Min time on form
+    if (Date.now() - openedAtRef.current < MIN_FORM_MS) {
+      setError(T.tooFastError);
+      return;
+    }
+
+    // 3. Captcha
+    const ans = parseInt(captchaAnswer.trim(), 10);
+    if (!Number.isFinite(ans) || ans !== captcha.sum) {
+      setError(T.captchaError);
+      setCaptchaSeed((s) => s + 1);
+      setCaptchaAnswer("");
+      return;
+    }
+
+    // 4. Local cooldown + hourly cap
+    const now = Date.now();
+    const history = readHistory().filter((ts) => now - ts < 60 * 60 * 1000);
+    if (history.length > 0 && now - history[history.length - 1] < COOLDOWN_MS) {
+      const wait = Math.ceil((COOLDOWN_MS - (now - history[history.length - 1])) / 1000);
+      setError(T.cooldownError(wait));
+      return;
+    }
+    if (history.length >= HOURLY_LIMIT) {
+      setError(T.floodError);
+      return;
+    }
+
     setSending(true);
     const ms = getMapState?.() ?? null;
     const { error: dbError } = await supabase.from("problem_reports").insert({
@@ -46,6 +132,7 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       setError(T.reportError);
       return;
     }
+    writeHistory([...history, now]);
     setMessage("");
     setContact("");
     setOpen(false);
@@ -91,6 +178,45 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
                 className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
+
+            {/* Honeypot — visually hidden but reachable to bots */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                left: "-10000px",
+                top: "auto",
+                width: 1,
+                height: 1,
+                overflow: "hidden",
+              }}
+            >
+              <label>
+                Website
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </label>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs text-muted-foreground">
+                {T.captchaLabel(captcha.a, captcha.b)}
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={captchaAnswer}
+                onChange={(e) => setCaptchaAnswer(e.target.value.slice(0, 4))}
+                maxLength={4}
+                className="w-24 rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
             {error && <p className="text-xs text-destructive">{error}</p>}
             <div className="flex justify-end gap-2">
               <Button variant="outline" size="sm" onClick={() => setOpen(false)} disabled={sending}>
