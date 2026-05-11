@@ -838,9 +838,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <MapPin className="mr-1.5 h-4 w-4" />
               {T.showRadius}
             </Button>
-            {neighborIds.size > 0 && (
+            {neighborIds.size > 0 && highlightMode === "radius" && (
               <p className="mt-2 text-xs text-muted-foreground">
                 {T.nearbyCount(nearbyCount)}
+              </p>
+            )}
+            {neighborIds.size > 0 && highlightMode === "area" && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {T.areaSelectedCount(neighborIds.size)}
               </p>
             )}
           </div>
