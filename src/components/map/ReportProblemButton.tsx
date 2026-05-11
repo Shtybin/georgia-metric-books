@@ -10,9 +10,10 @@ import { t } from "@/lib/i18n";
 
 interface Props {
   lang: Lang;
+  getMapState?: () => { lat: number; lon: number; zoom: number } | null;
 }
 
-export function ReportProblemButton({ lang }: Props) {
+export function ReportProblemButton({ lang, getMapState }: Props) {
   const T = t(lang);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
