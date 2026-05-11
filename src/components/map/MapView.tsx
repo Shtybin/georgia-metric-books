@@ -526,6 +526,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function resetView() {
     clearSelection();
     setQuery("");
+    setRegionFilter("");
+    setUezdFilter("");
     setShowResults(false);
     setEnabledBuckets(new Set(BUCKET_ORDER));
     const map = mapRef.current;
@@ -542,13 +544,37 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
   }
 
-  // When the user clears the search input, also drop any area highlight.
+  // When the user clears the search input, also drop any area highlight
+  // (unless a region/uezd dropdown filter is active).
   useEffect(() => {
-    if (query.trim().length === 0 && highlightMode === "area") {
+    if (
+      query.trim().length === 0 &&
+      highlightMode === "area" &&
+      !regionFilter &&
+      !uezdFilter
+    ) {
       clearSelection();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  // React to Region / Uezd dropdown filters: highlight matching ids (intersection).
+  useEffect(() => {
+    if (!regionFilter && !uezdFilter) {
+      if (highlightMode === "area") clearSelection();
+      return;
+    }
+    const r = regionFilter ? areaIndex.regions.find((x) => x.key === regionFilter) : null;
+    const u = uezdFilter ? areaIndex.uezds.find((x) => x.key === uezdFilter) : null;
+    let ids: number[] = [];
+    if (r && u) {
+      const us = new Set(u.ids);
+      ids = r.ids.filter((id) => us.has(id));
+    } else if (r) ids = r.ids;
+    else if (u) ids = u.ids;
+    if (ids.length > 0) highlightArea(ids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [regionFilter, uezdFilter, areaIndex]);
 
   const sel = selected?.properties;
   const nearbyCount = Math.max(0, neighborIds.size - 1);
