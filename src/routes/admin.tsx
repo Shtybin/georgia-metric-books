@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2 } from "lucide-react";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Админ — модерация" }] }),
