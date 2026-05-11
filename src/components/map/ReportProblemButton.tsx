@@ -52,7 +52,7 @@ export function ReportProblemButton({ lang }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="pointer-events-auto absolute bottom-3 left-1/2 z-20 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-lg backdrop-blur hover:bg-accent hover:text-foreground"
+        className="pointer-events-auto absolute bottom-3 right-3 z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur hover:bg-accent hover:text-foreground"
         aria-label={T.reportButton}
       >
         <AlertCircle className="h-3.5 w-3.5" />
@@ -100,7 +100,7 @@ export function ReportProblemButton({ lang }: Props) {
       </Dialog>
 
       {sentToast && (
-        <div className="pointer-events-none absolute bottom-14 left-1/2 z-30 -translate-x-1/2 rounded-full border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur">
+        <div className="pointer-events-none absolute bottom-12 right-3 z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur">
           {sentToast}
         </div>
       )}
