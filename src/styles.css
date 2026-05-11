@@ -106,20 +106,22 @@
   --map-safe-left: env(safe-area-inset-left, 0px);
   --map-safe-right: env(safe-area-inset-right, 0px);
 
-  /* Report button — mobile (default) sits above the bottom chip bar */
-  --report-btn-bottom: calc(var(--map-safe-bottom) + 4rem);
-  --report-btn-right: calc(var(--map-safe-right) + 0.5rem);
-  --report-toast-bottom: calc(var(--map-safe-bottom) + 7rem);
-  --report-toast-right: calc(var(--map-safe-right) + 0.5rem);
+  /* Generic map-overlay gaps — used by the auto-positioning report widget.
+   * Override on a parent container to tune all four corners at once.
+   */
+  --map-overlay-gap-top: calc(var(--map-safe-top) + 4rem);
+  --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + 0.75rem);
+  --map-overlay-gap-left: calc(var(--map-safe-left) + 0.5rem);
+  --map-overlay-gap-right: calc(var(--map-safe-right) + 0.5rem);
+  --map-overlay-toast-offset: 2.5rem;
 }
 
 @media (min-width: 640px) {
   :root {
-    /* Desktop — sit left of the 260px legend with a 24px gap */
-    --report-btn-bottom: calc(var(--map-safe-bottom) + 0.75rem);
-    --report-btn-right: calc(var(--map-safe-right) + 17.75rem);
-    --report-toast-bottom: calc(var(--map-safe-bottom) + 3rem);
-    --report-toast-right: calc(var(--map-safe-right) + 17.75rem);
+    --map-overlay-gap-top: calc(var(--map-safe-top) + 4.5rem);
+    --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + 0.75rem);
+    --map-overlay-gap-left: calc(var(--map-safe-left) + 0.75rem);
+    --map-overlay-gap-right: calc(var(--map-safe-right) + 0.75rem);
   }
 }
 

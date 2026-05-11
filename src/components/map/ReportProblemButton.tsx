@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { AlertCircle } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
@@ -67,6 +67,102 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       setError(null);
     }
   }, [open]);
+
+  // ===== Collision-aware anchor =====
+  // The button picks among 4 corners and falls back to the corner with the
+  // smallest overlap against sibling overlays in the same map container.
+  type Anchor = "br" | "bl" | "tr" | "tl";
+  const ANCHOR_PRIORITY: Anchor[] = ["br", "bl", "tr", "tl"];
+  const btnRef = useRef<HTMLButtonElement | null>(null);
+  const [anchor, setAnchor] = useState<Anchor>("br");
+
+  useLayoutEffect(() => {
+    const btn = btnRef.current;
+    const parent = btn?.parentElement;
+    if (!btn || !parent) return;
+
+    const overlap = (a: { left: number; right: number; top: number; bottom: number }, b: DOMRect) =>
+      !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+    const overlapArea = (a: { left: number; right: number; top: number; bottom: number }, b: DOMRect) => {
+      const x = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+      const y = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+      return x * y;
+    };
+
+    const pick = () => {
+      const btnRect = btn.getBoundingClientRect();
+      const w = btnRect.width || 140;
+      const h = btnRect.height || 26;
+      const pr = parent.getBoundingClientRect();
+      const m = 12;
+
+      const obstacles: DOMRect[] = [];
+      for (const el of Array.from(parent.children) as HTMLElement[]) {
+        if (el === btn) continue;
+        if (el.dataset.reportToast !== undefined) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width < 2 || r.height < 2) continue;
+        obstacles.push(r);
+      }
+
+      const cands: Record<Anchor, { left: number; right: number; top: number; bottom: number }> = {
+        br: { left: pr.right - m - w, right: pr.right - m, top: pr.bottom - m - h, bottom: pr.bottom - m },
+        bl: { left: pr.left + m, right: pr.left + m + w, top: pr.bottom - m - h, bottom: pr.bottom - m },
+        tr: { left: pr.right - m - w, right: pr.right - m, top: pr.top + m, bottom: pr.top + m + h },
+        tl: { left: pr.left + m, right: pr.left + m + w, top: pr.top + m, bottom: pr.top + m + h },
+      };
+
+      let best: Anchor = "br";
+      let bestScore = Infinity;
+      for (const a of ANCHOR_PRIORITY) {
+        const rect = cands[a];
+        let score = 0;
+        for (const o of obstacles) if (overlap(rect, o)) score += overlapArea(rect, o);
+        if (score === 0) { best = a; break; }
+        if (score < bestScore) { bestScore = score; best = a; }
+      }
+      setAnchor((prev) => (prev === best ? prev : best));
+    };
+
+    let raf = 0;
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(pick);
+    };
+
+    schedule();
+    const ro = new ResizeObserver(schedule);
+    ro.observe(parent);
+    for (const el of Array.from(parent.children)) ro.observe(el as Element);
+    const mo = new MutationObserver(() => {
+      // Re-observe new siblings, then re-pick
+      for (const el of Array.from(parent.children)) {
+        if (el !== btn) ro.observe(el as Element);
+      }
+      schedule();
+    });
+    mo.observe(parent, { childList: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      mo.disconnect();
+      window.removeEventListener("resize", schedule);
+    };
+  }, [open, sentToast]);
+
+  const anchorStyle = (a: Anchor, toast = false): CSSProperties => {
+    const off = toast ? " + var(--map-overlay-toast-offset)" : "";
+    const vert =
+      a[0] === "b"
+        ? { bottom: `calc(var(--map-overlay-gap-bottom)${off})` }
+        : { top: `calc(var(--map-overlay-gap-top)${off})` };
+    const horz =
+      a[1] === "r"
+        ? { right: "var(--map-overlay-gap-right)" }
+        : { left: "var(--map-overlay-gap-left)" };
+    return { ...vert, ...horz };
+  };
 
   async function submit() {
     setError(null);
@@ -143,9 +239,10 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
   return (
     <>
       <button
+        ref={btnRef}
         onClick={() => setOpen(true)}
-        style={{ bottom: "var(--report-btn-bottom)", right: "var(--report-btn-right)" }}
-        className="pointer-events-auto absolute z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur hover:bg-accent hover:text-foreground"
+        style={anchorStyle(anchor)}
+        className="pointer-events-auto absolute z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur transition-[top,bottom,left,right] duration-200 hover:bg-accent hover:text-foreground"
         aria-label={T.reportButton}
       >
         <AlertCircle className="h-3.5 w-3.5" />
@@ -233,8 +330,9 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
 
       {sentToast && (
         <div
-          style={{ bottom: "var(--report-toast-bottom)", right: "var(--report-toast-right)" }}
-          className="pointer-events-none absolute z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur"
+          data-report-toast=""
+          style={anchorStyle(anchor, true)}
+          className="pointer-events-none absolute z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur transition-[top,bottom,left,right] duration-200"
         >
           {sentToast}
         </div>
