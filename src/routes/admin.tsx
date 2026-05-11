@@ -155,12 +155,51 @@ function AdminPage() {
   }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
+    const { data: sess } = await supabase.auth.getSession();
+    const reviewer = sess.session?.user.id ?? null;
     const { error } = await supabase
       .from("problem_reports")
-      .update({ status, reviewed_at: new Date().toISOString() })
+      .update({ status, reviewed_at: new Date().toISOString(), reviewed_by: reviewer })
       .eq("id", id);
     if (error) { alert(error.message); return; }
     setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+    // If history panel is open, refresh it
+    if (historyOpen[id]) loadHistory(id);
+  }
+
+  async function saveNotes(id: string) {
+    const value = (notesDraft[id] ?? "").slice(0, 4000);
+    setNotesSaving((s) => ({ ...s, [id]: true }));
+    const { error } = await supabase
+      .from("problem_reports")
+      .update({ admin_notes: value || null })
+      .eq("id", id);
+    setNotesSaving((s) => ({ ...s, [id]: false }));
+    if (error) { alert(error.message); return; }
+    setReports((prev) => prev.map((r) => (r.id === id ? { ...r, admin_notes: value || null } : r)));
+    setNotesDraft((d) => {
+      const next = { ...d };
+      delete next[id];
+      return next;
+    });
+  }
+
+  async function loadHistory(id: string) {
+    setHistoryLoading((s) => ({ ...s, [id]: true }));
+    const { data, error } = await supabase
+      .from("problem_report_history")
+      .select("id, changed_at, changed_by, old_status, new_status, note")
+      .eq("report_id", id)
+      .order("changed_at", { ascending: false });
+    setHistoryLoading((s) => ({ ...s, [id]: false }));
+    if (error) { console.error(error); return; }
+    setHistoryData((h) => ({ ...h, [id]: (data as ReportHistoryEntry[]) || [] }));
+  }
+
+  function toggleHistory(id: string) {
+    const willOpen = !historyOpen[id];
+    setHistoryOpen((s) => ({ ...s, [id]: willOpen }));
+    if (willOpen && !historyData[id]) loadHistory(id);
   }
 
   async function deleteReport(id: string) {
