@@ -610,7 +610,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </button>
             )}
             {showResults && query.trim().length >= 2 && (
-              <div className="absolute mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl">
+              <div className="absolute mt-2 max-h-[70vh] w-full overflow-y-auto overscroll-contain rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl">
                 {(areaMatches.uezds.length > 0 || areaMatches.regions.length > 0) && (
                   <div className="border-b border-border bg-muted/40">
                     {areaMatches.uezds.map((u) => (
