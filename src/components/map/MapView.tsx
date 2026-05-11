@@ -236,11 +236,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const areaMatches = useMemo(() => {
     const q = query.trim().toLocaleLowerCase();
-    if (q.length < 2) return { uezds: [] as typeof areaIndex.uezds, regions: [] as typeof areaIndex.regions };
+    if (q.length < minQueryLen) return { uezds: [] as typeof areaIndex.uezds, regions: [] as typeof areaIndex.regions };
     const filt = (arr: typeof areaIndex.uezds) =>
       arr.filter((x) => x.key.includes(q)).slice(0, 3);
     return { uezds: filt(areaIndex.uezds), regions: filt(areaIndex.regions) };
-  }, [areaIndex, query]);
+  }, [areaIndex, query, minQueryLen]);
 
   // Sorted region/uezd lists for the dropdown filters under the search bar.
   const regionList = useMemo(
