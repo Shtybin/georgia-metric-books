@@ -697,6 +697,34 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </div>
             )}
           </div>
+          {/* Region / Uezd dropdown filters — highlight all matching points. */}
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <select
+              value={regionFilter}
+              onChange={(e) => {
+                setRegionFilter(e.target.value);
+                setUezdFilter("");
+              }}
+              aria-label={T.regionLabel}
+              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">{T.allRegions}</option>
+              {regionList.map((r) => (
+                <option key={r.key} value={r.key}>{r.label}</option>
+              ))}
+            </select>
+            <select
+              value={uezdFilter}
+              onChange={(e) => setUezdFilter(e.target.value)}
+              aria-label={T.uezdLabel}
+              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">{T.allUezds}</option>
+              {uezdsForRegion.map((u) => (
+                <option key={u.key} value={u.key}>{u.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
