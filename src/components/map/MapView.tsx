@@ -306,7 +306,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.addSource("parishes", {
       type: "geojson",
       data: data as any,
-      cluster: false,
+      cluster: true,
+      clusterRadius: 38,
+      clusterMaxZoom: 7,
+      promoteId: undefined,
+      generateId: false,
     });
 
     map.addLayer({
@@ -344,16 +348,39 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       filter: ["!", ["has", "point_count"]],
       paint: {
         "circle-color": colorExpression,
-        "circle-radius": radiusExpression,
+        "circle-radius": [
+          "case",
+          ["boolean", ["feature-state", "highlighted"], false],
+          ["+", ["coalesce", radiusExpression as any, 6], 3],
+          radiusExpression,
+        ],
         "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": 1.5,
+        "circle-stroke-width": [
+          "case",
+          ["boolean", ["feature-state", "highlighted"], false], 2.5,
+          1.5,
+        ],
         "circle-opacity": [
           "case",
-          ["boolean", ["feature-state", "dimmed"], false], 0.18,
+          ["boolean", ["feature-state", "dimmed"], false], 0.10,
           0.95,
         ],
       },
     });
+
+    map.on("click", "clusters", (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
+      const clusterId = features[0]?.properties?.cluster_id;
+      const src = map.getSource("parishes") as any;
+      if (clusterId == null || !src?.getClusterExpansionZoom) return;
+      src.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
+        if (err) return;
+        const coords = (features[0].geometry as any).coordinates as [number, number];
+        map.easeTo({ center: coords, zoom: zoom + 0.2, duration: 600 });
+      });
+    });
+    map.on("mouseenter", "clusters", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "clusters", () => { map.getCanvas().style.cursor = ""; });
 
     const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
