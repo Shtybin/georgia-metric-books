@@ -351,7 +351,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         "circle-radius": [
           "case",
           ["boolean", ["feature-state", "highlighted"], false],
-          ["+", ["coalesce", radiusExpression as any, 6], 3],
+          ["+", radiusExpression, 3],
           radiusExpression,
         ],
         "circle-stroke-color": "#ffffff",
