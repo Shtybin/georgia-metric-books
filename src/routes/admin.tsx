@@ -48,6 +48,12 @@ function AdminPage() {
   const [reportFilter, setReportFilter] = useState<"new" | "in_progress" | "resolved" | "all">("new");
   const [reports, setReports] = useState<ProblemReport[]>([]);
   const [reportsLoading, setReportsLoading] = useState(false);
+  const [reportSearch, setReportSearch] = useState("");
+  const [reportSearchDebounced, setReportSearchDebounced] = useState("");
+  const [reportsHasMore, setReportsHasMore] = useState(false);
+  const [reportsTotal, setReportsTotal] = useState<number | null>(null);
+  const [reportsLoadingMore, setReportsLoadingMore] = useState(false);
+  const REPORTS_PAGE = 25;
 
   useEffect(() => {
     let mounted = true;
