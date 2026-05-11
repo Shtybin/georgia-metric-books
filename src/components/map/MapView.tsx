@@ -81,6 +81,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const dataRef = useRef<FC | null>(null);
   useEffect(() => { dataRef.current = data; }, [data]);
+  // Refs so the (once-registered) map click handler reads up-to-date values.
+  const regionFilterRef = useRef("");
+  const uezdFilterRef = useRef("");
+  useEffect(() => { regionFilterRef.current = regionFilter; }, [regionFilter]);
+  useEffect(() => { uezdFilterRef.current = uezdFilter; }, [uezdFilter]);
 
   // Index for "find on map" jumps from the unlocated panel
   const locatedIndex = useMemo(() => {
