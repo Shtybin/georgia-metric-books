@@ -482,6 +482,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     }
   }, [neighborIds, data, highlightMode]);
 
+  // Toggle the "points-top" layer filter so it only renders highlighted ids
+  // (area mode). Stays empty in radius / no-highlight mode.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    if (!map.getLayer("points-top")) return;
+    const ids = highlightMode === "area" ? [...neighborIds] : [];
+    map.setFilter("points-top", ["in", ["id"], ["literal", ids]]);
+  }, [neighborIds, highlightMode, styleReady]);
+
   function selectFeature(f: Feature) {
     setSelected(f);
     // Selecting a new point should drop any prior area highlight; the user can
