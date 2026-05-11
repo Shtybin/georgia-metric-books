@@ -95,7 +95,14 @@ function Index() {
           ))}
         </div>
 
-        <div className="mt-16">
+        <div className="mt-12 rounded-2xl border border-border bg-card p-5 sm:p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            {L.archiveTitle}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-foreground/90">{L.archiveBody}</p>
+        </div>
+
+        <div className="mt-12">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             {L.featuresEyebrow}
           </p>

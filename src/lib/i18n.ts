@@ -97,6 +97,9 @@ export const STRINGS = {
       feat2Desc: "Okabe-Ito — палитра, дружелюбная к дальтоникам.",
       feat3Title: "Русский / English / ქართული",
       feat3Desc: "Переключение языка без перезагрузки.",
+      archiveTitle: "Источник данных",
+      archiveBody:
+        "Метрические книги собраны на основе данных Национального исторического архива Грузии (Тбилиси, ул. Важа Пшавела, 1). Подробнее о том, как получить документы в архиве и как он работает, можно прочитать, нажав на кнопку «Где найти документы?» внизу карты.",
       metaTitle: "Метрические книги Грузии 1819–1930 · Архивный атлас",
       metaDesc: "Интерактивная карта приходских метрических книг Грузии 1819–1930 года: поиск, периоды, анализ в радиусе 10 км.",
     },
@@ -197,6 +200,9 @@ export const STRINGS = {
       feat2Desc: "Okabe-Ito — a colour-blind-friendly palette.",
       feat3Title: "Русский / English / ქართული",
       feat3Desc: "Switch language without reloading.",
+      archiveTitle: "Data source",
+      archiveBody:
+        "The metric books are compiled from the holdings of the National Historical Archive of Georgia (Tbilisi, 1 Vazha-Pshavela Ave). Details on how to request documents at the archive and how it operates are available via the \u201CWhere to find documents?\u201D button at the bottom of the map.",
       metaTitle: "Georgian Parish Registers 1819–1930 · Archival Atlas",
       metaDesc: "An interactive map of Georgian parish metric books, 1819–1930: search, periods, 10 km neighbourhood analysis.",
     },
@@ -297,6 +303,9 @@ export const STRINGS = {
       feat2Desc: "Okabe-Ito — დალტონიკთათვის მეგობრული პალიტრა.",
       feat3Title: "Русский / English / ქართული",
       feat3Desc: "ენის გადართვა გვერდის გადატვირთვის გარეშე.",
+      archiveTitle: "მონაცემთა წყარო",
+      archiveBody:
+        "მეტრიკული წიგნები შედგენილია საქართველოს ეროვნული ისტორიული არქივის (თბილისი, ვაჟა-ფშაველას გამზ. 1) ფონდების მიხედვით. დეტალები იმის შესახებ, თუ როგორ მივიღოთ დოკუმენტები არქივიდან და როგორ მუშაობს თავად არქივი, შეგიძლიათ წაიკითხოთ რუკის ბოლოს მდებარე ღილაკზე „სად ვიპოვო დოკუმენტები?“ დაჭერით.",
       metaTitle: "საქართველოს მეტრიკული წიგნები 1819–1930 · არქივის ატლასი",
       metaDesc: "საქართველოს სამრევლო მეტრიკული წიგნების ინტერაქტიული რუკა, 1819–1930: ძიება, პერიოდები, 10 კმ რადიუსში ანალიზი.",
     },
