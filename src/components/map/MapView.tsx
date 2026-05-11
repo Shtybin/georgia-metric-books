@@ -47,6 +47,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [stats, setStats] = useState<Stats | null>(null);
   const [selected, setSelected] = useState<Feature | null>(null);
   const [neighborIds, setNeighborIds] = useState<Set<number>>(new Set());
+  const [highlightMode, setHighlightMode] = useState<"radius" | "area" | null>(null);
   const [enabledBuckets, setEnabledBuckets] = useState<Set<string>>(
     new Set(BUCKET_ORDER),
   );
