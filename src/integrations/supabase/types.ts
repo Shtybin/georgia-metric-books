@@ -90,12 +90,15 @@ export type Database = {
           created_at: string
           id: string
           lang: string | null
+          lat: number | null
+          lon: number | null
           message: string
           page_url: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           status: Database["public"]["Enums"]["report_status"]
           user_agent: string | null
+          zoom: number | null
         }
         Insert: {
           admin_notes?: string | null
@@ -103,12 +106,15 @@ export type Database = {
           created_at?: string
           id?: string
           lang?: string | null
+          lat?: number | null
+          lon?: number | null
           message: string
           page_url?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: Database["public"]["Enums"]["report_status"]
           user_agent?: string | null
+          zoom?: number | null
         }
         Update: {
           admin_notes?: string | null
@@ -116,12 +122,15 @@ export type Database = {
           created_at?: string
           id?: string
           lang?: string | null
+          lat?: number | null
+          lon?: number | null
           message?: string
           page_url?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: Database["public"]["Enums"]["report_status"]
           user_agent?: string | null
+          zoom?: number | null
         }
         Relationships: []
       }

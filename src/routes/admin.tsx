@@ -18,6 +18,9 @@ interface ProblemReport {
   lang: string | null;
   user_agent: string | null;
   status: "new" | "in_progress" | "resolved";
+  lat: number | null;
+  lon: number | null;
+  zoom: number | null;
 }
 
 interface Suggestion {
@@ -105,7 +108,7 @@ function AdminPage() {
     else setReportsLoading(true);
     let q = supabase
       .from("problem_reports")
-      .select("id, created_at, message, contact, page_url, lang, user_agent, status", { count: "exact" })
+      .select("id, created_at, message, contact, page_url, lang, user_agent, status, lat, lon, zoom", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(offset, offset + REPORTS_PAGE - 1);
     if (reportFilter !== "all") q = q.eq("status", reportFilter);
@@ -378,6 +381,43 @@ function AdminPage() {
                           {r.user_agent}
                         </p>
                       )}
+                      {r.lat != null && r.lon != null && (() => {
+                        const z = Math.min(Math.max(r.zoom ?? 12, 3), 18);
+                        // ~degrees per pixel at zoom z; build a small bbox around the point
+                        const d = 180 / Math.pow(2, z);
+                        const dLat = d * 0.6;
+                        const dLon = d * 1.2;
+                        const bbox = `${r.lon - dLon},${r.lat - dLat},${r.lon + dLon},${r.lat + dLat}`;
+                        const embedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${r.lat},${r.lon}`;
+                        const osmHref = `https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}#map=${Math.round(z)}/${r.lat}/${r.lon}`;
+                        return (
+                          <div className="mt-2 w-full max-w-sm">
+                            <div className="overflow-hidden rounded-md border border-border">
+                              <iframe
+                                title={`Карта ${r.id}`}
+                                src={embedSrc}
+                                loading="lazy"
+                                referrerPolicy="no-referrer"
+                                className="h-40 w-full"
+                              />
+                            </div>
+                            <div className="mt-1 flex items-center justify-between text-[10px] tabular-nums text-muted-foreground">
+                              <span>
+                                {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
+                                {r.zoom != null && <> · z{r.zoom.toFixed(1)}</>}
+                              </span>
+                              <a
+                                href={osmHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-0.5 text-primary hover:underline"
+                              >
+                                OSM <ExternalLink className="h-3 w-3" />
+                              </a>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
                     <div className="flex shrink-0 flex-wrap gap-1">
                       {r.status !== "in_progress" && (
