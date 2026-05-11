@@ -224,45 +224,19 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "parishes.geojson"),
   JSON.stringify({ type: "FeatureCollection", features }));
 
-// Group unlocated by settlementRu|uezdRu (fallback to en if ru empty)
-const unlocatedGroups = new Map<string, UnlocatedRaw[]>();
-for (const r of unlocatedRaw) {
-  const sKey = (r.settlementRu || r.settlementEn || "").toLocaleLowerCase();
-  const uKey = (r.uezdRu || r.uezdEn || "").toLocaleLowerCase();
-  const key = `${sKey}|${uKey}`;
-  const arr = unlocatedGroups.get(key);
-  if (arr) arr.push(r); else unlocatedGroups.set(key, [r]);
-}
-const unlocated = [...unlocatedGroups.values()].map((rows) => {
-  const yearsSet = new Set<number>();
-  for (const r of rows) for (const y of parseYears(r.yearsStr)) yearsSet.add(y);
-  const yearsArr = [...yearsSet].sort((a, b) => a - b);
-  const startYears = rows.map(r => r.startYear).filter(y => y > 0);
+// Each unlocated row becomes its own entry (no grouping) so the count
+// matches the dataset total of settlements without coordinates.
+const unlocated = unlocatedRaw.map((r) => {
+  const yearsArr = parseYears(r.yearsStr).sort((a, b) => a - b);
   return {
-    settlement: {
-      en: firstNonEmpty(rows.map(r => r.settlementEn)),
-      ru: firstNonEmpty(rows.map(r => r.settlementRu)),
-      ka: firstNonEmpty(rows.map(r => r.settlementKa)),
-    },
-    church: {
-      en: joinUnique(rows.map(r => r.churchEn)),
-      ru: joinUnique(rows.map(r => r.churchRu)),
-      ka: joinUnique(rows.map(r => r.churchKa)),
-    },
-    region: {
-      en: firstNonEmpty(rows.map(r => r.regionEn)),
-      ru: firstNonEmpty(rows.map(r => r.regionRu)),
-      ka: firstNonEmpty(rows.map(r => r.regionKa)),
-    },
-    uezd: {
-      en: firstNonEmpty(rows.map(r => r.uezdEn)),
-      ru: firstNonEmpty(rows.map(r => r.uezdRu)),
-      ka: firstNonEmpty(rows.map(r => r.uezdKa)),
-    },
+    settlement: { en: r.settlementEn, ru: r.settlementRu, ka: r.settlementKa },
+    church:     { en: r.churchEn,     ru: r.churchRu,     ka: r.churchKa },
+    region:     { en: r.regionEn,     ru: r.regionRu,     ka: r.regionKa },
+    uezd:       { en: r.uezdEn,       ru: r.uezdRu,       ka: r.uezdKa },
     years: compactYears(yearsArr),
-    startYear: startYears.length ? Math.min(...startYears) : null,
+    startYear: r.startYear > 0 ? r.startYear : null,
     endYear: yearsArr.length ? yearsArr[yearsArr.length - 1] : null,
-    count: rows.length,
+    count: 1,
   };
 }).sort((a, b) => {
   const au = (a.uezd.ru || a.uezd.en || "").toLocaleLowerCase();
