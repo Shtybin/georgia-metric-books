@@ -1018,9 +1018,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         );
       })()}
 
-      {/* Mobile: 2-row legend along the bottom + docs button. Hidden when a card is open. */}
+      {/* Mobile: docs button above the 2-row legend along the bottom.
+          Hidden when a card is open. */}
       {!selected && (
         <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 flex flex-col gap-1.5 sm:hidden">
+          <button
+            onClick={() => setDocsOpen(true)}
+            className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1 text-[11px] font-medium text-foreground shadow-lg backdrop-blur hover:bg-accent"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
+            {T.docsButton}
+          </button>
           <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
             {BUCKET_ORDER.map((b) => {
               const on = enabledBuckets.has(b);
@@ -1043,13 +1051,6 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               );
             })}
           </div>
-          <button
-            onClick={() => setDocsOpen(true)}
-            className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1 text-[11px] font-medium text-foreground shadow-lg backdrop-blur hover:bg-accent"
-          >
-            <HelpCircle className="h-3.5 w-3.5" />
-            {T.docsButton}
-          </button>
         </div>
       )}
 
