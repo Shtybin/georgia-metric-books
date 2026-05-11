@@ -89,6 +89,34 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       return x * y;
     };
 
+    // Portal selectors that may host tooltips/popovers/dropdowns outside the
+    // map container (Radix, MapLibre popups, sonner toasts, …).
+    const PORTAL_SELECTORS = [
+      "[data-radix-popper-content-wrapper]",
+      "[data-radix-tooltip-content]",
+      "[data-radix-popover-content]",
+      "[data-radix-dropdown-menu-content]",
+      "[data-radix-hover-card-content]",
+      "[role='tooltip']",
+      ".maplibregl-popup",
+      ".maplibregl-ctrl-top-right",
+      ".maplibregl-ctrl-top-left",
+      ".maplibregl-ctrl-bottom-right",
+      ".maplibregl-ctrl-bottom-left",
+      "[data-sonner-toaster]",
+    ].join(",");
+
+    const isInsideSelf = (el: Element) =>
+      el === btn || btn.contains(el) || (el as HTMLElement).dataset?.reportToast !== undefined;
+
+    const isVisible = (el: Element, r: DOMRect) => {
+      if (r.width < 2 || r.height < 2) return false;
+      const cs = getComputedStyle(el as Element);
+      if (cs.visibility === "hidden" || cs.display === "none" || cs.opacity === "0") return false;
+      if (cs.pointerEvents === "none" && cs.position !== "absolute" && cs.position !== "fixed") return false;
+      return true;
+    };
+
     const pick = () => {
       const btnRect = btn.getBoundingClientRect();
       const w = btnRect.width || 140;
@@ -97,13 +125,20 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       const m = 12;
 
       const obstacles: DOMRect[] = [];
-      for (const el of Array.from(parent.children) as HTMLElement[]) {
-        if (el === btn) continue;
-        if (el.dataset.reportToast !== undefined) continue;
-        const r = el.getBoundingClientRect();
-        if (r.width < 2 || r.height < 2) continue;
+      const collect = (el: Element) => {
+        if (isInsideSelf(el)) return;
+        const r = (el as HTMLElement).getBoundingClientRect();
+        if (!isVisible(el, r)) return;
+        // Only count if intersects the map container area at all
+        if (r.right <= pr.left || r.left >= pr.right || r.bottom <= pr.top || r.top >= pr.bottom) return;
         obstacles.push(r);
-      }
+      };
+      // Direct children of the map container (legend, search bar, detail card, chip bar…)
+      for (const el of Array.from(parent.children)) collect(el);
+      // Nested overlays inside the map (MapLibre controls and popups)
+      parent.querySelectorAll(PORTAL_SELECTORS).forEach(collect);
+      // Portaled overlays elsewhere in the document (Radix tooltips/popovers, sonner)
+      document.querySelectorAll(PORTAL_SELECTORS).forEach(collect);
 
       const cands: Record<Anchor, { left: number; right: number; top: number; bottom: number }> = {
         br: { left: pr.right - m - w, right: pr.right - m, top: pr.bottom - m - h, bottom: pr.bottom - m },
@@ -131,23 +166,37 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
     };
 
     schedule();
+
+    // Watch sizes: map container + every descendant overlay we know about.
     const ro = new ResizeObserver(schedule);
     ro.observe(parent);
-    for (const el of Array.from(parent.children)) ro.observe(el as Element);
-    const mo = new MutationObserver(() => {
-      // Re-observe new siblings, then re-pick
-      for (const el of Array.from(parent.children)) {
-        if (el !== btn) ro.observe(el as Element);
-      }
-      schedule();
-    });
-    mo.observe(parent, { childList: true });
+    const observeNested = () => {
+      for (const el of Array.from(parent.children)) if (el !== btn) ro.observe(el as Element);
+      parent.querySelectorAll(PORTAL_SELECTORS).forEach((el) => ro.observe(el));
+      document.querySelectorAll(PORTAL_SELECTORS).forEach((el) => ro.observe(el));
+    };
+    observeNested();
+
+    // Watch DOM mutations for show/hide of overlays anywhere in document.
+    const mo = new MutationObserver(() => { observeNested(); schedule(); });
+    mo.observe(parent, { childList: true, subtree: true });
+    mo.observe(document.body, { childList: true, subtree: false });
+
+    // Map gestures: zoom/pan can move MapLibre popups without DOM mutation.
+    const canvas = parent.querySelector(".maplibregl-canvas");
+    canvas?.addEventListener("wheel", schedule, { passive: true });
+    canvas?.addEventListener("pointerup", schedule);
+
     window.addEventListener("resize", schedule);
+    window.addEventListener("scroll", schedule, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
       mo.disconnect();
+      canvas?.removeEventListener("wheel", schedule);
+      canvas?.removeEventListener("pointerup", schedule);
       window.removeEventListener("resize", schedule);
+      window.removeEventListener("scroll", schedule);
     };
   }, [open, sentToast]);
 
