@@ -18,6 +18,9 @@ interface ProblemReport {
   lang: string | null;
   user_agent: string | null;
   status: "new" | "in_progress" | "resolved";
+  lat: number | null;
+  lon: number | null;
+  zoom: number | null;
 }
 
 interface Suggestion {
