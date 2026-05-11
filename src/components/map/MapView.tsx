@@ -520,23 +520,64 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
   }
 
+  // Compute highlighted ids based on the currently chosen region / uezd
+  // dropdown filters (intersection if both). Returns [] when neither is set.
+  function currentFilterIds(): number[] {
+    const r = regionFilterRef.current
+      ? areaIndex.regions.find((x) => x.key === regionFilterRef.current)
+      : null;
+    const u = uezdFilterRef.current
+      ? areaIndex.uezds.find((x) => x.key === uezdFilterRef.current)
+      : null;
+    if (r && u) {
+      const us = new Set(u.ids);
+      return r.ids.filter((id) => us.has(id));
+    }
+    if (r) return r.ids;
+    if (u) return u.ids;
+    return [];
+  }
+
   function clearSelection() {
     setSelected(null);
-    setNeighborIds(new Set());
-    setHighlightMode(null);
     const map = mapRef.current;
-    if (!map) return;
-    (map.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
-    (map.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
+    if (map) {
+      (map.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
+      (map.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
+    }
+    // Если активен фильтр по уезду/региону — возвращаемся к его подсветке,
+    // иначе полностью снимаем выделение.
+    const ids = currentFilterIds();
+    if (ids.length > 0) {
+      setNeighborIds(new Set(ids));
+      setHighlightMode("area");
+    } else {
+      setNeighborIds(new Set());
+      setHighlightMode(null);
+    }
   }
 
   function showRadius() {
     if (!selected) return;
+    const map = mapRef.current;
+    // Toggle: если радиус уже включён — выключаем и возвращаем фильтр уезда/региона
+    // (если он был активен).
+    if (highlightMode === "radius") {
+      (map?.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
+      const ids = currentFilterIds();
+      if (ids.length > 0) {
+        setNeighborIds(new Set(ids));
+        setHighlightMode("area");
+      } else {
+        setNeighborIds(new Set());
+        setHighlightMode(null);
+      }
+      return;
+    }
     const [lon, lat] = selected.geometry.coordinates;
     const ids = new Set(neighborsWithin(points, lon, lat, 10));
     setNeighborIds(ids);
     setHighlightMode("radius");
-    const map = mapRef.current;
     (map?.getSource("radius") as any)?.setData({
       type: "FeatureCollection",
       features: [circlePolygon(lon, lat, 10)],
