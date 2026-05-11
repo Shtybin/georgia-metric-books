@@ -232,7 +232,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        <div className="mx-auto flex max-w-6xl gap-1 px-4 py-2 text-xs">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -246,18 +246,36 @@ function AdminPage() {
                   {s === "pending" ? "Ожидают" : s === "approved" ? "Одобрены" : s === "rejected" ? "Отклонены" : "Все"}
                 </button>
               ))
-            : (["new", "in_progress", "resolved", "all"] as const).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setReportFilter(s)}
-                  className={
-                    "rounded-md px-3 py-1 transition-colors " +
-                    (reportFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent")
-                  }
-                >
-                  {s === "new" ? "Новые" : s === "in_progress" ? "В работе" : s === "resolved" ? "Решено" : "Все"}
-                </button>
-              ))}
+            : (
+              <>
+                {(["new", "in_progress", "resolved", "all"] as const).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setReportFilter(s)}
+                    className={
+                      "rounded-md px-3 py-1 transition-colors " +
+                      (reportFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent")
+                    }
+                  >
+                    {s === "new" ? "Новые" : s === "in_progress" ? "В работе" : s === "resolved" ? "Решено" : "Все"}
+                  </button>
+                ))}
+                <div className="ml-auto flex items-center gap-2">
+                  <input
+                    type="search"
+                    value={reportSearch}
+                    onChange={(e) => setReportSearch(e.target.value)}
+                    placeholder="Поиск по тексту или контакту…"
+                    className="w-56 rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  {reportsTotal != null && (
+                    <span className="text-muted-foreground tabular-nums">
+                      {reports.length} / {reportsTotal}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
         </div>
       </header>
 
