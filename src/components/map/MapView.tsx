@@ -259,12 +259,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }, [data, lang]);
 
   const areaMatches = useMemo(() => {
-    const q = query.trim().toLocaleLowerCase();
+    const q = debouncedQuery.trim().toLocaleLowerCase();
     if (q.length < minQueryLen) return { uezds: [] as typeof areaIndex.uezds, regions: [] as typeof areaIndex.regions };
     const filt = (arr: typeof areaIndex.uezds) =>
       arr.filter((x) => x.key.includes(q)).slice(0, 3);
     return { uezds: filt(areaIndex.uezds), regions: filt(areaIndex.regions) };
-  }, [areaIndex, query, minQueryLen]);
+  }, [areaIndex, debouncedQuery, minQueryLen]);
 
   // Sorted region/uezd lists for the dropdown filters under the search bar.
   const regionList = useMemo(
