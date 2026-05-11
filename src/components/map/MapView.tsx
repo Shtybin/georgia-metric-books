@@ -669,9 +669,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           >
             <ListX className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">{T.unlocatedButton}</span>
-            {stats?.withoutCoords ? (
+            {(stats?.unlocatedGroups ?? stats?.withoutCoords) ? (
               <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
-                {stats.withoutCoords.toLocaleString()}
+                {(stats!.unlocatedGroups ?? stats!.withoutCoords).toLocaleString()}
               </span>
             ) : null}
           </button>
