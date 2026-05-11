@@ -187,14 +187,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!data) return null;
     return new Fuse(data.features, {
       keys: [
-        "properties.settlement.ru", "properties.settlement.en",
-        "properties.church.ru", "properties.church.en",
-        "properties.uezd.ru", "properties.uezd.en",
-        "properties.region.ru", "properties.region.en",
+        { name: "properties.settlement.ru", weight: 1.0 },
+        { name: "properties.settlement.en", weight: 1.0 },
+        { name: "properties.settlement.ka", weight: 1.0 },
+        { name: "properties.church.ru", weight: 0.9 },
+        { name: "properties.church.en", weight: 0.9 },
+        { name: "properties.church.ka", weight: 0.9 },
+        { name: "properties.uezd.ru", weight: 0.6 },
+        { name: "properties.uezd.en", weight: 0.6 },
+        { name: "properties.uezd.ka", weight: 0.6 },
+        { name: "properties.region.ru", weight: 0.5 },
+        { name: "properties.region.en", weight: 0.5 },
+        { name: "properties.region.ka", weight: 0.5 },
       ],
       threshold: 0.35,
-      minMatchCharLength: 2,
+      minMatchCharLength: 1,
+      ignoreLocation: true,
       includeScore: true,
+      includeMatches: true,
     });
   }, [data]);
 
