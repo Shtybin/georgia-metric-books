@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, MapPin, Layers, Globe2 } from "lucide-react";
+import { ArrowRight, MapPin, Layers, Globe2, Landmark } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
@@ -112,11 +112,14 @@ function Index() {
         </div>
 
 
-        <div className="mt-12 rounded-2xl border border-border bg-card p-5 sm:p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            {L.archiveTitle}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-foreground/90">{L.archiveBody}</p>
+        <div className="mt-12 flex gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
+          <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary sm:flex">
+            <Landmark className="h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="font-serif text-lg font-semibold">{L.archiveTitle}</h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{L.archiveBody}</p>
+          </div>
         </div>
 
         <div className="mt-12">
