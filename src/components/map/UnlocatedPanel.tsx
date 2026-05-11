@@ -80,7 +80,11 @@ export function UnlocatedPanel({
 
   const visibleItems = useMemo(() => {
     if (!items) return [];
-    return items.filter((it) => !excludeKeys.has(itemKey(it)));
+    return items.filter(
+      (it) =>
+        (it.settlement.ru || it.settlement.en).trim().length > 0 &&
+        !excludeKeys.has(itemKey(it)),
+    );
   }, [items, excludeKeys]);
 
   const uezds = useMemo(() => {
