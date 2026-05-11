@@ -95,6 +95,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const approved = useApprovedSuggestions();
   const [submitToast, setSubmitToast] = useState<string | null>(null);
   const T = t(lang);
+  const isMobile = useIsMobileSm();
 
   // Merge base GeoJSON with community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
