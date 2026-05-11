@@ -47,6 +47,8 @@ export const STRINGS = {
     unlocatedHint: "Записи, для которых не удалось установить координаты. Нажмите на иконку, чтобы вручную привязать селение к карте.",
     unlocatedSearch: "Поиск по селению, церкви, уезду…",
     unlocatedAllUezds: "Все уезды",
+    allRegions: "Все регионы",
+    allUezds: "Все уезды",
     unlocatedEmpty: "Ничего не найдено",
     unlocatedShowingFirst: (n: number, total: number) => `Показаны первые ${n} из ${total}. Уточните запрос.`,
     findOnMap: "Найти на карте",
