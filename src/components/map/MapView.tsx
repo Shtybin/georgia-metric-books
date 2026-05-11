@@ -52,6 +52,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     new Set(BUCKET_ORDER),
   );
   const [query, setQuery] = useState("");
+  const [regionFilter, setRegionFilter] = useState("");
+  const [uezdFilter, setUezdFilter] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
