@@ -239,9 +239,10 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
   return (
     <>
       <button
+        ref={btnRef}
         onClick={() => setOpen(true)}
-        style={{ bottom: "var(--report-btn-bottom)", right: "var(--report-btn-right)" }}
-        className="pointer-events-auto absolute z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur hover:bg-accent hover:text-foreground"
+        style={anchorStyle(anchor)}
+        className="pointer-events-auto absolute z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur transition-[top,bottom,left,right] duration-200 hover:bg-accent hover:text-foreground"
         aria-label={T.reportButton}
       >
         <AlertCircle className="h-3.5 w-3.5" />
