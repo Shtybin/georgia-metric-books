@@ -23,20 +23,29 @@ function LoginPage() {
     });
   }, [navigate]);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErr(null);
     setInfo(null);
+    // Read directly from the form to handle browser autofill that may not
+    // trigger React's onChange and leave controlled state empty.
+    const fd = new FormData(e.currentTarget);
+    const emailVal = ((fd.get("email") as string) || email || "").trim();
+    const passwordVal = (fd.get("password") as string) || password || "";
+    if (!emailVal || !passwordVal) {
+      setErr("Введите email и пароль");
+      return;
+    }
     setBusy(true);
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email: emailVal, password: passwordVal });
         if (error) throw error;
         navigate({ to: "/admin" });
       } else {
         const { error } = await supabase.auth.signUp({
-          email,
-          password,
+          email: emailVal,
+          password: passwordVal,
           options: { emailRedirectTo: `${window.location.origin}/admin` },
         });
         if (error) throw error;
@@ -63,6 +72,8 @@ function LoginPage() {
             <span className="mb-1 block text-xs text-muted-foreground">Email</span>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -73,6 +84,8 @@ function LoginPage() {
             <span className="mb-1 block text-xs text-muted-foreground">Пароль</span>
             <input
               type="password"
+              name="password"
+              autoComplete="current-password"
               required
               minLength={6}
               value={password}
