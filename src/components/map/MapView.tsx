@@ -306,41 +306,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.addSource("parishes", {
       type: "geojson",
       data: data as any,
-      cluster: true,
-      clusterRadius: 38,
-      clusterMaxZoom: 7,
+      cluster: false,
       promoteId: undefined,
       generateId: false,
     });
 
-    map.addLayer({
-      id: "clusters",
-      type: "circle",
-      source: "parishes",
-      filter: ["has", "point_count"],
-      paint: {
-        "circle-color": "#475569",
-        "circle-opacity": 0.85,
-        "circle-stroke-color": "#fff",
-        "circle-stroke-width": 2,
-        "circle-radius": [
-          "step", ["get", "point_count"],
-          14, 10, 18, 50, 24, 200, 30,
-        ],
-      },
-    }, map.getLayer("radius-fill") ? "radius-fill" : undefined);
-    map.addLayer({
-      id: "cluster-count",
-      type: "symbol",
-      source: "parishes",
-      filter: ["has", "point_count"],
-      layout: {
-        "text-field": ["get", "point_count_abbreviated"],
-        "text-size": 12,
-        "text-font": ["Noto Sans Regular"],
-      },
-      paint: { "text-color": "#fff" },
-    });
     map.addLayer({
       id: "points",
       type: "circle",
