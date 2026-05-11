@@ -232,7 +232,10 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       </Dialog>
 
       {sentToast && (
-        <div className="pointer-events-none absolute bottom-28 right-2 z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur sm:bottom-12 sm:right-[284px]">
+        <div
+          style={{ bottom: "var(--report-toast-bottom)", right: "var(--report-toast-right)" }}
+          className="pointer-events-none absolute z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur"
+        >
           {sentToast}
         </div>
       )}
