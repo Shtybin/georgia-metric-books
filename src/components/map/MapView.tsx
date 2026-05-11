@@ -81,6 +81,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const dataRef = useRef<FC | null>(null);
   useEffect(() => { dataRef.current = data; }, [data]);
+  // Refs so the (once-registered) map click handler reads up-to-date values.
+  const regionFilterRef = useRef("");
+  const uezdFilterRef = useRef("");
+  useEffect(() => { regionFilterRef.current = regionFilter; }, [regionFilter]);
+  useEffect(() => { uezdFilterRef.current = uezdFilter; }, [uezdFilter]);
 
   // Index for "find on map" jumps from the unlocated panel
   const locatedIndex = useMemo(() => {
@@ -497,7 +502,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     // Если активен фильтр по региону/уезду — сохраняем подсветку района,
     // чтобы выбор отдельной точки не сбрасывал контекст. Иначе сбрасываем
     // прежний радиус/районную подсветку, как и раньше.
-    if (!regionFilter && !uezdFilter) {
+    if (!regionFilterRef.current && !uezdFilterRef.current) {
       setNeighborIds(new Set());
       setHighlightMode(null);
     }
