@@ -144,34 +144,38 @@ describe("pickAnchor — realistic mobile layout (390×844)", () => {
   // Chip bar at bottom (full width, ~44px tall)
   const chipBar = C(8, 844 - 8 - 44, 390 - 8, 844 - 8);
 
-  it("places button in bottom-right when only top+bottom bars exist", () => {
-    // Button (140×26) at br: top = 844-12-26 = 806, bottom = 832
-    // chipBar.top = 844-8-44 = 792. They overlap by (832-806)*(?) → actually
-    // chip is from y=792 to 836, br from 806 to 832 → overlap ≠ 0.
-    // So with chip bar present, br IS blocked → falls to bl (same row, also blocked) → tr.
+  it("falls through to a free top corner when only the chip bar blocks the bottom", () => {
     const res = pickAnchor({
       container: MOBILE,
-      obstacles: [searchBar, chipBar],
+      obstacles: [chipBar],
       size: SIZE,
     });
-    expect(["tr", "tl"]).toContain(res.anchor);
+    // Top row is free → tr is the first free priority anchor
+    expect(res.anchor).toBe("tr");
     expect(res.overlap).toBe(0);
   });
 
-  it("avoids top bar AND chip bar by going to a middle-free corner if any", () => {
-    // If search bar is taller and blocks both top corners too:
+  it("picks bottom-right (priority) when every corner is blocked equally by full-width bars", () => {
     const tallSearch = C(0, 0, 390, 80);
     const res = pickAnchor({
       container: MOBILE,
       obstacles: [tallSearch, chipBar],
       size: SIZE,
     });
-    // All corners blocked → pick minimum overlap (search vs chip areas).
-    // Both bars span full width, so vertical overlap decides; chip is 44 tall
-    // intersecting br/bl 26-tall button → overlap 140 * (832-792 capped at 26) ≈ 140*26 = 3640
-    // tallSearch is 80 tall, button top corner is 12–38 → overlap 140*26 = 3640 — equal.
-    // Ties resolved by priority — first hit "br".
+    // All corners overlap a full-width bar with identical area → priority wins
     expect(res.anchor).toBe("br");
+    expect(res.scores.br).toBe(res.scores.bl);
+    expect(res.scores.tr).toBe(res.scores.tl);
+  });
+
+  it("avoids the top bar via bottom corners when only the search bar is present", () => {
+    const res = pickAnchor({
+      container: MOBILE,
+      obstacles: [searchBar],
+      size: SIZE,
+    });
+    expect(res.anchor).toBe("br");
+    expect(res.overlap).toBe(0);
   });
 });
 
