@@ -30,12 +30,16 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       return;
     }
     setSending(true);
+    const ms = getMapState?.() ?? null;
     const { error: dbError } = await supabase.from("problem_reports").insert({
       message: trimmed.slice(0, 4000),
       contact: contact.trim().slice(0, 200) || null,
       page_url: typeof window !== "undefined" ? window.location.href.slice(0, 500) : null,
       lang,
       user_agent: typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
+      lat: ms ? Number(ms.lat.toFixed(6)) : null,
+      lon: ms ? Number(ms.lon.toFixed(6)) : null,
+      zoom: ms ? Number(ms.zoom.toFixed(2)) : null,
     });
     setSending(false);
     if (dbError) {
