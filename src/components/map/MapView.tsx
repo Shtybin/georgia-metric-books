@@ -247,6 +247,27 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
     map.on("load", () => {
       styleLoadedRef.current = true;
+      // Перевести все подписи на английский (с фолбэком на латиницу и
+      // локальное имя). Это даёт международно принятые формы топонимов —
+      // в т.ч. для Абхазии и Южной Осетии (Sukhumi, Tskhinvali и т.п.).
+      try {
+        const style = map.getStyle();
+        for (const layer of style.layers || []) {
+          if (layer.type !== "symbol") continue;
+          const layout: any = (layer as any).layout;
+          if (!layout || !("text-field" in layout)) continue;
+          map.setLayoutProperty(layer.id, "text-field", [
+            "coalesce",
+            ["get", "name:en"],
+            ["get", "name:latin"],
+            ["get", "name_en"],
+            ["get", "name"],
+          ]);
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn("[maplibre] label localization failed", e);
+      }
       // Selected halo / radius sources are independent of parishes data — add them now.
       if (!map.getSource("selected")) {
         map.addSource("selected", {
