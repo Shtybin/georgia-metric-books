@@ -108,7 +108,7 @@ function AdminPage() {
     else setReportsLoading(true);
     let q = supabase
       .from("problem_reports")
-      .select("id, created_at, message, contact, page_url, lang, user_agent, status", { count: "exact" })
+      .select("id, created_at, message, contact, page_url, lang, user_agent, status, lat, lon, zoom", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(offset, offset + REPORTS_PAGE - 1);
     if (reportFilter !== "all") q = q.eq("status", reportFilter);
