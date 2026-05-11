@@ -153,6 +153,43 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return fuse.search(query.trim()).slice(0, 8).map(r => r.item as Feature);
   }, [fuse, query]);
 
+  // Build uezd/region → feature ids index for "highlight all in area" search
+  const areaIndex = useMemo(() => {
+    const uezdMap = new Map<string, { label: string; ids: number[] }>();
+    const regionMap = new Map<string, { label: string; ids: number[] }>();
+    if (!data) return { uezds: [] as Array<{ key: string; label: string; ids: number[] }>, regions: [] as Array<{ key: string; label: string; ids: number[] }> };
+    for (const f of data.features) {
+      const p: any = f.properties;
+      const id = f.id as number;
+      const uLabel = p.uezd?.[lang] || p.uezd?.en || p.uezd?.ru;
+      if (uLabel) {
+        const key = uLabel.toLocaleLowerCase();
+        const entry = uezdMap.get(key) || { label: uLabel, ids: [] };
+        entry.ids.push(id);
+        uezdMap.set(key, entry);
+      }
+      const rLabel = p.region?.[lang] || p.region?.en || p.region?.ru;
+      if (rLabel) {
+        const key = rLabel.toLocaleLowerCase();
+        const entry = regionMap.get(key) || { label: rLabel, ids: [] };
+        entry.ids.push(id);
+        regionMap.set(key, entry);
+      }
+    }
+    return {
+      uezds: [...uezdMap.entries()].map(([k, v]) => ({ key: k, ...v })),
+      regions: [...regionMap.entries()].map(([k, v]) => ({ key: k, ...v })),
+    };
+  }, [data, lang]);
+
+  const areaMatches = useMemo(() => {
+    const q = query.trim().toLocaleLowerCase();
+    if (q.length < 2) return { uezds: [] as typeof areaIndex.uezds, regions: [] as typeof areaIndex.regions };
+    const filt = (arr: typeof areaIndex.uezds) =>
+      arr.filter((x) => x.key.includes(q)).slice(0, 3);
+    return { uezds: filt(areaIndex.uezds), regions: filt(areaIndex.regions) };
+  }, [areaIndex, query]);
+
   const points = useMemo(() => {
     if (!data) return [];
     return data.features.map(f => ({
