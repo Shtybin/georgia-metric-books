@@ -1106,9 +1106,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </div>
             <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
               {(() => {
-                const withC = stats.uniqueLocations ?? Math.max(0, stats.total - stats.withoutCoords);
-                const without = stats.unlocatedGroups ?? stats.withoutCoords;
-                const total = withC + without;
+                const total = stats.total;
+                const withC = Math.max(0, stats.total - stats.withoutCoords);
+                const without = stats.withoutCoords;
                 const pct = (n: number) => total > 0 ? Math.round((n / total) * 100) : 0;
                 return (
                   <>
