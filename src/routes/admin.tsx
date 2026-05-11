@@ -94,25 +94,47 @@ function AdminPage() {
     setLoading(false);
   }
 
-  async function loadReports() {
-    setReportsLoading(true);
+  function escapeForOr(s: string) {
+    // Postgrest .or() uses commas/parens as separators; also escape % and _
+    return s.replace(/[(),%_*]/g, " ").trim();
+  }
+
+  async function loadReports(opts: { append?: boolean; offset?: number } = {}) {
+    const offset = opts.offset ?? 0;
+    if (opts.append) setReportsLoadingMore(true);
+    else setReportsLoading(true);
     let q = supabase
       .from("problem_reports")
-      .select("id, created_at, message, contact, page_url, lang, user_agent, status")
+      .select("id, created_at, message, contact, page_url, lang, user_agent, status", { count: "exact" })
       .order("created_at", { ascending: false })
-      .limit(500);
+      .range(offset, offset + REPORTS_PAGE - 1);
     if (reportFilter !== "all") q = q.eq("status", reportFilter);
-    const { data, error } = await q;
+    const term = escapeForOr(reportSearchDebounced);
+    if (term) {
+      const pat = `%${term}%`;
+      q = q.or(`message.ilike.${pat},contact.ilike.${pat}`);
+    }
+    const { data, error, count } = await q;
     if (error) console.error(error);
-    setReports((data as ProblemReport[]) || []);
-    setReportsLoading(false);
+    const rows = (data as ProblemReport[]) || [];
+    setReports((prev) => (opts.append ? [...prev, ...rows] : rows));
+    setReportsTotal(count ?? null);
+    setReportsHasMore(rows.length === REPORTS_PAGE && (count == null || offset + rows.length < count));
+    if (opts.append) setReportsLoadingMore(false);
+    else setReportsLoading(false);
   }
+
+  // Debounce search input
+  useEffect(() => {
+    const t = setTimeout(() => setReportSearchDebounced(reportSearch.trim()), 300);
+    return () => clearTimeout(t);
+  }, [reportSearch]);
 
   useEffect(() => {
     if (isAdmin && tab === "coords") load();
     if (isAdmin && tab === "reports") loadReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin, tab, filter, reportFilter]);
+  }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
     const { error } = await supabase
