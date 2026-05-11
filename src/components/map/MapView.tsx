@@ -470,13 +470,36 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function showRadius() {
     if (!selected) return;
     const [lon, lat] = selected.geometry.coordinates;
-    const ids = new Set(neighborsWithin(points, lon, lat, 50));
+    const ids = new Set(neighborsWithin(points, lon, lat, 10));
     setNeighborIds(ids);
     const map = mapRef.current;
     (map?.getSource("radius") as any)?.setData({
       type: "FeatureCollection",
-      features: [circlePolygon(lon, lat, 50)],
+      features: [circlePolygon(lon, lat, 10)],
     });
+  }
+
+  function highlightArea(ids: number[]) {
+    setNeighborIds(new Set(ids));
+    const map = mapRef.current;
+    (map?.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
+    (map?.getSource("selected") as any)?.setData({ type: "FeatureCollection", features: [] });
+    setSelected(null);
+    if (data && ids.length > 0 && map) {
+      const idSet = new Set(ids);
+      let minLon = 180, maxLon = -180, minLat = 90, maxLat = -90;
+      for (const f of data.features) {
+        if (!idSet.has(f.id as number)) continue;
+        const [lo, la] = f.geometry.coordinates;
+        if (lo < minLon) minLon = lo;
+        if (lo > maxLon) maxLon = lo;
+        if (la < minLat) minLat = la;
+        if (la > maxLat) maxLat = la;
+      }
+      if (minLon <= maxLon && minLat <= maxLat) {
+        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 10 });
+      }
+    }
   }
 
   function toggleBucket(b: string) {
