@@ -71,10 +71,26 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
 
   // ===== Collision-aware anchor =====
   // Pure picker logic lives in src/lib/collision-anchor.ts (unit-tested).
+  // On mobile we pin the button to the top-right corner and skip the
+  // collision detector entirely so it never moves during zoom/filter/select.
   const btnRef = useRef<HTMLButtonElement | null>(null);
-  const [anchor, setAnchor] = useState<Anchor>("br");
+  const [anchor, setAnchor] = useState<Anchor>("tr");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 639px)");
+    const apply = () => setIsMobile(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   useLayoutEffect(() => {
+    if (isMobile) {
+      setAnchor("tr");
+      return;
+    }
     const btn = btnRef.current;
     const parent = btn?.parentElement;
     if (!btn || !parent) return;
@@ -175,7 +191,7 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       window.removeEventListener("resize", schedule);
       window.removeEventListener("scroll", schedule);
     };
-  }, [open, sentToast]);
+  }, [open, sentToast, isMobile]);
 
   const anchorStyle = (a: Anchor, toast = false): CSSProperties => {
     const off = toast ? " + var(--map-overlay-toast-offset)" : "";

@@ -61,6 +61,18 @@ interface Props {
   embed?: boolean;
 }
 
+function useIsMobileSm() {
+  const [m, setM] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const apply = () => setM(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  return m;
+}
+
 export function MapView({ lang, onLangChange, embed }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
@@ -83,6 +95,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const approved = useApprovedSuggestions();
   const [submitToast, setSubmitToast] = useState<string | null>(null);
   const T = t(lang);
+  const isMobile = useIsMobileSm();
 
   // Merge base GeoJSON with community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
@@ -810,7 +823,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               aria-label={T.regionLabel}
               className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <option value="">{T.allRegions}</option>
+              <option value="">{isMobile ? T.regionLabel : T.allRegions}</option>
               {regionList.map((r) => (
                 <option key={r.key} value={r.key}>{r.label}</option>
               ))}
@@ -821,7 +834,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               aria-label={T.uezdLabel}
               className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <option value="">{T.allUezds}</option>
+              <option value="">{isMobile ? T.uezdLabel : T.allUezds}</option>
               {uezdsForRegion.map((u) => (
                 <option key={u.key} value={u.key}>{u.label}</option>
               ))}
@@ -1018,9 +1031,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         );
       })()}
 
-      {/* Mobile: 2-row legend along the bottom + docs button. Hidden when a card is open. */}
+      {/* Mobile: docs button above the 2-row legend along the bottom.
+          Hidden when a card is open. */}
       {!selected && (
         <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 flex flex-col gap-1.5 sm:hidden">
+          <button
+            onClick={() => setDocsOpen(true)}
+            className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1 text-[11px] font-medium text-foreground shadow-lg backdrop-blur hover:bg-accent"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
+            {T.docsButton}
+          </button>
           <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
             {BUCKET_ORDER.map((b) => {
               const on = enabledBuckets.has(b);
@@ -1043,13 +1064,6 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               );
             })}
           </div>
-          <button
-            onClick={() => setDocsOpen(true)}
-            className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1 text-[11px] font-medium text-foreground shadow-lg backdrop-blur hover:bg-accent"
-          >
-            <HelpCircle className="h-3.5 w-3.5" />
-            {T.docsButton}
-          </button>
         </div>
       )}
 
