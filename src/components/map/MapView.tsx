@@ -897,7 +897,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   </div>
                 )}
                 {searchResults.length === 0 && areaMatches.uezds.length === 0 && areaMatches.regions.length === 0 ? (
-                  <div className="p-3 text-sm text-muted-foreground">{T.notFoundTitle}</div>
+                  <div className="p-3 text-sm text-muted-foreground">
+                    {query !== debouncedQuery ? "…" : T.notFoundTitle}
+                  </div>
                 ) : searchResults.map(({ feature: f, churchMatch }) => {
                   const p = f.properties;
                   const settlementName = p.settlement[lang] || p.settlement.en || "—";
