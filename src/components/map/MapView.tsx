@@ -535,7 +535,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         if (la > maxLat) maxLat = la;
       }
       if (minLon <= maxLon && minLat <= maxLat) {
-        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 9 });
+        map.fitBounds([[minLon, minLat], [maxLon, maxLat]], { padding: 80, duration: 700, maxZoom: 11 });
+        // Cluster ends at zoom 7. Ensure we go past it so highlights are visible.
+        map.once("moveend", () => {
+          if (map.getZoom() < 7.5) map.easeTo({ zoom: 8, duration: 400 });
+        });
       }
     }
   }
