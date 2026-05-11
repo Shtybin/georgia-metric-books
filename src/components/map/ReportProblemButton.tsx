@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import type { Lang } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
+import { pickAnchor, type Anchor, type Rect } from "@/lib/collision-anchor";
 
 interface Props {
   lang: Lang;
