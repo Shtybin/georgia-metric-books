@@ -239,7 +239,7 @@ export function UnlocatedPanel({
                                   onJumpToFeature(featureId);
                                   onOpenChange(false);
                                 }}
-                                className="rounded-md border border-border bg-background p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                                 aria-label={T.findOnMap}
                                 title={T.findOnMap}
                               >
@@ -249,7 +249,7 @@ export function UnlocatedPanel({
                             <button
                               onClick={() => setEditingKey(isEditing ? null : k)}
                               className={cn(
-                                "rounded-md border p-1.5 transition-colors",
+                                "inline-flex h-10 w-10 items-center justify-center rounded-md border transition-colors",
                                 isEditing
                                   ? "border-primary bg-primary text-primary-foreground"
                                   : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground",
