@@ -26,13 +26,14 @@ type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
 
 // Set basemap label fields based on current UI language.
-// ka → name:ka with fallback to English/latin; en/ru → English/latin per
-// international conventions (Sukhumi, Tskhinvali, etc.).
+// ka → name:ka, ru → name:ru, en → name:en, each with sensible fallbacks.
 function applyBasemapLabels(map: MLMap, lang: Lang) {
   try {
     const style = map.getStyle();
     const expr: any = lang === "ka"
       ? ["coalesce", ["get", "name:ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
+      : lang === "ru"
+      ? ["coalesce", ["get", "name:ru"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
       : ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]];
     for (const layer of style.layers || []) {
       if (layer.type !== "symbol") continue;
