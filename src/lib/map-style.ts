@@ -1,16 +1,18 @@
 // Okabe-Ito categorical palette for start-year buckets.
 // Colorblind-safe; tested for contrast on light & dark basemaps.
 export const BUCKET_COLORS: Record<string, string> = {
-  "pre-1840": "#0072B2",
-  "1840-1860": "#009E73",
+  "pre-1820": "#0072B2",
+  "1820-1835": "#56B4E9",
+  "1835-1860": "#009E73",
   "1860-1880": "#E69F00",
   "1880-1900": "#CC79A7",
   "post-1900": "#D55E00",
 };
 
 export const BUCKET_ORDER = [
-  "pre-1840",
-  "1840-1860",
+  "pre-1820",
+  "1820-1835",
+  "1835-1860",
   "1860-1880",
   "1880-1900",
   "post-1900",
@@ -23,8 +25,9 @@ export const BASEMAP_STYLE =
 export const colorExpression: any = [
   "match",
   ["get", "bucket"],
-  "pre-1840", BUCKET_COLORS["pre-1840"],
-  "1840-1860", BUCKET_COLORS["1840-1860"],
+  "pre-1820", BUCKET_COLORS["pre-1820"],
+  "1820-1835", BUCKET_COLORS["1820-1835"],
+  "1835-1860", BUCKET_COLORS["1835-1860"],
   "1860-1880", BUCKET_COLORS["1860-1880"],
   "1880-1900", BUCKET_COLORS["1880-1900"],
   "post-1900", BUCKET_COLORS["post-1900"],
