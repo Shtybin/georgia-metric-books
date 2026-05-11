@@ -52,6 +52,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     new Set(BUCKET_ORDER),
   );
   const [query, setQuery] = useState("");
+  const [regionFilter, setRegionFilter] = useState("");
+  const [uezdFilter, setUezdFilter] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
@@ -192,6 +194,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return { uezds: filt(areaIndex.uezds), regions: filt(areaIndex.regions) };
   }, [areaIndex, query]);
 
+  // Sorted region/uezd lists for the dropdown filters under the search bar.
+  const regionList = useMemo(
+    () => [...areaIndex.regions].sort((a, b) => a.label.localeCompare(b.label)),
+    [areaIndex],
+  );
+  const uezdList = useMemo(
+    () => [...areaIndex.uezds].sort((a, b) => a.label.localeCompare(b.label)),
+    [areaIndex],
+  );
+  // When a region is chosen, restrict the uezd dropdown to uezds inside it.
+  const uezdsForRegion = useMemo(() => {
+    if (!regionFilter) return uezdList;
+    const region = areaIndex.regions.find((r) => r.key === regionFilter);
+    if (!region) return uezdList;
+    const regionIds = new Set(region.ids);
+    return uezdList.filter((u) => u.ids.some((id) => regionIds.has(id)));
+  }, [uezdList, regionFilter, areaIndex]);
+
   const points = useMemo(() => {
     if (!data) return [];
     return data.features.map(f => ({
@@ -306,41 +326,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.addSource("parishes", {
       type: "geojson",
       data: data as any,
-      cluster: true,
-      clusterRadius: 38,
-      clusterMaxZoom: 7,
+      cluster: false,
       promoteId: undefined,
       generateId: false,
     });
 
-    map.addLayer({
-      id: "clusters",
-      type: "circle",
-      source: "parishes",
-      filter: ["has", "point_count"],
-      paint: {
-        "circle-color": "#475569",
-        "circle-opacity": 0.85,
-        "circle-stroke-color": "#fff",
-        "circle-stroke-width": 2,
-        "circle-radius": [
-          "step", ["get", "point_count"],
-          14, 10, 18, 50, 24, 200, 30,
-        ],
-      },
-    }, map.getLayer("radius-fill") ? "radius-fill" : undefined);
-    map.addLayer({
-      id: "cluster-count",
-      type: "symbol",
-      source: "parishes",
-      filter: ["has", "point_count"],
-      layout: {
-        "text-field": ["get", "point_count_abbreviated"],
-        "text-size": 12,
-        "text-font": ["Noto Sans Regular"],
-      },
-      paint: { "text-color": "#fff" },
-    });
     map.addLayer({
       id: "points",
       type: "circle",
@@ -368,19 +358,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       },
     });
 
-    map.on("click", "clusters", (e) => {
-      const features = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
-      const clusterId = features[0]?.properties?.cluster_id;
-      const src = map.getSource("parishes") as any;
-      if (clusterId == null || !src?.getClusterExpansionZoom) return;
-      src.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
-        if (err) return;
-        const coords = (features[0].geometry as any).coordinates as [number, number];
-        map.easeTo({ center: coords, zoom: zoom + 0.2, duration: 600 });
-      });
-    });
-    map.on("mouseenter", "clusters", () => { map.getCanvas().style.cursor = "pointer"; });
-    map.on("mouseleave", "clusters", () => { map.getCanvas().style.cursor = ""; });
+
+
 
     const findOriginalFeature = (f: MapGeoJSONFeature): Feature | undefined => {
       if (!f) return;
@@ -547,6 +526,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function resetView() {
     clearSelection();
     setQuery("");
+    setRegionFilter("");
+    setUezdFilter("");
     setShowResults(false);
     setEnabledBuckets(new Set(BUCKET_ORDER));
     const map = mapRef.current;
@@ -563,13 +544,37 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
   }
 
-  // When the user clears the search input, also drop any area highlight.
+  // When the user clears the search input, also drop any area highlight
+  // (unless a region/uezd dropdown filter is active).
   useEffect(() => {
-    if (query.trim().length === 0 && highlightMode === "area") {
+    if (
+      query.trim().length === 0 &&
+      highlightMode === "area" &&
+      !regionFilter &&
+      !uezdFilter
+    ) {
       clearSelection();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  // React to Region / Uezd dropdown filters: highlight matching ids (intersection).
+  useEffect(() => {
+    if (!regionFilter && !uezdFilter) {
+      if (highlightMode === "area") clearSelection();
+      return;
+    }
+    const r = regionFilter ? areaIndex.regions.find((x) => x.key === regionFilter) : null;
+    const u = uezdFilter ? areaIndex.uezds.find((x) => x.key === uezdFilter) : null;
+    let ids: number[] = [];
+    if (r && u) {
+      const us = new Set(u.ids);
+      ids = r.ids.filter((id) => us.has(id));
+    } else if (r) ids = r.ids;
+    else if (u) ids = u.ids;
+    if (ids.length > 0) highlightArea(ids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [regionFilter, uezdFilter, areaIndex]);
 
   const sel = selected?.properties;
   const nearbyCount = Math.max(0, neighborIds.size - 1);
@@ -692,6 +697,34 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </div>
             )}
           </div>
+          {/* Region / Uezd dropdown filters — highlight all matching points. */}
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <select
+              value={regionFilter}
+              onChange={(e) => {
+                setRegionFilter(e.target.value);
+                setUezdFilter("");
+              }}
+              aria-label={T.regionLabel}
+              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">{T.allRegions}</option>
+              {regionList.map((r) => (
+                <option key={r.key} value={r.key}>{r.label}</option>
+              ))}
+            </select>
+            <select
+              value={uezdFilter}
+              onChange={(e) => setUezdFilter(e.target.value)}
+              aria-label={T.uezdLabel}
+              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">{T.allUezds}</option>
+              {uezdsForRegion.map((u) => (
+                <option key={u.key} value={u.key}>{u.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
@@ -710,9 +743,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           >
             <ListX className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">{T.unlocatedButton}</span>
-            {stats?.withoutCoords ? (
+            {(stats?.unlocatedGroups ?? stats?.withoutCoords) ? (
               <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
-                {stats.withoutCoords.toLocaleString()}
+                {(stats!.unlocatedGroups ?? stats!.withoutCoords).toLocaleString()}
               </span>
             ) : null}
           </button>
@@ -968,14 +1001,23 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </div>
             <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
               <dt className="text-muted-foreground">{T.total}</dt>
-              <dd className="tabular-nums">{stats.total.toLocaleString()}</dd>
+              <dd className="tabular-nums">{(stats.uniqueLocations ?? stats.total).toLocaleString()}</dd>
               <dt className="text-muted-foreground">{T.withCoords}</dt>
               <dd className="tabular-nums">
-                {stats.withCoords.toLocaleString()} ({Math.round(stats.withCoords / stats.total * 100)}%)
+                {(() => {
+                  const total = stats.uniqueLocations ?? stats.total;
+                  const without = stats.unlocatedGroups ?? stats.withoutCoords;
+                  const withC = Math.max(0, total - without);
+                  return `${withC.toLocaleString()} (${Math.round(withC / total * 100)}%)`;
+                })()}
               </dd>
               <dt className="text-muted-foreground">{T.withoutCoords}</dt>
               <dd className="tabular-nums">
-                {stats.withoutCoords.toLocaleString()} ({Math.round(stats.withoutCoords / stats.total * 100)}%)
+                {(() => {
+                  const total = stats.uniqueLocations ?? stats.total;
+                  const without = stats.unlocatedGroups ?? stats.withoutCoords;
+                  return `${without.toLocaleString()} (${Math.round(without / total * 100)}%)`;
+                })()}
               </dd>
               <dt className="text-muted-foreground">{T.confidence}</dt>
               <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
