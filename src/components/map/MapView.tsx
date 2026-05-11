@@ -430,7 +430,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           [e.point.x - hitbox, e.point.y - hitbox],
           [e.point.x + hitbox, e.point.y + hitbox],
         ],
-        { layers: ["points"] },
+        { layers: ["points-top", "points"] },
       );
       const orig = features[0] ? findOriginalFeature(features[0]) : findNearestFeature(e.point, hitbox);
       if (!orig) return;
