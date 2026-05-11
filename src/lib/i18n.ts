@@ -105,6 +105,7 @@ export const STRINGS = {
     title: "Georgian Parish Registers",
     subtitle: "Archival atlas 1819–1930",
     search: "Search settlement, church, uezd…",
+    searchShort: "Search",
     legend: "Start-year period",
     bucket: {
       "pre-1820": "before 1820",
