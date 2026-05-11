@@ -49,11 +49,25 @@ interface Suggestion {
   created_at: string;
 }
 
+interface Diagnostics {
+  checkedAt: string;
+  sessionPresent: boolean;
+  userId: string | null;
+  email: string | null;
+  expiresAt: string | null;
+  provider: string | null;
+  rpcOk: boolean;
+  rpcResult: unknown;
+  rpcError: string | null;
+}
+
 function AdminPage() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
+  const [diagOpen, setDiagOpen] = useState(false);
   const [tab, setTab] = useState<"coords" | "reports">("coords");
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
@@ -73,6 +87,37 @@ function AdminPage() {
   const [historyData, setHistoryData] = useState<Record<string, ReportHistoryEntry[]>>({});
   const [historyLoading, setHistoryLoading] = useState<Record<string, boolean>>({});
 
+  async function runDiagnostics(): Promise<{ admin: boolean; email: string | null }> {
+    const { data: sess } = await supabase.auth.getSession();
+    const session = sess.session;
+    let rpcOk = false;
+    let rpcResult: unknown = null;
+    let rpcError: string | null = null;
+    let admin = false;
+    if (session) {
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: session.user.id,
+        _role: "admin",
+      });
+      rpcResult = data;
+      rpcOk = !error;
+      rpcError = error?.message ?? null;
+      admin = !error && data === true;
+    }
+    setDiagnostics({
+      checkedAt: new Date().toISOString(),
+      sessionPresent: !!session,
+      userId: session?.user.id ?? null,
+      email: session?.user.email ?? null,
+      expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
+      provider: (session?.user.app_metadata?.provider as string) ?? null,
+      rpcOk,
+      rpcResult,
+      rpcError,
+    });
+    return { admin, email: session?.user.email ?? null };
+  }
+
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -81,15 +126,9 @@ function AdminPage() {
         navigate({ to: "/login" });
         return;
       }
-      setEmail(sess.session.user.email ?? null);
-      // Use the SECURITY DEFINER RPC so the check works regardless of RLS
-      // visibility on user_roles for the current session.
-      const { data: isAdminRpc, error } = await supabase.rpc("has_role", {
-        _user_id: sess.session.user.id,
-        _role: "admin",
-      });
+      const { admin, email: e } = await runDiagnostics();
       if (!mounted) return;
-      const admin = !error && isAdminRpc === true;
+      setEmail(e);
       setIsAdmin(admin);
       setChecking(false);
     })();
