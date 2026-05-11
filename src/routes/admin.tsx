@@ -150,6 +150,7 @@ function AdminPage() {
     const { error } = await supabase.from("problem_reports").delete().eq("id", id);
     if (error) { alert(error.message); return; }
     setReports((prev) => prev.filter((r) => r.id !== id));
+    setReportsTotal((t) => (t != null ? Math.max(0, t - 1) : t));
   }
 
   async function setStatus(id: string, status: "approved" | "rejected") {
