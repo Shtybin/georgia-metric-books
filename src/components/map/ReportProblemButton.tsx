@@ -113,41 +113,27 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       const w = btnRect.width || 140;
       const h = btnRect.height || 26;
       const pr = parent.getBoundingClientRect();
-      const m = 12;
+      const container: Rect = { left: pr.left, right: pr.right, top: pr.top, bottom: pr.bottom };
 
-      const obstacles: DOMRect[] = [];
+      const obstacles: Rect[] = [];
       const collect = (el: Element) => {
         if (isInsideSelf(el)) return;
         const r = (el as HTMLElement).getBoundingClientRect();
         if (!isVisible(el, r)) return;
-        // Only count if intersects the map container area at all
         if (r.right <= pr.left || r.left >= pr.right || r.bottom <= pr.top || r.top >= pr.bottom) return;
-        obstacles.push(r);
+        obstacles.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
       };
-      // Direct children of the map container (legend, search bar, detail card, chip bar…)
       for (const el of Array.from(parent.children)) collect(el);
-      // Nested overlays inside the map (MapLibre controls and popups)
       parent.querySelectorAll(PORTAL_SELECTORS).forEach(collect);
-      // Portaled overlays elsewhere in the document (Radix tooltips/popovers, sonner)
       document.querySelectorAll(PORTAL_SELECTORS).forEach(collect);
 
-      const cands: Record<Anchor, { left: number; right: number; top: number; bottom: number }> = {
-        br: { left: pr.right - m - w, right: pr.right - m, top: pr.bottom - m - h, bottom: pr.bottom - m },
-        bl: { left: pr.left + m, right: pr.left + m + w, top: pr.bottom - m - h, bottom: pr.bottom - m },
-        tr: { left: pr.right - m - w, right: pr.right - m, top: pr.top + m, bottom: pr.top + m + h },
-        tl: { left: pr.left + m, right: pr.left + m + w, top: pr.top + m, bottom: pr.top + m + h },
-      };
-
-      let best: Anchor = "br";
-      let bestScore = Infinity;
-      for (const a of ANCHOR_PRIORITY) {
-        const rect = cands[a];
-        let score = 0;
-        for (const o of obstacles) if (overlap(rect, o)) score += overlapArea(rect, o);
-        if (score === 0) { best = a; break; }
-        if (score < bestScore) { bestScore = score; best = a; }
-      }
-      setAnchor((prev) => (prev === best ? prev : best));
+      const { anchor: best } = pickAnchor({
+        container,
+        obstacles,
+        size: { width: w, height: h },
+        margin: 12,
+      });
+      setAnchor((prev: Anchor) => (prev === best ? prev : best));
     };
 
     let raf = 0;
