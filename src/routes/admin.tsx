@@ -2,12 +2,23 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Check, X, LogOut, ExternalLink } from "lucide-react";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Админ — модерация координат" }] }),
+  head: () => ({ meta: [{ title: "Админ — модерация" }] }),
   component: AdminPage,
 });
+
+interface ProblemReport {
+  id: string;
+  created_at: string;
+  message: string;
+  contact: string | null;
+  page_url: string | null;
+  lang: string | null;
+  user_agent: string | null;
+  status: "new" | "in_progress" | "resolved";
+}
 
 interface Suggestion {
   id: string;
