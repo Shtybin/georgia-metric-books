@@ -21,6 +21,16 @@ interface ProblemReport {
   lat: number | null;
   lon: number | null;
   zoom: number | null;
+  admin_notes: string | null;
+}
+
+interface ReportHistoryEntry {
+  id: string;
+  changed_at: string;
+  changed_by: string | null;
+  old_status: "new" | "in_progress" | "resolved" | null;
+  new_status: "new" | "in_progress" | "resolved";
+  note: string | null;
 }
 
 interface Suggestion {
