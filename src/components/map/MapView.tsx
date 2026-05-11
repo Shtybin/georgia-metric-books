@@ -55,22 +55,26 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
   const userCoords = useUserCoords();
+  const approved = useApprovedSuggestions();
+  const [submitToast, setSubmitToast] = useState<string | null>(null);
   const T = t(lang);
 
-  // Merge base GeoJSON with user-pinned features.
+  // Merge base GeoJSON with community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
     if (!baseData) return null;
-    const userKeys = Object.keys(userCoords.records);
-    if (userKeys.length === 0) return baseData;
     const baseLen = baseData.features.length;
     const userFeatures = Object.values(userCoords.records).map((rec, i) =>
       userRecordToFeature(rec, 1_000_000 + i + baseLen),
     );
+    const approvedFeatures = approved.map((s, i) =>
+      approvedToFeature(s, 2_000_000 + i + baseLen),
+    );
+    if (userFeatures.length === 0 && approvedFeatures.length === 0) return baseData;
     return {
       ...baseData,
-      features: [...baseData.features, ...userFeatures],
+      features: [...baseData.features, ...approvedFeatures, ...userFeatures],
     };
-  }, [baseData, userCoords.records]);
+  }, [baseData, userCoords.records, approved]);
 
   const dataRef = useRef<FC | null>(null);
   useEffect(() => { dataRef.current = data; }, [data]);
