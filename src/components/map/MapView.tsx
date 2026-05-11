@@ -781,7 +781,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 if (e.key === "Enter") {
                   e.preventDefault();
                   if (searchResults[0]) {
-                    const f = searchResults[0];
+                    const f = searchResults[0].feature;
                     selectFeature(f);
                     setQuery(f.properties.settlement[lang] || f.properties.settlement.en);
                     setShowResults(false);
