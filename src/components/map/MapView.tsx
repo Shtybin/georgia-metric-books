@@ -992,25 +992,22 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <Info className="h-3 w-3" />{T.stats}
             </div>
             <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
-              <dt className="text-muted-foreground">{T.total}</dt>
-              <dd className="tabular-nums">{(stats.uniqueLocations ?? stats.total).toLocaleString()}</dd>
-              <dt className="text-muted-foreground">{T.withCoords}</dt>
-              <dd className="tabular-nums">
-                {(() => {
-                  const total = stats.uniqueLocations ?? stats.total;
-                  const without = stats.unlocatedGroups ?? stats.withoutCoords;
-                  const withC = Math.max(0, total - without);
-                  return `${withC.toLocaleString()} (${Math.round(withC / total * 100)}%)`;
-                })()}
-              </dd>
-              <dt className="text-muted-foreground">{T.withoutCoords}</dt>
-              <dd className="tabular-nums">
-                {(() => {
-                  const total = stats.uniqueLocations ?? stats.total;
-                  const without = stats.unlocatedGroups ?? stats.withoutCoords;
-                  return `${without.toLocaleString()} (${Math.round(without / total * 100)}%)`;
-                })()}
-              </dd>
+              {(() => {
+                const withC = stats.uniqueLocations ?? Math.max(0, stats.total - stats.withoutCoords);
+                const without = stats.unlocatedGroups ?? stats.withoutCoords;
+                const total = withC + without;
+                const pct = (n: number) => total > 0 ? Math.round((n / total) * 100) : 0;
+                return (
+                  <>
+                    <dt className="text-muted-foreground">{T.total}</dt>
+                    <dd className="tabular-nums">{total.toLocaleString()}</dd>
+                    <dt className="text-muted-foreground">{T.withCoords}</dt>
+                    <dd className="tabular-nums">{withC.toLocaleString()} ({pct(withC)}%)</dd>
+                    <dt className="text-muted-foreground">{T.withoutCoords}</dt>
+                    <dd className="tabular-nums">{without.toLocaleString()} ({pct(without)}%)</dd>
+                  </>
+                );
+              })()}
               <dt className="text-muted-foreground">{T.confidence}</dt>
               <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
             </dl>
