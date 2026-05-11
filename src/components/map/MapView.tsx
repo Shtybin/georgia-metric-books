@@ -198,10 +198,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
   }, [data]);
 
+  const minQueryLen = isMobile ? 1 : 2;
   const searchResults = useMemo(() => {
-    if (!fuse || query.trim().length < 2) return [];
-    return fuse.search(query.trim()).slice(0, 8).map(r => r.item as Feature);
-  }, [fuse, query]);
+    if (!fuse || query.trim().length < minQueryLen) return [];
+    return fuse.search(query.trim()).slice(0, isMobile ? 12 : 8).map(r => r.item as Feature);
+  }, [fuse, query, minQueryLen, isMobile]);
 
   // Build uezd/region → feature ids index for "highlight all in area" search
   const areaIndex = useMemo(() => {
