@@ -210,13 +210,23 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }, [data]);
 
   const minQueryLen = isMobile ? 1 : 2;
+
+  // Debounce search query so we don't re-run fuse / re-render the dropdown
+  // on every keystroke. Short delay on desktop, slightly longer on mobile
+  // where typing is more frequent and lists must stay snappy.
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedQuery(query), isMobile ? 140 : 90);
+    return () => clearTimeout(id);
+  }, [query, isMobile]);
+
+  const RESULT_LIMIT = isMobile ? 10 : 8;
   const searchResults = useMemo(() => {
-    if (!fuse || query.trim().length < minQueryLen) return [];
-    return fuse.search(query.trim()).slice(0, isMobile ? 12 : 8).map((r) => ({
+    if (!fuse || debouncedQuery.trim().length < minQueryLen) return [];
+    return fuse.search(debouncedQuery.trim(), { limit: RESULT_LIMIT }).map((r) => ({
       feature: r.item as Feature,
       churchMatch: (r.matches ?? []).some((m) => m.key?.startsWith("properties.church")),
     }));
-  }, [fuse, query, minQueryLen, isMobile]);
+  }, [fuse, debouncedQuery, minQueryLen, RESULT_LIMIT]);
 
   // Build uezd/region → feature ids index for "highlight all in area" search
   const areaIndex = useMemo(() => {
