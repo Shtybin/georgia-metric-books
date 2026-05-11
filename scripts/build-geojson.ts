@@ -61,10 +61,11 @@ function compactYears(years: number[]): string {
 }
 
 function bucketOf(year: number): string {
-  if (year < 1840) return "pre-1840";
-  if (year < 1860) return "1840-1860";
-  if (year < 1880) return "1860-1880";
-  if (year < 1900) return "1880-1900";
+  if (year < 1820) return "pre-1820";
+  if (year < 1836) return "1820-1835";
+  if (year < 1861) return "1835-1860";
+  if (year < 1881) return "1860-1880";
+  if (year < 1901) return "1880-1900";
   return "post-1900";
 }
 

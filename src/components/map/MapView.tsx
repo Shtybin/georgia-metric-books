@@ -2,7 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX, Undo2 } from "lucide-react";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle } from "lucide-react";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+} from "@/components/ui/dialog";
 import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
@@ -49,6 +52,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [unlocatedOpen, setUnlocatedOpen] = useState(false);
+  const [docsOpen, setDocsOpen] = useState(false);
   const userCoords = useUserCoords();
   const T = t(lang);
 
@@ -434,7 +438,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const nearbyCount = Math.max(0, neighborIds.size - 1);
 
   return (
-    <div className="relative" style={{ width: "100%", height: "100%", minHeight: "100vh" }}>
+    <div
+      className="relative overflow-hidden overscroll-none"
+      style={{ width: "100%", height: "100dvh" }}
+    >
       <div
         ref={containerRef}
         className="absolute inset-0"
@@ -654,10 +661,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         );
       })()}
 
-      {/* Mobile: compact horizontal legend along the bottom. Hidden when a card is open. */}
+      {/* Mobile: 2-row legend along the bottom + docs button. Hidden when a card is open. */}
       {!selected && (
-        <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
-          <div className="flex items-center gap-1 overflow-x-auto rounded-full border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
+        <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 flex flex-col gap-1.5 sm:hidden">
+          <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
             {BUCKET_ORDER.map((b) => {
               const on = enabledBuckets.has(b);
               return (
@@ -666,21 +673,51 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   onClick={() => toggleBucket(b)}
                   aria-pressed={on}
                   className={cn(
-                    "flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] tabular-nums transition-opacity",
+                    "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
                     on ? "opacity-100" : "opacity-40",
                   )}
                 >
                   <span
-                    className="h-2.5 w-2.5 rounded-full ring-1 ring-white"
+                    className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
                     style={{ backgroundColor: BUCKET_COLORS[b] }}
                   />
-                  {T.bucket[b]}
+                  <span className="truncate">{T.bucket[b]}</span>
                 </button>
               );
             })}
           </div>
+          <button
+            onClick={() => setDocsOpen(true)}
+            className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1 text-[11px] font-medium text-foreground shadow-lg backdrop-blur hover:bg-accent"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
+            {T.docsButton}
+          </button>
         </div>
       )}
+
+      {/* Desktop: floating docs button at the bottom center. */}
+      <button
+        onClick={() => setDocsOpen(true)}
+        className="pointer-events-auto absolute bottom-3 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-1.5 rounded-full border border-border bg-card/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent sm:inline-flex"
+      >
+        <HelpCircle className="h-4 w-4" />
+        {T.docsButton}
+      </button>
+
+      <Dialog open={docsOpen} onOpenChange={setDocsOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{T.docsTitle}</DialogTitle>
+          </DialogHeader>
+          <DialogDescription asChild>
+            <div
+              className="text-sm leading-relaxed text-foreground"
+              dangerouslySetInnerHTML={{ __html: T.docsBodyHtml }}
+            />
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
 
       {/* Desktop: full legend + stats panel. */}
       <div

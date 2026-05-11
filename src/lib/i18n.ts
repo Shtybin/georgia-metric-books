@@ -7,10 +7,11 @@ export const STRINGS = {
     search: "Поиск селения, церкви, уезда…",
     legend: "Период начала книги",
     bucket: {
-      "pre-1840": "до 1840",
-      "1840-1860": "1840–1860",
-      "1860-1880": "1860–1880",
-      "1880-1900": "1880–1900",
+      "pre-1820": "до 1820",
+      "1820-1835": "1821–1835",
+      "1835-1860": "1835–1860",
+      "1860-1880": "1861–1880",
+      "1880-1900": "1881–1900",
       "post-1900": "после 1900",
     },
     settlement: "Селение",
@@ -50,6 +51,11 @@ export const STRINGS = {
     invalidCoords: "Введите широту (-90…90) и долготу (-180…180)",
     coordsAdded: (name: string) => `Координаты добавлены: ${name}`,
     undo: "Отменить",
+    docsButton: "Где искать документы?",
+    docsTitle: "Где искать документы?",
+    docsBodyHtml:
+      'Метрические книги Грузии находятся в Национальном историческом архиве Грузии (фонд 489, опись 6). Списки метрических книг — на сайте <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">архива</a>. Как начать работу с архивом — читайте на <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">сайте</a>.',
+    close: "Закрыть",
   },
   en: {
     title: "Georgian Parish Registers",
@@ -57,10 +63,11 @@ export const STRINGS = {
     search: "Search settlement, church, uezd…",
     legend: "Start-year period",
     bucket: {
-      "pre-1840": "before 1840",
-      "1840-1860": "1840–1860",
-      "1860-1880": "1860–1880",
-      "1880-1900": "1880–1900",
+      "pre-1820": "before 1820",
+      "1820-1835": "1821–1835",
+      "1835-1860": "1835–1860",
+      "1860-1880": "1861–1880",
+      "1880-1900": "1881–1900",
       "post-1900": "after 1900",
     },
     settlement: "Settlement",
@@ -100,6 +107,11 @@ export const STRINGS = {
     invalidCoords: "Enter latitude (-90…90) and longitude (-180…180)",
     coordsAdded: (name: string) => `Coordinates added: ${name}`,
     undo: "Undo",
+    docsButton: "Where to find documents?",
+    docsTitle: "Where to find the documents?",
+    docsBodyHtml:
+      'The parish registers of Georgia are kept at the National Historical Archive of Georgia (fund 489, inventory 6). A catalogue of the registers is available on the <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">archive</a> website. To learn how to start working with the archive, see the <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">website</a>.',
+    close: "Close",
   },
 } as const;
 
