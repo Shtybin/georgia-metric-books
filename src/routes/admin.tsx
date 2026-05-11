@@ -489,6 +489,80 @@ function AdminPage() {
                       </Button>
                     </div>
                   </div>
+
+                  <div className="mt-3 border-t border-border pt-3">
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Заметки модератора
+                    </label>
+                    <textarea
+                      value={notesDraft[r.id] ?? r.admin_notes ?? ""}
+                      onChange={(e) =>
+                        setNotesDraft((d) => ({ ...d, [r.id]: e.target.value.slice(0, 4000) }))
+                      }
+                      rows={2}
+                      maxLength={4000}
+                      placeholder="Внутренние заметки видны только администраторам…"
+                      className="w-full rounded-md border border-border bg-background p-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    <div className="mt-1 flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleHistory(r.id)}
+                        className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+                      >
+                        <History className="h-3 w-3" />
+                        {historyOpen[r.id] ? "Скрыть историю" : "История изменений"}
+                      </button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={
+                          notesSaving[r.id] ||
+                          notesDraft[r.id] === undefined ||
+                          (notesDraft[r.id] ?? "") === (r.admin_notes ?? "")
+                        }
+                        onClick={() => saveNotes(r.id)}
+                      >
+                        {notesSaving[r.id] ? "Сохранение…" : "Сохранить заметки"}
+                      </Button>
+                    </div>
+
+                    {historyOpen[r.id] && (
+                      <div className="mt-2 rounded-md bg-muted/40 p-2">
+                        {historyLoading[r.id] ? (
+                          <p className="text-[11px] text-muted-foreground">Загрузка истории…</p>
+                        ) : (historyData[r.id]?.length ?? 0) === 0 ? (
+                          <p className="text-[11px] text-muted-foreground">История пуста.</p>
+                        ) : (
+                          <ol className="space-y-1 text-[11px]">
+                            {historyData[r.id].map((h) => {
+                              const label = (s: ReportHistoryEntry["new_status"] | null) =>
+                                s === "new" ? "новое" : s === "in_progress" ? "в работе" : s === "resolved" ? "решено" : "—";
+                              return (
+                                <li key={h.id} className="flex flex-wrap items-baseline gap-x-2">
+                                  <span className="tabular-nums text-muted-foreground">
+                                    {new Date(h.changed_at).toLocaleString("ru-RU")}
+                                  </span>
+                                  <span>
+                                    {h.old_status ? (
+                                      <>
+                                        <span className="text-muted-foreground">{label(h.old_status)}</span>
+                                        {" → "}
+                                      </>
+                                    ) : (
+                                      <span className="text-muted-foreground">создано · </span>
+                                    )}
+                                    <span className="font-medium">{label(h.new_status)}</span>
+                                  </span>
+                                  {h.note && <span className="text-muted-foreground">«{h.note}»</span>}
+                                </li>
+                              );
+                            })}
+                          </ol>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
