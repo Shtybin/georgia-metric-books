@@ -540,6 +540,37 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     map.setFilter("points-top", ["in", ["id"], ["literal", ids]]);
   }, [neighborIds, highlightMode, styleReady]);
 
+  const pulseRafRef = useRef<number | null>(null);
+  function pulseHalo() {
+    const map = mapRef.current;
+    if (!map || !map.getLayer("selected-halo")) return;
+    if (pulseRafRef.current) cancelAnimationFrame(pulseRafRef.current);
+    const start = performance.now();
+    const DUR = 1800;
+    const PULSES = 3;
+    const step = (now: number) => {
+      const m = mapRef.current;
+      if (!m || !m.getLayer("selected-halo")) { pulseRafRef.current = null; return; }
+      const t = Math.min(1, (now - start) / DUR);
+      const phase = (t * PULSES) % 1;
+      const ease = Math.sin(phase * Math.PI); // 0 → 1 → 0
+      const r = 22 + ease * 16;
+      const op = 0.9 - ease * 0.55;
+      m.setPaintProperty("selected-halo", "circle-radius", r);
+      m.setPaintProperty("selected-halo", "circle-stroke-opacity", op);
+      m.setPaintProperty("selected-halo", "circle-stroke-width", 3 + ease * 1.5);
+      if (t < 1) {
+        pulseRafRef.current = requestAnimationFrame(step);
+      } else {
+        m.setPaintProperty("selected-halo", "circle-radius", 22);
+        m.setPaintProperty("selected-halo", "circle-stroke-opacity", 0.9);
+        m.setPaintProperty("selected-halo", "circle-stroke-width", 3);
+        pulseRafRef.current = null;
+      }
+    };
+    pulseRafRef.current = requestAnimationFrame(step);
+  }
+
   function selectFeature(f: Feature) {
     setSelected(f);
     // Если активен фильтр по региону/уезду — сохраняем подсветку района,
@@ -555,12 +586,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       type: "FeatureCollection", features: [f],
     });
     (map.getSource("radius") as any)?.setData({ type: "FeatureCollection", features: [] });
+    // Плавный перелёт с сохранением видимости точки: на мобильных смещаем
+    // центр выше, чтобы карточка снизу не перекрывала выбранную точку.
+    const targetZoom = Math.max(map.getZoom(), 9);
     map.flyTo({
       center: f.geometry.coordinates as [number, number],
-      zoom: Math.max(map.getZoom(), 9),
-      duration: 800,
+      zoom: targetZoom,
+      duration: 900,
+      curve: 1.42,
+      speed: 0.9,
+      offset: isMobile ? [0, -120] : [0, -40],
       essential: true,
     });
+    pulseHalo();
   }
 
   // Compute highlighted ids based on the currently chosen region / uezd
