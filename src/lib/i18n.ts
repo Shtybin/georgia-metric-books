@@ -113,6 +113,8 @@ export const STRINGS = {
     unlocatedHint: "Records whose coordinates could not be established. Click the icon to manually pin a settlement on the map.",
     unlocatedSearch: "Search settlement, church, uezd…",
     unlocatedAllUezds: "All uezds",
+    allRegions: "All regions",
+    allUezds: "All uezds",
     unlocatedEmpty: "No matches",
     unlocatedShowingFirst: (n: number, total: number) => `Showing first ${n} of ${total}. Refine your query.`,
     findOnMap: "Find on map",
