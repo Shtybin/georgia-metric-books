@@ -438,7 +438,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const nearbyCount = Math.max(0, neighborIds.size - 1);
 
   return (
-    <div className="relative" style={{ width: "100%", height: "100%", minHeight: "100vh" }}>
+    <div
+      className="relative overflow-hidden overscroll-none"
+      style={{ width: "100%", height: "100dvh" }}
+    >
       <div
         ref={containerRef}
         className="absolute inset-0"
