@@ -66,6 +66,15 @@ export const STRINGS = {
     docsBodyHtml:
       'Метрические книги Грузии находятся в Национальном историческом архиве Грузии (фонд 489, опись 6). Списки метрических книг — на сайте <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">архива</a>. Как начать работу с архивом — читайте на <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">сайте</a>.',
     close: "Закрыть",
+    reportButton: "Сообщить о проблеме",
+    reportTitle: "Сообщить о проблеме",
+    reportHint: "Опишите проблему: ошибка на карте, неверные координаты, опечатка в названии, идея улучшения. Контакт — по желанию.",
+    reportPlaceholder: "Что не так? Что предлагаете?",
+    reportContactLabel: "Email или Telegram (по желанию)",
+    reportSend: "Отправить",
+    reportSent: "Спасибо! Сообщение отправлено.",
+    reportEmpty: "Введите текст сообщения.",
+    reportError: "Не удалось отправить. Попробуйте позже.",
     landing: {
       eyebrow: "Архивный атлас · Archival Atlas · არქივის ატლასი",
       h1: "Метрические книги Грузии",
