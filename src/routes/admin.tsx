@@ -41,9 +41,13 @@ function AdminPage() {
   const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const [tab, setTab] = useState<"coords" | "reports">("coords");
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
+  const [reportFilter, setReportFilter] = useState<"new" | "in_progress" | "resolved" | "all">("new");
+  const [reports, setReports] = useState<ProblemReport[]>([]);
+  const [reportsLoading, setReportsLoading] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -84,10 +88,41 @@ function AdminPage() {
     setLoading(false);
   }
 
+  async function loadReports() {
+    setReportsLoading(true);
+    let q = supabase
+      .from("problem_reports")
+      .select("id, created_at, message, contact, page_url, lang, user_agent, status")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    if (reportFilter !== "all") q = q.eq("status", reportFilter);
+    const { data, error } = await q;
+    if (error) console.error(error);
+    setReports((data as ProblemReport[]) || []);
+    setReportsLoading(false);
+  }
+
   useEffect(() => {
-    if (isAdmin) load();
+    if (isAdmin && tab === "coords") load();
+    if (isAdmin && tab === "reports") loadReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin, filter]);
+  }, [isAdmin, tab, filter, reportFilter]);
+
+  async function setReportStatus(id: string, status: ProblemReport["status"]) {
+    const { error } = await supabase
+      .from("problem_reports")
+      .update({ status, reviewed_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) { alert(error.message); return; }
+    setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+  }
+
+  async function deleteReport(id: string) {
+    if (!confirm("Удалить сообщение?")) return;
+    const { error } = await supabase.from("problem_reports").delete().eq("id", id);
+    if (error) { alert(error.message); return; }
+    setReports((prev) => prev.filter((r) => r.id !== id));
+  }
 
   async function setStatus(id: string, status: "approved" | "rejected") {
     const { error } = await supabase
