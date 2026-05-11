@@ -155,23 +155,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   // Build uezd/region → feature ids index for "highlight all in area" search
   const areaIndex = useMemo(() => {
-    const uezdMap = new Map<string, { label: string; ids: number[] }>();
-    const regionMap = new Map<string, { label: string; ids: number[] }>();
-    if (!data) return { uezds: [] as Array<{ key: string; label: string; ids: number[] }>, regions: [] as Array<{ key: string; label: string; ids: number[] }> };
+    type Entry = { label: string; ids: number[] };
+    const uezdMap = new Map<string, Entry>();
+    const regionMap = new Map<string, Entry>();
+    if (!data) return { uezds: [] as Array<{ key: string } & Entry>, regions: [] as Array<{ key: string } & Entry> };
     for (const f of data.features) {
       const p: any = f.properties;
       const id = f.id as number;
-      const uLabel = p.uezd?.[lang] || p.uezd?.en || p.uezd?.ru;
+      const uLabel: string | undefined = p.uezd?.[lang] || p.uezd?.en || p.uezd?.ru;
       if (uLabel) {
         const key = uLabel.toLocaleLowerCase();
-        const entry = uezdMap.get(key) || { label: uLabel, ids: [] };
+        const entry: Entry = uezdMap.get(key) || { label: uLabel, ids: [] };
         entry.ids.push(id);
         uezdMap.set(key, entry);
       }
-      const rLabel = p.region?.[lang] || p.region?.en || p.region?.ru;
+      const rLabel: string | undefined = p.region?.[lang] || p.region?.en || p.region?.ru;
       if (rLabel) {
         const key = rLabel.toLocaleLowerCase();
-        const entry = regionMap.get(key) || { label: rLabel, ids: [] };
+        const entry: Entry = regionMap.get(key) || { label: rLabel, ids: [] };
         entry.ids.push(id);
         regionMap.set(key, entry);
       }
