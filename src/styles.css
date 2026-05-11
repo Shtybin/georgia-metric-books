@@ -191,4 +191,16 @@
 html, body {
   overflow: hidden;
   overscroll-behavior: none;
+  height: 100%;
 }
+
+/* When a Radix dialog/sheet is open, lock the body so iOS Safari does
+ * not scroll the page when an input inside the sheet receives focus
+ * and the on-screen keyboard appears. */
+body[data-scroll-locked] {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  overflow: hidden !important;
+}
+

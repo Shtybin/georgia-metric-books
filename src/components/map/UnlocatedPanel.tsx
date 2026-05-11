@@ -141,7 +141,7 @@ export function UnlocatedPanel({
         className={cn(
           "flex flex-col gap-0 p-0",
           isMobile
-            ? "h-[80vh] rounded-t-2xl"
+            ? "h-[85dvh] max-h-[85dvh] rounded-t-2xl"
             : "w-full sm:max-w-md",
         )}
       >
