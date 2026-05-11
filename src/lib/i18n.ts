@@ -254,6 +254,15 @@ export const STRINGS = {
     docsBodyHtml:
       'საქართველოს მეტრიკული წიგნები ინახება საქართველოს ეროვნულ ისტორიულ არქივში (ფონდი 489, აღწერა 6). მეტრიკული წიგნების სია — <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">არქივის</a> საიტზე. როგორ დავიწყოთ მუშაობა არქივში — იხილეთ <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">საიტზე</a>.',
     close: "დახურვა",
+    reportButton: "პრობლემის შეტყობინება",
+    reportTitle: "პრობლემის შეტყობინება",
+    reportHint: "აღწერეთ პრობლემა: შეცდომა რუკაზე, არასწორი კოორდინატები, ბეჭდური შეცდომა სახელში, გაუმჯობესების იდეა. კონტაქტი — სურვილისამებრ.",
+    reportPlaceholder: "რა არის არასწორად? რას გვთავაზობთ?",
+    reportContactLabel: "ელფოსტა ან Telegram (სურვილისამებრ)",
+    reportSend: "გაგზავნა",
+    reportSent: "გმადლობთ! შეტყობინება გაიგზავნა.",
+    reportEmpty: "გთხოვთ, შეიყვანოთ ტექსტი.",
+    reportError: "გაგზავნა ვერ მოხერხდა. სცადეთ მოგვიანებით.",
     landing: {
       eyebrow: "Архивный атлас · Archival Atlas · არქივის ატლასი",
       h1: "საქართველოს მეტრიკული წიგნები",
