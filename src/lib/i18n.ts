@@ -200,6 +200,9 @@ export const STRINGS = {
       feat2Desc: "Okabe-Ito — a colour-blind-friendly palette.",
       feat3Title: "Русский / English / ქართული",
       feat3Desc: "Switch language without reloading.",
+      archiveTitle: "Data source",
+      archiveBody:
+        "The metric books are compiled from the holdings of the National Historical Archive of Georgia (Tbilisi, 1 Vazha-Pshavela Ave). Details on how to request documents at the archive and how it operates are available via the \u201CWhere to find documents?\u201D button at the bottom of the map.",
       metaTitle: "Georgian Parish Registers 1819–1930 · Archival Atlas",
       metaDesc: "An interactive map of Georgian parish metric books, 1819–1930: search, periods, 10 km neighbourhood analysis.",
     },
