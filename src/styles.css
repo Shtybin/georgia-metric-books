@@ -95,6 +95,32 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+
+  /* --- Map overlay safe-area offsets ---
+   * Adjustable per-element gaps that combine the device safe-area insets
+   * with a configurable base offset. Override on a parent (e.g. map container)
+   * to tune positioning without touching components.
+   */
+  --map-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --map-safe-top: env(safe-area-inset-top, 0px);
+  --map-safe-left: env(safe-area-inset-left, 0px);
+  --map-safe-right: env(safe-area-inset-right, 0px);
+
+  /* Report button — mobile (default) sits above the bottom chip bar */
+  --report-btn-bottom: calc(var(--map-safe-bottom) + 4rem);
+  --report-btn-right: calc(var(--map-safe-right) + 0.5rem);
+  --report-toast-bottom: calc(var(--map-safe-bottom) + 7rem);
+  --report-toast-right: calc(var(--map-safe-right) + 0.5rem);
+}
+
+@media (min-width: 640px) {
+  :root {
+    /* Desktop — sit left of the 260px legend with a 24px gap */
+    --report-btn-bottom: calc(var(--map-safe-bottom) + 0.75rem);
+    --report-btn-right: calc(var(--map-safe-right) + 17.75rem);
+    --report-toast-bottom: calc(var(--map-safe-bottom) + 3rem);
+    --report-toast-right: calc(var(--map-safe-right) + 17.75rem);
+  }
 }
 
 .dark {
