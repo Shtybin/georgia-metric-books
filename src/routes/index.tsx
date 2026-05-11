@@ -112,31 +112,35 @@ function Index() {
         </div>
 
 
-        <div className="mt-12 flex gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
-          <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary sm:flex">
-            <Landmark className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="font-serif text-lg font-semibold">{L.archiveTitle}</h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{L.archiveBody}</p>
-          </div>
-        </div>
-
-        <div className="mt-12">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            {L.featuresEyebrow}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">{L.featuresHint}</p>
-        </div>
-        <div className="mt-4 grid gap-6 sm:grid-cols-3">
-          {features.map(({ i: Icon, t: title, d }) => (
-            <div key={title} className="rounded-2xl border border-border bg-card p-5">
-              <Icon className="h-5 w-5 text-primary" />
-              <h3 className="mt-3 font-semibold">{title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{d}</p>
+        {/* Section: data source */}
+        <section className="mt-16">
+          <h2 className="font-serif text-lg font-semibold">{L.archiveTitle}</h2>
+          <div className="mt-4 flex gap-4 rounded-2xl border border-border bg-card p-6">
+            <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary sm:flex">
+              <Landmark className="h-5 w-5" />
             </div>
-          ))}
-        </div>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {L.archiveBody}
+            </p>
+          </div>
+        </section>
+
+        {/* Section: map features */}
+        <section className="mt-16">
+          <h2 className="font-serif text-lg font-semibold">{L.featuresEyebrow}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{L.featuresHint}</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            {features.map(({ i: Icon, t: title, d }) => (
+              <div key={title} className="rounded-2xl border border-border bg-card p-6">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-serif text-base font-semibold">{title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{d}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );
