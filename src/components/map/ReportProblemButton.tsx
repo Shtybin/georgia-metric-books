@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { AlertCircle } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import type { Lang } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
-import { pickAnchor, type Anchor, type Rect } from "@/lib/collision-anchor";
+import { pickAnchor, type Anchor } from "@/lib/collision-anchor";
 
 interface Props {
   lang: Lang;
