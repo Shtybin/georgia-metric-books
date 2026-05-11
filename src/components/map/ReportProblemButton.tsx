@@ -191,7 +191,7 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
       window.removeEventListener("resize", schedule);
       window.removeEventListener("scroll", schedule);
     };
-  }, [open, sentToast]);
+  }, [open, sentToast, isMobile]);
 
   const anchorStyle = (a: Anchor, toast = false): CSSProperties => {
     const off = toast ? " + var(--map-overlay-toast-offset)" : "";
