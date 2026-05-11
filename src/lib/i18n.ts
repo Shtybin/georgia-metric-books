@@ -160,6 +160,15 @@ export const STRINGS = {
     docsBodyHtml:
       'The parish registers of Georgia are kept at the National Historical Archive of Georgia (fund 489, inventory 6). A catalogue of the registers is available on the <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">archive</a> website. To learn how to start working with the archive, see the <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">website</a>.',
     close: "Close",
+    reportButton: "Report a problem",
+    reportTitle: "Report a problem",
+    reportHint: "Describe the issue: a map bug, wrong coordinates, a typo in a name, an idea for improvement. Contact is optional.",
+    reportPlaceholder: "What is wrong? What do you suggest?",
+    reportContactLabel: "Email or Telegram (optional)",
+    reportSend: "Send",
+    reportSent: "Thank you! Your report was sent.",
+    reportEmpty: "Please enter a message.",
+    reportError: "Could not send. Please try again later.",
     landing: {
       eyebrow: "Архивный атлас · Archival Atlas · არქივის ატლასი",
       h1: "Georgian Parish Registers",
