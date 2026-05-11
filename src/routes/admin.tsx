@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History } from "lucide-react";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Админ — модерация" }] }),
@@ -49,11 +49,25 @@ interface Suggestion {
   created_at: string;
 }
 
+interface Diagnostics {
+  checkedAt: string;
+  sessionPresent: boolean;
+  userId: string | null;
+  email: string | null;
+  expiresAt: string | null;
+  provider: string | null;
+  rpcOk: boolean;
+  rpcResult: unknown;
+  rpcError: string | null;
+}
+
 function AdminPage() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
+  const [diagOpen, setDiagOpen] = useState(false);
   const [tab, setTab] = useState<"coords" | "reports">("coords");
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
@@ -73,6 +87,37 @@ function AdminPage() {
   const [historyData, setHistoryData] = useState<Record<string, ReportHistoryEntry[]>>({});
   const [historyLoading, setHistoryLoading] = useState<Record<string, boolean>>({});
 
+  async function runDiagnostics(): Promise<{ admin: boolean; email: string | null }> {
+    const { data: sess } = await supabase.auth.getSession();
+    const session = sess.session;
+    let rpcOk = false;
+    let rpcResult: unknown = null;
+    let rpcError: string | null = null;
+    let admin = false;
+    if (session) {
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: session.user.id,
+        _role: "admin",
+      });
+      rpcResult = data;
+      rpcOk = !error;
+      rpcError = error?.message ?? null;
+      admin = !error && data === true;
+    }
+    setDiagnostics({
+      checkedAt: new Date().toISOString(),
+      sessionPresent: !!session,
+      userId: session?.user.id ?? null,
+      email: session?.user.email ?? null,
+      expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
+      provider: (session?.user.app_metadata?.provider as string) ?? null,
+      rpcOk,
+      rpcResult,
+      rpcError,
+    });
+    return { admin, email: session?.user.email ?? null };
+  }
+
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -81,15 +126,9 @@ function AdminPage() {
         navigate({ to: "/login" });
         return;
       }
-      setEmail(sess.session.user.email ?? null);
-      // Use the SECURITY DEFINER RPC so the check works regardless of RLS
-      // visibility on user_roles for the current session.
-      const { data: isAdminRpc, error } = await supabase.rpc("has_role", {
-        _user_id: sess.session.user.id,
-        _role: "admin",
-      });
+      const { admin, email: e } = await runDiagnostics();
       if (!mounted) return;
-      const admin = !error && isAdminRpc === true;
+      setEmail(e);
       setIsAdmin(admin);
       setChecking(false);
     })();
@@ -233,6 +272,19 @@ function AdminPage() {
     return <main className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">Проверка доступа…</main>;
   }
 
+  const diagPanel = (
+    <DiagnosticsPanel
+      open={diagOpen}
+      onToggle={() => setDiagOpen((v) => !v)}
+      isAdmin={isAdmin}
+      diagnostics={diagnostics}
+      onRefresh={async () => {
+        const { admin } = await runDiagnostics();
+        setIsAdmin(admin);
+      }}
+    />
+  );
+
   if (!isAdmin) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
@@ -248,6 +300,7 @@ function AdminPage() {
             <Button size="sm" variant="ghost">На карту</Button>
           </Link>
         </div>
+        <div className="w-full max-w-xl text-left">{diagPanel}</div>
       </main>
     );
   }
@@ -271,6 +324,7 @@ function AdminPage() {
             </Button>
           </div>
         </div>
+        <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
           {(["coords", "reports"] as const).map((k) => (
             <button
@@ -586,3 +640,108 @@ function AdminPage() {
     </main>
   );
 }
+
+function DiagnosticsPanel({
+  open,
+  onToggle,
+  isAdmin,
+  diagnostics,
+  onRefresh,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  isAdmin: boolean;
+  diagnostics: Diagnostics | null;
+  onRefresh: () => void | Promise<void>;
+}) {
+  const [refreshing, setRefreshing] = useState(false);
+  const sessionOk = !!diagnostics?.sessionPresent;
+  const expiresInMs = diagnostics?.expiresAt
+    ? new Date(diagnostics.expiresAt).getTime() - Date.now()
+    : null;
+  const expiresLabel =
+    expiresInMs == null
+      ? "—"
+      : expiresInMs <= 0
+        ? "истекла"
+        : `через ${Math.round(expiresInMs / 60000)} мин`;
+
+  return (
+    <div className="rounded-lg border border-border bg-muted/30 text-xs">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left"
+      >
+        <span className="flex items-center gap-2">
+          <Activity className="h-3.5 w-3.5 text-muted-foreground" />
+          <span className="font-medium">Диагностика</span>
+          <Badge ok={sessionOk} label={sessionOk ? "сессия" : "нет сессии"} />
+          <Badge ok={isAdmin} label={isAdmin ? "admin" : "не admin"} />
+        </span>
+        {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+      </button>
+      {open && (
+        <div className="space-y-2 border-t border-border/60 px-3 py-2">
+          <dl className="grid grid-cols-[140px_1fr] gap-x-3 gap-y-1 font-mono text-[11px]">
+            <dt className="text-muted-foreground">email</dt>
+            <dd className="break-all">{diagnostics?.email ?? "—"}</dd>
+            <dt className="text-muted-foreground">user id</dt>
+            <dd className="break-all">{diagnostics?.userId ?? "—"}</dd>
+            <dt className="text-muted-foreground">провайдер</dt>
+            <dd>{diagnostics?.provider ?? "—"}</dd>
+            <dt className="text-muted-foreground">истекает</dt>
+            <dd>
+              {diagnostics?.expiresAt ?? "—"}
+              <span className="ml-1 text-muted-foreground">({expiresLabel})</span>
+            </dd>
+            <dt className="text-muted-foreground">has_role rpc</dt>
+            <dd>
+              {diagnostics?.rpcOk ? "ok" : "ошибка"} → {String(diagnostics?.rpcResult ?? "null")}
+              {diagnostics?.rpcError && (
+                <span className="ml-1 text-destructive">({diagnostics.rpcError})</span>
+              )}
+            </dd>
+            <dt className="text-muted-foreground">проверено</dt>
+            <dd>{diagnostics?.checkedAt ?? "—"}</dd>
+          </dl>
+          <div className="flex justify-end">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={refreshing}
+              onClick={async () => {
+                setRefreshing(true);
+                try {
+                  await onRefresh();
+                } finally {
+                  setRefreshing(false);
+                }
+              }}
+            >
+              <RefreshCw className={"mr-1 h-3.5 w-3.5 " + (refreshing ? "animate-spin" : "")} />
+              Обновить
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Badge({ ok, label }: { ok: boolean; label: string }) {
+  return (
+    <span
+      className={
+        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium " +
+        (ok
+          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+          : "bg-destructive/10 text-destructive")
+      }
+    >
+      <span className={"h-1.5 w-1.5 rounded-full " + (ok ? "bg-emerald-500" : "bg-destructive")} />
+      {label}
+    </span>
+  );
+}
+
