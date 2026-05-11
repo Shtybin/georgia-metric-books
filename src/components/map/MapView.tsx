@@ -367,6 +367,27 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       },
     });
 
+    // Top layer: only highlighted points (filtered by id list). Rendered above
+    // the base "points" layer so the selected area visually stands out, even
+    // when neighbours are densely packed.
+    map.addLayer({
+      id: "points-top",
+      type: "circle",
+      source: "parishes",
+      filter: ["in", ["id"], ["literal", []]],
+      paint: {
+        "circle-color": colorExpression,
+        "circle-radius": [
+          "interpolate", ["linear"], ["zoom"],
+          4, ["+", ["max", 5, ["*", ["sqrt", ["get", "coverage"]], 1.4]], 2],
+          10, ["+", ["max", 7, ["*", ["sqrt", ["get", "coverage"]], 2.0]], 2],
+        ],
+        "circle-stroke-color": "#0f172a",
+        "circle-stroke-width": 2,
+        "circle-opacity": 1,
+      },
+    });
+
 
 
 
