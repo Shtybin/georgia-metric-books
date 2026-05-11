@@ -549,7 +549,51 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             )}
             {showResults && query.trim().length >= 2 && (
               <div className="absolute mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl">
-                {searchResults.length === 0 ? (
+                {(areaMatches.uezds.length > 0 || areaMatches.regions.length > 0) && (
+                  <div className="border-b border-border bg-muted/40">
+                    {areaMatches.uezds.map((u) => (
+                      <button
+                        key={"u-" + u.key}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          highlightArea(u.ids);
+                          setQuery(u.label);
+                          setShowResults(false);
+                        }}
+                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-accent"
+                      >
+                        <span>
+                          <span className="text-xs text-muted-foreground">{T.uezdLabel}</span>{" "}
+                          <span className="font-medium">{u.label}</span>
+                        </span>
+                        <span className="rounded-full bg-background px-2 py-0.5 text-[10px] tabular-nums text-muted-foreground">
+                          {u.ids.length}
+                        </span>
+                      </button>
+                    ))}
+                    {areaMatches.regions.map((r) => (
+                      <button
+                        key={"r-" + r.key}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          highlightArea(r.ids);
+                          setQuery(r.label);
+                          setShowResults(false);
+                        }}
+                        className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-accent"
+                      >
+                        <span>
+                          <span className="text-xs text-muted-foreground">{T.regionLabel}</span>{" "}
+                          <span className="font-medium">{r.label}</span>
+                        </span>
+                        <span className="rounded-full bg-background px-2 py-0.5 text-[10px] tabular-nums text-muted-foreground">
+                          {r.ids.length}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {searchResults.length === 0 && areaMatches.uezds.length === 0 && areaMatches.regions.length === 0 ? (
                   <div className="p-3 text-sm text-muted-foreground">{T.notFoundTitle}</div>
                 ) : searchResults.map((f) => {
                   const p = f.properties;
