@@ -330,8 +330,9 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
 
       {sentToast && (
         <div
-          style={{ bottom: "var(--report-toast-bottom)", right: "var(--report-toast-right)" }}
-          className="pointer-events-none absolute z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur"
+          data-report-toast=""
+          style={anchorStyle(anchor, true)}
+          className="pointer-events-none absolute z-30 rounded-md border border-border bg-card/98 px-3 py-1.5 text-xs shadow-2xl backdrop-blur transition-[top,bottom,left,right] duration-200"
         >
           {sentToast}
         </div>
