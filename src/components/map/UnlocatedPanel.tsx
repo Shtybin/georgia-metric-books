@@ -98,21 +98,25 @@ export function UnlocatedPanel({
       const u = uezd.toLocaleLowerCase();
       out = out.filter((it) => pick(it.uezd, lang).toLocaleLowerCase() === u);
     }
-    if (debounced) {
+    if (normalizedQuery) {
       out = out.filter((it) => {
         const blob =
           pick(it.settlement, lang) +
+          " " +
+          (it.settlement.ru || "") +
+          " " +
+          (it.settlement.en || "") +
           " " +
           pick(it.church, lang) +
           " " +
           pick(it.uezd, lang) +
           " " +
           pick(it.region, lang);
-        return blob.toLocaleLowerCase().includes(debounced);
+        return blob.toLocaleLowerCase().includes(normalizedQuery);
       });
     }
     return out;
-  }, [visibleItems, debounced, uezd, lang]);
+  }, [visibleItems, normalizedQuery, uezd, lang]);
 
   const visible = filtered.slice(0, MAX_VISIBLE);
 
