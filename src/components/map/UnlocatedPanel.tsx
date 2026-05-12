@@ -60,7 +60,6 @@ export function UnlocatedPanel({
   const [items, setItems] = useState<UnlocatedItem[] | null>(null);
   const [query, setQuery] = useState("");
   const [uezd, setUezd] = useState<string>("");
-  const [debounced, setDebounced] = useState("");
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
@@ -73,10 +72,7 @@ export function UnlocatedPanel({
       .catch(() => setItems([]));
   }, [open, items]);
 
-  useEffect(() => {
-    const id = setTimeout(() => setDebounced(query.trim().toLocaleLowerCase()), 150);
-    return () => clearTimeout(id);
-  }, [query]);
+  const normalizedQuery = query.trim().toLocaleLowerCase();
 
   const visibleItems = useMemo(() => {
     if (!items) return [];
@@ -102,21 +98,25 @@ export function UnlocatedPanel({
       const u = uezd.toLocaleLowerCase();
       out = out.filter((it) => pick(it.uezd, lang).toLocaleLowerCase() === u);
     }
-    if (debounced) {
+    if (normalizedQuery) {
       out = out.filter((it) => {
         const blob =
           pick(it.settlement, lang) +
+          " " +
+          (it.settlement.ru || "") +
+          " " +
+          (it.settlement.en || "") +
           " " +
           pick(it.church, lang) +
           " " +
           pick(it.uezd, lang) +
           " " +
           pick(it.region, lang);
-        return blob.toLocaleLowerCase().includes(debounced);
+        return blob.toLocaleLowerCase().includes(normalizedQuery);
       });
     }
     return out;
-  }, [visibleItems, debounced, uezd, lang]);
+  }, [visibleItems, normalizedQuery, uezd, lang]);
 
   const visible = filtered.slice(0, MAX_VISIBLE);
 
@@ -164,6 +164,13 @@ export function UnlocatedPanel({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={T.unlocatedSearch}
+              type="search"
+              inputMode="search"
+              enterKeyHint="search"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
               className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
             {query && (
