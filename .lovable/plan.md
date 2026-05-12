@@ -1,86 +1,116 @@
+Создам файл `README.md` в корне проекта (на русском, с дублирующими английскими подзаголовками для GitHub-аудитории) со следующими разделами:
 
-# Грузинская версия (ka): план
+## 1. Шапка
+- Название: **Архивный атлас Грузии XIX века / Georgia Metric Books Atlas**
+- Краткое описание (1–2 строки): интерактивная карта селений и приходов Грузии XIX в. на основе метрических книг.
+- Бейджи: TanStack Start, React 19, Vite 7, Tailwind v4, Supabase, MapLibre, лицензия.
+- Скриншот карты (placeholder `docs/screenshot.png`).
+- Живые ссылки: `https://metrics.datatells.info`, `https://georgia-metric-books.lovable.app`.
 
-## 1. Расширение системы языков
+## 2. Возможности
+- Интерактивная карта (MapLibre GL) с ~5000+ точками.
+- Три языка интерфейса: русский, английский, грузинский.
+- Поиск, фильтры по региону/уезду/периоду, радиусный поиск.
+- Панель «без координат», репортинг проблем.
+- Embed-режим (`/embed`) для встраивания.
+- Админ-панель с ролевой моделью (Lovable Cloud / Supabase + RLS + `has_role`).
+- Диагностика сессии в админке.
 
-**`src/lib/i18n.ts`**
-- `Lang = "ru" | "en" | "ka"`.
-- Добавить ветку `ka` в `STRINGS` — полный качественный перевод всех ~60 ключей с учётом исторического контекста:
-  - метрические книги → მეტრიკული წიგნები
-  - уезд → მაზრა, регион → რეგიონი / მხარე
-  - селение → სოფელი, церковь → ეკლესია
-  - приход → სამრევლო, архив → არქივი
-  - бакеты периодов, тосты, кнопки фильтров, легенда, статистика, документы.
+## 3. Технологический стек
+Таблица: Frontend (React 19, TanStack Start/Router, Tailwind v4, shadcn/ui, MapLibre GL, Fuse.js), Backend (Lovable Cloud = Supabase: Postgres + RLS + Auth), Сборка (Vite 7, Cloudflare Workers runtime), AI-перевод (Lovable AI Gateway, Gemini 2.5 Pro).
 
-**Роутинг — `src/routes/map.tsx`, `src/routes/embed.tsx`**
-- `z.enum(["ru","en","ka"])`.
+## 4. Структура проекта
+ASCII-дерево ключевых каталогов: `src/routes`, `src/components/map`, `src/lib`, `scripts/`, `supabase/migrations`, `public/data`.
 
-**Переключатель языка** (компонент шапки карты, где сейчас RU/EN)
-- Добавить третью кнопку `ქარ` рядом с `RU`/`EN`.
+## 5. Быстрый старт локально
+```bash
+git clone https://github.com/<user>/<repo>.git
+cd <repo>
+bun install        # или npm install
+cp .env.example .env  # заполнить ключи Supabase
+bun run dev
+```
+- Требования: Node 20+ или Bun 1.1+.
+- Переменные окружения: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID` (+ серверные `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_PUBLISHABLE_KEY`).
+- Команды: `dev`, `build`, `build:dev`, `preview`, `lint`, `format`, `test`.
 
-**`src/routes/__root.tsx`**
-- Динамически выставлять `<html lang>` по текущему `?lang=`.
+## 6. Подготовка данных
+- `scripts/build-geojson.ts` — собирает GeoJSON из `scripts/data/*.csv` в `public/data/`.
+- `scripts/translate-ka.ts` — AI-перевод на грузинский (требует Lovable AI Gateway).
+- `scripts/check-unlocated.ts` — проверка точек без координат.
 
-## 2. Лендинг (`src/routes/index.tsx`)
+## 7. База данных и миграции
+- Все миграции в `supabase/migrations/`.
+- Роли через таблицу `user_roles` + функция `has_role(uuid, app_role)` (security definer).
+- Описание ролевой модели и почему НЕ хранить роль в `profiles`.
+- Как назначить администратора SQL-вставкой.
 
-- Вынести все хардкод-строки в `STRINGS.landing` (ru/en/ka).
-- Третья кнопка-CTA «რუკის გახსნა» рядом с «Открыть карту» / «Open in English», ведёт на `/map?lang=ka`.
-- Локализованный `head()` (title, description, og:title, og:description) для всех трёх языков. Используем `useSearch`-производный `lang`, а на главной — детект из `navigator.language` с дефолтом `ru` для согласованности с текущим поведением.
+## 8. Публикация на GitHub — пошагово
+Подробная инструкция (главное, что просил пользователь):
 
-## 3. Перевод данных — гибридный подход
+### 8.1. Через интеграцию Lovable ↔ GitHub (рекомендуется)
+1. В редакторе Lovable: меню «+» → GitHub → Connect project.
+2. Авторизовать Lovable GitHub App.
+3. Выбрать аккаунт/организацию и нажать **Create Repository**.
+4. Двунаправленный sync: пуши в GitHub автоматически прилетают в Lovable и наоборот.
 
-Источник: `scripts/data/ru.csv` (5102 строки). Цель: новый `scripts/data/ka.csv` с теми же колонками.
+### 8.2. Вручную (если хотите свой репозиторий с нуля)
+```bash
+# 1. Скачать код из Lovable: Code Editor → Download codebase
+# 2. Создать репозиторий на GitHub (gh CLI или web UI)
+gh repo create datatells/georgia-metric-books --public --source=. --remote=origin
+# 3. Подготовить .gitignore (уже есть), удалить .env из истории если попал
+git init
+git add .
+git commit -m "Initial commit: Georgia Metric Books Atlas"
+git branch -M main
+git push -u origin main
+```
 
-**Шаг A — справочники вручную** (закладываются в скрипт как авторитетная таблица):
-- Все ~12 регионов (Грузия, Кутаисская губ., Тифлисская губ., Абхазия, и т.д.) → проверенные грузинские формы.
-- Все ~50 уездов (Кутаисский, Тифлисский, Горийский, Сухумский, Озургетский, …) → მაზრები с историческими названиями.
-- Топ-300 крупнейших селений (по частоте упоминаний в CSV) — выверенные формы.
+### 8.3. Что НЕ коммитить (`.gitignore`)
+- `.env`, `.env.local`
+- `node_modules`, `dist`, `.vite`, `.wrangler`
+- `public/data/*.geojson` (если генерится из CSV — опционально)
+- `scripts/data/ka.cache.json`
 
-**Шаг B — AI-перевод остальных названий через Lovable AI Gateway**
-- Скрипт `scripts/translate-ka.ts` читает `ru.csv` + `en.csv`, для каждой строки:
-  - если значение есть в справочнике (Шаг A) — берём оттуда;
-  - иначе батчами по ~50 строк отправляем в `google/gemini-2.5-pro` с system-prompt:
-    - «Ты историк-картограф Грузии XIX в. Переведи русские исторические топонимы на грузинский литературный язык. Сохраняй исторические формы (Тифлис → ტფილისი, а не თბილისი). Для церквей сохраняй посвящение (Святой Георгий → წმინდა გიორგი). Если уверенности нет — верни поле `uncertain: true`.»
-  - Используем structured output (Output.object со схемой).
-- Результат сохраняется в `scripts/data/ka.csv` + сопутствующий `scripts/data/ka.review.json` с пометками `uncertain` для последующей ручной правки.
-- Скрипт идемпотентный: уже переведённые строки не дёргаем повторно (кеш по хешу русского значения).
+### 8.4. Защита секретов
+- Никогда не пушить `SUPABASE_SERVICE_ROLE_KEY`.
+- Anon key (`VITE_SUPABASE_PUBLISHABLE_KEY`) — безопасен в коде.
+- Если случайно запушили секрет → ротация в Lovable Cloud → `git filter-repo`.
 
-**Шаг C — интеграция в сборку**
-- `scripts/build-geojson.ts` читает теперь три CSV (`ru`, `en`, `ka`), кладёт три набора локализованных свойств в GeoJSON (`name_ru/name_en/name_ka`, `church_ru/...`, `region_ru/...`, `uezd_ru/...`).
-- `MapView` и `UnlocatedPanel` при `lang="ka"` читают `*_ka`, с фолбэком: `ka → en → ru` (если поле пустое или помечено `uncertain` — показываем английское, что соответствует выбранному в опросе «грузинский с фолбэком на английский»).
-- Поиск работает по всем трём локалям одновременно (объединение).
+### 8.5. GitHub Actions (опционально)
+Минимальный workflow `.github/workflows/ci.yml`: install → lint → test → build на каждый PR.
 
-## 4. Подложка карты — грузинский с фолбэком на английский
+### 8.6. Настройки репозитория
+- Description, topics: `georgia`, `history`, `metric-books`, `maplibre`, `tanstack-start`, `genealogy`.
+- About: ссылка на `https://metrics.datatells.info`.
+- Включить Discussions / Issues с шаблонами.
+- Branch protection на `main`.
 
-В `MapView.tsx`, в обработчике `map.on("load")`:
-- При `lang === "ka"` для всех `symbol`-слоёв ставим:
-  ```
-  ["coalesce", ["get","name:ka"], ["get","name:en"], ["get","name:latin"], ["get","name"]]
-  ```
-- Реакция на смену языка: при изменении пропса `lang` пересчитать `text-field` всех label-слоёв (через `useEffect`, зависящий от `lang`).
+## 9. Деплой
+- **Lovable**: автодеплой на push, кнопка Publish → `*.lovable.app` + custom domain `metrics.datatells.info`.
+- **Self-hosting**: ссылка на docs Lovable, упоминание Cloudflare Workers (т.к. `wrangler.jsonc`).
 
-## 5. Проверка и QA
+## 10. Развитие и контрибьютинг
+- Workflow: issue → branch → PR → review → merge.
+- Code style: ESLint + Prettier (`bun run lint`, `bun run format`).
+- Тесты: Vitest (`bun run test`).
+- Conventional Commits рекомендуются.
 
-- Проверить, что `?lang=ka` корректно отображает: легенду, статистику, фильтры, поиск, карточку точки, кнопку радиуса, документы, «без координат».
-- Сверить top-50 топонимов на карте визуально (Тбилиси/Кутаиси/Батуми/Сухуми/Цхинвали — должны отображаться на грузинском).
-- Проверить, что фильтр по региону/уезду работает и при выборе грузинского варианта (поиск по нормализованной форме).
-- Прогон `scripts/translate-ka.ts` локально, ревью `ka.review.json` — выправить вручную самые видимые проблемы.
+## 11. Лицензия и благодарности
+- Лицензия (MIT по умолчанию — спрошу подтвердить, если нужно иное).
+- Источники данных: метрические книги (указать архивы).
+- Карта: MapLibre + © OpenStreetMap contributors.
+- Сделано на Lovable Cloud.
 
-## Технические детали
+## 12. Контакты
+- Автор / поддержка: email или ссылка на datatells.info.
 
-- AI-перевод запускается **офлайн** (скрипт, не рантайм), результат коммитится в репозиторий. Никаких запросов к Lovable AI с клиента — нулевая стоимость на пользователя и стабильная работа без интернета у конечного пользователя.
-- Размер `ka.csv` ≈ как у `ru.csv` (~600 КБ), GeoJSON вырастет примерно в 1.3× за счёт трёх локализаций — приемлемо.
-- Шрифт для грузинского: Tailwind стек `system-ui, sans-serif` корректно тянет Noto Sans Georgian / системные грузинские шрифты на macOS/Windows/Linux/iOS/Android — отдельная подгрузка не нужна. Если на превью обнаружим артефакты — подключим Noto Sans Georgian через Google Fonts.
-- Стоимость AI: ~5000 строк × 2 поля ≈ 10К коротких переводов. Батчами по 50 → ~200 запросов к `gemini-2.5-pro`. Уложится в стандартную квоту Lovable AI Gateway.
+---
 
-## Объём (для оценки)
+**Дополнительно (если согласуете):**
+- Создам `.env.example` с пустыми ключами и комментариями.
+- Создам шаблон `docs/screenshot.png` (плейсхолдер) или сделаю скриншот текущей карты через imagegen-инструмент.
+- Создам базовый `.github/workflows/ci.yml` и `.github/ISSUE_TEMPLATE/`.
 
-| Часть | Файлы | Строк изменить |
-|---|---|---|
-| i18n + типы | `src/lib/i18n.ts`, `routes/*.tsx` | ~150 |
-| Переключатель + лендинг | header, `routes/index.tsx` | ~80 |
-| Подложка карты | `MapView.tsx` | ~20 |
-| Скрипт перевода | `scripts/translate-ka.ts` (новый) | ~250 |
-| Справочник toponyms | `scripts/data/ka-glossary.json` (новый) | ~400 пар |
-| Сборка | `scripts/build-geojson.ts` | ~40 |
-| Чтение `*_ka` в UI | `MapView`, `UnlocatedPanel` | ~50 |
+Подтверди, делать ли README двуязычным (RU + EN секциями) или только на русском, и нужны ли сопутствующие файлы (`.env.example`, CI workflow, issue templates) — иначе сделаю только `README.md` на русском с английскими подзаголовками.
