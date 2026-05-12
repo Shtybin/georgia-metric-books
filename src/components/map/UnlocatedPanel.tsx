@@ -60,7 +60,6 @@ export function UnlocatedPanel({
   const [items, setItems] = useState<UnlocatedItem[] | null>(null);
   const [query, setQuery] = useState("");
   const [uezd, setUezd] = useState<string>("");
-  const [debounced, setDebounced] = useState("");
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
@@ -73,10 +72,7 @@ export function UnlocatedPanel({
       .catch(() => setItems([]));
   }, [open, items]);
 
-  useEffect(() => {
-    const id = setTimeout(() => setDebounced(query.trim().toLocaleLowerCase()), 150);
-    return () => clearTimeout(id);
-  }, [query]);
+  const normalizedQuery = query.trim().toLocaleLowerCase();
 
   const visibleItems = useMemo(() => {
     if (!items) return [];
