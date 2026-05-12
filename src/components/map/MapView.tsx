@@ -787,7 +787,35 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       {/* Top bar: search + lang */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-3 sm:p-4">
         <div className="pointer-events-auto w-full max-w-md">
-          <div className="relative">
+          {/* Region / Uezd dropdown filters — highlight all matching points. */}
+          <div className="grid grid-cols-2 gap-2">
+            <select
+              value={regionFilter}
+              onChange={(e) => {
+                setRegionFilter(e.target.value);
+                setUezdFilter("");
+              }}
+              aria-label={T.regionLabel}
+              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">{isMobile ? T.regionLabel : T.allRegions}</option>
+              {regionList.map((r) => (
+                <option key={r.key} value={r.key}>{r.label}</option>
+              ))}
+            </select>
+            <select
+              value={uezdFilter}
+              onChange={(e) => setUezdFilter(e.target.value)}
+              aria-label={T.uezdLabel}
+              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">{isMobile ? T.uezdLabel : T.allUezds}</option>
+              {uezdsForRegion.map((u) => (
+                <option key={u.key} value={u.key}>{u.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="relative mt-2">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
@@ -944,34 +972,6 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 })}
               </div>
             )}
-          </div>
-          {/* Region / Uezd dropdown filters — highlight all matching points. */}
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <select
-              value={regionFilter}
-              onChange={(e) => {
-                setRegionFilter(e.target.value);
-                setUezdFilter("");
-              }}
-              aria-label={T.regionLabel}
-              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <option value="">{isMobile ? T.regionLabel : T.allRegions}</option>
-              {regionList.map((r) => (
-                <option key={r.key} value={r.key}>{r.label}</option>
-              ))}
-            </select>
-            <select
-              value={uezdFilter}
-              onChange={(e) => setUezdFilter(e.target.value)}
-              aria-label={T.uezdLabel}
-              className="w-full rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <option value="">{isMobile ? T.uezdLabel : T.allUezds}</option>
-              {uezdsForRegion.map((u) => (
-                <option key={u.key} value={u.key}>{u.label}</option>
-              ))}
-            </select>
           </div>
         </div>
 
