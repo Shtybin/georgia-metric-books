@@ -164,6 +164,13 @@ export function UnlocatedPanel({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={T.unlocatedSearch}
+              type="search"
+              inputMode="search"
+              enterKeyHint="search"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
               className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
             {query && (
