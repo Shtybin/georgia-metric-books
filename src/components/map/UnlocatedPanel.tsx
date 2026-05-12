@@ -121,15 +121,19 @@ export function UnlocatedPanel({
   const visible = filtered.slice(0, MAX_VISIBLE);
 
   const grouped = useMemo(() => {
-    const groups: { uezd: string; items: UnlocatedItem[] }[] = [];
+    const groups: {
+      key: string;
+      uezd: string;
+      items: { item: UnlocatedItem; visibleIndex: number }[];
+    }[] = [];
     let current: string | null = null;
-    for (const it of visible) {
+    for (const [visibleIndex, it] of visible.entries()) {
       const label = pick(it.uezd, lang) || "—";
       if (label !== current) {
-        groups.push({ uezd: label, items: [] });
+        groups.push({ key: `${groups.length}-${label}`, uezd: label, items: [] });
         current = label;
       }
-      groups[groups.length - 1].items.push(it);
+      groups[groups.length - 1].items.push({ item: it, visibleIndex });
     }
     return groups;
   }, [visible, lang]);
@@ -208,11 +212,11 @@ export function UnlocatedPanel({
                 </div>
               )}
               {grouped.map((g) => (
-                <div key={g.uezd}>
+                <div key={g.key}>
                   <div className="sticky top-0 z-[1] border-b border-border bg-card/95 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground backdrop-blur">
                     {g.uezd}
                   </div>
-                  {g.items.map((it, idx) => {
+                  {g.items.map(({ item: it, visibleIndex }) => {
                     const settlement = pick(it.settlement, lang);
                     const church = pick(it.church, lang);
                     const region = pick(it.region, lang);
@@ -221,7 +225,7 @@ export function UnlocatedPanel({
                     const isEditing = editingKey === k;
                     return (
                       <div
-                        key={`${g.uezd}-${idx}-${settlement}`}
+                        key={`${g.key}-${visibleIndex}-${k}-${settlement}`}
                         className="border-b border-border last:border-b-0"
                       >
                         <div className="flex items-start gap-2 px-4 py-3">
