@@ -6,14 +6,15 @@ import { toast } from "sonner";
 import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
 
-async function openExternal(href: string) {
-  const w = window.open(href, "_blank", "noopener,noreferrer");
-  if (!w) {
+async function copyLink(href: string, e: React.MouseEvent<HTMLAnchorElement>) {
+  // Если пользователь зажал Alt — не уходим, а копируем URL.
+  if (e.altKey) {
+    e.preventDefault();
     try {
       await navigator.clipboard.writeText(href);
-      toast.info("Ссылка скопирована — откройте её в новой вкладке");
+      toast.success("Ссылка скопирована");
     } catch {
-      toast.error("Не удалось открыть ссылку. Скопируйте её вручную: " + href);
+      toast.error("Не удалось скопировать. URL: " + href);
     }
   }
 }
@@ -439,13 +440,21 @@ function AdminPage() {
                         <span>lat {it.lat.toFixed(4)}, lon {it.lon.toFixed(4)}</span>
                         {it.years && <span>{it.years}</span>}
                         <span>{new Date(it.created_at).toLocaleString("ru-RU")}</span>
-                        <button
-                          type="button"
-                          onClick={() => openExternal(`https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`)}
-                          className="inline-flex items-center gap-0.5 text-primary hover:underline"
-                        >
-                          OSM <ExternalLink className="h-3 w-3" />
-                        </button>
+                        {(() => {
+                          const href = `https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`;
+                          return (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => copyLink(href, e)}
+                              title="Открыть в OpenStreetMap (Alt+клик — скопировать ссылку)"
+                              className="inline-flex items-center gap-0.5 text-primary hover:underline"
+                            >
+                              OSM <ExternalLink className="h-3 w-3" />
+                            </a>
+                          );
+                        })()}
                       </div>
                     </div>
                     {it.status === "pending" && (
@@ -525,13 +534,16 @@ function AdminPage() {
                                 {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
                                 {r.zoom != null && <> · z{r.zoom.toFixed(1)}</>}
                               </span>
-                              <button
-                                type="button"
-                                onClick={() => openExternal(osmHref)}
+                              <a
+                                href={osmHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => copyLink(osmHref, e)}
+                                title="Открыть в OpenStreetMap (Alt+клик — скопировать ссылку)"
                                 className="inline-flex items-center gap-0.5 text-primary hover:underline"
                               >
                                 OSM <ExternalLink className="h-3 w-3" />
-                              </button>
+                              </a>
                             </div>
                           </div>
                         );
