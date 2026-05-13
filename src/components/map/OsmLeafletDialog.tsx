@@ -124,8 +124,11 @@ export function OsmLeafletDialog({ lat, lon, zoom, trigger, title }: Props) {
       >
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between gap-2 text-sm">
-            <span className="truncate">
-              {label} — {lat.toFixed(5)}, {lon.toFixed(5)}
+            <span className="flex min-w-0 flex-wrap items-baseline gap-x-2">
+              <span className="truncate">{label}</span>
+              <span className="font-mono text-xs font-normal text-muted-foreground tabular-nums">
+                {lat.toFixed(5)}, {lon.toFixed(5)} · z{currentZoom.toFixed(1)}
+              </span>
             </span>
             <a
               href={externalHref}
