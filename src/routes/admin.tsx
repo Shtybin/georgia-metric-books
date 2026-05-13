@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { type MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -10,28 +10,51 @@ async function copyExternalLink(href: string) {
   try {
     await navigator.clipboard.writeText(href);
     toast.success("Ссылка OSM скопирована — откройте её в новой вкладке браузера");
+    return true;
   } catch {
     toast.error("Не удалось скопировать. URL: " + href);
+    return false;
   }
 }
 
-function isInsideIframe() {
+function openInNewTab(href: string) {
   try {
-    return window.self !== window.top;
-  } catch {
+    const opened = window.open(href, "_blank");
+    if (!opened) return false;
+    opened.opener = null;
+    opened.focus();
     return true;
+  } catch {
+    return false;
   }
 }
 
-async function openOsmLink(href: string, e: MouseEvent<HTMLButtonElement>) {
-  if (e.altKey || isInsideIframe()) {
-    await copyExternalLink(href);
-    return;
+function OsmAction({ href }: { href: string }) {
+  const [fallback, setFallback] = useState<"copied" | "manual" | null>(null);
+
+  async function handleClick() {
+    setFallback(null);
+    if (openInNewTab(href)) return;
+
+    const copied = await copyExternalLink(href);
+    setFallback(copied ? "copied" : "manual");
+    if (!copied) window.prompt("Скопируйте ссылку OSM и откройте её в новой вкладке:", href);
   }
 
-  const opened = window.open(href, "_blank", "noopener,noreferrer");
-  if (opened) return;
-  await copyExternalLink(href);
+  return (
+    <span className="inline-flex max-w-full flex-wrap items-center gap-x-1 gap-y-0.5">
+      <button
+        type="button"
+        onClick={handleClick}
+        title="Открыть в OpenStreetMap"
+        className="inline-flex items-center gap-0.5 text-primary hover:underline"
+      >
+        OSM <ExternalLink className="h-3 w-3" />
+      </button>
+      {fallback === "copied" && <span className="text-muted-foreground">ссылка скопирована</span>}
+      {fallback === "manual" && <span className="break-all text-muted-foreground">{href}</span>}
+    </span>
+  );
 }
 
 export const Route = createFileRoute("/admin")({
@@ -457,16 +480,7 @@ function AdminPage() {
                         <span>{new Date(it.created_at).toLocaleString("ru-RU")}</span>
                         {(() => {
                           const href = `https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`;
-                          return (
-                            <button
-                              type="button"
-                              onClick={(e) => openOsmLink(href, e)}
-                              title="Открыть в OpenStreetMap (Alt+клик — скопировать ссылку)"
-                              className="inline-flex items-center gap-0.5 text-primary hover:underline"
-                            >
-                              OSM <ExternalLink className="h-3 w-3" />
-                            </button>
-                          );
+                          return <OsmAction href={href} />;
                         })()}
                       </div>
                     </div>
@@ -547,14 +561,7 @@ function AdminPage() {
                                 {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
                                 {r.zoom != null && <> · z{r.zoom.toFixed(1)}</>}
                               </span>
-                              <button
-                                type="button"
-                                onClick={(e) => openOsmLink(osmHref, e)}
-                                title="Открыть в OpenStreetMap (Alt+клик — скопировать ссылку)"
-                                className="inline-flex items-center gap-0.5 text-primary hover:underline"
-                              >
-                                OSM <ExternalLink className="h-3 w-3" />
-                              </button>
+                              <OsmAction href={osmHref} />
                             </div>
                           </div>
                         );
