@@ -1,21 +1,38 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
 
-async function copyLink(href: string, e: React.MouseEvent<HTMLAnchorElement>) {
-  // Если пользователь зажал Alt — не уходим, а копируем URL.
+async function copyExternalLink(href: string) {
+  try {
+    await navigator.clipboard.writeText(href);
+    toast.success("Ссылка скопирована");
+  } catch {
+    toast.error("Не удалось скопировать. URL: " + href);
+  }
+}
+
+async function openOsmLink(href: string, e: MouseEvent<HTMLButtonElement>) {
   if (e.altKey) {
-    e.preventDefault();
-    try {
-      await navigator.clipboard.writeText(href);
-      toast.success("Ссылка скопирована");
-    } catch {
-      toast.error("Не удалось скопировать. URL: " + href);
-    }
+    await copyExternalLink(href);
+    return;
+  }
+
+  const opened = window.open(href, "_blank");
+  if (opened) {
+    opened.opener = null;
+    opened.focus();
+    return;
+  }
+
+  try {
+    const targetWindow = window.top && window.top !== window ? window.top : window;
+    targetWindow.location.assign(href);
+  } catch {
+    await copyExternalLink(href);
   }
 }
 
