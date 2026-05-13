@@ -36,14 +36,17 @@ function OsmAction({ href }: { href: string }) {
     setCopied(false);
     const insidePreviewFrame = isInsideIframe();
 
+    if (insidePreviewFrame) {
+      setFallback("preview");
+      toast.warning("Lovable preview может блокировать новое окно OSM. Откройте админку в отдельной вкладке браузера.");
+      return;
+    }
+
     window.setTimeout(() => {
-      if (!insidePreviewFrame && !document.hasFocus()) return;
-      const reason = insidePreviewFrame ? "preview" : "browser";
-      setFallback(reason);
+      if (!document.hasFocus()) return;
+      setFallback("browser");
       toast.warning(
-        reason === "preview"
-          ? "Lovable preview может блокировать новое окно OSM. Откройте админку в отдельной вкладке браузера."
-          : "Если окно OSM не открылось, браузер заблокировал popup. Разрешите новые окна для этого сайта.",
+        "Если окно OSM не открылось, браузер заблокировал popup. Разрешите новые окна для этого сайта.",
       );
     }, 700);
   }
