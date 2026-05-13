@@ -31,12 +31,15 @@ function OsmAction({ href }: { href: string }) {
   const [fallback, setFallback] = useState<OsmFallback>(null);
   const [copied, setCopied] = useState(false);
 
-  function handleClick(_event: MouseEvent<HTMLAnchorElement>) {
+  async function handleClick(event: MouseEvent<HTMLAnchorElement>) {
     setFallback(null);
     setCopied(false);
     const insidePreviewFrame = isInsideIframe();
 
     if (insidePreviewFrame) {
+      event.preventDefault();
+      const linkCopied = await copyExternalLink(href);
+      setCopied(linkCopied);
       setFallback("preview");
       toast.warning("Lovable preview может блокировать новое окно OSM. Откройте админку в отдельной вкладке браузера.");
       return;
