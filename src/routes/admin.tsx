@@ -9,35 +9,29 @@ import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activit
 async function copyExternalLink(href: string) {
   try {
     await navigator.clipboard.writeText(href);
-    toast.success("Ссылка скопирована");
+    toast.success("Ссылка OSM скопирована — откройте её в новой вкладке браузера");
   } catch {
     toast.error("Не удалось скопировать. URL: " + href);
   }
 }
 
+function isInsideIframe() {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
 async function openOsmLink(href: string, e: MouseEvent<HTMLButtonElement>) {
-  if (e.altKey) {
+  if (e.altKey || isInsideIframe()) {
     await copyExternalLink(href);
     return;
   }
 
-  if (window.top && window.top !== window) {
-    try {
-      window.top.location.href = href;
-      return;
-    } catch {
-      // Fall back below if the preview sandbox blocks top-level navigation.
-    }
-  }
-
   const opened = window.open(href, "_blank", "noopener,noreferrer");
   if (opened) return;
-
-  try {
-    window.location.assign(href);
-  } catch {
-    await copyExternalLink(href);
-  }
+  await copyExternalLink(href);
 }
 
 export const Route = createFileRoute("/admin")({
