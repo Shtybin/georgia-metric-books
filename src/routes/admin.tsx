@@ -8,6 +8,10 @@ import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activit
 
 type OsmFallback = "preview" | "browser" | null;
 
+function osmOpenerHref(href: string) {
+  return `/open-osm?to=${encodeURIComponent(href)}`;
+}
+
 async function copyExternalLink(href: string) {
   try {
     await navigator.clipboard.writeText(href);
@@ -30,26 +34,31 @@ function isInsideIframe() {
 function OsmAction({ href }: { href: string }) {
   const [fallback, setFallback] = useState<OsmFallback>(null);
   const [copied, setCopied] = useState(false);
+  const openerHref = osmOpenerHref(href);
 
-  async function handleClick(event: MouseEvent<HTMLAnchorElement>) {
+  function handleClick(event: MouseEvent<HTMLAnchorElement>) {
     setFallback(null);
     setCopied(false);
     const insidePreviewFrame = isInsideIframe();
+    const popup = window.open(openerHref, "_blank");
 
-    if (insidePreviewFrame) {
+    if (popup) {
       event.preventDefault();
-      const linkCopied = await copyExternalLink(href);
-      setCopied(linkCopied);
-      setFallback("preview");
-      toast.warning("Lovable preview может блокировать новое окно OSM. Откройте админку в отдельной вкладке браузера.");
+      try {
+        popup.focus();
+      } catch {
+        // The tab is already opened; focus may be denied by the browser.
+      }
       return;
     }
 
     window.setTimeout(() => {
       if (!document.hasFocus()) return;
-      setFallback("browser");
+      setFallback(insidePreviewFrame ? "preview" : "browser");
       toast.warning(
-        "Если окно OSM не открылось, браузер заблокировал popup. Разрешите новые окна для этого сайта.",
+        insidePreviewFrame
+          ? "Если вкладка OSM не открылась, preview заблокировал popup. Повторите ссылкой ниже или откройте админку отдельной вкладкой."
+          : "Если вкладка OSM не открылась, браузер заблокировал popup. Разрешите новые окна для этого сайта.",
       );
     }, 700);
   }
@@ -57,7 +66,7 @@ function OsmAction({ href }: { href: string }) {
   return (
     <span className="inline-flex max-w-full flex-wrap items-center gap-x-1 gap-y-0.5">
       <a
-        href={href}
+        href={openerHref}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
@@ -70,15 +79,15 @@ function OsmAction({ href }: { href: string }) {
         <span className="inline-flex max-w-lg flex-wrap items-center gap-x-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[11px] leading-snug text-muted-foreground">
           <span>
             {fallback === "preview"
-              ? "Preview блокирует новое окно; откройте админку отдельной вкладкой."
+              ? "Preview мог заблокировать popup; повторите открытие или откройте админку отдельной вкладкой."
               : "Браузер заблокировал popup; разрешите новые окна для сайта."}
           </span>
           <span>{copied ? "Ссылка скопирована." : "Скопируйте:"}</span>
           <button type="button" onClick={async () => setCopied(await copyExternalLink(href))} className="text-primary underline">
             копировать
           </button>
-          <a href={href} target="_blank" rel="noopener noreferrer" className="break-all text-primary underline">
-            OSM
+          <a href={openerHref} target="_blank" rel="noopener noreferrer" className="break-all text-primary underline">
+            повторить OSM
           </a>
         </span>
       )}
