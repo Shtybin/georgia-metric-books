@@ -21,16 +21,20 @@ async function openOsmLink(href: string, e: MouseEvent<HTMLButtonElement>) {
     return;
   }
 
-  const opened = window.open(href, "_blank");
-  if (opened) {
-    opened.opener = null;
-    opened.focus();
-    return;
+  if (window.top && window.top !== window) {
+    try {
+      window.top.location.href = href;
+      return;
+    } catch {
+      // Fall back below if the preview sandbox blocks top-level navigation.
+    }
   }
 
+  const opened = window.open(href, "_blank", "noopener,noreferrer");
+  if (opened) return;
+
   try {
-    const targetWindow = window.top && window.top !== window ? window.top : window;
-    targetWindow.location.assign(href);
+    window.location.assign(href);
   } catch {
     await copyExternalLink(href);
   }
