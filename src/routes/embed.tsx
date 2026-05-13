@@ -12,7 +12,10 @@ export const Route = createFileRoute("/embed")({
   validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
-      { title: "Map embed" },
+      { title: "Embeddable map — Georgia Metric Books Atlas" },
+      { name: "description", content: "Lightweight embeddable version of the Georgia Metric Books Atlas, designed for inclusion in third-party sites and articles." },
+      { property: "og:title", content: "Embeddable map — Georgia Metric Books Atlas" },
+      { property: "og:description", content: "Embeddable version of the Georgia Metric Books interactive historical map." },
       { name: "robots", content: "noindex" },
     ],
   }),

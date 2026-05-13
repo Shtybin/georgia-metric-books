@@ -4,7 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Вход — Архивный атлас" }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in — Georgia Metric Books Atlas" },
+      { name: "description", content: "Administrator sign-in for the Georgia Metric Books Atlas. Restricted area for project moderators and editors." },
+      { property: "og:title", content: "Sign in — Georgia Metric Books Atlas" },
+      { property: "og:description", content: "Administrator sign-in for the Georgia Metric Books Atlas." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: LoginPage,
 });
 

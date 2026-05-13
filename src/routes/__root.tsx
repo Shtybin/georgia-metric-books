@@ -91,6 +91,53 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Georgia Metric Books Map",
+          alternateName: "Архивный атлас метрических книг Грузии",
+          url: "https://metrics.datatells.info",
+          description:
+            "Interactive historical atlas of Georgian parish metric books (1819–1930): search settlements, churches, and uezds, with 10 km neighbourhood analysis.",
+          inLanguage: ["ru", "en", "ka"],
+          publisher: {
+            "@type": "Organization",
+            name: "Datatells",
+            url: "https://datatells.info",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Dataset",
+          name: "Georgian Parish Metric Books 1819–1930",
+          description:
+            "Geocoded index of 19th–early 20th century parish metric books from the National Historical Archive of Georgia (Fond 489, Inventory 6).",
+          url: "https://metrics.datatells.info/map",
+          inLanguage: ["ru", "en", "ka"],
+          keywords: [
+            "Georgia",
+            "metric books",
+            "parish registers",
+            "genealogy",
+            "history",
+            "Caucasus",
+          ],
+          creator: {
+            "@type": "Organization",
+            name: "Datatells",
+            url: "https://datatells.info",
+          },
+          isAccessibleForFree: true,
+          license: "https://opensource.org/licenses/MIT",
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
