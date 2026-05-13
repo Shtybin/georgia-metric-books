@@ -480,16 +480,7 @@ function AdminPage() {
                         <span>{new Date(it.created_at).toLocaleString("ru-RU")}</span>
                         {(() => {
                           const href = `https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`;
-                          return (
-                            <button
-                              type="button"
-                              onClick={(e) => openOsmLink(href, e)}
-                              title="Открыть в OpenStreetMap (Alt+клик — скопировать ссылку)"
-                              className="inline-flex items-center gap-0.5 text-primary hover:underline"
-                            >
-                              OSM <ExternalLink className="h-3 w-3" />
-                            </button>
-                          );
+                          return <OsmAction href={href} />;
                         })()}
                       </div>
                     </div>
@@ -570,14 +561,7 @@ function AdminPage() {
                                 {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
                                 {r.zoom != null && <> · z{r.zoom.toFixed(1)}</>}
                               </span>
-                              <button
-                                type="button"
-                                onClick={(e) => openOsmLink(osmHref, e)}
-                                title="Открыть в OpenStreetMap (Alt+клик — скопировать ссылку)"
-                                className="inline-flex items-center gap-0.5 text-primary hover:underline"
-                              >
-                                OSM <ExternalLink className="h-3 w-3" />
-                              </button>
+                              <OsmAction href={osmHref} />
                             </div>
                           </div>
                         );
