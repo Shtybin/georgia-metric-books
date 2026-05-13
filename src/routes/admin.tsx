@@ -2,7 +2,21 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
+
+async function openExternal(href: string) {
+  const w = window.open(href, "_blank", "noopener,noreferrer");
+  if (!w) {
+    try {
+      await navigator.clipboard.writeText(href);
+      toast.info("Ссылка скопирована — откройте её в новой вкладке");
+    } catch {
+      toast.error("Не удалось открыть ссылку. Скопируйте её вручную: " + href);
+    }
+  }
+}
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
