@@ -14,6 +14,9 @@ interface OsmActionProps {
 }
 
 function OsmAction({ lat, lon, zoom, title }: OsmActionProps) {
+  const accessibleLabel = title
+    ? `Открыть карту OpenStreetMap для ${title} (${lat.toFixed(5)}, ${lon.toFixed(5)})`
+    : `Открыть карту OpenStreetMap для координат ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
   return (
     <OsmLeafletDialog
       lat={lat}
@@ -23,10 +26,10 @@ function OsmAction({ lat, lon, zoom, title }: OsmActionProps) {
       trigger={
         <button
           type="button"
-          title="Открыть карту OpenStreetMap"
-          className="inline-flex items-center gap-0.5 text-primary hover:underline"
+          aria-label={accessibleLabel}
+          className="inline-flex items-center gap-0.5 rounded-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          <MapIcon className="h-3 w-3" /> OSM
+          <MapIcon aria-hidden="true" className="h-3 w-3" /> OSM
         </button>
       }
     />

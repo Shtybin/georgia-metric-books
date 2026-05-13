@@ -1,7 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ExternalLink } from "lucide-react";
 
 interface Props {
@@ -16,25 +23,28 @@ export function OsmLeafletDialog({ lat, lon, zoom, trigger, title }: Props) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const descId = useId();
 
   const z = Math.min(Math.max(zoom ?? 12, 3), 18);
   const externalHref = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${Math.round(z)}/${lat}/${lon}`;
+  const label = title ?? "OpenStreetMap";
+  const coordsLabel = `широта ${lat.toFixed(5)}, долгота ${lon.toFixed(5)}`;
 
   useEffect(() => {
     if (!open) return;
-    // Defer init so the dialog content has a measured size.
     const id = window.setTimeout(() => {
       if (!containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current, {
         center: [lat, lon],
         zoom: z,
         scrollWheelZoom: true,
+        keyboard: true,
       });
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
-      L.marker([lat, lon]).addTo(map);
+      L.marker([lat, lon], { title: label, alt: `Маркер: ${label}, ${coordsLabel}` }).addTo(map);
       mapRef.current = map;
     }, 50);
     return () => {
@@ -44,30 +54,49 @@ export function OsmLeafletDialog({ lat, lon, zoom, trigger, title }: Props) {
         mapRef.current = null;
       }
     };
-  }, [open, lat, lon, z]);
+  }, [open, lat, lon, z, label, coordsLabel]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <span onClick={() => setOpen(true)} className="inline-flex">
-        {trigger}
-      </span>
-      <DialogContent className="max-w-3xl">
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent
+        className="max-w-3xl"
+        aria-describedby={descId}
+        onOpenAutoFocus={(event) => {
+          // Keep focus on the dialog container so screen readers announce title
+          // and Esc/Tab work, but don't steal it into the map tiles.
+          event.preventDefault();
+          (event.currentTarget as HTMLElement)?.focus();
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between gap-2 text-sm">
             <span className="truncate">
-              {title ?? "OpenStreetMap"} — {lat.toFixed(5)}, {lon.toFixed(5)}
+              {label} — {lat.toFixed(5)}, {lon.toFixed(5)}
             </span>
             <a
               href={externalHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-normal text-primary hover:underline"
+              aria-label={`Открыть ${label} на openstreetmap.org в новой вкладке`}
+              className="inline-flex items-center gap-1 rounded-sm text-xs font-normal text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              открыть на openstreetmap.org <ExternalLink className="h-3 w-3" />
+              открыть на openstreetmap.org <ExternalLink aria-hidden="true" className="h-3 w-3" />
             </a>
           </DialogTitle>
+          <DialogDescription id={descId}>
+            Интерактивная карта OpenStreetMap с маркером в точке {coordsLabel}.
+            Используйте клавиши со стрелками для перемещения, «+» и «−» для масштабирования,
+            Esc для закрытия окна.
+          </DialogDescription>
         </DialogHeader>
-        <div ref={containerRef} className="h-[60vh] w-full overflow-hidden rounded-md border border-border" />
+        <div
+          ref={containerRef}
+          role="application"
+          aria-label={`Карта OpenStreetMap: ${label}, ${coordsLabel}`}
+          tabIndex={0}
+          className="h-[60vh] w-full overflow-hidden rounded-md border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        />
       </DialogContent>
     </Dialog>
   );
