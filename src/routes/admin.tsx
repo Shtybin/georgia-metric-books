@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -19,19 +19,6 @@ async function copyExternalLink(href: string) {
   }
 }
 
-function openInNewTab(href: string) {
-  try {
-    const opened = window.open("about:blank", "_blank");
-    if (!opened) return false;
-    opened.opener = null;
-    opened.location.href = href;
-    opened.focus();
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function isInsideIframe() {
   try {
     return window.self !== window.top;
@@ -44,31 +31,35 @@ function OsmAction({ href }: { href: string }) {
   const [fallback, setFallback] = useState<OsmFallback>(null);
   const [copied, setCopied] = useState(false);
 
-  async function handleClick() {
+  function handleClick(_event: MouseEvent<HTMLAnchorElement>) {
     setFallback(null);
     setCopied(false);
-    if (openInNewTab(href)) return;
+    const insidePreviewFrame = isInsideIframe();
 
-    const linkCopied = await copyExternalLink(href);
-    setCopied(linkCopied);
-    setFallback(isInsideIframe() ? "preview" : "browser");
-    toast.warning(
-      isInsideIframe()
-        ? "Lovable preview заблокировал новое окно OSM. Откройте админку в отдельной вкладке браузера."
-        : "Браузер заблокировал новое окно OSM. Разрешите popups для этого сайта.",
-    );
+    window.setTimeout(() => {
+      if (!insidePreviewFrame && !document.hasFocus()) return;
+      const reason = insidePreviewFrame ? "preview" : "browser";
+      setFallback(reason);
+      toast.warning(
+        reason === "preview"
+          ? "Lovable preview может блокировать новое окно OSM. Откройте админку в отдельной вкладке браузера."
+          : "Если окно OSM не открылось, браузер заблокировал popup. Разрешите новые окна для этого сайта.",
+      );
+    }, 700);
   }
 
   return (
     <span className="inline-flex max-w-full flex-wrap items-center gap-x-1 gap-y-0.5">
-      <button
-        type="button"
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         onClick={handleClick}
         title="Открыть в OpenStreetMap"
         className="inline-flex items-center gap-0.5 text-primary hover:underline"
       >
         OSM <ExternalLink className="h-3 w-3" />
-      </button>
+      </a>
       {fallback && (
         <span className="inline-flex max-w-lg flex-wrap items-center gap-x-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[11px] leading-snug text-muted-foreground">
           <span>
@@ -77,6 +68,9 @@ function OsmAction({ href }: { href: string }) {
               : "Браузер заблокировал popup; разрешите новые окна для сайта."}
           </span>
           <span>{copied ? "Ссылка скопирована." : "Скопируйте:"}</span>
+          <button type="button" onClick={async () => setCopied(await copyExternalLink(href))} className="text-primary underline">
+            копировать
+          </button>
           <a href={href} target="_blank" rel="noopener noreferrer" className="break-all text-primary underline">
             OSM
           </a>
