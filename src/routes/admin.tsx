@@ -454,10 +454,11 @@ function AdminPage() {
                         <span>lat {it.lat.toFixed(4)}, lon {it.lon.toFixed(4)}</span>
                         {it.years && <span>{it.years}</span>}
                         <span>{new Date(it.created_at).toLocaleString("ru-RU")}</span>
-                        {(() => {
-                          const href = `https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`;
-                          return <OsmAction href={href} />;
-                        })()}
+                        <OsmAction
+                          lat={it.lat}
+                          lon={it.lon}
+                          title={it.settlement_ru || it.settlement_en || undefined}
+                        />
                       </div>
                     </div>
                     {it.status === "pending" && (
@@ -524,24 +525,20 @@ function AdminPage() {
                           {r.user_agent}
                         </p>
                       )}
-                      {r.lat != null && r.lon != null && (() => {
-                        const z = Math.min(Math.max(r.zoom ?? 12, 3), 18);
-                        const osmHref = `https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}#map=${Math.round(z)}/${r.lat}/${r.lon}`;
-                        return (
-                          <div className="mt-2 w-full max-w-sm">
-                            <div className="overflow-hidden rounded-md border border-border">
-                              <AdminMiniMap lat={r.lat} lon={r.lon} zoom={r.zoom} className="h-40 w-full" />
-                            </div>
-                            <div className="mt-1 flex items-center justify-between text-[10px] tabular-nums text-muted-foreground">
-                              <span>
-                                {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
-                                {r.zoom != null && <> · z{r.zoom.toFixed(1)}</>}
-                              </span>
-                              <OsmAction href={osmHref} />
-                            </div>
+                      {r.lat != null && r.lon != null && (
+                        <div className="mt-2 w-full max-w-sm">
+                          <div className="overflow-hidden rounded-md border border-border">
+                            <AdminMiniMap lat={r.lat} lon={r.lon} zoom={r.zoom} className="h-40 w-full" />
                           </div>
-                        );
-                      })()}
+                          <div className="mt-1 flex items-center justify-between text-[10px] tabular-nums text-muted-foreground">
+                            <span>
+                              {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
+                              {r.zoom != null && <> · z{r.zoom.toFixed(1)}</>}
+                            </span>
+                            <OsmAction lat={r.lat} lon={r.lon} zoom={r.zoom} />
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="flex shrink-0 flex-wrap gap-1">
                       {r.status !== "in_progress" && (
