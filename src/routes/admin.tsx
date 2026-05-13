@@ -2,7 +2,21 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
+
+async function openExternal(href: string) {
+  const w = window.open(href, "_blank", "noopener,noreferrer");
+  if (!w) {
+    try {
+      await navigator.clipboard.writeText(href);
+      toast.info("Ссылка скопирована — откройте её в новой вкладке");
+    } catch {
+      toast.error("Не удалось открыть ссылку. Скопируйте её вручную: " + href);
+    }
+  }
+}
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -425,14 +439,13 @@ function AdminPage() {
                         <span>lat {it.lat.toFixed(4)}, lon {it.lon.toFixed(4)}</span>
                         {it.years && <span>{it.years}</span>}
                         <span>{new Date(it.created_at).toLocaleString("ru-RU")}</span>
-                        <a
-                          href={`https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          type="button"
+                          onClick={() => openExternal(`https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`)}
                           className="inline-flex items-center gap-0.5 text-primary hover:underline"
                         >
                           OSM <ExternalLink className="h-3 w-3" />
-                        </a>
+                        </button>
                       </div>
                     </div>
                     {it.status === "pending" && (
@@ -501,37 +514,24 @@ function AdminPage() {
                       )}
                       {r.lat != null && r.lon != null && (() => {
                         const z = Math.min(Math.max(r.zoom ?? 12, 3), 18);
-                        // ~degrees per pixel at zoom z; build a small bbox around the point
-                        const d = 180 / Math.pow(2, z);
-                        const dLat = d * 0.6;
-                        const dLon = d * 1.2;
-                        const bbox = `${r.lon - dLon},${r.lat - dLat},${r.lon + dLon},${r.lat + dLat}`;
-                        const embedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${r.lat},${r.lon}`;
                         const osmHref = `https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}#map=${Math.round(z)}/${r.lat}/${r.lon}`;
                         return (
                           <div className="mt-2 w-full max-w-sm">
                             <div className="overflow-hidden rounded-md border border-border">
-                              <iframe
-                                title={`Карта ${r.id}`}
-                                src={embedSrc}
-                                loading="lazy"
-                                referrerPolicy="no-referrer"
-                                className="h-40 w-full"
-                              />
+                              <AdminMiniMap lat={r.lat} lon={r.lon} zoom={r.zoom} className="h-40 w-full" />
                             </div>
                             <div className="mt-1 flex items-center justify-between text-[10px] tabular-nums text-muted-foreground">
                               <span>
                                 {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
                                 {r.zoom != null && <> · z{r.zoom.toFixed(1)}</>}
                               </span>
-                              <a
-                                href={osmHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                              <button
+                                type="button"
+                                onClick={() => openExternal(osmHref)}
                                 className="inline-flex items-center gap-0.5 text-primary hover:underline"
                               >
                                 OSM <ExternalLink className="h-3 w-3" />
-                              </a>
+                              </button>
                             </div>
                           </div>
                         );
