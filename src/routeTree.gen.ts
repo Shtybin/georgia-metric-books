@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as OpenOsmRouteImport } from './routes/open-osm'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as EmbedRouteImport } from './routes/embed'
@@ -20,11 +19,6 @@ import { Route as IndexRouteImport } from './routes/index'
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OpenOsmRoute = OpenOsmRouteImport.update({
-  id: '/open-osm',
-  path: '/open-osm',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapRoute = MapRouteImport.update({
@@ -59,7 +53,6 @@ export interface FileRoutesByFullPath {
   '/embed': typeof EmbedRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
-  '/open-osm': typeof OpenOsmRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
@@ -68,7 +61,6 @@ export interface FileRoutesByTo {
   '/embed': typeof EmbedRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
-  '/open-osm': typeof OpenOsmRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
@@ -78,28 +70,13 @@ export interface FileRoutesById {
   '/embed': typeof EmbedRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
-  '/open-osm': typeof OpenOsmRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/admin'
-    | '/embed'
-    | '/login'
-    | '/map'
-    | '/open-osm'
-    | '/sitemap.xml'
+  fullPaths: '/' | '/admin' | '/embed' | '/login' | '/map' | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/admin'
-    | '/embed'
-    | '/login'
-    | '/map'
-    | '/open-osm'
-    | '/sitemap.xml'
+  to: '/' | '/admin' | '/embed' | '/login' | '/map' | '/sitemap.xml'
   id:
     | '__root__'
     | '/'
@@ -107,7 +84,6 @@ export interface FileRouteTypes {
     | '/embed'
     | '/login'
     | '/map'
-    | '/open-osm'
     | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
@@ -117,7 +93,6 @@ export interface RootRouteChildren {
   EmbedRoute: typeof EmbedRoute
   LoginRoute: typeof LoginRoute
   MapRoute: typeof MapRoute
-  OpenOsmRoute: typeof OpenOsmRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -128,13 +103,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/open-osm': {
-      id: '/open-osm'
-      path: '/open-osm'
-      fullPath: '/open-osm'
-      preLoaderRoute: typeof OpenOsmRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/map': {
@@ -181,7 +149,6 @@ const rootRouteChildren: RootRouteChildren = {
   EmbedRoute: EmbedRoute,
   LoginRoute: LoginRoute,
   MapRoute: MapRoute,
-  OpenOsmRoute: OpenOsmRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
