@@ -1,97 +1,35 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { type MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { AdminMiniMap } from "@/components/map/AdminMiniMap";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
+import { OsmLeafletDialog } from "@/components/map/OsmLeafletDialog";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon } from "lucide-react";
 
-type OsmFallback = "preview" | "browser" | null;
-
-function osmOpenerHref(href: string) {
-  return `/open-osm?to=${encodeURIComponent(href)}`;
+interface OsmActionProps {
+  lat: number;
+  lon: number;
+  zoom?: number | null;
+  title?: string;
 }
 
-async function copyExternalLink(href: string) {
-  try {
-    await navigator.clipboard.writeText(href);
-    toast.success("Ссылка OSM скопирована — откройте её в новой вкладке браузера");
-    return true;
-  } catch {
-    toast.error("Не удалось скопировать. URL: " + href);
-    return false;
-  }
-}
-
-function isInsideIframe() {
-  try {
-    return window.self !== window.top;
-  } catch {
-    return true;
-  }
-}
-
-function OsmAction({ href }: { href: string }) {
-  const [fallback, setFallback] = useState<OsmFallback>(null);
-  const [copied, setCopied] = useState(false);
-  const openerHref = osmOpenerHref(href);
-
-  function handleClick(event: MouseEvent<HTMLAnchorElement>) {
-    setFallback(null);
-    setCopied(false);
-    const insidePreviewFrame = isInsideIframe();
-    const popup = window.open(openerHref, "_blank");
-
-    if (popup) {
-      event.preventDefault();
-      try {
-        popup.focus();
-      } catch {
-        // The tab is already opened; focus may be denied by the browser.
-      }
-      return;
-    }
-
-    window.setTimeout(() => {
-      if (!document.hasFocus()) return;
-      setFallback(insidePreviewFrame ? "preview" : "browser");
-      toast.warning(
-        insidePreviewFrame
-          ? "Если вкладка OSM не открылась, preview заблокировал popup. Повторите ссылкой ниже или откройте админку отдельной вкладкой."
-          : "Если вкладка OSM не открылась, браузер заблокировал popup. Разрешите новые окна для этого сайта.",
-      );
-    }, 700);
-  }
-
+function OsmAction({ lat, lon, zoom, title }: OsmActionProps) {
   return (
-    <span className="inline-flex max-w-full flex-wrap items-center gap-x-1 gap-y-0.5">
-      <a
-        href={openerHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={handleClick}
-        title="Открыть в OpenStreetMap"
-        className="inline-flex items-center gap-0.5 text-primary hover:underline"
-      >
-        OSM <ExternalLink className="h-3 w-3" />
-      </a>
-      {fallback && (
-        <span className="inline-flex max-w-lg flex-wrap items-center gap-x-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[11px] leading-snug text-muted-foreground">
-          <span>
-            {fallback === "preview"
-              ? "Preview мог заблокировать popup; повторите открытие или откройте админку отдельной вкладкой."
-              : "Браузер заблокировал popup; разрешите новые окна для сайта."}
-          </span>
-          <span>{copied ? "Ссылка скопирована." : "Скопируйте:"}</span>
-          <button type="button" onClick={async () => setCopied(await copyExternalLink(href))} className="text-primary underline">
-            копировать
-          </button>
-          <a href={openerHref} target="_blank" rel="noopener noreferrer" className="break-all text-primary underline">
-            повторить OSM
-          </a>
-        </span>
-      )}
-    </span>
+    <OsmLeafletDialog
+      lat={lat}
+      lon={lon}
+      zoom={zoom}
+      title={title}
+      trigger={
+        <button
+          type="button"
+          title="Открыть карту OpenStreetMap"
+          className="inline-flex items-center gap-0.5 text-primary hover:underline"
+        >
+          <MapIcon className="h-3 w-3" /> OSM
+        </button>
+      }
+    />
   );
 }
 
