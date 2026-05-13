@@ -36,10 +36,21 @@ function OsmAction({ href }: { href: string }) {
   const [copied, setCopied] = useState(false);
   const openerHref = osmOpenerHref(href);
 
-  function handleClick(_event: MouseEvent<HTMLAnchorElement>) {
+  function handleClick(event: MouseEvent<HTMLAnchorElement>) {
     setFallback(null);
     setCopied(false);
     const insidePreviewFrame = isInsideIframe();
+    const popup = window.open(openerHref, "_blank");
+
+    if (popup) {
+      event.preventDefault();
+      try {
+        popup.focus();
+      } catch {
+        // The tab is already opened; focus may be denied by the browser.
+      }
+      return;
+    }
 
     window.setTimeout(() => {
       if (!document.hasFocus()) return;
