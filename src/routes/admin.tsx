@@ -439,14 +439,13 @@ function AdminPage() {
                         <span>lat {it.lat.toFixed(4)}, lon {it.lon.toFixed(4)}</span>
                         {it.years && <span>{it.years}</span>}
                         <span>{new Date(it.created_at).toLocaleString("ru-RU")}</span>
-                        <a
-                          href={`https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          type="button"
+                          onClick={() => openExternal(`https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lon}#map=12/${it.lat}/${it.lon}`)}
                           className="inline-flex items-center gap-0.5 text-primary hover:underline"
                         >
                           OSM <ExternalLink className="h-3 w-3" />
-                        </a>
+                        </button>
                       </div>
                     </div>
                     {it.status === "pending" && (
