@@ -1,0 +1,16 @@
+# Georgia Metric Books Map
+
+> Interactive historical atlas of 19th–early 20th century Georgian parish metric books (1819–1930). Search settlements, churches, and uezds; explore neighbouring parishes within 10 km.
+
+The project digitises and geolocates parish registers from the National Historical Archive of Georgia (Fond 489, Inventory 6). The interface is available in Russian, English, and Georgian.
+
+## Pages
+
+- [Home / Landing](/): project overview, languages, entry points to the map.
+- [Interactive map](/map): full atlas with search, filters by region/uezd/period, and 10 km radius analysis.
+- [Embeddable map](/embed): lightweight version of the map for embedding on third-party sites.
+
+## Optional
+
+- [Live site](https://metrics.datatells.info)
+- [Mirror](https://georgia-metric-books.lovable.app)

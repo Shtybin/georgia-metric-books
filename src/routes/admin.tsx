@@ -5,7 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Админ — модерация" }] }),
+  head: () => ({
+    meta: [
+      { title: "Admin — Georgia Metric Books Atlas" },
+      { name: "description", content: "Moderation dashboard for the Georgia Metric Books Atlas: review user reports, coordinate suggestions, and content edits." },
+      { property: "og:title", content: "Admin — Georgia Metric Books Atlas" },
+      { property: "og:description", content: "Moderation dashboard for the Georgia Metric Books Atlas." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: AdminPage,
 });
 

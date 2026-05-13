@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { MapView } from "@/components/map/MapView";
-import type { Lang } from "@/lib/i18n";
+import { STRINGS, type Lang } from "@/lib/i18n";
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
@@ -10,16 +10,25 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/map")({
   validateSearch: zodValidator(searchSchema),
-  head: () => ({
-    meta: [
-      { title: "Метрические книги Грузии · Архивный атлас 1819–1930" },
-      { name: "description", content: "Интерактивная карта приходских метрических книг Грузии 1819–1930. Поиск по селениям, церквям и уездам, анализ в радиусе 10 км." },
-      { property: "og:title", content: "Метрические книги Грузии — Архивный атлас 1819–1930" },
-      { property: "og:description", content: "Интерактивная историческая карта: поиск, фильтры по периоду, анализ соседних приходов." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = ((match.search as any)?.lang ?? "ru") as Lang;
+    const L = STRINGS[lang].landing;
+    const url = `https://metrics.datatells.info/map?lang=${lang}`;
+    return {
+      meta: [
+        { title: L.metaTitle },
+        { name: "description", content: L.metaDesc },
+        { property: "og:title", content: L.metaTitle },
+        { property: "og:description", content: L.metaDesc },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: L.metaTitle },
+        { name: "twitter:description", content: L.metaDesc },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: MapPage,
 });
 
