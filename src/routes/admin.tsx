@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw } from "lucide-react";
 
+type OsmFallback = "preview" | "browser" | null;
+
 async function copyExternalLink(href: string) {
   try {
     await navigator.clipboard.writeText(href);
@@ -19,9 +21,10 @@ async function copyExternalLink(href: string) {
 
 function openInNewTab(href: string) {
   try {
-    const opened = window.open(href, "_blank");
+    const opened = window.open("about:blank", "_blank");
     if (!opened) return false;
     opened.opener = null;
+    opened.location.href = href;
     opened.focus();
     return true;
   } catch {
@@ -29,16 +32,31 @@ function openInNewTab(href: string) {
   }
 }
 
+function isInsideIframe() {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
 function OsmAction({ href }: { href: string }) {
-  const [fallback, setFallback] = useState<"copied" | "manual" | null>(null);
+  const [fallback, setFallback] = useState<OsmFallback>(null);
+  const [copied, setCopied] = useState(false);
 
   async function handleClick() {
     setFallback(null);
+    setCopied(false);
     if (openInNewTab(href)) return;
 
-    const copied = await copyExternalLink(href);
-    setFallback(copied ? "copied" : "manual");
-    if (!copied) window.prompt("Скопируйте ссылку OSM и откройте её в новой вкладке:", href);
+    const linkCopied = await copyExternalLink(href);
+    setCopied(linkCopied);
+    setFallback(isInsideIframe() ? "preview" : "browser");
+    toast.warning(
+      isInsideIframe()
+        ? "Lovable preview заблокировал новое окно OSM. Откройте админку в отдельной вкладке браузера."
+        : "Браузер заблокировал новое окно OSM. Разрешите popups для этого сайта.",
+    );
   }
 
   return (
@@ -51,8 +69,19 @@ function OsmAction({ href }: { href: string }) {
       >
         OSM <ExternalLink className="h-3 w-3" />
       </button>
-      {fallback === "copied" && <span className="text-muted-foreground">ссылка скопирована</span>}
-      {fallback === "manual" && <span className="break-all text-muted-foreground">{href}</span>}
+      {fallback && (
+        <span className="inline-flex max-w-lg flex-wrap items-center gap-x-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[11px] leading-snug text-muted-foreground">
+          <span>
+            {fallback === "preview"
+              ? "Preview блокирует новое окно; откройте админку отдельной вкладкой."
+              : "Браузер заблокировал popup; разрешите новые окна для сайта."}
+          </span>
+          <span>{copied ? "Ссылка скопирована." : "Скопируйте:"}</span>
+          <a href={href} target="_blank" rel="noopener noreferrer" className="break-all text-primary underline">
+            OSM
+          </a>
+        </span>
+      )}
     </span>
   );
 }
