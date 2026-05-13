@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 function safeOsmUrl(raw: string | undefined) {
   if (!raw) return null;
@@ -22,9 +23,9 @@ function OpenOsmPage() {
   const { to } = Route.useSearch();
   const href = safeOsmUrl(to);
 
-  if (href && typeof window !== "undefined") {
-    window.location.replace(href);
-  }
+  useEffect(() => {
+    if (href) window.location.replace(href);
+  }, [href]);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 text-center text-sm text-muted-foreground">
