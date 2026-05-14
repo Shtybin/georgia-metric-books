@@ -278,7 +278,7 @@ export const STRINGS = {
     regionLabel: "რეგიონი:",
     clear: "გასუფთავება",
     stats: "სტატისტიკა",
-    sizeLegend: "ზომა = წლების რაოდენობა",
+    sizeLegend: "უწყვეტი წიგნთწარმოების პერიოდი",
     total: "ჩანაწერი სულ",
     withCoords: "კოორდინატებით",
     withoutCoords: "კოორდინატების გარეშე",
