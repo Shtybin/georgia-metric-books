@@ -26,6 +26,70 @@ import { cn } from "@/lib/utils";
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
 
+// Trailing parenthetical "(бывш. X)" / "(formerly X)" / "(ყოფ. X)" markers
+// used in source data to record former settlement names. We extract them into
+// a structured `aliases` field so the UI can show a clean primary name plus a
+// "former name" badge, and so search can match the alias.
+const ALIAS_MARKERS = [
+  /\(\s*(?:бывш\.?|ранее)\s+([^)]+?)\s*\)/gi,
+  /\(\s*formerly\s+([^)]+?)\s*\)/gi,
+  /\(\s*ყოფ\.?\s+([^)]+?)\s*\)/gi,
+];
+
+function splitAliases(name: string): { clean: string; aliases: string[] } {
+  if (!name) return { clean: "", aliases: [] };
+  const aliases: string[] = [];
+  let clean = name;
+  for (const re of ALIAS_MARKERS) {
+    clean = clean.replace(re, (_m, cap: string) => {
+      const v = (cap || "").trim();
+      if (v) aliases.push(v);
+      return "";
+    });
+  }
+  return { clean: clean.replace(/\s{2,}/g, " ").trim(), aliases };
+}
+
+/** Normalize features: pull "(бывш. X)" out of the settlement name into
+ *  `properties.aliases` and `properties.historicalName` (when not set). */
+function normalizeAliases(fc: FC): FC {
+  let changed = false;
+  const next: any[] = fc.features.map((f) => {
+    const p: any = f.properties ?? {};
+    const s = p.settlement ?? {};
+    const ru = splitAliases(s.ru || "");
+    const en = splitAliases(s.en || "");
+    const ka = splitAliases(s.ka || "");
+    const hasAny = ru.aliases.length || en.aliases.length || ka.aliases.length;
+    if (!hasAny) return f;
+    changed = true;
+    const aliases = { ru: ru.aliases, en: en.aliases, ka: ka.aliases };
+    const histExisting = p.historicalName;
+    const histFilled = histExisting && (histExisting.ru || histExisting.en || histExisting.ka)
+      ? histExisting
+      : {
+          ru: ru.aliases[0] || histExisting?.ru || "",
+          en: en.aliases[0] || histExisting?.en || "",
+          ka: ka.aliases[0] || histExisting?.ka || "",
+        };
+    return {
+      ...f,
+      properties: {
+        ...p,
+        settlement: {
+          ...s,
+          ru: ru.clean || s.ru,
+          en: en.clean || s.en,
+          ka: ka.clean || s.ka,
+        },
+        aliases,
+        historicalName: histFilled,
+      },
+    };
+  });
+  return changed ? { ...fc, features: next as any } : fc;
+}
+
 // Set basemap label fields based on current UI language.
 // ka → name:ka, ru → name:ru, en → name:en, each with sensible fallbacks.
 function applyBasemapLabels(map: MLMap, lang: Lang) {
@@ -139,7 +203,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   // Merge base GeoJSON with admin overrides + community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
     if (!baseData) return null;
-    const overridden = applyOverrides(baseData, overrides);
+    const overridden = normalizeAliases(applyOverrides(baseData, overrides));
     const baseLen = overridden.features.length;
     const userFeatures = Object.values(userCoords.records).map((rec, i) =>
       userRecordToFeature(rec, 1_000_000 + i + baseLen),
@@ -292,6 +356,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         { name: "properties.region.ru", weight: 0.5 },
         { name: "properties.region.en", weight: 0.5 },
         { name: "properties.region.ka", weight: 0.5 },
+        { name: "properties.aliases.ru", weight: 0.95 },
+        { name: "properties.aliases.en", weight: 0.95 },
+        { name: "properties.aliases.ka", weight: 0.95 },
+        { name: "properties.historicalName.ru", weight: 0.9 },
+        { name: "properties.historicalName.en", weight: 0.9 },
+        { name: "properties.historicalName.ka", weight: 0.9 },
       ],
       threshold: 0.35,
       minMatchCharLength: 1,
