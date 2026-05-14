@@ -30,11 +30,37 @@ type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
 function applyBasemapLabels(map: MLMap, lang: Lang) {
   try {
     const style = map.getStyle();
-    const expr: any = lang === "ka"
+    // Primary localized label (with sensible fallbacks).
+    const primary: any = lang === "ka"
       ? ["coalesce", ["get", "name:ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
       : lang === "ru"
       ? ["coalesce", ["get", "name:ru"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
       : ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]];
+
+    // For ru/en: append the Georgian name on a second line when it exists
+    // and differs from the primary label. For ka: show only the Georgian name.
+    const expr: any =
+      lang === "ka"
+        ? primary
+        : [
+            "case",
+            [
+              "all",
+              ["has", "name:ka"],
+              ["!=", ["get", "name:ka"], primary],
+            ],
+            [
+              "format",
+              primary,
+              {},
+              "\n",
+              {},
+              ["get", "name:ka"],
+              { "font-scale": 0.8 },
+            ],
+            primary,
+          ];
+
     for (const layer of style.layers || []) {
       if (layer.type !== "symbol") continue;
       const layout: any = (layer as any).layout;
