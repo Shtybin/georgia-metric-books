@@ -1164,6 +1164,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         const churchStr: string = sel.church[lang] || sel.church.en || "";
         const churchList = churchStr ? churchStr.split("|").map((s: string) => s.trim()).filter(Boolean) : [];
         const manyChurches = churchList.length > 3;
+        const histRaw = sel.historicalName as { ru?: string; en?: string; ka?: string } | undefined;
+        const histName = histRaw ? (histRaw[lang] || histRaw.en || histRaw.ru || "") : "";
+        const noteRaw = sel.discrepancyNote as { ru?: string; en?: string; ka?: string } | undefined;
+        const noteText = noteRaw ? (noteRaw[lang] || noteRaw.en || noteRaw.ru || "") : "";
+        const mismatches = nameMismatchIndex.get(selected.id as number) ?? [];
+        const hasHistory = !!(histName || noteText || mismatches.length);
         return (
         <div className="pointer-events-auto absolute bottom-3 left-3 z-10 flex w-[min(92vw,360px)] max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur">
           {/* Sticky header */}
