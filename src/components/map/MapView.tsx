@@ -1472,12 +1472,20 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         const churchStr: string = sel.church[lang] || sel.church.en || "";
         const churchList = churchStr ? churchStr.split("|").map((s: string) => s.trim()).filter(Boolean) : [];
         const manyChurches = churchList.length > 3;
-        const histRaw = sel.historicalName as { ru?: string; en?: string; ka?: string } | undefined;
-        const histName = histRaw ? (histRaw[lang] || histRaw.en || histRaw.ru || "") : "";
+         const histRaw = sel.historicalName as { ru?: string; en?: string; ka?: string } | undefined;
+         const histName = histRaw ? (histRaw[lang] || histRaw.en || histRaw.ru || "") : "";
+         const aliasRaw = sel.aliases as { ru?: string[]; en?: string[]; ka?: string[] } | string[] | undefined;
+         const aliasList: string[] = (() => {
+           if (!aliasRaw) return [];
+           if (Array.isArray(aliasRaw)) return aliasRaw.filter(Boolean);
+           const arr = (aliasRaw[lang] && aliasRaw[lang]!.length ? aliasRaw[lang] : (aliasRaw.en?.length ? aliasRaw.en : aliasRaw.ru)) || [];
+           return arr.filter(Boolean);
+         })();
+         const extraAliases = aliasList.filter((a) => a && a !== histName);
         const noteRaw = sel.discrepancyNote as { ru?: string; en?: string; ka?: string } | undefined;
         const noteText = noteRaw ? (noteRaw[lang] || noteRaw.en || noteRaw.ru || "") : "";
         const mismatches = nameMismatchIndex.get(selected.id as number) ?? [];
-        const hasHistory = !!(histName || noteText || mismatches.length);
+        const hasHistory = !!(histName || noteText || mismatches.length || extraAliases.length);
         return (
         <div className="pointer-events-auto absolute bottom-3 left-3 z-10 flex w-[min(92vw,360px)] max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur">
           {/* Sticky header */}
@@ -1486,20 +1494,29 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <h3 className="font-serif text-lg font-semibold leading-tight">
                 {sel.settlement[lang] || sel.settlement.en || "—"}
               </h3>
-              {(histName || mismatches.length > 0) && (
-                <div className="mt-1 flex flex-wrap items-center gap-1">
-                  {histName && (
-                    <span className="inline-flex items-center rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
-                      {T.historyBadgeFormer}: {histName}
-                    </span>
-                  )}
-                  {mismatches.length > 0 && (
-                    <span className="inline-flex items-center rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-medium text-destructive">
-                      ⚠ {T.historyBadgeMatch}
-                    </span>
-                  )}
-                </div>
-              )}
+              {(histName || extraAliases.length > 0 || mismatches.length > 0) && (
+                 <div className="mt-1 flex flex-wrap items-center gap-1">
+                   {histName && (
+                     <span className="inline-flex items-center rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
+                       {T.historyBadgeFormer}: {histName}
+                     </span>
+                   )}
+                   {extraAliases.map((a) => (
+                     <span
+                       key={a}
+                       className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-700/90 dark:text-amber-300/90"
+                       title={T.historyBadgeFormer}
+                     >
+                       бывш. {a}
+                     </span>
+                   ))}
+                   {mismatches.length > 0 && (
+                     <span className="inline-flex items-center rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-medium text-destructive">
+                       ⚠ {T.historyBadgeMatch}
+                     </span>
+                   )}
+                 </div>
+               )}
               {!manyChurches && churchList.length > 0 && (
                 <p className="mt-0.5 text-sm italic text-muted-foreground">
                   {churchList.join(" · ")}
