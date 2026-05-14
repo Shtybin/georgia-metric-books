@@ -385,8 +385,15 @@ function EditDialog({
   const [publish, setPublish] = useState<boolean>(() => row?.override?.published ?? false);
   const [saving, setSaving] = useState(false);
 
-  function setLang(field: "settlement" | "church" | "region" | "uezd", lang: "ru" | "en" | "ka", value: string) {
-    setData((d) => ({ ...d, [field]: { ...d[field], [lang]: value } }));
+  function setLang(
+    field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote",
+    lang: "ru" | "en" | "ka",
+    value: string,
+  ) {
+    setData((d) => {
+      const cur = (d as any)[field] ?? { ru: "", en: "", ka: "" };
+      return { ...d, [field]: { ...cur, [lang]: value } };
+    });
   }
 
   async function save() {
