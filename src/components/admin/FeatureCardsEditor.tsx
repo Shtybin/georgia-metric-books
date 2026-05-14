@@ -451,6 +451,18 @@ function EditDialog({
           <FieldGroup label="Уезд" field="uezd" data={data} setLang={setLang} />
           <FieldGroup label="Регион" field="region" data={data} setLang={setLang} />
           <FieldGroup label="Церковь" field="church" data={data} setLang={setLang} />
+          <FieldGroup
+            label="Историческое название (бывш. …)"
+            field="historicalName"
+            data={data}
+            setLang={setLang}
+          />
+          <FieldGroup
+            label="Заметка о расхождении (уезд / атрибуция)"
+            field="discrepancyNote"
+            data={data}
+            setLang={setLang}
+          />
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <div>
