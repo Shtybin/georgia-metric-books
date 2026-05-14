@@ -1460,9 +1460,21 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             )}
 
             {hasHistory && (
-              <details className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 open:bg-amber-500/10">
-                <summary className="cursor-pointer list-none px-2.5 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
-                  ▾ {T.historyTitle}
+              <details
+                className="group mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 open:bg-amber-500/10"
+                aria-label={T.historyTitle}
+              >
+                <summary
+                  className="flex cursor-pointer list-none items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-semibold text-amber-700 outline-none focus-visible:ring-2 focus-visible:ring-amber-500 dark:text-amber-300"
+                  aria-label={`${T.historyTitle}${mismatches.length ? ` — ${mismatches.length}` : ""}`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="inline-block transition-transform group-open:rotate-180"
+                  >
+                    ▾
+                  </span>
+                  <span>{T.historyTitle}</span>
                 </summary>
                 <div className="space-y-2 px-2.5 pb-2.5 pt-1 text-xs">
                   {histName && (
@@ -1482,31 +1494,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     </div>
                   )}
                   {mismatches.length > 0 && (
-                    <div>
-                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        ⚠ {T.historyMatchTitle}
-                      </div>
-                      <p className="mb-1 text-muted-foreground">{T.historyMatchHint}</p>
-                      <ul className="space-y-1">
-                        {mismatches.map((m) => (
-                          <li key={m.id}>
-                            <button
-                              onClick={() => {
-                                const f = data?.features.find((x) => (x.id as number) === m.id);
-                                if (f) selectFeature(f as Feature);
-                              }}
-                              className="w-full rounded border border-border bg-background/60 px-2 py-1 text-left hover:bg-accent"
-                            >
-                              <div className="font-medium">{m.settlement}</div>
-                              <div className="text-[10px] text-muted-foreground">
-                                {[m.uezd, m.region].filter(Boolean).join(" · ")}
-                                {m.years ? ` · ${m.years}` : ""}
-                              </div>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <MatchesList
+                      title={T.historyMatchTitle}
+                      hint={T.historyMatchHint}
+                      items={mismatches}
+                      onPick={(id) => {
+                        const f = data?.features.find((x) => (x.id as number) === id);
+                        if (f) selectFeature(f as Feature);
+                      }}
+                    />
                   )}
                 </div>
               </details>
