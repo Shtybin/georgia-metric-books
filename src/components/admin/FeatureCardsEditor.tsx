@@ -43,6 +43,7 @@ export function FeatureCardsEditor() {
   const [filter, setFilter] = useState<"all" | "drafts" | "published" | "deleted">("all");
   const [editing, setEditing] = useState<EffectiveRow | null>(null);
   const [creating, setCreating] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   // Load base + overrides
   useEffect(() => {
