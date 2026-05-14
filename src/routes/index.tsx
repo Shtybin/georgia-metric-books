@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, MapPin, Layers, Globe2, Landmark } from "lucide-react";
+import { ArrowRight, MapPin, Layers, Globe2, Landmark, BookOpen, Download } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
