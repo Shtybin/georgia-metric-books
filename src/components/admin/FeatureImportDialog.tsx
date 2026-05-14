@@ -94,8 +94,15 @@ function autoDetect(headers: string[]): Record<TargetKey, string | null> {
   return out;
 }
 
-function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): { data: FeatureData; featureId: number | null } {
+type ProvidedKey =
+  | "settlement" | "church" | "region" | "uezd" | "historicalName"
+  | "lat" | "lon" | "yearsRaw" | "missingYearsRaw" | "startYear" | "endYear";
+
+function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): {
+  data: FeatureData; featureId: number | null; provided: Set<ProvidedKey>;
+} {
   const d = emptyFeatureData();
+  const provided = new Set<ProvidedKey>();
   const get = (k: TargetKey) => {
     const col = mapping[k];
     if (!col) return "";
@@ -106,7 +113,10 @@ function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): { da
     const ru = get(`${field}.ru` as TargetKey);
     const en = get(`${field}.en` as TargetKey);
     const ka = get(`${field}.ka` as TargetKey);
-    (d as any)[field] = { ru, en, ka };
+    if (ru || en || ka) {
+      (d as any)[field] = { ru, en, ka };
+      provided.add(field);
+    }
   };
   setMl("settlement");
   setMl("church");
@@ -114,27 +124,36 @@ function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): { da
   setMl("uezd");
   setMl("historicalName");
 
-  const lat = parseFloat(get("lat").replace(",", "."));
-  const lon = parseFloat(get("lon").replace(",", "."));
-  if (Number.isFinite(lat)) d.lat = lat;
-  if (Number.isFinite(lon)) d.lon = lon;
+  const latStr = get("lat");
+  const lonStr = get("lon");
+  const lat = parseFloat(latStr.replace(",", "."));
+  const lon = parseFloat(lonStr.replace(",", "."));
+  if (latStr && Number.isFinite(lat)) { d.lat = lat; provided.add("lat"); }
+  if (lonStr && Number.isFinite(lon)) { d.lon = lon; provided.add("lon"); }
 
   const yr = get("yearsRaw");
-  if (yr) d.yearsRaw = { ru: yr, en: yr, ka: yr };
+  if (yr) { d.yearsRaw = { ru: yr, en: yr, ka: yr }; provided.add("yearsRaw"); }
   const my = get("missingYearsRaw");
-  if (my) d.missingYearsRaw = { ru: my, en: my, ka: my };
+  if (my) { d.missingYearsRaw = { ru: my, en: my, ka: my }; provided.add("missingYearsRaw"); }
 
   const sy = parseInt(get("startYear"), 10);
   const ey = parseInt(get("endYear"), 10);
-  if (Number.isInteger(sy)) d.startYear = sy;
-  if (Number.isInteger(ey)) d.endYear = ey;
+  if (Number.isInteger(sy)) { d.startYear = sy; provided.add("startYear"); }
+  if (Number.isInteger(ey)) { d.endYear = ey; provided.add("endYear"); }
   // Default end to start if missing
   if (!Number.isInteger(ey) && Number.isInteger(sy)) d.endYear = sy;
 
   const fidRaw = get("featureId");
   const fid = fidRaw ? parseInt(fidRaw, 10) : NaN;
 
-  return { data: d, featureId: Number.isInteger(fid) ? fid : null };
+  return { data: d, featureId: Number.isInteger(fid) ? fid : null, provided };
+}
+
+/** Merge CSV-provided fields into an existing override's data, preserving the rest. */
+function mergeProvided(existing: FeatureData, incoming: FeatureData, provided: Set<ProvidedKey>): FeatureData {
+  const out: FeatureData = { ...existing };
+  for (const k of provided) (out as any)[k] = (incoming as any)[k];
+  return out;
 }
 
 export function FeatureImportDialog({
