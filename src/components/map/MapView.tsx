@@ -787,7 +787,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         "circle-opacity": [
           "case",
           ["boolean", ["feature-state", "dimmed"], false], 0.10,
-          0.95,
+          0.6,
         ],
       },
     });
@@ -1336,8 +1336,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   );
                 })}
               </div>
-            )}
-          </div>
+        )}
+      </div>
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
@@ -1669,7 +1669,6 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 className="w-full"
                 onClick={() => setMissingDialogOpen(true)}
               >
-                ⚑ {T.suggestMissingAction}
               </Button>
             </div>
           </div>
@@ -1828,6 +1827,31 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
         )}
       </div>
+
+      {/* Size legend (bottom-left). Hidden when a point card is open
+          (the card occupies the same corner) and on mobile (cramped). */}
+      {!sel && (
+        <div className="pointer-events-none absolute bottom-3 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur sm:block">
+          <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            {T.sizeLegend}
+          </div>
+          <div className="flex items-end gap-3">
+            {[
+              { years: 5,  r: Math.max(4, Math.sqrt(5)  * 1.6) },
+              { years: 25, r: Math.max(4, Math.sqrt(25) * 1.6) },
+              { years: 50, r: Math.max(4, Math.sqrt(50) * 1.6) },
+            ].map(({ years, r }) => (
+              <div key={years} className="flex flex-col items-center gap-1">
+                <span
+                  className="rounded-full bg-foreground ring-1 ring-white"
+                  style={{ width: r * 2, height: r * 2, opacity: 0.6 }}
+                />
+                <span className="text-[10px] tabular-nums text-muted-foreground">{years}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
