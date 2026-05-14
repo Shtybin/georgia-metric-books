@@ -201,6 +201,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [submitToast, setSubmitToast] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [uezdDialogOpen, setUezdDialogOpen] = useState(false);
+  const [compareMode, setCompareMode] = useState<"after" | "base">("after");
   useEffect(() => {
     let mounted = true;
     (async () => {
