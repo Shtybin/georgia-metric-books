@@ -1498,6 +1498,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
              .filter((g) => g.values.length > 0);
          })();
          const hasAliasBlock = aliasByLang.length > 0;
+         const hasHistory = !!(histName || noteText || mismatches.length || extraAliases.length);
         return (
         <div className="pointer-events-auto absolute bottom-3 left-3 z-10 flex w-[min(92vw,360px)] max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur">
           {/* Sticky header */}
