@@ -19,7 +19,8 @@ import {
   type FeatureOverride,
   type ValidationIssue,
 } from "@/lib/featureOverrides";
-import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle, Download } from "lucide-react";
+import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle, Download, Upload } from "lucide-react";
+import { FeatureImportDialog } from "./FeatureImportDialog";
 
 type BaseFeature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -42,6 +43,7 @@ export function FeatureCardsEditor() {
   const [filter, setFilter] = useState<"all" | "drafts" | "published" | "deleted">("all");
   const [editing, setEditing] = useState<EffectiveRow | null>(null);
   const [creating, setCreating] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   // Load base + overrides
   useEffect(() => {
@@ -210,6 +212,9 @@ export function FeatureCardsEditor() {
           >
             <Download className="mr-1 h-4 w-4" /> Экспорт (все)
           </Button>
+          <Button size="sm" variant="outline" onClick={() => setImporting(true)}>
+            <Upload className="mr-1 h-4 w-4" /> Импорт CSV/Excel
+          </Button>
           <Button size="sm" onClick={() => setCreating(true)}>
             <Plus className="mr-1 h-4 w-4" /> Добавить точку
           </Button>
@@ -306,6 +311,11 @@ export function FeatureCardsEditor() {
           }}
         />
       )}
+      <FeatureImportDialog
+        open={importing}
+        onOpenChange={setImporting}
+        onImported={() => { void reloadOverrides(); }}
+      />
     </section>
   );
 }
