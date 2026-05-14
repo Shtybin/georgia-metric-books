@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const EXPECTED_COUNT = 2578;
+const EXPECTED_COUNT = 5197;
 const root = process.cwd();
 
 function fail(msg: string): never {
