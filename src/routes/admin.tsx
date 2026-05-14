@@ -453,6 +453,8 @@ function AdminPage() {
         <FeatureCardsEditor />
       ) : tab === "uezd" ? (
         <UezdCorrectionsModeration />
+      ) : tab === "log" ? (
+        <FeatureOverrideHistory currentUserId={currentUserId} />
       ) : tab === "coords" ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           {loading ? (
