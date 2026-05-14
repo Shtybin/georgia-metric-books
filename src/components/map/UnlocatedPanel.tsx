@@ -260,7 +260,7 @@ export function UnlocatedPanel({
                             <button
                               onClick={() => setEditingKey(isEditing ? null : k)}
                               className={cn(
-                                "inline-flex h-10 w-10 items-center justify-center rounded-md border transition-colors",
+                                "inline-flex h-10 items-center gap-1.5 rounded-md border px-2.5 transition-colors",
                                 isEditing
                                   ? "border-primary bg-primary text-primary-foreground"
                                   : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -269,6 +269,7 @@ export function UnlocatedPanel({
                               title={T.addCoords}
                             >
                               <MapPinPlus className="h-4 w-4" />
+                              <span className="text-xs font-medium">{T.addCoords}</span>
                             </button>
                           </div>
                         </div>
