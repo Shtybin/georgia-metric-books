@@ -396,7 +396,7 @@ function EditDialog({
         // Update existing override
         const { error } = await supabase
           .from("feature_overrides")
-          .update({ data, published: publish })
+          .update({ data: data as any, published: publish })
           .eq("id", row.override.id);
         if (error) throw error;
       } else if (row && row.feature_id != null) {
