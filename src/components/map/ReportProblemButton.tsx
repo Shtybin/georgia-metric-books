@@ -75,7 +75,6 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
   // is intentionally disabled so the button never moves during zoom, filter,
   // selection or card opening.
   const btnRef = useRef<HTMLButtonElement | null>(null);
-  const anchor: Anchor = "tr";
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -86,6 +85,8 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, []);
+
+  const anchor: Anchor = isMobile ? "br" : "tr";
 
   // Collision detection is disabled — anchor is fixed top-right on all sizes.
   void pickAnchor;

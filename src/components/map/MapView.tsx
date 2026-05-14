@@ -1358,7 +1358,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             className="flex items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
           >
             <ListX className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{T.unlocatedButton}</span>
+            <span>{T.unlocatedButton}</span>
             {(stats?.unlocatedGroups ?? stats?.withoutCoords) ? (
               <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
                 {(stats!.unlocatedGroups ?? stats!.withoutCoords).toLocaleString()}
@@ -1377,7 +1377,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               }
               aria-pressed={compareMode === "after"}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium shadow-lg backdrop-blur transition-colors",
+                "hidden sm:flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium shadow-lg backdrop-blur transition-colors",
                 compareMode === "after"
                   ? "border-border bg-card/95 text-foreground hover:bg-accent"
                   : "border-amber-500/60 bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 dark:text-amber-300",
@@ -1710,40 +1710,46 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         />
       )}
 
-      {/* Mobile: docs button above the 2-row legend along the bottom.
-          Hidden when a card is open. */}
+      {/* Mobile: docs button (bottom-left, level with report button on right),
+          and the 2-row legend pinned to the very bottom. Hidden when a card is open. */}
       {!selected && (
-        <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 flex flex-col gap-1.5 sm:hidden">
+        <>
           <button
             onClick={() => setDocsOpen(true)}
-            className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1 text-[11px] font-medium text-foreground shadow-lg backdrop-blur hover:bg-accent"
+            style={{
+              bottom: "var(--map-overlay-gap-bottom)",
+              left: "var(--map-overlay-gap-left)",
+            }}
+            className="pointer-events-auto absolute z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent sm:hidden"
           >
             <HelpCircle className="h-3.5 w-3.5" />
             {T.docsButton}
           </button>
-          <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
-            {BUCKET_ORDER.map((b) => {
-              const on = enabledBuckets.has(b);
-              return (
-                <button
-                  key={b}
-                  onClick={() => toggleBucket(b)}
-                  aria-pressed={on}
-                  className={cn(
-                    "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
-                    on ? "opacity-100" : "opacity-40",
-                  )}
-                >
-                  <span
-                    className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
-                    style={{ backgroundColor: BUCKET_COLORS[b] }}
-                  />
-                  <span className="truncate">{T.bucket[b]}</span>
-                </button>
-              );
-            })}
+          <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
+            <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
+              {BUCKET_ORDER.map((b) => {
+                const on = enabledBuckets.has(b);
+                return (
+                  <button
+                    key={b}
+                    onClick={() => toggleBucket(b)}
+                    aria-pressed={on}
+                    className={cn(
+                      "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
+                      on ? "opacity-100" : "opacity-40",
+                    )}
+                  >
+                    <span
+                      className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
+                      style={{ backgroundColor: BUCKET_COLORS[b] }}
+                    />
+                    <span className="truncate">{T.bucket[b]}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Desktop: floating docs button at the bottom center. */}
