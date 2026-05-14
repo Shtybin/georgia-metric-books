@@ -1460,9 +1460,21 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             )}
 
             {hasHistory && (
-              <details className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 open:bg-amber-500/10">
-                <summary className="cursor-pointer list-none px-2.5 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
-                  ▾ {T.historyTitle}
+              <details
+                className="group mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 open:bg-amber-500/10"
+                aria-label={T.historyTitle}
+              >
+                <summary
+                  className="flex cursor-pointer list-none items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-semibold text-amber-700 outline-none focus-visible:ring-2 focus-visible:ring-amber-500 dark:text-amber-300"
+                  aria-label={`${T.historyTitle}${mismatches.length ? ` — ${mismatches.length}` : ""}`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="inline-block transition-transform group-open:rotate-180"
+                  >
+                    ▾
+                  </span>
+                  <span>{T.historyTitle}</span>
                 </summary>
                 <div className="space-y-2 px-2.5 pb-2.5 pt-1 text-xs">
                   {histName && (
@@ -1482,31 +1494,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     </div>
                   )}
                   {mismatches.length > 0 && (
-                    <div>
-                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        ⚠ {T.historyMatchTitle}
-                      </div>
-                      <p className="mb-1 text-muted-foreground">{T.historyMatchHint}</p>
-                      <ul className="space-y-1">
-                        {mismatches.map((m) => (
-                          <li key={m.id}>
-                            <button
-                              onClick={() => {
-                                const f = data?.features.find((x) => (x.id as number) === m.id);
-                                if (f) selectFeature(f as Feature);
-                              }}
-                              className="w-full rounded border border-border bg-background/60 px-2 py-1 text-left hover:bg-accent"
-                            >
-                              <div className="font-medium">{m.settlement}</div>
-                              <div className="text-[10px] text-muted-foreground">
-                                {[m.uezd, m.region].filter(Boolean).join(" · ")}
-                                {m.years ? ` · ${m.years}` : ""}
-                              </div>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <MatchesList
+                      title={T.historyMatchTitle}
+                      hint={T.historyMatchHint}
+                      items={mismatches}
+                      onPick={(id) => {
+                        const f = data?.features.find((x) => (x.id as number) === id);
+                        if (f) selectFeature(f as Feature);
+                      }}
+                    />
                   )}
                 </div>
               </details>
@@ -1680,6 +1676,88 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/** Keyboard-navigable list of "probable match" candidates.
+ *  - Tab moves focus to the first item, then Tab leaves the list.
+ *  - ArrowDown / ArrowUp move focus between items (roving tabindex).
+ *  - Home / End jump to first / last item.
+ *  - Enter / Space activate the focused item (native button behavior). */
+function MatchesList({
+  title,
+  hint,
+  items,
+  onPick,
+}: {
+  title: string;
+  hint: string;
+  items: Array<{ id: number; settlement: string; uezd: string; region: string; years: string }>;
+  onPick: (id: number) => void;
+}) {
+  const [focusIdx, setFocusIdx] = useState(0);
+  const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const listId = `matches-${items[0]?.id ?? "x"}`;
+
+  const focusAt = (i: number) => {
+    const clamped = Math.max(0, Math.min(items.length - 1, i));
+    setFocusIdx(clamped);
+    itemRefs.current[clamped]?.focus();
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    switch (e.key) {
+      case "ArrowDown": e.preventDefault(); focusAt(focusIdx + 1); break;
+      case "ArrowUp":   e.preventDefault(); focusAt(focusIdx - 1); break;
+      case "Home":      e.preventDefault(); focusAt(0); break;
+      case "End":       e.preventDefault(); focusAt(items.length - 1); break;
+    }
+  };
+
+  return (
+    <div role="group" aria-labelledby={`${listId}-label`}>
+      <div
+        id={`${listId}-label`}
+        className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground"
+      >
+        ⚠ {title}
+      </div>
+      <p id={`${listId}-hint`} className="mb-1 text-muted-foreground">{hint}</p>
+      <ul
+        role="list"
+        aria-describedby={`${listId}-hint`}
+        aria-label={`${title} (${items.length})`}
+        className="space-y-1"
+        onKeyDown={onKeyDown}
+      >
+        {items.map((m, i) => {
+          const meta = [m.uezd, m.region].filter(Boolean).join(" · ");
+          const label = `${m.settlement}${meta ? `, ${meta}` : ""}${m.years ? `, ${m.years}` : ""}`;
+          return (
+            <li key={m.id}>
+              <button
+                ref={(el) => { itemRefs.current[i] = el; }}
+                type="button"
+                onClick={() => onPick(m.id)}
+                onFocus={() => setFocusIdx(i)}
+                tabIndex={i === focusIdx ? 0 : -1}
+                aria-label={label}
+                aria-posinset={i + 1}
+                aria-setsize={items.length}
+                className="w-full rounded border border-border bg-background/60 px-2 py-1 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <div className="font-medium" aria-hidden="true">{m.settlement}</div>
+                {meta || m.years ? (
+                  <div className="text-[10px] text-muted-foreground" aria-hidden="true">
+                    {meta}{m.years ? ` · ${m.years}` : ""}
+                  </div>
+                ) : null}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
