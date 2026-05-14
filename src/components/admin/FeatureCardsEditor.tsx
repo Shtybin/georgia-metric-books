@@ -14,10 +14,12 @@ import {
   applyOverrides,
   emptyFeatureData,
   featureToData,
+  validateFeatureData,
   type FeatureData,
   type FeatureOverride,
+  type ValidationIssue,
 } from "@/lib/featureOverrides";
-import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon } from "lucide-react";
+import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle } from "lucide-react";
 
 type BaseFeature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -384,6 +386,19 @@ function EditDialog({
   const [data, setData] = useState<FeatureData>(() => row?.data ?? emptyFeatureData());
   const [publish, setPublish] = useState<boolean>(() => row?.override?.published ?? false);
   const [saving, setSaving] = useState(false);
+  const [showAllIssues, setShowAllIssues] = useState(false);
+
+  const issues = useMemo<ValidationIssue[]>(() => validateFeatureData(data), [data]);
+  const errors = issues.filter((i) => i.severity === "error");
+  const warnings = issues.filter((i) => i.severity === "warning");
+  const errFields = new Set(errors.map((i) => i.field));
+  const warnFields = new Set(warnings.map((i) => i.field));
+  const fieldClass = (f: ValidationIssue["field"]) =>
+    errFields.has(f)
+      ? "border-destructive focus-visible:ring-destructive"
+      : warnFields.has(f)
+        ? "border-amber-500 focus-visible:ring-amber-500"
+        : "";
 
   function setLang(
     field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote",
@@ -397,6 +412,10 @@ function EditDialog({
   }
 
   async function save() {
+    if (errors.length > 0) {
+      setShowAllIssues(true);
+      return;
+    }
     setSaving(true);
     try {
       if (row?.override) {
@@ -471,6 +490,7 @@ function EditDialog({
                 value={data.yearsRaw.ru}
                 onChange={(e) => setData((d) => ({ ...d, yearsRaw: { ru: e.target.value, en: e.target.value, ka: e.target.value } }))}
                 placeholder="1845-1916"
+                className={fieldClass("yearsRaw")}
               />
             </div>
             <div>
@@ -479,6 +499,7 @@ function EditDialog({
                 type="number"
                 value={data.startYear}
                 onChange={(e) => setData((d) => ({ ...d, startYear: parseInt(e.target.value, 10) || 0 }))}
+                className={fieldClass("startYear")}
               />
             </div>
             <div>
@@ -487,8 +508,26 @@ function EditDialog({
                 type="number"
                 value={data.endYear}
                 onChange={(e) => setData((d) => ({ ...d, endYear: parseInt(e.target.value, 10) || 0 }))}
+                className={fieldClass("endYear")}
               />
             </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
+              Пропущенные годы (Missing Years) — например «1850, 1855-1857»
+            </label>
+            <Input
+              value={data.missingYearsRaw?.ru ?? ""}
+              onChange={(e) =>
+                setData((d) => ({
+                  ...d,
+                  missingYearsRaw: { ru: e.target.value, en: e.target.value, ka: e.target.value },
+                }))
+              }
+              placeholder="1850, 1855-1857"
+              className={fieldClass("missingYearsRaw")}
+            />
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -499,6 +538,7 @@ function EditDialog({
                 step="0.000001"
                 value={data.lat}
                 onChange={(e) => setData((d) => ({ ...d, lat: parseFloat(e.target.value) || 0 }))}
+                className={fieldClass("lat")}
               />
             </div>
             <div>
@@ -508,6 +548,7 @@ function EditDialog({
                 step="0.000001"
                 value={data.lon}
                 onChange={(e) => setData((d) => ({ ...d, lon: parseFloat(e.target.value) || 0 }))}
+                className={fieldClass("lon")}
               />
             </div>
           </div>
@@ -537,11 +578,43 @@ function EditDialog({
           </label>
         </div>
 
+        {(errors.length > 0 || warnings.length > 0) && (
+          <div
+            className={
+              "mt-3 rounded-md border p-3 text-xs " +
+              (errors.length > 0
+                ? "border-destructive/40 bg-destructive/10 text-destructive"
+                : "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300")
+            }
+          >
+            <div className="mb-1 flex items-center gap-2 font-medium">
+              <AlertTriangle className="h-4 w-4" />
+              {errors.length > 0
+                ? `Ошибок: ${errors.length}${warnings.length ? `, предупреждений: ${warnings.length}` : ""}`
+                : `Предупреждений: ${warnings.length}`}
+              {!showAllIssues && (errors.length + warnings.length) > 3 && (
+                <button
+                  type="button"
+                  className="ml-auto underline"
+                  onClick={() => setShowAllIssues(true)}
+                >
+                  показать все
+                </button>
+              )}
+            </div>
+            <ul className="ml-5 list-disc space-y-0.5">
+              {(showAllIssues ? [...errors, ...warnings] : [...errors, ...warnings].slice(0, 3)).map((i, idx) => (
+                <li key={idx}>{i.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={saving}>
             <XIcon className="mr-1 h-4 w-4" /> Отмена
           </Button>
-          <Button onClick={save} disabled={saving}>
+          <Button onClick={save} disabled={saving || errors.length > 0} title={errors.length > 0 ? "Исправьте ошибки перед сохранением" : undefined}>
             <Save className="mr-1 h-4 w-4" /> {saving ? "Сохранение…" : "Сохранить"}
           </Button>
         </DialogFooter>
