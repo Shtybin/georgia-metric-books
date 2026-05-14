@@ -34,7 +34,7 @@ export const STRINGS = {
     regionLabel: "Регион:",
     clear: "Сбросить",
     stats: "Статистика",
-    sizeLegend: "Размер = лет ведения",
+    sizeLegend: "Период беспрерывного ведения книг",
     total: "Всего записей",
     withCoords: "С координатами",
     withoutCoords: "Без координат",
