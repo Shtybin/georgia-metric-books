@@ -156,7 +156,7 @@ export const STRINGS = {
     regionLabel: "Region:",
     clear: "Clear",
     stats: "Statistics",
-    sizeLegend: "Size = years of records",
+    sizeLegend: "Continuous record-keeping span",
     total: "Total records",
     withCoords: "With coordinates",
     withoutCoords: "Without coordinates",
