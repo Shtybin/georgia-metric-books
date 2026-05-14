@@ -1758,36 +1758,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </>
       )}
 
-      {/* Desktop: floating docs button at the bottom center. */}
-      <button
-        onClick={() => setDocsOpen(true)}
-        className="pointer-events-auto absolute bottom-3 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-1.5 rounded-full border border-border bg-card/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent sm:inline-flex"
-      >
-        <HelpCircle className="h-4 w-4" />
-        {T.docsButton}
-      </button>
+      {/* Desktop: docs button stacked above the legend (right side). */}
+      <div className="pointer-events-none absolute bottom-3 right-3 z-10 hidden w-[min(92vw,260px)] flex-col items-stretch gap-2 sm:flex">
+        <button
+          onClick={() => setDocsOpen(true)}
+          className="pointer-events-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+        >
+          <HelpCircle className="h-4 w-4" />
+          {T.docsButton}
+        </button>
 
-      <Dialog open={docsOpen} onOpenChange={setDocsOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{T.docsTitle}</DialogTitle>
-          </DialogHeader>
-          <DialogDescription asChild>
-            <div
-              className="text-sm leading-relaxed text-foreground"
-              dangerouslySetInnerHTML={{ __html: T.docsBodyHtml }}
-            />
-          </DialogDescription>
-        </DialogContent>
-      </Dialog>
+        {/* Desktop: full legend + stats panel. */}
+        <div className="pointer-events-auto rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
 
-      {/* Desktop: full legend + stats panel. */}
-      <div
-        className={cn(
-          "pointer-events-auto absolute bottom-3 right-3 z-10 w-[min(92vw,260px)] rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur",
-          "hidden sm:block",
-        )}
-      >
         <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {T.legend}
         </div>
