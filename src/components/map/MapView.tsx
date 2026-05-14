@@ -12,6 +12,8 @@ import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
 import { usePublishedOverrides, applyOverrides } from "@/lib/featureOverrides";
+import { UezdCorrectionDialog } from "./UezdCorrectionDialog";
+import { supabase } from "@/integrations/supabase/client";
 import {
   BASEMAP_STYLE,
   BUCKET_COLORS,
@@ -197,6 +199,21 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const approved = useApprovedSuggestions();
   const overrides = usePublishedOverrides();
   const [submitToast, setSubmitToast] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [uezdDialogOpen, setUezdDialogOpen] = useState(false);
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data: sess } = await supabase.auth.getSession();
+      if (!sess.session) return;
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: sess.session.user.id,
+        _role: "admin",
+      });
+      if (mounted && !error && data === true) setIsAdmin(true);
+    })();
+    return () => { mounted = false; };
+  }, []);
   const T = t(lang);
   const isMobile = useIsMobileSm();
 
@@ -1370,6 +1387,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 </div>
               </details>
             )}
+
+            {isAdmin && (
+              <div className="mt-3">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setUezdDialogOpen(true)}
+                >
+                  ⚑ {T.suggestUezdAction}
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Sticky footer */}
@@ -1392,6 +1422,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
         );
       })()}
+
+      {selected && sel && (
+        <UezdCorrectionDialog
+          open={uezdDialogOpen}
+          onOpenChange={setUezdDialogOpen}
+          lang={lang}
+          featureId={typeof selected.id === "number" ? (selected.id as number) : null}
+          settlement={sel.settlement}
+          region={sel.region}
+          currentUezd={sel.uezd}
+          onSubmitted={(msg) => setSubmitToast(msg)}
+        />
+      )}
 
       {/* Mobile: docs button above the 2-row legend along the bottom.
           Hidden when a card is open. */}

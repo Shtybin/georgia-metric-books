@@ -208,6 +208,54 @@ export type Database = {
         }
         Relationships: []
       }
+      uezd_corrections: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          current_uezd: Json
+          feature_id: number | null
+          id: string
+          note: string | null
+          proposed_uezd: Json
+          region_snapshot: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
+          settlement_snapshot: Json
+          status: Database["public"]["Enums"]["uezd_correction_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          current_uezd?: Json
+          feature_id?: number | null
+          id?: string
+          note?: string | null
+          proposed_uezd?: Json
+          region_snapshot?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          settlement_snapshot?: Json
+          status?: Database["public"]["Enums"]["uezd_correction_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          current_uezd?: Json
+          feature_id?: number | null
+          id?: string
+          note?: string | null
+          proposed_uezd?: Json
+          region_snapshot?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          settlement_snapshot?: Json
+          status?: Database["public"]["Enums"]["uezd_correction_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -246,6 +294,7 @@ export type Database = {
       app_role: "admin" | "user"
       report_status: "new" | "in_progress" | "resolved"
       suggestion_status: "pending" | "approved" | "rejected"
+      uezd_correction_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -376,6 +425,7 @@ export const Constants = {
       app_role: ["admin", "user"],
       report_status: ["new", "in_progress", "resolved"],
       suggestion_status: ["pending", "approved", "rejected"],
+      uezd_correction_status: ["pending", "approved", "rejected"],
     },
   },
 } as const
