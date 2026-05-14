@@ -437,7 +437,9 @@ function AdminPage() {
         </div>}
       </header>
 
-      {tab === "coords" ? (
+      {tab === "cards" ? (
+        <FeatureCardsEditor />
+      ) : tab === "coords" ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           {loading ? (
             <p className="text-sm text-muted-foreground">Загрузка…</p>
