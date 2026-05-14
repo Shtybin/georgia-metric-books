@@ -140,15 +140,14 @@ function Index() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap gap-2 sm:flex-col sm:items-end">
-                <a
-                  href="/docs/map-guide-ru.md"
-                  target="_blank"
-                  rel="noopener"
+                <Link
+                  to="/guide"
+                  search={{ lang }}
                   className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5"
                 >
                   <BookOpen className="h-4 w-4" />
                   {lang === "en" ? "Open guide" : lang === "ka" ? "გახსნა" : "Открыть инструкцию"}
-                </a>
+                </Link>
                 <a
                   href="/docs/map-guide-ru.md"
                   download
