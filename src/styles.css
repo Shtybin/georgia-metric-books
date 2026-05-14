@@ -182,13 +182,19 @@
   }
 }
 
-/* Position MapLibre zoom controls below the top overlay (filters + search +
- * actions row on mobile, language switcher row on desktop). Uses the same
- * --map-overlay-gap-top variable as the other corner buttons so they stay
- * aligned and shift together. */
+/* Position MapLibre zoom controls below the top overlay. On mobile they sit
+ * just under the top bar (filters + search + actions). On desktop/tablet
+ * they sit BELOW the "Report a problem" button so the stacking order from
+ * top to bottom is: language switcher → report button → zoom controls. */
 .maplibregl-map .maplibregl-ctrl-top-right {
   top: var(--map-overlay-gap-top);
   right: var(--map-overlay-gap-right);
+}
+
+@media (min-width: 640px) {
+  .maplibregl-map .maplibregl-ctrl-top-right {
+    top: calc(var(--map-overlay-gap-top) + 2.5rem);
+  }
 }
 
 /* Lock the viewport to full height ONLY on routes that need a fullscreen
