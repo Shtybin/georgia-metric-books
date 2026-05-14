@@ -24,6 +24,7 @@ import {
 import { circlePolygon, neighborsWithin } from "@/lib/geo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { normalizeName, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -257,22 +258,71 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (map && styleLoadedRef.current) applyBasemapLabels(map, lang);
   }, [lang]);
 
-  // Index for "find on map" jumps from the unlocated panel
+  // Resolver for "find on map" jumps from the unlocated panel.
+  // Strategy: build an index of features keyed by the normalized settlement
+  // name, then for any incoming (settlement, uezd) pair try in order:
+  //   1. exact normalized name + same normalized uezd
+  //   2. exact normalized name (any uezd) — single candidate
+  //   3. fuzzy normalized name (Levenshtein-bounded) + same uezd
+  //   4. fuzzy normalized name (any uezd) — single best candidate by similarity
   const locatedIndex = useMemo(() => {
-    const m = new Map<string, number>();
-    if (!data) return m;
-    for (const f of data.features) {
-      const p: any = f.properties;
-      const s = (p.settlement?.ru || p.settlement?.en || "").toLocaleLowerCase();
-      const u = (p.uezd?.ru || p.uezd?.en || "").toLocaleLowerCase();
-      if (s) m.set(`${s}|${u}`, f.id as number);
+    type Entry = { id: number; nameN: string; uezdN: string };
+    const byName = new Map<string, Entry[]>();
+    const all: Entry[] = [];
+    if (data) {
+      for (const f of data.features) {
+        const p: any = f.properties;
+        const nameN = normalizeName(p.settlement?.ru || p.settlement?.en);
+        if (!nameN) continue;
+        const uezdN = normalizeName(p.uezd?.ru || p.uezd?.en);
+        const e: Entry = { id: f.id as number, nameN, uezdN };
+        all.push(e);
+        const arr = byName.get(nameN) ?? [];
+        arr.push(e);
+        byName.set(nameN, arr);
+        // Also index by aliases (former names) for better recall
+        const aliases: string[] = Array.isArray(p.aliases) ? p.aliases : [];
+        for (const a of aliases) {
+          const an = normalizeName(a);
+          if (!an || an === nameN) continue;
+          const arr2 = byName.get(an) ?? [];
+          arr2.push(e);
+          byName.set(an, arr2);
+        }
+      }
     }
-    return m;
+    return (settlement: string, uezd: string): number | undefined => {
+      const sN = normalizeName(settlement);
+      if (!sN) return undefined;
+      const uN = normalizeName(uezd);
+      // 1) exact name + matching uezd
+      const exact = byName.get(sN);
+      if (exact) {
+        if (uN) {
+          const sameU = exact.find((e) => e.uezdN === uN);
+          if (sameU) return sameU.id;
+        }
+        if (exact.length === 1) return exact[0].id;
+      }
+      // 3+4) fuzzy fallback — bounded by Levenshtein threshold inside
+      // isProbableMatch; rank by uezd match then similarity.
+      let best: { id: number; score: number } | undefined;
+      for (const e of all) {
+        if (!isProbableMatch(sN, e.nameN)) continue;
+        const nameSim = similarity(sN, e.nameN);
+        const uezdBoost = uN && e.uezdN === uN ? 0.5 : 0;
+        const score = nameSim + uezdBoost;
+        if (!best || score > best.score) best = { id: e.id, score };
+      }
+      // Require a reasonable confidence to avoid false positives.
+      return best && best.score >= 0.7 ? best.id : undefined;
+    };
   }, [data]);
 
-  // Index of "probable matches": features sharing the same settlement name (ru/en)
-  // but residing in a different uezd. Useful to flag administrative-attribution
-  // changes (e.g. one parish split between Gori and Tbilisi uezds).
+  // Index of "probable matches": features sharing the same settlement name
+  // (fuzzy/normalized) but residing in a different uezd. Useful to flag
+  // administrative-attribution changes (e.g. one parish split between Gori
+  // and Tbilisi uezds) and possible duplicates from transliteration drift.
   const nameMismatchIndex = useMemo(() => {
     const out = new Map<number, Array<{
       id: number;
@@ -282,27 +332,70 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       years: string;
     }>>();
     if (!data) return out;
-    const norm = (s: string) =>
-      (s || "")
-        .toLocaleLowerCase()
-        .replace(/\([^)]*\)/g, "")
-        .replace(/[\s.,;:!?„""'`«»\-–—]+/g, " ")
-        .trim();
-    type Bucket = { id: number; uezdRu: string; props: any };
-    const byName = new Map<string, Bucket[]>();
+    type Bucket = { id: number; nameN: string; uezdN: string; props: any };
+    // Step 1: bucket by normalized name (exact)
+    const exactBuckets = new Map<string, Bucket[]>();
+    const allBuckets: Bucket[] = [];
     for (const f of data.features) {
       const p: any = f.properties ?? {};
-      const key = norm(p.settlement?.ru) || norm(p.settlement?.en);
-      if (!key) continue;
-      const arr = byName.get(key) ?? [];
-      arr.push({ id: f.id as number, uezdRu: norm(p.uezd?.ru || p.uezd?.en), props: p });
-      byName.set(key, arr);
+      const nameN = normalizeName(p.settlement?.ru || p.settlement?.en);
+      if (!nameN) continue;
+      const b: Bucket = {
+        id: f.id as number,
+        nameN,
+        uezdN: normalizeName(p.uezd?.ru || p.uezd?.en),
+        props: p,
+      };
+      allBuckets.push(b);
+      const arr = exactBuckets.get(nameN) ?? [];
+      arr.push(b);
+      exactBuckets.set(nameN, arr);
     }
-    for (const arr of byName.values()) {
+    // Step 2: cluster fuzzy-equivalent buckets. Index by 2-char prefix to
+    // bound pairwise comparisons (avoids N² over the full dataset).
+    const byPrefix = new Map<string, string[]>();
+    for (const k of exactBuckets.keys()) {
+      const pref = k.slice(0, 2);
+      const arr = byPrefix.get(pref) ?? [];
+      arr.push(k);
+      byPrefix.set(pref, arr);
+    }
+    // Union-Find over name keys
+    const parent = new Map<string, string>();
+    const find = (x: string): string => {
+      let p = parent.get(x) ?? x;
+      if (p === x) return x;
+      p = find(p);
+      parent.set(x, p);
+      return p;
+    };
+    const union = (a: string, b: string) => {
+      const ra = find(a), rb = find(b);
+      if (ra !== rb) parent.set(ra, rb);
+    };
+    for (const keys of byPrefix.values()) {
+      if (keys.length < 2) continue;
+      for (let i = 0; i < keys.length; i++) {
+        for (let j = i + 1; j < keys.length; j++) {
+          if (isProbableMatch(keys[i], keys[j])) union(keys[i], keys[j]);
+        }
+      }
+    }
+    // Step 3: collect each cluster's full bucket list
+    const clusters = new Map<string, Bucket[]>();
+    for (const [name, list] of exactBuckets) {
+      const root = find(name);
+      const arr = clusters.get(root) ?? [];
+      arr.push(...list);
+      clusters.set(root, arr);
+    }
+    // Step 4: emit "probable match" records for features whose siblings sit
+    // in a *different* uezd (same-uezd duplicates aren't surfaced here).
+    for (const arr of clusters.values()) {
       if (arr.length < 2) continue;
       for (const me of arr) {
         const others = arr.filter(
-          (o) => o.id !== me.id && o.uezdRu && me.uezdRu && o.uezdRu !== me.uezdRu,
+          (o) => o.id !== me.id && o.uezdN && me.uezdN && o.uezdN !== me.uezdN,
         );
         if (!others.length) continue;
         out.set(

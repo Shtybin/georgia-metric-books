@@ -26,8 +26,9 @@ interface Props {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   lang: Lang;
-  /** Map of `${settlementLower}|${uezdLower}` → feature id, for jump-to-map */
-  locatedIndex: Map<string, number>;
+  /** Resolver: given an unlocated item's settlement+uezd names, returns the
+   *  feature id of the best probable match on the map (exact or fuzzy), if any. */
+  locatedIndex: (settlement: string, uezd: string) => number | undefined;
   onJumpToFeature: (featureId: number) => void;
   /** Keys of items already pinned by the user — should be hidden from the list. */
   excludeKeys: Set<string>;
@@ -221,7 +222,10 @@ export function UnlocatedPanel({
                     const church = pick(it.church, lang);
                     const region = pick(it.region, lang);
                     const k = itemKey(it);
-                    const featureId = locatedIndex.get(k);
+                    const featureId = locatedIndex(
+                      it.settlement.ru || it.settlement.en || "",
+                      it.uezd.ru || it.uezd.en || "",
+                    );
                     const isEditing = editingKey === k;
                     return (
                       <div
