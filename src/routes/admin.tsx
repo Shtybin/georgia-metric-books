@@ -434,7 +434,7 @@ function AdminPage() {
                 </div>
               </>
             )}
-        </div>
+        </div>}
       </header>
 
       {tab === "coords" ? (
