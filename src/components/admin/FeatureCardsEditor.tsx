@@ -578,11 +578,43 @@ function EditDialog({
           </label>
         </div>
 
+        {(errors.length > 0 || warnings.length > 0) && (
+          <div
+            className={
+              "mt-3 rounded-md border p-3 text-xs " +
+              (errors.length > 0
+                ? "border-destructive/40 bg-destructive/10 text-destructive"
+                : "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300")
+            }
+          >
+            <div className="mb-1 flex items-center gap-2 font-medium">
+              <AlertTriangle className="h-4 w-4" />
+              {errors.length > 0
+                ? `Ошибок: ${errors.length}${warnings.length ? `, предупреждений: ${warnings.length}` : ""}`
+                : `Предупреждений: ${warnings.length}`}
+              {!showAllIssues && (errors.length + warnings.length) > 3 && (
+                <button
+                  type="button"
+                  className="ml-auto underline"
+                  onClick={() => setShowAllIssues(true)}
+                >
+                  показать все
+                </button>
+              )}
+            </div>
+            <ul className="ml-5 list-disc space-y-0.5">
+              {(showAllIssues ? [...errors, ...warnings] : [...errors, ...warnings].slice(0, 3)).map((i, idx) => (
+                <li key={idx}>{i.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={saving}>
             <XIcon className="mr-1 h-4 w-4" /> Отмена
           </Button>
-          <Button onClick={save} disabled={saving}>
+          <Button onClick={save} disabled={saving || errors.length > 0} title={errors.length > 0 ? "Исправьте ошибки перед сохранением" : undefined}>
             <Save className="mr-1 h-4 w-4" /> {saving ? "Сохранение…" : "Сохранить"}
           </Button>
         </DialogFooter>
