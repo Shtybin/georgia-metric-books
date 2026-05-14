@@ -1837,9 +1837,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
           <div className="flex items-end gap-3">
             {[
-              { years: 5,  r: Math.max(4, Math.sqrt(5)  * 1.6) },
-              { years: 25, r: Math.max(4, Math.sqrt(25) * 1.6) },
-              { years: 50, r: Math.max(4, Math.sqrt(50) * 1.6) },
+              { years: 1,   r: Math.max(4, Math.sqrt(1)   * 1.6) },
+              { years: 10,  r: Math.max(4, Math.sqrt(10)  * 1.6) },
+              { years: 25,  r: Math.max(4, Math.sqrt(25)  * 1.6) },
+              { years: 50,  r: Math.max(4, Math.sqrt(50)  * 1.6) },
+              { years: 100, r: Math.max(4, Math.sqrt(100) * 1.6) },
+              { years: 150, r: Math.max(4, Math.sqrt(150) * 1.6) },
             ].map(({ years, r }) => (
               <div key={years} className="flex flex-col items-center gap-1">
                 <span
