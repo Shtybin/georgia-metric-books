@@ -1338,6 +1338,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </div>
         )}
       </div>
+        </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
           <button
