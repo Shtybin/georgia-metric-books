@@ -168,7 +168,7 @@ export const STRINGS = {
     docsButton: "Where to find documents?",
     docsTitle: "Where to find the documents?",
     docsBodyHtml:
-      'The parish registers of Georgia are kept at the National Historical Archive of Georgia (fund 489, inventory 6). A catalogue of the registers is available on the <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">archive</a> website. To learn how to start working with the archive, see the <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">website</a>.',
+      'The parish registers of Georgia are kept at the National Historical Archive of Georgia (fund 489, inventory 6). A catalogue of the registers is available on the <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">archive</a> website. To learn how to start working with the archive, see the <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">website</a>.<br/><br/>You can add coordinates for settlements that have not yet been located via the button at the top labelled “Without coords”. Once submitted, the coordinates are approved by an administrator and the point appears on the map together with all data on the settlement, the church and the dates.',
     close: "Close",
     reportButton: "Report a problem",
     reportTitle: "Report a problem",
