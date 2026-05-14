@@ -199,6 +199,21 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const approved = useApprovedSuggestions();
   const overrides = usePublishedOverrides();
   const [submitToast, setSubmitToast] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [uezdDialogOpen, setUezdDialogOpen] = useState(false);
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data: sess } = await supabase.auth.getSession();
+      if (!sess.session) return;
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: sess.session.user.id,
+        _role: "admin",
+      });
+      if (mounted && !error && data === true) setIsAdmin(true);
+    })();
+    return () => { mounted = false; };
+  }, []);
   const T = t(lang);
   const isMobile = useIsMobileSm();
 
