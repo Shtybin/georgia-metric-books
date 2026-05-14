@@ -80,12 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Georgia Metric Books Map" },
       { property: "og:description", content: "Интерактивная историческая карта для исследования церковных приходов и населенных пунктов." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Georgia Metric Books Map" },
       { name: "twitter:description", content: "Интерактивная историческая карта для исследования церковных приходов и населенных пунктов." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/F9erIPfz6AW2LhIGOZ5ngbOduhu1/social-images/social-1778322730491-111.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/F9erIPfz6AW2LhIGOZ5ngbOduhu1/social-images/social-1778322730491-111.webp" },
+      { property: "og:image", content: "https://metrics.datatells.info/og-map.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Карта приходов Грузии 1819–1930 с цветовой категоризацией по периодам" },
+      { name: "twitter:image", content: "https://metrics.datatells.info/og-map.jpg" },
     ],
     links: [
       {
