@@ -1195,8 +1195,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   (e.currentTarget as HTMLInputElement).blur();
                 }
               }}
-              placeholder={isMobile ? T.searchShort : T.search}
+              placeholder={T.searchShort}
               aria-label={T.search}
+              title={T.search}
               aria-autocomplete="list"
               aria-expanded={showResults && query.trim().length >= minQueryLen}
               role="combobox"
