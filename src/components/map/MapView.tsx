@@ -787,7 +787,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         "circle-opacity": [
           "case",
           ["boolean", ["feature-state", "dimmed"], false], 0.10,
-          0.95,
+          0.6,
         ],
       },
     });
