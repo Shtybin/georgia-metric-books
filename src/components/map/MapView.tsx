@@ -1387,6 +1387,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 </div>
               </details>
             )}
+
+            {isAdmin && (
+              <div className="mt-3">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setUezdDialogOpen(true)}
+                >
+                  ⚑ {T.suggestUezdAction}
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Sticky footer */}
