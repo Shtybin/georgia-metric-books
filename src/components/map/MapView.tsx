@@ -1377,7 +1377,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               }
               aria-pressed={compareMode === "after"}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium shadow-lg backdrop-blur transition-colors",
+                "hidden sm:flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium shadow-lg backdrop-blur transition-colors",
                 compareMode === "after"
                   ? "border-border bg-card/95 text-foreground hover:bg-accent"
                   : "border-amber-500/60 bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 dark:text-amber-300",
