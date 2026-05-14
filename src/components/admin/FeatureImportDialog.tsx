@@ -246,7 +246,7 @@ export function FeatureImportDialog({
     const { data: { user } } = await supabase.auth.getUser();
     const uid = user?.id ?? null;
 
-    // Pre-load existing edit overrides keyed by feature_id, so updates "upsert".
+    // Pre-load existing edit overrides keyed by feature_id, so updates merge over them.
     const featureIds = Array.from(
       new Set(
         rows
@@ -254,20 +254,49 @@ export function FeatureImportDialog({
           .filter((x): x is number => x != null),
       ),
     );
-    const existing = new Map<number, string>();
+    const existingOverride = new Map<number, { id: string; data: FeatureData | null }>();
     if (featureIds.length) {
       const { data } = await supabase
         .from("feature_overrides")
-        .select("id, feature_id, action")
+        .select("id, feature_id, action, data")
         .in("feature_id", featureIds)
         .eq("action", "edit");
       for (const r of data ?? []) {
-        if (r.feature_id != null) existing.set(r.feature_id, r.id as string);
+        if (r.feature_id != null) existingOverride.set(r.feature_id, { id: r.id as string, data: (r.data as unknown as FeatureData) ?? null });
+      }
+    }
+
+    // Pre-load base features so inserts/updates merge over current base data
+    // instead of wiping unmapped fields to empty defaults.
+    const baseById = new Map<number, FeatureData>();
+    if (featureIds.length) {
+      try {
+        const fc = await fetch("/data/parishes.geojson").then((r) => r.json());
+        for (const f of (fc.features ?? []) as GeoJSON.Feature<GeoJSON.Point, any>[]) {
+          if (typeof f.id === "number" && featureIds.includes(f.id)) {
+            baseById.set(f.id, featureToData(f));
+          }
+        }
+      } catch (e) {
+        console.error("[import] failed to load base features", e);
       }
     }
 
     for (let i = 0; i < rows.length; i++) {
-      const { data, featureId } = applyMapping(rows[i], mapping);
+      const { data: incoming, featureId, provided } = applyMapping(rows[i], mapping);
+      // Merge over existing override data, falling back to base feature data.
+      const baseData = featureId != null
+        ? (existingOverride.get(featureId)?.data ?? baseById.get(featureId) ?? incoming)
+        : incoming;
+      const data = featureId != null ? mergeProvided(baseData, incoming, provided) : incoming;
+
+      // Hard guard: never accept (0,0) coordinates from import.
+      if (data.lat === 0 && data.lon === 0) {
+        failed++;
+        errors.push(`Строка ${i + 2}: координаты (0, 0) — пропущено, чтобы не затереть существующие.`);
+        continue;
+      }
+
       const issues = validateFeatureData(data);
       const errs = issues.filter((x) => x.severity === "error");
       if (errs.length) {
@@ -277,12 +306,12 @@ export function FeatureImportDialog({
       }
       try {
         if (featureId != null) {
-          const existingId = existing.get(featureId);
-          if (existingId) {
+          const ex = existingOverride.get(featureId);
+          if (ex) {
             const { error } = await supabase
               .from("feature_overrides")
               .update({ data: data as any, published: publish })
-              .eq("id", existingId);
+              .eq("id", ex.id);
             if (error) throw error;
           } else {
             const { error } = await supabase.from("feature_overrides").insert({
