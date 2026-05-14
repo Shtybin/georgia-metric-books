@@ -25,9 +25,15 @@ export const Route = createFileRoute("/guide")({
 
 const FALLBACK_PATHS: Record<string, string> = {
   ru: "/docs/map-guide-ru.md",
-  en: "/docs/map-guide-ru.md",
-  ka: "/docs/map-guide-ru.md",
+  en: "/docs/map-guide-en.md",
+  ka: "/docs/map-guide-ka.md",
 };
+
+const LANG_OPTIONS: Array<{ code: "ru" | "en" | "ka"; label: string }> = [
+  { code: "ru", label: "RU" },
+  { code: "en", label: "EN" },
+  { code: "ka", label: "ქარ" },
+];
 
 function GuidePage() {
   const { lang } = Route.useSearch();
