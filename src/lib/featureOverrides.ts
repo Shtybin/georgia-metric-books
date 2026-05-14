@@ -199,6 +199,17 @@ export function dataToFeature(
   const hist = readMl(d.historicalName);
   const note = readMl(d.discrepancyNote);
   const missingYears = parseYearsString(d.missingYearsRaw?.ru || d.missingYearsRaw?.en || "");
+  // Aliases: split comma/semicolon strings into arrays per language. Include
+  // historicalName values automatically so search picks them up too.
+  const aliasArr = {
+    ru: splitAliasString(d.aliases?.ru || ""),
+    en: splitAliasString(d.aliases?.en || ""),
+    ka: splitAliasString(d.aliases?.ka || ""),
+  };
+  if (hist?.ru && !aliasArr.ru.includes(hist.ru)) aliasArr.ru.unshift(hist.ru);
+  if (hist?.en && !aliasArr.en.includes(hist.en)) aliasArr.en.unshift(hist.en);
+  if (hist?.ka && !aliasArr.ka.includes(hist.ka)) aliasArr.ka.unshift(hist.ka);
+  const hasAliases = aliasArr.ru.length || aliasArr.en.length || aliasArr.ka.length;
   return {
     type: "Feature",
     id,
@@ -217,6 +228,7 @@ export function dataToFeature(
       bucket: bucketOf(startYear),
       adminEdited: true,
       ...(hist ? { historicalName: hist } : {}),
+      ...(hasAliases ? { aliases: aliasArr } : {}),
       ...(note ? { discrepancyNote: note } : {}),
     },
   };
