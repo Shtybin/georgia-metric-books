@@ -1679,3 +1679,85 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     </div>
   );
 }
+
+/** Keyboard-navigable list of "probable match" candidates.
+ *  - Tab moves focus to the first item, then Tab leaves the list.
+ *  - ArrowDown / ArrowUp move focus between items (roving tabindex).
+ *  - Home / End jump to first / last item.
+ *  - Enter / Space activate the focused item (native button behavior). */
+function MatchesList({
+  title,
+  hint,
+  items,
+  onPick,
+}: {
+  title: string;
+  hint: string;
+  items: Array<{ id: number; settlement: string; uezd: string; region: string; years: string }>;
+  onPick: (id: number) => void;
+}) {
+  const [focusIdx, setFocusIdx] = useState(0);
+  const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const listId = `matches-${items[0]?.id ?? "x"}`;
+
+  const focusAt = (i: number) => {
+    const clamped = Math.max(0, Math.min(items.length - 1, i));
+    setFocusIdx(clamped);
+    itemRefs.current[clamped]?.focus();
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    switch (e.key) {
+      case "ArrowDown": e.preventDefault(); focusAt(focusIdx + 1); break;
+      case "ArrowUp":   e.preventDefault(); focusAt(focusIdx - 1); break;
+      case "Home":      e.preventDefault(); focusAt(0); break;
+      case "End":       e.preventDefault(); focusAt(items.length - 1); break;
+    }
+  };
+
+  return (
+    <div role="group" aria-labelledby={`${listId}-label`}>
+      <div
+        id={`${listId}-label`}
+        className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground"
+      >
+        ⚠ {title}
+      </div>
+      <p id={`${listId}-hint`} className="mb-1 text-muted-foreground">{hint}</p>
+      <ul
+        role="list"
+        aria-describedby={`${listId}-hint`}
+        aria-label={`${title} (${items.length})`}
+        className="space-y-1"
+        onKeyDown={onKeyDown}
+      >
+        {items.map((m, i) => {
+          const meta = [m.uezd, m.region].filter(Boolean).join(" · ");
+          const label = `${m.settlement}${meta ? `, ${meta}` : ""}${m.years ? `, ${m.years}` : ""}`;
+          return (
+            <li key={m.id}>
+              <button
+                ref={(el) => { itemRefs.current[i] = el; }}
+                type="button"
+                onClick={() => onPick(m.id)}
+                onFocus={() => setFocusIdx(i)}
+                tabIndex={i === focusIdx ? 0 : -1}
+                aria-label={label}
+                aria-posinset={i + 1}
+                aria-setsize={items.length}
+                className="w-full rounded border border-border bg-background/60 px-2 py-1 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <div className="font-medium" aria-hidden="true">{m.settlement}</div>
+                {meta || m.years ? (
+                  <div className="text-[10px] text-muted-foreground" aria-hidden="true">
+                    {meta}{m.years ? ` · ${m.years}` : ""}
+                  </div>
+                ) : null}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
