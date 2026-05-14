@@ -53,6 +53,32 @@ function splitAliases(name: string): { clean: string; aliases: string[] } {
   return { clean: clean.replace(/\s{2,}/g, " ").trim(), aliases };
 }
 
+/** Wrap matched character ranges (Fuse.js indices) in <mark>. */
+function renderHighlight(
+  text: string,
+  indices: ReadonlyArray<readonly [number, number]> | undefined,
+): React.ReactNode {
+  if (!text) return text;
+  if (!indices || indices.length === 0) return text;
+  const sorted = [...indices].sort((a, b) => a[0] - b[0]);
+  const out: React.ReactNode[] = [];
+  let cursor = 0;
+  sorted.forEach(([start, end], i) => {
+    if (start > cursor) out.push(text.slice(cursor, start));
+    out.push(
+      <mark
+        key={i}
+        className="rounded bg-amber-500/30 px-0.5 text-foreground"
+      >
+        {text.slice(start, end + 1)}
+      </mark>,
+    );
+    cursor = end + 1;
+  });
+  if (cursor < text.length) out.push(text.slice(cursor));
+  return out;
+}
+
 /** Normalize features: pull "(бывш. X)" out of the settlement name into
  *  `properties.aliases` and `properties.historicalName` (when not set). */
 function normalizeAliases(fc: FC): FC {
