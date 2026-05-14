@@ -669,3 +669,26 @@ function FieldGroup({
     </div>
   );
 }
+
+function exportPublishedGeoJSON(
+  base: FC | null,
+  overrides: FeatureOverride[],
+  scope: "published" | "all",
+) {
+  if (!base) return;
+  const filtered = scope === "published" ? overrides.filter((o) => o.published) : overrides;
+  const merged = applyOverrides(base, filtered);
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+  const filename = `parishes-${scope}-${stamp}.geojson`;
+  const blob = new Blob([JSON.stringify(merged, null, 2)], {
+    type: "application/geo+json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
