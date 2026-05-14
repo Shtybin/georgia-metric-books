@@ -65,7 +65,7 @@ export const STRINGS = {
     docsButton: "Где искать документы?",
     docsTitle: "Где искать документы?",
     docsBodyHtml:
-      'Метрические книги Грузии находятся в Национальном историческом архиве Грузии (фонд 489, опись 6). Списки метрических книг — на сайте <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">архива</a>. Как начать работу с архивом — читайте на <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">сайте</a>.',
+      'Метрические книги Грузии находятся в Национальном историческом архиве Грузии (фонд 489, опись 6). Списки метрических книг — на сайте <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">архива</a>. Как начать работу с архивом — читайте на <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">сайте</a>.<br/><br/>Добавить координаты к селениям, по которым координаты не найдены, можно через кнопку вверху с названием «Без координат». После добавления координаты будут одобрены администратором и точка появится на карте со всеми данными по селению, церкви и датам.',
     close: "Закрыть",
     reportButton: "Сообщить о проблеме",
     reportTitle: "Сообщить о проблеме",
