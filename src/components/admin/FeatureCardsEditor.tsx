@@ -412,6 +412,10 @@ function EditDialog({
   }
 
   async function save() {
+    if (errors.length > 0) {
+      setShowAllIssues(true);
+      return;
+    }
     setSaving(true);
     try {
       if (row?.override) {
