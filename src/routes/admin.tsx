@@ -111,7 +111,8 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "reports" | "cards" | "uezd">("coords");
+  const [tab, setTab] = useState<"coords" | "reports" | "cards" | "uezd" | "log">("coords");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
