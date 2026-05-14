@@ -135,9 +135,27 @@ export function emptyFeatureData(lat = 41.7151, lon = 44.8271): FeatureData {
     lat,
     lon,
     historicalName: emptyMultiLang(),
+    aliases: emptyMultiLang(),
     discrepancyNote: emptyMultiLang(),
     missingYearsRaw: { ru: "", en: "", ka: "" },
   };
+}
+
+/** Split comma/semicolon/newline-separated alias string into trimmed unique values. */
+function splitAliasString(s: string): string[] {
+  if (!s) return [];
+  return Array.from(
+    new Set(
+      s.split(/[,;\n]/).map((x) => x.trim()).filter(Boolean),
+    ),
+  );
+}
+
+/** Read aliases from properties (array on disk → comma-joined string for UI). */
+function readAliases(v: any): MultiLang {
+  const j = (arr: any) => Array.isArray(arr) ? arr.filter(Boolean).join(", ") : "";
+  if (!v || typeof v !== "object") return emptyMultiLang();
+  return { ru: j(v.ru), en: j(v.en), ka: j(v.ka) };
 }
 
 function readMl(v: any): MultiLang | undefined {
