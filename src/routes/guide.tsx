@@ -160,6 +160,31 @@ function GuidePage() {
           </Link>
 
           <div className="flex flex-wrap items-center gap-2">
+            <div
+              role="group"
+              aria-label="Language"
+              className="inline-flex overflow-hidden rounded-xl border border-border bg-card text-sm"
+            >
+              {LANG_OPTIONS.map((opt) => {
+                const active = opt.code === lang;
+                return (
+                  <Link
+                    key={opt.code}
+                    to="/guide"
+                    search={{ lang: opt.code }}
+                    aria-current={active ? "page" : undefined}
+                    className={
+                      "px-3 py-2 transition-colors " +
+                      (active
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-accent")
+                    }
+                  >
+                    {opt.label}
+                  </Link>
+                );
+              })}
+            </div>
             {isAdmin && !editing && (
               <button
                 type="button"
