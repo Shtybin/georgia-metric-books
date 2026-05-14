@@ -160,6 +160,11 @@ export function featureToData(f: GeoJSON.Feature<GeoJSON.Point, any>): FeatureDa
     lon,
     historicalName: readMl(p.historicalName) ?? emptyMultiLang(),
     discrepancyNote: readMl(p.discrepancyNote) ?? emptyMultiLang(),
+    missingYearsRaw: {
+      ru: p.missingRaw?.ru ?? "",
+      en: p.missingRaw?.en ?? "",
+      ka: p.missingRaw?.ka ?? "",
+    },
   };
 }
 
