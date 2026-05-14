@@ -350,6 +350,16 @@ export const STRINGS = {
     historyMatchHint: "მონაცემთა ბაზაში ნაპოვნია იმავე სახელწოდების სოფელი სხვა მაზრაში. შეამოწმეთ, ხომ არ არის ეს ერთი და იგივე ადგილი შეცვლილი ადმინისტრაციული მიკუთვნებით.",
     historyBadgeFormer: "ყოფ. სახელი",
     historyBadgeMatch: "შესაძლო დამთხვევა",
+    suggestUezdAction: "მაზრის კორექტირების შეთავაზება",
+    suggestUezdTitle: "მაზრის კორექტირების შეთავაზება",
+    suggestUezdHint: "შესთავაზეთ უფრო ზუსტი მაზრის ატრიბუცია. ჩანაწერი გადაიცემა ადმინისტრატორის მოდერაციის რიგში.",
+    suggestUezdCurrent: "მიმდინარე მაზრა",
+    suggestUezdProposed: "შემოთავაზებული მაზრა",
+    suggestUezdNote: "კომენტარი (სურვილისამებრ)",
+    suggestUezdSubmit: "გაგზავნა",
+    suggestUezdCancel: "გაუქმება",
+    suggestUezdSubmitted: "შეთავაზება შენახულია",
+    suggestUezdEmpty: "შეავსეთ მინიმუმ ერთი ენის ველი",
   },
 } as const;
 
