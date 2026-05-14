@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "audit": "bun audit --audit-level=high"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
