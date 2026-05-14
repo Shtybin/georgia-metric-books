@@ -404,7 +404,7 @@ function EditDialog({
         const { error } = await supabase.from("feature_overrides").insert({
           feature_id: row.feature_id,
           action: "edit",
-          data,
+          data: data as any,
           published: publish,
         });
         if (error) throw error;
@@ -413,7 +413,7 @@ function EditDialog({
         const { error } = await supabase.from("feature_overrides").insert({
           feature_id: null,
           action: "add",
-          data,
+          data: data as any,
           published: publish,
         });
         if (error) throw error;
