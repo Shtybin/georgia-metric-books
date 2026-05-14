@@ -431,7 +431,7 @@ function EditDialog({
         : "";
 
   function setLang(
-    field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote",
+    field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "aliases" | "discrepancyNote",
     lang: "ru" | "en" | "ka",
     value: string,
   ) {
@@ -505,6 +505,13 @@ function EditDialog({
             field="historicalName"
             data={data}
             setLang={setLang}
+          />
+          <FieldGroup
+            label="Бывшие / альтернативные названия (через запятую) — попадают в поиск"
+            field="aliases"
+            data={data}
+            setLang={setLang}
+            placeholder="напр.: Ахалкалаки, Akhalkalaki"
           />
           <FieldGroup
             label="Заметка о расхождении (уезд / атрибуция)"
@@ -658,11 +665,13 @@ function FieldGroup({
   field,
   data,
   setLang,
+  placeholder,
 }: {
   label: string;
-  field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote";
+  field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "aliases" | "discrepancyNote";
   data: FeatureData;
   setLang: (f: any, l: "ru" | "en" | "ka", v: string) => void;
+  placeholder?: string;
 }) {
   const cur = (data as any)[field] ?? { ru: "", en: "", ka: "" };
   return (
@@ -672,7 +681,11 @@ function FieldGroup({
         {(["ru", "en", "ka"] as const).map((l) => (
           <div key={l}>
             <label className="mb-1 block text-[10px] uppercase text-muted-foreground">{l}</label>
-            <Input value={cur[l] ?? ""} onChange={(e) => setLang(field, l, e.target.value)} />
+            <Input
+              value={cur[l] ?? ""}
+              onChange={(e) => setLang(field, l, e.target.value)}
+              placeholder={placeholder}
+            />
           </div>
         ))}
       </div>

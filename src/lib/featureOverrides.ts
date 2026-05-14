@@ -20,6 +20,8 @@ export interface FeatureData {
   lon: number;
   /** Историческое название (бывш. ...) на трёх языках, опционально. */
   historicalName?: MultiLang;
+  /** Бывшие/альтернативные названия — список через запятую (UI), массив в properties. */
+  aliases?: MultiLang;
   /** Заметка администратора о расхождении уезда / атрибуции. */
   discrepancyNote?: MultiLang;
   /** Пропущенные годы (текстом, "1850, 1855-1857"). */
@@ -133,9 +135,27 @@ export function emptyFeatureData(lat = 41.7151, lon = 44.8271): FeatureData {
     lat,
     lon,
     historicalName: emptyMultiLang(),
+    aliases: emptyMultiLang(),
     discrepancyNote: emptyMultiLang(),
     missingYearsRaw: { ru: "", en: "", ka: "" },
   };
+}
+
+/** Split comma/semicolon/newline-separated alias string into trimmed unique values. */
+function splitAliasString(s: string): string[] {
+  if (!s) return [];
+  return Array.from(
+    new Set(
+      s.split(/[,;\n]/).map((x) => x.trim()).filter(Boolean),
+    ),
+  );
+}
+
+/** Read aliases from properties (array on disk → comma-joined string for UI). */
+function readAliases(v: any): MultiLang {
+  const j = (arr: any) => Array.isArray(arr) ? arr.filter(Boolean).join(", ") : "";
+  if (!v || typeof v !== "object") return emptyMultiLang();
+  return { ru: j(v.ru), en: j(v.en), ka: j(v.ka) };
 }
 
 function readMl(v: any): MultiLang | undefined {
@@ -159,6 +179,7 @@ export function featureToData(f: GeoJSON.Feature<GeoJSON.Point, any>): FeatureDa
     lat,
     lon,
     historicalName: readMl(p.historicalName) ?? emptyMultiLang(),
+    aliases: readAliases(p.aliases),
     discrepancyNote: readMl(p.discrepancyNote) ?? emptyMultiLang(),
     missingYearsRaw: {
       ru: p.missingRaw?.ru ?? "",
@@ -178,6 +199,17 @@ export function dataToFeature(
   const hist = readMl(d.historicalName);
   const note = readMl(d.discrepancyNote);
   const missingYears = parseYearsString(d.missingYearsRaw?.ru || d.missingYearsRaw?.en || "");
+  // Aliases: split comma/semicolon strings into arrays per language. Include
+  // historicalName values automatically so search picks them up too.
+  const aliasArr = {
+    ru: splitAliasString(d.aliases?.ru || ""),
+    en: splitAliasString(d.aliases?.en || ""),
+    ka: splitAliasString(d.aliases?.ka || ""),
+  };
+  if (hist?.ru && !aliasArr.ru.includes(hist.ru)) aliasArr.ru.unshift(hist.ru);
+  if (hist?.en && !aliasArr.en.includes(hist.en)) aliasArr.en.unshift(hist.en);
+  if (hist?.ka && !aliasArr.ka.includes(hist.ka)) aliasArr.ka.unshift(hist.ka);
+  const hasAliases = aliasArr.ru.length || aliasArr.en.length || aliasArr.ka.length;
   return {
     type: "Feature",
     id,
@@ -196,6 +228,7 @@ export function dataToFeature(
       bucket: bucketOf(startYear),
       adminEdited: true,
       ...(hist ? { historicalName: hist } : {}),
+      ...(hasAliases ? { aliases: aliasArr } : {}),
       ...(note ? { discrepancyNote: note } : {}),
     },
   };
