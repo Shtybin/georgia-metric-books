@@ -170,6 +170,27 @@ export type Database = {
         }
         Relationships: []
       }
+      guide_content: {
+        Row: {
+          content: string
+          lang: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: string
+          lang: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: string
+          lang?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       problem_report_history: {
         Row: {
           changed_at: string
