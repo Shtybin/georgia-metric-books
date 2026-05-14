@@ -1423,6 +1423,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         );
       })()}
 
+      {selected && sel && (
+        <UezdCorrectionDialog
+          open={uezdDialogOpen}
+          onOpenChange={setUezdDialogOpen}
+          lang={lang}
+          featureId={typeof selected.id === "number" ? (selected.id as number) : null}
+          settlement={sel.settlement}
+          region={sel.region}
+          currentUezd={sel.uezd}
+          onSubmitted={(msg) => setSubmitToast(msg)}
+        />
+      )}
+
       {/* Mobile: docs button above the 2-row legend along the bottom.
           Hidden when a card is open. */}
       {!selected && (
