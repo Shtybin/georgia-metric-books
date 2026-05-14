@@ -311,6 +311,11 @@ export function FeatureCardsEditor() {
           }}
         />
       )}
+      <FeatureImportDialog
+        open={importing}
+        onOpenChange={setImporting}
+        onImported={() => { void reloadOverrides(); }}
+      />
     </section>
   );
 }
