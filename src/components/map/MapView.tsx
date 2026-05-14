@@ -1115,6 +1115,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   return (
     <div
       className="relative overflow-hidden overscroll-none"
+      data-card-open={selected ? "true" : "false"}
+      data-legend-visible={!selected ? "true" : "false"}
       style={{ width: "100%", height: "100dvh" }}
     >
       <div
