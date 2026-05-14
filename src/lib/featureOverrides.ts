@@ -179,6 +179,7 @@ export function featureToData(f: GeoJSON.Feature<GeoJSON.Point, any>): FeatureDa
     lat,
     lon,
     historicalName: readMl(p.historicalName) ?? emptyMultiLang(),
+    aliases: readAliases(p.aliases),
     discrepancyNote: readMl(p.discrepancyNote) ?? emptyMultiLang(),
     missingYearsRaw: {
       ru: p.missingRaw?.ru ?? "",
