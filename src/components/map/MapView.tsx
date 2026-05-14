@@ -1573,6 +1573,33 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </dd>
             </dl>
 
+            {hasAliasBlock && (
+              <section className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-2" aria-label="Бывшие названия">
+                <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                  Бывшие названия
+                </div>
+                <ul className="space-y-1.5">
+                  {aliasByLang.map((g) => (
+                    <li key={g.code} className="flex flex-wrap items-center gap-1.5">
+                      <span className="inline-flex min-w-[24px] justify-center rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">
+                        {g.label}
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {g.values.map((v) => (
+                          <span
+                            key={v}
+                            className="inline-flex items-center rounded-full border border-amber-500/30 bg-background/60 px-2 py-0.5 text-xs text-foreground"
+                          >
+                            {v}
+                          </span>
+                        ))}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
             {manyChurches && (
               <div className="mt-3">
                 <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
