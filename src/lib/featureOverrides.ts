@@ -134,6 +134,7 @@ export function emptyFeatureData(lat = 41.7151, lon = 44.8271): FeatureData {
     lon,
     historicalName: emptyMultiLang(),
     discrepancyNote: emptyMultiLang(),
+    missingYearsRaw: { ru: "", en: "", ka: "" },
   };
 }
 
