@@ -1254,10 +1254,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   <div className="p-3 text-sm text-muted-foreground">
                     {query !== debouncedQuery ? "…" : T.notFoundTitle}
                   </div>
-                ) : searchResults.map(({ feature: f, churchMatch }) => {
+                ) : searchResults.map(({ feature: f, churchMatch, reason, aliasHit, histHit }) => {
                   const p = f.properties;
                   const settlementName = p.settlement[lang] || p.settlement.en || "—";
                   const churchName = p.church[lang] || p.church.en;
+                  const aliasLabel =
+                    reason === "alias" ? (aliasHit?.value ?? "") :
+                    reason === "historical" ? (histHit?.value ?? "") : "";
+                  const aliasIndices =
+                    reason === "alias" ? aliasHit?.indices :
+                    reason === "historical" ? histHit?.indices : undefined;
+                  const showAliasRow = (reason === "alias" || reason === "historical")
+                    && aliasLabel && aliasLabel.toLocaleLowerCase() !== settlementName.toLocaleLowerCase();
                   return (
                     <button
                       key={f.id as number}
@@ -1273,18 +1281,29 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     >
                       <span className="flex w-full items-center justify-between gap-2">
                         <span className="font-medium">
-                          {churchMatch && churchName ? churchName : settlementName}
+                          {showAliasRow
+                            ? renderHighlight(aliasLabel, aliasIndices)
+                            : churchMatch && churchName
+                              ? churchName
+                              : settlementName}
                         </span>
-                        {churchMatch && churchName && (
+                        {showAliasRow && (
+                          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                            {reason === "historical" ? T.historyBadgeFormer : T.historyFormer}
+                          </span>
+                        )}
+                        {!showAliasRow && churchMatch && churchName && (
                           <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
                             {T.church}
                           </span>
                         )}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {(churchMatch && churchName
-                          ? [settlementName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
-                          : [churchName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                        {(showAliasRow
+                          ? [`→ ${settlementName}`, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                          : churchMatch && churchName
+                            ? [settlementName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                            : [churchName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
                         ).filter(Boolean).join(" · ")}
                       </span>
                     </button>
