@@ -191,9 +191,29 @@ export function FeatureCardsEditor() {
             </button>
           ))}
         </div>
-        <Button size="sm" onClick={() => setCreating(true)} className="ml-auto">
-          <Plus className="mr-1 h-4 w-4" /> Добавить точку
-        </Button>
+        <div className="ml-auto flex gap-1">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => exportPublishedGeoJSON(base, overrides, "published")}
+            disabled={!base}
+            title="Скачать опубликованную карту с учётом правок"
+          >
+            <Download className="mr-1 h-4 w-4" /> Экспорт (опубл.)
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => exportPublishedGeoJSON(base, overrides, "all")}
+            disabled={!base}
+            title="Скачать с учётом всех правок, включая черновики"
+          >
+            <Download className="mr-1 h-4 w-4" /> Экспорт (все)
+          </Button>
+          <Button size="sm" onClick={() => setCreating(true)}>
+            <Plus className="mr-1 h-4 w-4" /> Добавить точку
+          </Button>
+        </div>
       </div>
       <p className="mb-3 text-xs text-muted-foreground">
         Базовых точек: {base?.features.length ?? "—"} · правок: {overrides.length}
