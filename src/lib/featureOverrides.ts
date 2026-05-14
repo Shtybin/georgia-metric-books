@@ -20,6 +20,8 @@ export interface FeatureData {
   lon: number;
   /** Историческое название (бывш. ...) на трёх языках, опционально. */
   historicalName?: MultiLang;
+  /** Бывшие/альтернативные названия — список через запятую (UI), массив в properties. */
+  aliases?: MultiLang;
   /** Заметка администратора о расхождении уезда / атрибуции. */
   discrepancyNote?: MultiLang;
   /** Пропущенные годы (текстом, "1850, 1855-1857"). */
