@@ -221,7 +221,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   // Merge base GeoJSON with admin overrides + community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
     if (!baseData) return null;
-    const overridden = normalizeAliases(applyOverrides(baseData, overrides));
+    const effectiveOverrides = compareMode === "base" ? [] : overrides;
+    const overridden = normalizeAliases(applyOverrides(baseData, effectiveOverrides));
     const baseLen = overridden.features.length;
     const userFeatures = Object.values(userCoords.records).map((rec, i) =>
       userRecordToFeature(rec, 1_000_000 + i + baseLen),
@@ -234,7 +235,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       ...overridden,
       features: [...overridden.features, ...approvedFeatures, ...userFeatures],
     };
-  }, [baseData, userCoords.records, approved, overrides]);
+  }, [baseData, userCoords.records, approved, overrides, compareMode]);
 
   const dataRef = useRef<FC | null>(null);
   useEffect(() => { dataRef.current = data; }, [data]);
