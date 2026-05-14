@@ -187,7 +187,55 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return m;
   }, [data]);
 
-  // Hide already-pinned items from the unlocated list
+  // Index of "probable matches": features sharing the same settlement name (ru/en)
+  // but residing in a different uezd. Useful to flag administrative-attribution
+  // changes (e.g. one parish split between Gori and Tbilisi uezds).
+  const nameMismatchIndex = useMemo(() => {
+    const out = new Map<number, Array<{
+      id: number;
+      settlement: string;
+      uezd: string;
+      region: string;
+      years: string;
+    }>>();
+    if (!data) return out;
+    const norm = (s: string) =>
+      (s || "")
+        .toLocaleLowerCase()
+        .replace(/\([^)]*\)/g, "")
+        .replace(/[\s.,;:!?„""'`«»\-–—]+/g, " ")
+        .trim();
+    type Bucket = { id: number; uezdRu: string; props: any };
+    const byName = new Map<string, Bucket[]>();
+    for (const f of data.features) {
+      const p: any = f.properties ?? {};
+      const key = norm(p.settlement?.ru) || norm(p.settlement?.en);
+      if (!key) continue;
+      const arr = byName.get(key) ?? [];
+      arr.push({ id: f.id as number, uezdRu: norm(p.uezd?.ru || p.uezd?.en), props: p });
+      byName.set(key, arr);
+    }
+    for (const arr of byName.values()) {
+      if (arr.length < 2) continue;
+      for (const me of arr) {
+        const others = arr.filter(
+          (o) => o.id !== me.id && o.uezdRu && me.uezdRu && o.uezdRu !== me.uezdRu,
+        );
+        if (!others.length) continue;
+        out.set(
+          me.id,
+          others.map((o) => ({
+            id: o.id,
+            settlement: o.props.settlement?.ru || o.props.settlement?.en || "",
+            uezd: o.props.uezd?.ru || o.props.uezd?.en || "",
+            region: o.props.region?.ru || o.props.region?.en || "",
+            years: o.props.yearsRaw?.ru || o.props.yearsRaw?.en || `${o.props.startYear ?? ""}–${o.props.endYear ?? ""}`,
+          })),
+        );
+      }
+    }
+    return out;
+  }, [data]);
   const userPinnedKeys = useMemo(
     () => new Set(Object.keys(userCoords.records)),
     [userCoords.records],
