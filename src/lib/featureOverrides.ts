@@ -177,15 +177,6 @@ export function dataToFeature(
   const endYear = d.endYear || (years.length ? years[years.length - 1] : startYear);
   const hist = readMl(d.historicalName);
   const note = readMl(d.discrepancyNote);
-  return {
-    type: "Feature",
-    id,
-    geometry: { type: "Point", coordinates: [d.lon, d.lat] },
-    properties: {
-      settlement: d.settlement,
-      church: d.church,
-      region: d.region,
-      uezd: d.uezd,
   const missingYears = parseYearsString(d.missingYearsRaw?.ru || d.missingYearsRaw?.en || "");
   return {
     type: "Feature",
