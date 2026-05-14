@@ -111,6 +111,56 @@ function Index() {
           </Link>
         </div>
 
+        {/* Prominent guide CTA */}
+        <section className="mt-10">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/10 via-card to-card p-6 shadow-md sm:p-7">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="font-serif text-xs uppercase tracking-[0.18em] text-primary">
+                    {lang === "en" ? "Start here" : lang === "ka" ? "დაიწყეთ აქედან" : "Начните отсюда"}
+                  </p>
+                  <h3 className="mt-1 font-serif text-xl font-semibold sm:text-2xl">
+                    {lang === "en"
+                      ? "User guide for the map"
+                      : lang === "ka"
+                      ? "რუკის სახელმძღვანელო"
+                      : "Инструкция к карте"}
+                  </h3>
+                  <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                    {lang === "en"
+                      ? "All features, layers, the “Before / After” mode and where to find the original archive documents — in one short guide."
+                      : lang === "ka"
+                      ? "ყველა ფუნქცია, ფენა, „მდე/შემდეგ“ რეჟიმი და სად ვეძებოთ არქივის ორიგინალი დოკუმენტები — ერთ მოკლე სახელმძღვანელოში."
+                      : "Все функции, слои, режим «До/После» и где искать оригиналы архивных документов — в одной короткой инструкции."}
+                  </p>
+                </div>
+              </div>
+              <div className="flex shrink-0 flex-wrap gap-2 sm:flex-col sm:items-end">
+                <a
+                  href="/docs/map-guide-ru.md"
+                  target="_blank"
+                  rel="noopener"
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  {lang === "en" ? "Open guide" : lang === "ka" ? "გახსნა" : "Открыть инструкцию"}
+                </a>
+                <a
+                  href="/docs/map-guide-ru.md"
+                  download
+                  className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-medium hover:bg-accent"
+                >
+                  <Download className="h-4 w-4" />
+                  {lang === "en" ? "Download .md" : lang === "ka" ? "ჩამოტვირთვა .md" : "Скачать .md"}
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Section: data source */}
         <section className="mt-16">
