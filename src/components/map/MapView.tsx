@@ -31,11 +31,20 @@ function applyBasemapLabels(map: MLMap, lang: Lang) {
   try {
     const style = map.getStyle();
     // Primary localized label (with sensible fallbacks).
-    const primary: any = lang === "ka"
+    const basePrimary: any = lang === "ka"
       ? ["coalesce", ["get", "name:ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
       : lang === "ru"
       ? ["coalesce", ["get", "name:ru"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
       : ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]];
+
+    // Manual overrides for ru/en (keep ka as-is). Matched by Georgian name.
+    const overrideRu = lang === "ru"
+      ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Сухум-Кале", basePrimary]
+      : null;
+    const overrideEn = lang === "en"
+      ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Sukhum-Kale", basePrimary]
+      : null;
+    const primary: any = overrideRu ?? overrideEn ?? basePrimary;
 
     // For ru/en: append the Georgian name on a second line when it exists
     // and differs from the primary label. For ka: show only the Georgian name.
