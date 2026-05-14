@@ -192,7 +192,9 @@ interface Props {
 }
 
 function useIsMobileSm() {
-  const [m, setM] = useState(false);
+  const [m, setM] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches,
+  );
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 639px)");
     const apply = () => setM(mq.matches);
