@@ -1178,6 +1178,20 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <h3 className="font-serif text-lg font-semibold leading-tight">
                 {sel.settlement[lang] || sel.settlement.en || "—"}
               </h3>
+              {(histName || mismatches.length > 0) && (
+                <div className="mt-1 flex flex-wrap items-center gap-1">
+                  {histName && (
+                    <span className="inline-flex items-center rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
+                      {T.historyBadgeFormer}: {histName}
+                    </span>
+                  )}
+                  {mismatches.length > 0 && (
+                    <span className="inline-flex items-center rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-medium text-destructive">
+                      ⚠ {T.historyBadgeMatch}
+                    </span>
+                  )}
+                </div>
+              )}
               {!manyChurches && churchList.length > 0 && (
                 <p className="mt-0.5 text-sm italic text-muted-foreground">
                   {churchList.join(" · ")}
