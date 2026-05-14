@@ -187,7 +187,7 @@
  * they sit BELOW the "Report a problem" button so the stacking order from
  * top to bottom is: language switcher → report button → zoom controls. */
 .maplibregl-map .maplibregl-ctrl-top-right {
-  top: var(--map-overlay-gap-top);
+  top: calc(var(--map-overlay-gap-top) + 2.5rem);
   right: var(--map-overlay-gap-right);
 }
 
