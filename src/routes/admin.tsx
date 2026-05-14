@@ -173,6 +173,7 @@ function AdminPage() {
       const { admin, email: e } = await runDiagnostics();
       if (!mounted) return;
       setEmail(e);
+      setCurrentUserId(sess.session.user.id);
       setIsAdmin(admin);
       setChecking(false);
     })();
