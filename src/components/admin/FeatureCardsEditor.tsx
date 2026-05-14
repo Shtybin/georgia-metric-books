@@ -19,7 +19,7 @@ import {
   type FeatureOverride,
   type ValidationIssue,
 } from "@/lib/featureOverrides";
-import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle } from "lucide-react";
+import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle, Download } from "lucide-react";
 
 type BaseFeature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -191,9 +191,29 @@ export function FeatureCardsEditor() {
             </button>
           ))}
         </div>
-        <Button size="sm" onClick={() => setCreating(true)} className="ml-auto">
-          <Plus className="mr-1 h-4 w-4" /> Добавить точку
-        </Button>
+        <div className="ml-auto flex gap-1">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => exportPublishedGeoJSON(base, overrides, "published")}
+            disabled={!base}
+            title="Скачать опубликованную карту с учётом правок"
+          >
+            <Download className="mr-1 h-4 w-4" /> Экспорт (опубл.)
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => exportPublishedGeoJSON(base, overrides, "all")}
+            disabled={!base}
+            title="Скачать с учётом всех правок, включая черновики"
+          >
+            <Download className="mr-1 h-4 w-4" /> Экспорт (все)
+          </Button>
+          <Button size="sm" onClick={() => setCreating(true)}>
+            <Plus className="mr-1 h-4 w-4" /> Добавить точку
+          </Button>
+        </div>
       </div>
       <p className="mb-3 text-xs text-muted-foreground">
         Базовых точек: {base?.features.length ?? "—"} · правок: {overrides.length}
@@ -648,4 +668,27 @@ function FieldGroup({
       </div>
     </div>
   );
+}
+
+function exportPublishedGeoJSON(
+  base: FC | null,
+  overrides: FeatureOverride[],
+  scope: "published" | "all",
+) {
+  if (!base) return;
+  const filtered = scope === "published" ? overrides.filter((o) => o.published) : overrides;
+  const merged = applyOverrides(base, filtered);
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+  const filename = `parishes-${scope}-${stamp}.geojson`;
+  const blob = new Blob([JSON.stringify(merged, null, 2)], {
+    type: "application/geo+json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
