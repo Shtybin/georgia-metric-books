@@ -12,6 +12,8 @@ import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
 import { usePublishedOverrides, applyOverrides } from "@/lib/featureOverrides";
+import { UezdCorrectionDialog } from "./UezdCorrectionDialog";
+import { supabase } from "@/integrations/supabase/client";
 import {
   BASEMAP_STYLE,
   BUCKET_COLORS,
