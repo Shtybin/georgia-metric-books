@@ -106,19 +106,30 @@
   --map-safe-left: env(safe-area-inset-left, 0px);
   --map-safe-right: env(safe-area-inset-right, 0px);
 
-  /* Generic map-overlay gaps — used by the auto-positioning report widget.
-   * Override on a parent container to tune all four corners at once.
-   */
-  --map-overlay-gap-top: calc(var(--map-safe-top) + 9.5rem);
-  --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + 5.75rem);
+  /* Heights reserved by floating UI on top of the map. Override on the map
+   * container or via [data-*] state to shift overlays in lockstep when
+   * the card or the legend appears/disappears. */
+  --map-top-bar-height: 9rem;     /* mobile: filters + search + actions row */
+  --map-bottom-legend-height: 5rem; /* mobile: 2-row bucket legend */
+
+  --map-overlay-gap-top: calc(var(--map-safe-top) + var(--map-top-bar-height) + 0.5rem);
+  --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + var(--map-bottom-legend-height) + 0.75rem);
   --map-overlay-gap-left: calc(var(--map-safe-left) + 0.5rem);
   --map-overlay-gap-right: calc(var(--map-safe-right) + 0.5rem);
   --map-overlay-toast-offset: 2.5rem;
 }
 
+/* When no legend is visible (a feature card is open), bottom overlays
+ * (docs button, report button) collapse down toward the bottom edge. */
+[data-legend-visible="false"] {
+  --map-bottom-legend-height: 0rem;
+}
+
 @media (min-width: 640px) {
   :root {
-    --map-overlay-gap-top: calc(var(--map-safe-top) + 4.5rem);
+    --map-top-bar-height: 3.5rem;
+    --map-bottom-legend-height: 0rem;
+    --map-overlay-gap-top: calc(var(--map-safe-top) + var(--map-top-bar-height) + 1rem);
     --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + 0.75rem);
     --map-overlay-gap-left: calc(var(--map-safe-left) + 0.75rem);
     --map-overlay-gap-right: calc(var(--map-safe-right) + 0.75rem);
