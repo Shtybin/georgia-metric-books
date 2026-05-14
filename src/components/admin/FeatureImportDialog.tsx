@@ -20,6 +20,7 @@ import {
 import { Upload, AlertTriangle, CheckCircle2, X as XIcon } from "lucide-react";
 import {
   emptyFeatureData,
+  featureToData,
   validateFeatureData,
   type FeatureData,
 } from "@/lib/featureOverrides";
@@ -94,8 +95,15 @@ function autoDetect(headers: string[]): Record<TargetKey, string | null> {
   return out;
 }
 
-function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): { data: FeatureData; featureId: number | null } {
+type ProvidedKey =
+  | "settlement" | "church" | "region" | "uezd" | "historicalName"
+  | "lat" | "lon" | "yearsRaw" | "missingYearsRaw" | "startYear" | "endYear";
+
+function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): {
+  data: FeatureData; featureId: number | null; provided: Set<ProvidedKey>;
+} {
   const d = emptyFeatureData();
+  const provided = new Set<ProvidedKey>();
   const get = (k: TargetKey) => {
     const col = mapping[k];
     if (!col) return "";
@@ -106,7 +114,10 @@ function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): { da
     const ru = get(`${field}.ru` as TargetKey);
     const en = get(`${field}.en` as TargetKey);
     const ka = get(`${field}.ka` as TargetKey);
-    (d as any)[field] = { ru, en, ka };
+    if (ru || en || ka) {
+      (d as any)[field] = { ru, en, ka };
+      provided.add(field);
+    }
   };
   setMl("settlement");
   setMl("church");
@@ -114,27 +125,36 @@ function applyMapping(row: Row, mapping: Record<TargetKey, string | null>): { da
   setMl("uezd");
   setMl("historicalName");
 
-  const lat = parseFloat(get("lat").replace(",", "."));
-  const lon = parseFloat(get("lon").replace(",", "."));
-  if (Number.isFinite(lat)) d.lat = lat;
-  if (Number.isFinite(lon)) d.lon = lon;
+  const latStr = get("lat");
+  const lonStr = get("lon");
+  const lat = parseFloat(latStr.replace(",", "."));
+  const lon = parseFloat(lonStr.replace(",", "."));
+  if (latStr && Number.isFinite(lat)) { d.lat = lat; provided.add("lat"); }
+  if (lonStr && Number.isFinite(lon)) { d.lon = lon; provided.add("lon"); }
 
   const yr = get("yearsRaw");
-  if (yr) d.yearsRaw = { ru: yr, en: yr, ka: yr };
+  if (yr) { d.yearsRaw = { ru: yr, en: yr, ka: yr }; provided.add("yearsRaw"); }
   const my = get("missingYearsRaw");
-  if (my) d.missingYearsRaw = { ru: my, en: my, ka: my };
+  if (my) { d.missingYearsRaw = { ru: my, en: my, ka: my }; provided.add("missingYearsRaw"); }
 
   const sy = parseInt(get("startYear"), 10);
   const ey = parseInt(get("endYear"), 10);
-  if (Number.isInteger(sy)) d.startYear = sy;
-  if (Number.isInteger(ey)) d.endYear = ey;
+  if (Number.isInteger(sy)) { d.startYear = sy; provided.add("startYear"); }
+  if (Number.isInteger(ey)) { d.endYear = ey; provided.add("endYear"); }
   // Default end to start if missing
   if (!Number.isInteger(ey) && Number.isInteger(sy)) d.endYear = sy;
 
   const fidRaw = get("featureId");
   const fid = fidRaw ? parseInt(fidRaw, 10) : NaN;
 
-  return { data: d, featureId: Number.isInteger(fid) ? fid : null };
+  return { data: d, featureId: Number.isInteger(fid) ? fid : null, provided };
+}
+
+/** Merge CSV-provided fields into an existing override's data, preserving the rest. */
+function mergeProvided(existing: FeatureData, incoming: FeatureData, provided: Set<ProvidedKey>): FeatureData {
+  const out: FeatureData = { ...existing };
+  for (const k of provided) (out as any)[k] = (incoming as any)[k];
+  return out;
 }
 
 export function FeatureImportDialog({
@@ -227,7 +247,7 @@ export function FeatureImportDialog({
     const { data: { user } } = await supabase.auth.getUser();
     const uid = user?.id ?? null;
 
-    // Pre-load existing edit overrides keyed by feature_id, so updates "upsert".
+    // Pre-load existing edit overrides keyed by feature_id, so updates merge over them.
     const featureIds = Array.from(
       new Set(
         rows
@@ -235,20 +255,49 @@ export function FeatureImportDialog({
           .filter((x): x is number => x != null),
       ),
     );
-    const existing = new Map<number, string>();
+    const existingOverride = new Map<number, { id: string; data: FeatureData | null }>();
     if (featureIds.length) {
       const { data } = await supabase
         .from("feature_overrides")
-        .select("id, feature_id, action")
+        .select("id, feature_id, action, data")
         .in("feature_id", featureIds)
         .eq("action", "edit");
       for (const r of data ?? []) {
-        if (r.feature_id != null) existing.set(r.feature_id, r.id as string);
+        if (r.feature_id != null) existingOverride.set(r.feature_id, { id: r.id as string, data: (r.data as unknown as FeatureData) ?? null });
+      }
+    }
+
+    // Pre-load base features so inserts/updates merge over current base data
+    // instead of wiping unmapped fields to empty defaults.
+    const baseById = new Map<number, FeatureData>();
+    if (featureIds.length) {
+      try {
+        const fc = await fetch("/data/parishes.geojson").then((r) => r.json());
+        for (const f of (fc.features ?? []) as GeoJSON.Feature<GeoJSON.Point, any>[]) {
+          if (typeof f.id === "number" && featureIds.includes(f.id)) {
+            baseById.set(f.id, featureToData(f));
+          }
+        }
+      } catch (e) {
+        console.error("[import] failed to load base features", e);
       }
     }
 
     for (let i = 0; i < rows.length; i++) {
-      const { data, featureId } = applyMapping(rows[i], mapping);
+      const { data: incoming, featureId, provided } = applyMapping(rows[i], mapping);
+      // Merge over existing override data, falling back to base feature data.
+      const baseData = featureId != null
+        ? (existingOverride.get(featureId)?.data ?? baseById.get(featureId) ?? incoming)
+        : incoming;
+      const data = featureId != null ? mergeProvided(baseData, incoming, provided) : incoming;
+
+      // Hard guard: never accept (0,0) coordinates from import.
+      if (data.lat === 0 && data.lon === 0) {
+        failed++;
+        errors.push(`Строка ${i + 2}: координаты (0, 0) — пропущено, чтобы не затереть существующие.`);
+        continue;
+      }
+
       const issues = validateFeatureData(data);
       const errs = issues.filter((x) => x.severity === "error");
       if (errs.length) {
@@ -258,12 +307,12 @@ export function FeatureImportDialog({
       }
       try {
         if (featureId != null) {
-          const existingId = existing.get(featureId);
-          if (existingId) {
+          const ex = existingOverride.get(featureId);
+          if (ex) {
             const { error } = await supabase
               .from("feature_overrides")
               .update({ data: data as any, published: publish })
-              .eq("id", existingId);
+              .eq("id", ex.id);
             if (error) throw error;
           } else {
             const { error } = await supabase.from("feature_overrides").insert({
