@@ -14,6 +14,7 @@ export const Route = createFileRoute("/map")({
     const lang = ((match.search as any)?.lang ?? "ru") as Lang;
     const L = STRINGS[lang].landing;
     const url = `https://metrics.datatells.info/map?lang=${lang}`;
+    const image = "https://metrics.datatells.info/og-map.jpg";
     return {
       meta: [
         { title: L.metaTitle },
@@ -22,9 +23,13 @@ export const Route = createFileRoute("/map")({
         { property: "og:description", content: L.metaDesc },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
+        { property: "og:image", content: image },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: L.metaTitle },
         { name: "twitter:description", content: L.metaDesc },
+        { name: "twitter:image", content: image },
       ],
       links: [{ rel: "canonical", href: url }],
     };
