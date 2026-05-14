@@ -83,6 +83,57 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_override_history: {
+        Row: {
+          action: string | null
+          changed_at: string
+          changed_by: string | null
+          data: Json | null
+          feature_id: number | null
+          id: string
+          notes: string | null
+          op: string
+          override_id: string
+          prev_action: string | null
+          prev_data: Json | null
+          prev_notes: string | null
+          prev_published: boolean | null
+          published: boolean | null
+        }
+        Insert: {
+          action?: string | null
+          changed_at?: string
+          changed_by?: string | null
+          data?: Json | null
+          feature_id?: number | null
+          id?: string
+          notes?: string | null
+          op: string
+          override_id: string
+          prev_action?: string | null
+          prev_data?: Json | null
+          prev_notes?: string | null
+          prev_published?: boolean | null
+          published?: boolean | null
+        }
+        Update: {
+          action?: string | null
+          changed_at?: string
+          changed_by?: string | null
+          data?: Json | null
+          feature_id?: number | null
+          id?: string
+          notes?: string | null
+          op?: string
+          override_id?: string
+          prev_action?: string | null
+          prev_data?: Json | null
+          prev_notes?: string | null
+          prev_published?: boolean | null
+          published?: boolean | null
+        }
+        Relationships: []
+      }
       feature_overrides: {
         Row: {
           action: string
@@ -288,6 +339,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      rollback_feature_override: {
+        Args: { _history_id: string }
+        Returns: string
       }
     }
     Enums: {
