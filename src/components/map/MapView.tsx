@@ -131,26 +131,28 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [docsOpen, setDocsOpen] = useState(false);
   const userCoords = useUserCoords();
   const approved = useApprovedSuggestions();
+  const overrides = usePublishedOverrides();
   const [submitToast, setSubmitToast] = useState<string | null>(null);
   const T = t(lang);
   const isMobile = useIsMobileSm();
 
-  // Merge base GeoJSON with community-approved + user-pinned features.
+  // Merge base GeoJSON with admin overrides + community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
     if (!baseData) return null;
-    const baseLen = baseData.features.length;
+    const overridden = applyOverrides(baseData, overrides);
+    const baseLen = overridden.features.length;
     const userFeatures = Object.values(userCoords.records).map((rec, i) =>
       userRecordToFeature(rec, 1_000_000 + i + baseLen),
     );
     const approvedFeatures = approved.map((s, i) =>
       approvedToFeature(s, 2_000_000 + i + baseLen),
     );
-    if (userFeatures.length === 0 && approvedFeatures.length === 0) return baseData;
+    if (userFeatures.length === 0 && approvedFeatures.length === 0) return overridden;
     return {
-      ...baseData,
-      features: [...baseData.features, ...approvedFeatures, ...userFeatures],
+      ...overridden,
+      features: [...overridden.features, ...approvedFeatures, ...userFeatures],
     };
-  }, [baseData, userCoords.records, approved]);
+  }, [baseData, userCoords.records, approved, overrides]);
 
   const dataRef = useRef<FC | null>(null);
   useEffect(() => { dataRef.current = data; }, [data]);
