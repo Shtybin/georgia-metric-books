@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { OsmLeafletDialog } from "@/components/map/OsmLeafletDialog";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon } from "lucide-react";
+import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit } from "lucide-react";
 
 interface OsmActionProps {
   lat: number;
@@ -108,7 +109,7 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "reports">("coords");
+  const [tab, setTab] = useState<"coords" | "reports" | "cards">("coords");
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
@@ -351,7 +352,7 @@ function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
           <div>
             <h1 className="font-serif text-lg font-semibold">
-              {tab === "coords" ? "Модерация координат" : "Сообщения от пользователей"}
+              {tab === "coords" ? "Модерация координат" : tab === "reports" ? "Сообщения от пользователей" : "Карточки и точки на карте"}
             </h1>
             <p className="text-xs text-muted-foreground">{email}</p>
           </div>
@@ -366,7 +367,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "reports"] as const).map((k) => (
+          {(["coords", "reports", "cards"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -377,15 +378,19 @@ function AdminPage() {
                   : "border-transparent text-muted-foreground hover:text-foreground")
               }
             >
-              {k === "coords" ? "Координаты" : (
+              {k === "coords" ? "Координаты" : k === "reports" ? (
                 <span className="inline-flex items-center gap-1">
                   <MessageSquare className="h-3.5 w-3.5" /> Сообщения
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1">
+                  <FileEdit className="h-3.5 w-3.5" /> Карточки
                 </span>
               )}
             </button>
           ))}
         </div>
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -429,10 +434,12 @@ function AdminPage() {
                 </div>
               </>
             )}
-        </div>
+        </div>}
       </header>
 
-      {tab === "coords" ? (
+      {tab === "cards" ? (
+        <FeatureCardsEditor />
+      ) : tab === "coords" ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           {loading ? (
             <p className="text-sm text-muted-foreground">Загрузка…</p>

@@ -83,6 +83,42 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_overrides: {
+        Row: {
+          action: string
+          created_at: string
+          created_by: string | null
+          data: Json | null
+          feature_id: number | null
+          id: string
+          notes: string | null
+          published: boolean
+          updated_at: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          created_by?: string | null
+          data?: Json | null
+          feature_id?: number | null
+          id?: string
+          notes?: string | null
+          published?: boolean
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          created_by?: string | null
+          data?: Json | null
+          feature_id?: number | null
+          id?: string
+          notes?: string | null
+          published?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       problem_report_history: {
         Row: {
           changed_at: string
