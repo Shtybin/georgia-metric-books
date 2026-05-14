@@ -1,0 +1,51 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly run (Mondays 06:00 UTC) — catches advisories published after merge
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Dependency vulnerability audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies (frozen lockfile)
+        run: bun install --frozen-lockfile
+
+      # Primary check: fail on high or critical advisories.
+      # Bun's audit exits non-zero when any advisory at-or-above the level is found.
+      - name: Audit (fail on high/critical)
+        run: bun audit --audit-level=high
+
+      # Always-run informational summary so the PR check log shows the full
+      # picture even when the gate above passes.
+      - name: Full audit report (informational)
+        if: always()
+        run: bun audit --json > audit-report.json || true
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-report
+          path: audit-report.json
+          if-no-files-found: ignore
+          retention-days: 30
