@@ -20,6 +20,7 @@ import {
 import { Upload, AlertTriangle, CheckCircle2, X as XIcon } from "lucide-react";
 import {
   emptyFeatureData,
+  featureToData,
   validateFeatureData,
   type FeatureData,
 } from "@/lib/featureOverrides";
