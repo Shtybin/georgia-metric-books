@@ -146,7 +146,7 @@ export const STRINGS = {
     embed: "Embed",
     notFoundTitle: "No matches",
     churches: "Churches",
-    unlocatedButton: "Without coords",
+    unlocatedButton: "Add settlement coords",
     unlocatedTitle: "Settlements without coordinates",
     unlocatedHint: "Records whose coordinates could not be established. Click the icon to manually pin a settlement on the map.",
     unlocatedSearch: "Search settlement, church, uezd…",
