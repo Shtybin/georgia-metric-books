@@ -368,7 +368,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "reports", "cards"] as const).map((k) => (
+          {(["coords", "reports", "cards", "uezd"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -383,9 +383,13 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <MessageSquare className="h-3.5 w-3.5" /> Сообщения
                 </span>
-              ) : (
+              ) : k === "cards" ? (
                 <span className="inline-flex items-center gap-1">
                   <FileEdit className="h-3.5 w-3.5" /> Карточки
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1">
+                  <Flag className="h-3.5 w-3.5" /> Уезды
                 </span>
               )}
             </button>
