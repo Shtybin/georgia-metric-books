@@ -1485,7 +1485,20 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         const noteRaw = sel.discrepancyNote as { ru?: string; en?: string; ka?: string } | undefined;
         const noteText = noteRaw ? (noteRaw[lang] || noteRaw.en || noteRaw.ru || "") : "";
         const mismatches = nameMismatchIndex.get(selected.id as number) ?? [];
-        const hasHistory = !!(histName || noteText || mismatches.length || extraAliases.length);
+         const aliasByLang: { code: "ru" | "en" | "ka"; label: string; values: string[] }[] = (() => {
+           const raw = sel.aliases as { ru?: string[]; en?: string[]; ka?: string[] } | string[] | undefined;
+           if (!raw) return [];
+           if (Array.isArray(raw)) {
+             const vals = raw.filter(Boolean);
+             return vals.length ? [{ code: "ru" as const, label: "RU", values: vals }] : [];
+           }
+           const labels: Record<"ru" | "en" | "ka", string> = { ru: "RU", en: "EN", ka: "KA" };
+           return (["ru", "en", "ka"] as const)
+             .map((code) => ({ code, label: labels[code], values: (raw[code] || []).filter(Boolean) }))
+             .filter((g) => g.values.length > 0);
+         })();
+         const hasAliasBlock = aliasByLang.length > 0;
+         const hasHistory = !!(histName || noteText || mismatches.length || extraAliases.length);
         return (
         <div className="pointer-events-auto absolute bottom-3 left-3 z-10 flex w-[min(92vw,360px)] max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur">
           {/* Sticky header */}
@@ -1559,6 +1572,33 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     : "—"}
               </dd>
             </dl>
+
+            {hasAliasBlock && (
+              <section className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-2" aria-label="Бывшие названия">
+                <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                  Бывшие названия
+                </div>
+                <ul className="space-y-1.5">
+                  {aliasByLang.map((g) => (
+                    <li key={g.code} className="flex flex-wrap items-center gap-1.5">
+                      <span className="inline-flex min-w-[24px] justify-center rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">
+                        {g.label}
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {g.values.map((v) => (
+                          <span
+                            key={v}
+                            className="inline-flex items-center rounded-full border border-amber-500/30 bg-background/60 px-2 py-0.5 text-xs text-foreground"
+                          >
+                            {v}
+                          </span>
+                        ))}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             {manyChurches && (
               <div className="mt-3">
