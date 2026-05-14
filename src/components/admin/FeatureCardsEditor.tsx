@@ -490,6 +490,7 @@ function EditDialog({
                 value={data.yearsRaw.ru}
                 onChange={(e) => setData((d) => ({ ...d, yearsRaw: { ru: e.target.value, en: e.target.value, ka: e.target.value } }))}
                 placeholder="1845-1916"
+                className={fieldClass("yearsRaw")}
               />
             </div>
             <div>
@@ -498,6 +499,7 @@ function EditDialog({
                 type="number"
                 value={data.startYear}
                 onChange={(e) => setData((d) => ({ ...d, startYear: parseInt(e.target.value, 10) || 0 }))}
+                className={fieldClass("startYear")}
               />
             </div>
             <div>
@@ -506,8 +508,26 @@ function EditDialog({
                 type="number"
                 value={data.endYear}
                 onChange={(e) => setData((d) => ({ ...d, endYear: parseInt(e.target.value, 10) || 0 }))}
+                className={fieldClass("endYear")}
               />
             </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
+              Пропущенные годы (Missing Years) — например «1850, 1855-1857»
+            </label>
+            <Input
+              value={data.missingYearsRaw?.ru ?? ""}
+              onChange={(e) =>
+                setData((d) => ({
+                  ...d,
+                  missingYearsRaw: { ru: e.target.value, en: e.target.value, ka: e.target.value },
+                }))
+              }
+              placeholder="1850, 1855-1857"
+              className={fieldClass("missingYearsRaw")}
+            />
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -518,6 +538,7 @@ function EditDialog({
                 step="0.000001"
                 value={data.lat}
                 onChange={(e) => setData((d) => ({ ...d, lat: parseFloat(e.target.value) || 0 }))}
+                className={fieldClass("lat")}
               />
             </div>
             <div>
@@ -527,6 +548,7 @@ function EditDialog({
                 step="0.000001"
                 value={data.lon}
                 onChange={(e) => setData((d) => ({ ...d, lon: parseFloat(e.target.value) || 0 }))}
+                className={fieldClass("lon")}
               />
             </div>
           </div>
