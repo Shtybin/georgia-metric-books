@@ -1472,8 +1472,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         const churchStr: string = sel.church[lang] || sel.church.en || "";
         const churchList = churchStr ? churchStr.split("|").map((s: string) => s.trim()).filter(Boolean) : [];
         const manyChurches = churchList.length > 3;
-        const histRaw = sel.historicalName as { ru?: string; en?: string; ka?: string } | undefined;
-        const histName = histRaw ? (histRaw[lang] || histRaw.en || histRaw.ru || "") : "";
+         const histRaw = sel.historicalName as { ru?: string; en?: string; ka?: string } | undefined;
+         const histName = histRaw ? (histRaw[lang] || histRaw.en || histRaw.ru || "") : "";
+         const aliasRaw = sel.aliases as { ru?: string[]; en?: string[]; ka?: string[] } | string[] | undefined;
+         const aliasList: string[] = (() => {
+           if (!aliasRaw) return [];
+           if (Array.isArray(aliasRaw)) return aliasRaw.filter(Boolean);
+           const arr = (aliasRaw[lang] && aliasRaw[lang]!.length ? aliasRaw[lang] : (aliasRaw.en?.length ? aliasRaw.en : aliasRaw.ru)) || [];
+           return arr.filter(Boolean);
+         })();
+         const extraAliases = aliasList.filter((a) => a && a !== histName);
         const noteRaw = sel.discrepancyNote as { ru?: string; en?: string; ka?: string } | undefined;
         const noteText = noteRaw ? (noteRaw[lang] || noteRaw.en || noteRaw.ru || "") : "";
         const mismatches = nameMismatchIndex.get(selected.id as number) ?? [];
