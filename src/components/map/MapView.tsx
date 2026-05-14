@@ -234,10 +234,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const { data: sess } = await supabase.auth.getSession();
-      if (!sess.session) return;
+      // Use getUser() so the JWT is re-validated server-side; getSession()
+      // only reads localStorage and can be spoofed/stale.
+      const { data: { user }, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !user) return;
       const { data, error } = await supabase.rpc("has_role", {
-        _user_id: sess.session.user.id,
+        _user_id: user.id,
         _role: "admin",
       });
       if (mounted && !error && data === true) setIsAdmin(true);

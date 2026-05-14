@@ -132,15 +132,19 @@ function AdminPage() {
   const [historyLoading, setHistoryLoading] = useState<Record<string, boolean>>({});
 
   async function runDiagnostics(): Promise<{ admin: boolean; email: string | null }> {
+    // getUser() validates the JWT against the auth server; getSession() only
+    // reads localStorage. Use getSession() afterwards for telemetry-only
+    // fields like expires_at / provider.
+    const { data: { user } } = await supabase.auth.getUser();
     const { data: sess } = await supabase.auth.getSession();
     const session = sess.session;
     let rpcOk = false;
     let rpcResult: unknown = null;
     let rpcError: string | null = null;
     let admin = false;
-    if (session) {
+    if (user) {
       const { data, error } = await supabase.rpc("has_role", {
-        _user_id: session.user.id,
+        _user_id: user.id,
         _role: "admin",
       });
       rpcResult = data;
@@ -150,30 +154,31 @@ function AdminPage() {
     }
     setDiagnostics({
       checkedAt: new Date().toISOString(),
-      sessionPresent: !!session,
-      userId: session?.user.id ?? null,
-      email: session?.user.email ?? null,
+      sessionPresent: !!user,
+      userId: user?.id ?? null,
+      email: user?.email ?? null,
       expiresAt: session?.expires_at ? new Date(session.expires_at * 1000).toISOString() : null,
       provider: (session?.user.app_metadata?.provider as string) ?? null,
       rpcOk,
       rpcResult,
       rpcError,
     });
-    return { admin, email: session?.user.email ?? null };
+    return { admin, email: user?.email ?? null };
   }
 
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const { data: sess } = await supabase.auth.getSession();
-      if (!sess.session) {
+      // Server-validated user check (vs getSession which only reads storage)
+      const { data: { user }, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !user) {
         navigate({ to: "/login" });
         return;
       }
       const { admin, email: e } = await runDiagnostics();
       if (!mounted) return;
       setEmail(e);
-      setCurrentUserId(sess.session.user.id);
+      setCurrentUserId(user.id);
       setIsAdmin(admin);
       setChecking(false);
     })();
@@ -241,8 +246,8 @@ function AdminPage() {
   }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
-    const { data: sess } = await supabase.auth.getSession();
-    const reviewer = sess.session?.user.id ?? null;
+    const { data: { user } } = await supabase.auth.getUser();
+    const reviewer = user?.id ?? null;
     const { error } = await supabase
       .from("problem_reports")
       .update({ status, reviewed_at: new Date().toISOString(), reviewed_by: reviewer })
