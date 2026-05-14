@@ -1133,11 +1133,6 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       {/* Top bar: search + lang */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-3 sm:p-4">
         <div className="pointer-events-auto w-full max-w-md">
-          {isMobile && (
-            <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-              {T.searchShort}
-            </div>
-          )}
           {/* Region / Uezd dropdown filters — highlight all matching points. */}
           <div className="grid grid-cols-2 gap-2">
             <select
