@@ -22,6 +22,84 @@ export interface FeatureData {
   historicalName?: MultiLang;
   /** Заметка администратора о расхождении уезда / атрибуции. */
   discrepancyNote?: MultiLang;
+  /** Пропущенные годы (текстом, "1850, 1855-1857"). */
+  missingYearsRaw?: { ru: string; en: string; ka?: string };
+}
+
+export interface ValidationIssue {
+  field:
+    | "startYear"
+    | "endYear"
+    | "yearsRaw"
+    | "missingYearsRaw"
+    | "lat"
+    | "lon"
+    | "settlement";
+  severity: "error" | "warning";
+  message: string;
+}
+
+const YEAR_MIN = 1700;
+const YEAR_MAX = 2100;
+
+export function validateFeatureData(d: FeatureData): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  const sy = d.startYear;
+  const ey = d.endYear;
+
+  if (!Number.isInteger(sy) || sy < YEAR_MIN || sy > YEAR_MAX) {
+    issues.push({ field: "startYear", severity: "error", message: `Начало: год должен быть в ${YEAR_MIN}–${YEAR_MAX}.` });
+  }
+  if (!Number.isInteger(ey) || ey < YEAR_MIN || ey > YEAR_MAX) {
+    issues.push({ field: "endYear", severity: "error", message: `Конец: год должен быть в ${YEAR_MIN}–${YEAR_MAX}.` });
+  }
+  if (Number.isInteger(sy) && Number.isInteger(ey) && ey < sy) {
+    issues.push({ field: "endYear", severity: "error", message: "Конец не может быть раньше начала." });
+  }
+
+  const raw = d.yearsRaw?.ru || d.yearsRaw?.en || "";
+  if (raw.trim()) {
+    const years = parseYearsString(raw);
+    if (years.length === 0) {
+      issues.push({ field: "yearsRaw", severity: "error", message: "Не удалось распознать годы (например: «1845-1916» или «1836, 1838»)." });
+    } else if (Number.isInteger(sy) && Number.isInteger(ey)) {
+      const oob = years.filter((y) => y < sy || y > ey);
+      if (oob.length) {
+        issues.push({ field: "yearsRaw", severity: "warning", message: `Годы вне диапазона начала/конца: ${oob.slice(0, 5).join(", ")}${oob.length > 5 ? "…" : ""}.` });
+      }
+    }
+  } else {
+    issues.push({ field: "yearsRaw", severity: "warning", message: "Поле «Годы» пустое." });
+  }
+
+  const missRaw = d.missingYearsRaw?.ru || d.missingYearsRaw?.en || "";
+  if (missRaw.trim()) {
+    const miss = parseYearsString(missRaw);
+    if (miss.length === 0) {
+      issues.push({ field: "missingYearsRaw", severity: "error", message: "Не удалось распознать пропуски." });
+    } else if (Number.isInteger(sy) && Number.isInteger(ey)) {
+      const oob = miss.filter((y) => y < sy || y > ey);
+      if (oob.length) {
+        issues.push({ field: "missingYearsRaw", severity: "error", message: `Пропуски вне диапазона: ${oob.slice(0, 5).join(", ")}${oob.length > 5 ? "…" : ""}.` });
+      }
+      const present = new Set(parseYearsString(raw));
+      const overlap = miss.filter((y) => present.has(y));
+      if (overlap.length) {
+        issues.push({ field: "missingYearsRaw", severity: "warning", message: `Эти годы отмечены и как имеющиеся, и как пропуски: ${overlap.slice(0, 5).join(", ")}.` });
+      }
+    }
+  }
+
+  if (!Number.isFinite(d.lat) || d.lat < -90 || d.lat > 90) {
+    issues.push({ field: "lat", severity: "error", message: "Широта вне диапазона −90…90." });
+  }
+  if (!Number.isFinite(d.lon) || d.lon < -180 || d.lon > 180) {
+    issues.push({ field: "lon", severity: "error", message: "Долгота вне диапазона −180…180." });
+  }
+  if (!d.settlement.ru && !d.settlement.en && !d.settlement.ka) {
+    issues.push({ field: "settlement", severity: "error", message: "Укажите название села хотя бы на одном языке." });
+  }
+  return issues;
 }
 
 export type OverrideAction = "edit" | "delete" | "add";
