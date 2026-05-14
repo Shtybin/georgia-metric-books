@@ -1676,6 +1676,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 className="w-full"
                 onClick={() => setMissingDialogOpen(true)}
               >
+                <CalendarClock className="mr-1.5 h-4 w-4" />
+                {T.suggestMissingAction}
               </Button>
             </div>
           </div>
