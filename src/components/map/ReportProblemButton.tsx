@@ -86,7 +86,7 @@ export function ReportProblemButton({ lang, getMapState }: Props) {
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  const anchor: Anchor = isMobile ? "br" : "tr";
+  const anchor: Anchor = "tr";
 
   // Collision detection is disabled — anchor is fixed top-right on all sizes.
   void pickAnchor;
