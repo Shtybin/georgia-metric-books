@@ -109,7 +109,7 @@
   /* Generic map-overlay gaps — used by the auto-positioning report widget.
    * Override on a parent container to tune all four corners at once.
    */
-  --map-overlay-gap-top: calc(var(--map-safe-top) + 4rem);
+  --map-overlay-gap-top: calc(var(--map-safe-top) + 9.5rem);
   --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + 0.75rem);
   --map-overlay-gap-left: calc(var(--map-safe-left) + 0.5rem);
   --map-overlay-gap-right: calc(var(--map-safe-right) + 0.5rem);
