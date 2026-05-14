@@ -187,7 +187,55 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return m;
   }, [data]);
 
-  // Hide already-pinned items from the unlocated list
+  // Index of "probable matches": features sharing the same settlement name (ru/en)
+  // but residing in a different uezd. Useful to flag administrative-attribution
+  // changes (e.g. one parish split between Gori and Tbilisi uezds).
+  const nameMismatchIndex = useMemo(() => {
+    const out = new Map<number, Array<{
+      id: number;
+      settlement: string;
+      uezd: string;
+      region: string;
+      years: string;
+    }>>();
+    if (!data) return out;
+    const norm = (s: string) =>
+      (s || "")
+        .toLocaleLowerCase()
+        .replace(/\([^)]*\)/g, "")
+        .replace(/[\s.,;:!?„""'`«»\-–—]+/g, " ")
+        .trim();
+    type Bucket = { id: number; uezdRu: string; props: any };
+    const byName = new Map<string, Bucket[]>();
+    for (const f of data.features) {
+      const p: any = f.properties ?? {};
+      const key = norm(p.settlement?.ru) || norm(p.settlement?.en);
+      if (!key) continue;
+      const arr = byName.get(key) ?? [];
+      arr.push({ id: f.id as number, uezdRu: norm(p.uezd?.ru || p.uezd?.en), props: p });
+      byName.set(key, arr);
+    }
+    for (const arr of byName.values()) {
+      if (arr.length < 2) continue;
+      for (const me of arr) {
+        const others = arr.filter(
+          (o) => o.id !== me.id && o.uezdRu && me.uezdRu && o.uezdRu !== me.uezdRu,
+        );
+        if (!others.length) continue;
+        out.set(
+          me.id,
+          others.map((o) => ({
+            id: o.id,
+            settlement: o.props.settlement?.ru || o.props.settlement?.en || "",
+            uezd: o.props.uezd?.ru || o.props.uezd?.en || "",
+            region: o.props.region?.ru || o.props.region?.en || "",
+            years: o.props.yearsRaw?.ru || o.props.yearsRaw?.en || `${o.props.startYear ?? ""}–${o.props.endYear ?? ""}`,
+          })),
+        );
+      }
+    }
+    return out;
+  }, [data]);
   const userPinnedKeys = useMemo(
     () => new Set(Object.keys(userCoords.records)),
     [userCoords.records],
@@ -1116,6 +1164,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         const churchStr: string = sel.church[lang] || sel.church.en || "";
         const churchList = churchStr ? churchStr.split("|").map((s: string) => s.trim()).filter(Boolean) : [];
         const manyChurches = churchList.length > 3;
+        const histRaw = sel.historicalName as { ru?: string; en?: string; ka?: string } | undefined;
+        const histName = histRaw ? (histRaw[lang] || histRaw.en || histRaw.ru || "") : "";
+        const noteRaw = sel.discrepancyNote as { ru?: string; en?: string; ka?: string } | undefined;
+        const noteText = noteRaw ? (noteRaw[lang] || noteRaw.en || noteRaw.ru || "") : "";
+        const mismatches = nameMismatchIndex.get(selected.id as number) ?? [];
+        const hasHistory = !!(histName || noteText || mismatches.length);
         return (
         <div className="pointer-events-auto absolute bottom-3 left-3 z-10 flex w-[min(92vw,360px)] max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur">
           {/* Sticky header */}
@@ -1124,6 +1178,20 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <h3 className="font-serif text-lg font-semibold leading-tight">
                 {sel.settlement[lang] || sel.settlement.en || "—"}
               </h3>
+              {(histName || mismatches.length > 0) && (
+                <div className="mt-1 flex flex-wrap items-center gap-1">
+                  {histName && (
+                    <span className="inline-flex items-center rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
+                      {T.historyBadgeFormer}: {histName}
+                    </span>
+                  )}
+                  {mismatches.length > 0 && (
+                    <span className="inline-flex items-center rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-medium text-destructive">
+                      ⚠ {T.historyBadgeMatch}
+                    </span>
+                  )}
+                </div>
+              )}
               {!manyChurches && churchList.length > 0 && (
                 <p className="mt-0.5 text-sm italic text-muted-foreground">
                   {churchList.join(" · ")}
@@ -1178,6 +1246,59 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   ))}
                 </ul>
               </div>
+            )}
+
+            {hasHistory && (
+              <details className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 open:bg-amber-500/10">
+                <summary className="cursor-pointer list-none px-2.5 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
+                  ▾ {T.historyTitle}
+                </summary>
+                <div className="space-y-2 px-2.5 pb-2.5 pt-1 text-xs">
+                  {histName && (
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        {T.historyFormer}
+                      </div>
+                      <div className="text-foreground">{histName}</div>
+                    </div>
+                  )}
+                  {noteText && (
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        {T.historyNote}
+                      </div>
+                      <div className="whitespace-pre-line text-foreground">{noteText}</div>
+                    </div>
+                  )}
+                  {mismatches.length > 0 && (
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        ⚠ {T.historyMatchTitle}
+                      </div>
+                      <p className="mb-1 text-muted-foreground">{T.historyMatchHint}</p>
+                      <ul className="space-y-1">
+                        {mismatches.map((m) => (
+                          <li key={m.id}>
+                            <button
+                              onClick={() => {
+                                const f = data?.features.find((x) => (x.id as number) === m.id);
+                                if (f) selectFeature(f as Feature);
+                              }}
+                              className="w-full rounded border border-border bg-background/60 px-2 py-1 text-left hover:bg-accent"
+                            >
+                              <div className="font-medium">{m.settlement}</div>
+                              <div className="text-[10px] text-muted-foreground">
+                                {[m.uezd, m.region].filter(Boolean).join(" · ")}
+                                {m.years ? ` · ${m.years}` : ""}
+                              </div>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </details>
             )}
           </div>
 

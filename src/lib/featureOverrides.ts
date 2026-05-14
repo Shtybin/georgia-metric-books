@@ -18,6 +18,10 @@ export interface FeatureData {
   endYear: number;
   lat: number;
   lon: number;
+  /** Историческое название (бывш. ...) на трёх языках, опционально. */
+  historicalName?: MultiLang;
+  /** Заметка администратора о расхождении уезда / атрибуции. */
+  discrepancyNote?: MultiLang;
 }
 
 export type OverrideAction = "edit" | "delete" | "add";
@@ -50,7 +54,16 @@ export function emptyFeatureData(lat = 41.7151, lon = 44.8271): FeatureData {
     endYear: 1900,
     lat,
     lon,
+    historicalName: emptyMultiLang(),
+    discrepancyNote: emptyMultiLang(),
   };
+}
+
+function readMl(v: any): MultiLang | undefined {
+  if (!v || typeof v !== "object") return undefined;
+  const ml: MultiLang = { ru: v.ru ?? "", en: v.en ?? "", ka: v.ka ?? "" };
+  if (!ml.ru && !ml.en && !ml.ka) return undefined;
+  return ml;
 }
 
 export function featureToData(f: GeoJSON.Feature<GeoJSON.Point, any>): FeatureData {
@@ -66,6 +79,8 @@ export function featureToData(f: GeoJSON.Feature<GeoJSON.Point, any>): FeatureDa
     endYear: typeof p.endYear === "number" ? p.endYear : 1900,
     lat,
     lon,
+    historicalName: readMl(p.historicalName) ?? emptyMultiLang(),
+    discrepancyNote: readMl(p.discrepancyNote) ?? emptyMultiLang(),
   };
 }
 
@@ -76,6 +91,8 @@ export function dataToFeature(
   const years = parseYearsString(d.yearsRaw.ru || d.yearsRaw.en || "");
   const startYear = d.startYear || years[0] || 1900;
   const endYear = d.endYear || (years.length ? years[years.length - 1] : startYear);
+  const hist = readMl(d.historicalName);
+  const note = readMl(d.discrepancyNote);
   return {
     type: "Feature",
     id,
@@ -93,6 +110,8 @@ export function dataToFeature(
       missingCount: 0,
       bucket: bucketOf(startYear),
       adminEdited: true,
+      ...(hist ? { historicalName: hist } : {}),
+      ...(note ? { discrepancyNote: note } : {}),
     },
   };
 }

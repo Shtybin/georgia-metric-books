@@ -385,8 +385,15 @@ function EditDialog({
   const [publish, setPublish] = useState<boolean>(() => row?.override?.published ?? false);
   const [saving, setSaving] = useState(false);
 
-  function setLang(field: "settlement" | "church" | "region" | "uezd", lang: "ru" | "en" | "ka", value: string) {
-    setData((d) => ({ ...d, [field]: { ...d[field], [lang]: value } }));
+  function setLang(
+    field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote",
+    lang: "ru" | "en" | "ka",
+    value: string,
+  ) {
+    setData((d) => {
+      const cur = (d as any)[field] ?? { ru: "", en: "", ka: "" };
+      return { ...d, [field]: { ...cur, [lang]: value } };
+    });
   }
 
   async function save() {
@@ -444,6 +451,18 @@ function EditDialog({
           <FieldGroup label="Уезд" field="uezd" data={data} setLang={setLang} />
           <FieldGroup label="Регион" field="region" data={data} setLang={setLang} />
           <FieldGroup label="Церковь" field="church" data={data} setLang={setLang} />
+          <FieldGroup
+            label="Историческое название (бывш. …)"
+            field="historicalName"
+            data={data}
+            setLang={setLang}
+          />
+          <FieldGroup
+            label="Заметка о расхождении (уезд / атрибуция)"
+            field="discrepancyNote"
+            data={data}
+            setLang={setLang}
+          />
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <div>
@@ -538,10 +557,11 @@ function FieldGroup({
   setLang,
 }: {
   label: string;
-  field: "settlement" | "church" | "region" | "uezd";
+  field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote";
   data: FeatureData;
   setLang: (f: any, l: "ru" | "en" | "ka", v: string) => void;
 }) {
+  const cur = (data as any)[field] ?? { ru: "", en: "", ka: "" };
   return (
     <div>
       <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
@@ -549,7 +569,7 @@ function FieldGroup({
         {(["ru", "en", "ka"] as const).map((l) => (
           <div key={l}>
             <label className="mb-1 block text-[10px] uppercase text-muted-foreground">{l}</label>
-            <Input value={data[field][l]} onChange={(e) => setLang(field, l, e.target.value)} />
+            <Input value={cur[l] ?? ""} onChange={(e) => setLang(field, l, e.target.value)} />
           </div>
         ))}
       </div>
