@@ -168,9 +168,24 @@ bun run scripts/translate-ka.ts
 
 **Ролевая модель** (важно для безопасности):
 
-- Роли хранятся в **отдельной** таблице `public.user_roles` — НЕ в `profiles` и НЕ в `auth.users`.
-- Проверка прав — через security-definer функцию `public.has_role(_user_id uuid, _role app_role)`, чтобы не упираться в RLS-рекурсию.
-- RLS-политики на таблицах используют `has_role(auth.uid(), 'admin')`.
+- Роли хранятся в **отдельной** таблице `public.user_roles` — НЕ в `profiles` и НЕ в `auth.users` (защита от privilege escalation).
+- Тип роли — enum `public.app_role` (`admin`, `moderator`, `user`).
+- Проверка прав — через `SECURITY DEFINER` функции `public.has_role(uuid, app_role)` и её зеркало `private.has_role(uuid, app_role)`, чтобы не упираться в RLS-рекурсию. RLS-политики используют именно `private.has_role(auth.uid(), 'admin')`.
+- Все админ-операции (изменение `feature_overrides`, модерация `problem_reports`, `coord_suggestions`, `uezd_corrections`, `missing_years_suggestions`, правка `guide_content`) защищены RLS-политиками `private.has_role(auth.uid(), 'admin')`.
+- Серверная функция `public.rollback_feature_override(uuid)` дополнительно проверяет роль внутри тела (`RAISE EXCEPTION 'Forbidden'`).
+
+**Доступы (`GRANT` / `REVOKE`) к `SECURITY DEFINER` функциям:**
+
+| Функция | `anon` | `authenticated` | Назначение |
+|---|---|---|---|
+| `public.log_problem_report_status_change()` | ❌ | ❌ | trigger-only (вызывается Postgres) |
+| `public.log_feature_override_change()` | ❌ | ❌ | trigger-only |
+| `public.update_updated_at_column()` | ❌ | ❌ | trigger-only |
+| `public.rollback_feature_override(uuid)` | ❌ | ✅ | внутри проверяется `private.has_role(..., 'admin')` |
+| `public.has_role(uuid, app_role)` | ❌ | ✅ | проверка прав в приложении |
+| `private.has_role(uuid, app_role)` | ❌ | ✅ | используется RLS-политиками |
+
+`anon` и `PUBLIC` не имеют `EXECUTE` ни на одной из них. Линтер Supabase помечает `rollback_feature_override` и `has_role` как доступные авторизованным — это **by design**: без этого приложение не сможет вызвать их через PostgREST/SDK; защита обеспечивается внутренней проверкой роли и/или RLS.
 
 **Назначить администратора вручную:**
 
