@@ -1358,7 +1358,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             className="flex items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
           >
             <ListX className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{T.unlocatedButton}</span>
+            <span>{T.unlocatedButton}</span>
             {(stats?.unlocatedGroups ?? stats?.withoutCoords) ? (
               <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
                 {(stats!.unlocatedGroups ?? stats!.withoutCoords).toLocaleString()}
