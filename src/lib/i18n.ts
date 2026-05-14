@@ -43,7 +43,7 @@ export const STRINGS = {
     embed: "Встроить",
     notFoundTitle: "Ничего не найдено",
     churches: "Церкви",
-    unlocatedButton: "Села без координат",
+    unlocatedButton: "Без координат",
     unlocatedTitle: "Селения без координат",
     unlocatedHint: "Записи, для которых не удалось установить координаты. Нажмите на иконку, чтобы вручную привязать селение к карте.",
     unlocatedSearch: "Поиск по селению, церкви, уезду…",
