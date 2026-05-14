@@ -557,10 +557,11 @@ function FieldGroup({
   setLang,
 }: {
   label: string;
-  field: "settlement" | "church" | "region" | "uezd";
+  field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote";
   data: FeatureData;
   setLang: (f: any, l: "ru" | "en" | "ka", v: string) => void;
 }) {
+  const cur = (data as any)[field] ?? { ru: "", en: "", ka: "" };
   return (
     <div>
       <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
@@ -568,7 +569,7 @@ function FieldGroup({
         {(["ru", "en", "ka"] as const).map((l) => (
           <div key={l}>
             <label className="mb-1 block text-[10px] uppercase text-muted-foreground">{l}</label>
-            <Input value={data[field][l]} onChange={(e) => setLang(field, l, e.target.value)} />
+            <Input value={cur[l] ?? ""} onChange={(e) => setLang(field, l, e.target.value)} />
           </div>
         ))}
       </div>
