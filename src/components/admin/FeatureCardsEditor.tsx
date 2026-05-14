@@ -507,6 +507,13 @@ function EditDialog({
             setLang={setLang}
           />
           <FieldGroup
+            label="Бывшие / альтернативные названия (через запятую) — попадают в поиск"
+            field="aliases"
+            data={data}
+            setLang={setLang}
+            placeholder="напр.: Ахалкалаки, Akhalkalaki"
+          />
+          <FieldGroup
             label="Заметка о расхождении (уезд / атрибуция)"
             field="discrepancyNote"
             data={data}
