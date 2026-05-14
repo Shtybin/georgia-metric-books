@@ -18,6 +18,10 @@ export interface FeatureData {
   endYear: number;
   lat: number;
   lon: number;
+  /** Историческое название (бывш. ...) на трёх языках, опционально. */
+  historicalName?: MultiLang;
+  /** Заметка администратора о расхождении уезда / атрибуции. */
+  discrepancyNote?: MultiLang;
 }
 
 export type OverrideAction = "edit" | "delete" | "add";
