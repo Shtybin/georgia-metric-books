@@ -38,8 +38,8 @@ export function MissingYearsSuggestionDialog({
     if (!proposed.trim()) { setError(T.suggestMissingEmpty); return; }
     setError(null);
     setSaving(true);
-    const { data: sess } = await supabase.auth.getSession();
-    const uid = sess.session?.user.id ?? null;
+    const { data: { user } } = await supabase.auth.getUser();
+    const uid = user?.id ?? null;
     const { error: err } = await supabase.from("missing_years_suggestions").insert({
       feature_id: featureId,
       settlement_snapshot: { settlement, region } as any,

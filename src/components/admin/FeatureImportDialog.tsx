@@ -224,8 +224,8 @@ export function FeatureImportDialog({
     let ok = 0;
     let failed = 0;
     const errors: string[] = [];
-    const { data: sess } = await supabase.auth.getSession();
-    const uid = sess.session?.user.id ?? null;
+    const { data: { user } } = await supabase.auth.getUser();
+    const uid = user?.id ?? null;
 
     // Pre-load existing edit overrides keyed by feature_id, so updates "upsert".
     const featureIds = Array.from(

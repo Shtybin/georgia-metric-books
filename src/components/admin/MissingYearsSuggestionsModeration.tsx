@@ -51,8 +51,8 @@ export function MissingYearsSuggestionsModeration() {
   useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [filter]);
 
   async function setStatus(id: string, status: "approved" | "rejected") {
-    const { data: sess } = await supabase.auth.getSession();
-    const reviewer = sess.session?.user.id ?? null;
+    const { data: { user } } = await supabase.auth.getUser();
+    const reviewer = user?.id ?? null;
     const { error } = await supabase
       .from("missing_years_suggestions")
       .update({ status, reviewed_at: new Date().toISOString(), reviewed_by: reviewer })
