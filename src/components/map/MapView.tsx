@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
@@ -51,6 +51,32 @@ function splitAliases(name: string): { clean: string; aliases: string[] } {
     });
   }
   return { clean: clean.replace(/\s{2,}/g, " ").trim(), aliases };
+}
+
+/** Wrap matched character ranges (Fuse.js indices) in <mark>. */
+function renderHighlight(
+  text: string,
+  indices: ReadonlyArray<readonly [number, number]> | undefined,
+): React.ReactNode {
+  if (!text) return text;
+  if (!indices || indices.length === 0) return text;
+  const sorted = [...indices].sort((a, b) => a[0] - b[0]);
+  const out: React.ReactNode[] = [];
+  let cursor = 0;
+  sorted.forEach(([start, end], i) => {
+    if (start > cursor) out.push(text.slice(cursor, start));
+    out.push(
+      <mark
+        key={i}
+        className="rounded bg-amber-500/30 px-0.5 text-foreground"
+      >
+        {text.slice(start, end + 1)}
+      </mark>,
+    );
+    cursor = end + 1;
+  });
+  if (cursor < text.length) out.push(text.slice(cursor));
+  return out;
 }
 
 /** Normalize features: pull "(бывш. X)" out of the settlement name into
@@ -468,12 +494,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         { name: "properties.region.ru", weight: 0.5 },
         { name: "properties.region.en", weight: 0.5 },
         { name: "properties.region.ka", weight: 0.5 },
-        { name: "properties.aliases.ru", weight: 0.95 },
-        { name: "properties.aliases.en", weight: 0.95 },
-        { name: "properties.aliases.ka", weight: 0.95 },
-        { name: "properties.historicalName.ru", weight: 0.9 },
-        { name: "properties.historicalName.en", weight: 0.9 },
-        { name: "properties.historicalName.ka", weight: 0.9 },
+        // Aliases / historical names ranked equal to current settlement so
+        // a query like "Ахалкалаки" finds renamed places (e.g. former
+        // "Ахалкалаки" → modern "X") with equal confidence.
+        { name: "properties.aliases.ru", weight: 1.0 },
+        { name: "properties.aliases.en", weight: 1.0 },
+        { name: "properties.aliases.ka", weight: 1.0 },
+        { name: "properties.historicalName.ru", weight: 1.0 },
+        { name: "properties.historicalName.en", weight: 1.0 },
+        { name: "properties.historicalName.ka", weight: 1.0 },
       ],
       threshold: 0.35,
       minMatchCharLength: 1,
@@ -496,10 +525,59 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const RESULT_LIMIT = isMobile ? 10 : 8;
   const searchResults = useMemo(() => {
     if (!fuse || debouncedQuery.trim().length < minQueryLen) return [];
-    return fuse.search(debouncedQuery.trim(), { limit: RESULT_LIMIT }).map((r) => ({
-      feature: r.item as Feature,
-      churchMatch: (r.matches ?? []).some((m) => m.key?.startsWith("properties.church")),
-    }));
+    const q = debouncedQuery.trim();
+    type MatchInfo = {
+      key?: string;
+      value?: string;
+      indices?: ReadonlyArray<readonly [number, number]>;
+    };
+    const pickBest = (matches: ReadonlyArray<MatchInfo>, prefix: string) => {
+      let best: MatchInfo | undefined;
+      let bestLen = -1;
+      for (const m of matches) {
+        if (!m.key?.startsWith(prefix)) continue;
+        const len = (m.indices ?? []).reduce(
+          (s, [a, b]) => s + (b - a + 1),
+          0,
+        );
+        if (len > bestLen) { best = m; bestLen = len; }
+      }
+      return best;
+    };
+    return fuse
+      .search(q, { limit: RESULT_LIMIT * 2 })
+      .map((r) => {
+        const matches = (r.matches ?? []) as ReadonlyArray<MatchInfo>;
+        const aliasHit = pickBest(matches, "properties.aliases");
+        const histHit  = pickBest(matches, "properties.historicalName");
+        const settHit  = pickBest(matches, "properties.settlement");
+        const churchHit = pickBest(matches, "properties.church");
+        // Reason ranking: alias/historical first (the user is looking for the
+        // historical name), then settlement, then church, then other.
+        const reason: "alias" | "historical" | "settlement" | "church" | "other" =
+          aliasHit ? "alias"
+          : histHit ? "historical"
+          : settHit ? "settlement"
+          : churchHit ? "church"
+          : "other";
+        const reasonRank = { alias: 0, historical: 1, settlement: 2, church: 3, other: 4 }[reason];
+        return {
+          feature: r.item as Feature,
+          score: r.score ?? 1,
+          reason,
+          reasonRank,
+          aliasHit,
+          histHit,
+          churchHit,
+          churchMatch: !!churchHit && !aliasHit && !histHit && !settHit,
+        };
+      })
+      .sort((a, b) => {
+        // Strong reason wins; within the same reason, lower fuse score is better.
+        if (a.reasonRank !== b.reasonRank) return a.reasonRank - b.reasonRank;
+        return a.score - b.score;
+      })
+      .slice(0, RESULT_LIMIT);
   }, [fuse, debouncedQuery, minQueryLen, RESULT_LIMIT]);
 
   // Build uezd/region → feature ids index for "highlight all in area" search
@@ -1202,10 +1280,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   <div className="p-3 text-sm text-muted-foreground">
                     {query !== debouncedQuery ? "…" : T.notFoundTitle}
                   </div>
-                ) : searchResults.map(({ feature: f, churchMatch }) => {
+                ) : searchResults.map(({ feature: f, churchMatch, reason, aliasHit, histHit }) => {
                   const p = f.properties;
                   const settlementName = p.settlement[lang] || p.settlement.en || "—";
                   const churchName = p.church[lang] || p.church.en;
+                  const aliasLabel =
+                    reason === "alias" ? (aliasHit?.value ?? "") :
+                    reason === "historical" ? (histHit?.value ?? "") : "";
+                  const aliasIndices =
+                    reason === "alias" ? aliasHit?.indices :
+                    reason === "historical" ? histHit?.indices : undefined;
+                  const showAliasRow = (reason === "alias" || reason === "historical")
+                    && aliasLabel && aliasLabel.toLocaleLowerCase() !== settlementName.toLocaleLowerCase();
                   return (
                     <button
                       key={f.id as number}
@@ -1221,18 +1307,29 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     >
                       <span className="flex w-full items-center justify-between gap-2">
                         <span className="font-medium">
-                          {churchMatch && churchName ? churchName : settlementName}
+                          {showAliasRow
+                            ? renderHighlight(aliasLabel, aliasIndices)
+                            : churchMatch && churchName
+                              ? churchName
+                              : settlementName}
                         </span>
-                        {churchMatch && churchName && (
+                        {showAliasRow && (
+                          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                            {reason === "historical" ? T.historyBadgeFormer : T.historyFormer}
+                          </span>
+                        )}
+                        {!showAliasRow && churchMatch && churchName && (
                           <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
                             {T.church}
                           </span>
                         )}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {(churchMatch && churchName
-                          ? [settlementName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
-                          : [churchName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                        {(showAliasRow
+                          ? [`→ ${settlementName}`, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                          : churchMatch && churchName
+                            ? [settlementName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
+                            : [churchName, p.uezd[lang] || p.uezd.en, p.region[lang] || p.region.en]
                         ).filter(Boolean).join(" · ")}
                       </span>
                     </button>
