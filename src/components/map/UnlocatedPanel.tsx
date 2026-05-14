@@ -222,7 +222,10 @@ export function UnlocatedPanel({
                     const church = pick(it.church, lang);
                     const region = pick(it.region, lang);
                     const k = itemKey(it);
-                    const featureId = locatedIndex.get(k);
+                    const featureId = locatedIndex(
+                      it.settlement.ru || it.settlement.en || "",
+                      it.uezd.ru || it.uezd.en || "",
+                    );
                     const isEditing = editingKey === k;
                     return (
                       <div
