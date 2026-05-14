@@ -1195,7 +1195,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   (e.currentTarget as HTMLInputElement).blur();
                 }
               }}
-              placeholder={T.searchShort}
+              placeholder={isMobile ? T.searchShort : T.search}
               aria-label={T.search}
               title={T.search}
               aria-autocomplete="list"
