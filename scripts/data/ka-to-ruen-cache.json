@@ -1,0 +1,3338 @@
+{
+ "settlement::გაუწყინარი": {
+  "ru": "Гауцкинари",
+  "en": "Gautskinari"
+ },
+ "church::წმ. გიორგის": {
+  "ru": "Св. Георгия",
+  "en": "St. George"
+ },
+ "church::წმ. თეოდორე ტირონის": {
+  "ru": "Св. Феодора Тирона",
+  "en": "St. Theodore Tyron"
+ },
+ "church::მაცხოვრის/წმ. იოანე ნათლისმცემლის": {
+  "ru": "Спасителя/Св. Иоанна Крестителя",
+  "en": "Savior/St. John the Baptist"
+ },
+ "settlement::თხმელარი": {
+  "ru": "Тхмелари",
+  "en": "Tkhmelari"
+ },
+ "church::მაცხოვრის": {
+  "ru": "Спасителя",
+  "en": "Savior"
+ },
+ "church::მთავარანგელოზის": {
+  "ru": "Архангела",
+  "en": "Archangel"
+ },
+ "settlement::ნოღა": {
+  "ru": "Нога",
+  "en": "Noga"
+ },
+ "church::წმ. ბარბარეს": {
+  "ru": "Св. Варвары",
+  "en": "St. Barbara"
+ },
+ "settlement::საგვაზავო": {
+  "ru": "Сагвазаво",
+  "en": "Sagvazavo"
+ },
+ "settlement::საკაჭარაო": {
+  "ru": "Сакачарао",
+  "en": "Sakacharao"
+ },
+ "settlement::საჭილაო": {
+  "ru": "Сачиало",
+  "en": "Sachialo"
+ },
+ "settlement::სეფიეთი": {
+  "ru": "Сепиети",
+  "en": "Sepieti"
+ },
+ "settlement::ზედა ჭყვიში": {
+  "ru": "Зеда Чквиши",
+  "en": "Zeda Chkvishi"
+ },
+ "church::წმ. სამების": {
+  "ru": "Св. Троицы",
+  "en": "Holy Trinity"
+ },
+ "settlement::თლუღი": {
+  "ru": "Тлуги",
+  "en": "Tlugi"
+ },
+ "settlement::თხმორი": {
+  "ru": "Тхмори",
+  "en": "Tkhmori"
+ },
+ "settlement::იწა": {
+  "ru": "Ица",
+  "en": "Itsa"
+ },
+ "settlement::კვარცხუთი": {
+  "ru": "Кварцхути",
+  "en": "Kvartskhuti"
+ },
+ "settlement::ლაბეჭინა": {
+  "ru": "Лабечина",
+  "en": "Labechina"
+ },
+ "settlement::მეორე ტოლა": {
+  "ru": "Меоре Тола",
+  "en": "Meore Tola"
+ },
+ "settlement::მოტყიარი": {
+  "ru": "Мотыари",
+  "en": "Motyari"
+ },
+ "settlement::პირველი ტოლა": {
+  "ru": "Пирвели Тола",
+  "en": "Pirveli Tola"
+ },
+ "settlement::ჟოშხა": {
+  "ru": "Жошха",
+  "en": "Zhoskha"
+ },
+ "church::მაცხოვრის ჯვარცმის": {
+  "ru": "Распятия Спасителя",
+  "en": "Crucifixion of the Savior"
+ },
+ "settlement::სხვავა (I)": {
+  "ru": "Схвава",
+  "en": "Skhvava"
+ },
+ "church::ჯვრის ამაღლების": {
+  "ru": "Воздвиженская",
+  "en": "Exaltation of the Cross"
+ },
+ "settlement::სხვავა (II)": {
+  "ru": "Схвава",
+  "en": "Skhvava"
+ },
+ "settlement::სხვავა (III)": {
+  "ru": "Схвава",
+  "en": "Skhvava"
+ },
+ "settlement::ფუტიეთი": {
+  "ru": "Футиети",
+  "en": "Futieti"
+ },
+ "settlement::ქედისუბანი": {
+  "ru": "Кедисубани",
+  "en": "Kedisubani"
+ },
+ "settlement::ქვედა ჭყვიში": {
+  "ru": "Кведа Чквиши",
+  "en": "Kveda Chkvishi"
+ },
+ "settlement::ღვარდია": {
+  "ru": "Гвардиа",
+  "en": "Gvardia"
+ },
+ "settlement::წესი": {
+  "ru": "Цеси",
+  "en": "Tsesi"
+ },
+ "church::მაცხოვრის ფერიცვალების": {
+  "ru": "Преображенская",
+  "en": "Transfiguration"
+ },
+ "church::იესოს წმ. გულის (კათოლიკური)": {
+  "ru": "Св. Сердца Иисуса (католическая)",
+  "en": "Sacred Heart of Jesus (Catholic)"
+ },
+ "church::წმ. სააკის": {
+  "ru": "Св. Саака",
+  "en": "St. Saak"
+ },
+ "church::წმ. გრიგორ ლუსავორიჩის": {
+  "ru": "Св. Григора Лусаворича",
+  "en": "St. Grigor Lusavorich"
+ },
+ "church::სიონის": {
+  "ru": "Сионская",
+  "en": "Sioni"
+ },
+ "settlement::ზაკვი": {
+  "ru": "Закви",
+  "en": "Zakvi"
+ },
+ "church::წმ. იოანე ნათლისმცემლის": {
+  "ru": "Св. Иоанна Крестителя",
+  "en": "St. John the Baptist"
+ },
+ "settlement::ზაკვი და თირკნა": {
+  "ru": "Закви и Тиркна",
+  "en": "Zakvi and Tirkna"
+ },
+ "church::წმ. მინასის": {
+  "ru": "Св. Минаса",
+  "en": "St. Minas"
+ },
+ "settlement::იხტილა (ღრტილა)": {
+  "ru": "Ихтила (Гртила)",
+  "en": "Ikhtila (Grtila)"
+ },
+ "church::წმ. სტეფანოსის": {
+  "ru": "Св. Стефаноса",
+  "en": "St. Stephanos"
+ },
+ "settlement::იხტილა-სამსარი": {
+  "ru": "Ихтила-Самсари",
+  "en": "Ikhtila-Samsari"
+ },
+ "church::წმ. არუთინის": {
+  "ru": "Св. Арутина",
+  "en": "St. Arutin"
+ },
+ "settlement::კარტიკამი": {
+  "ru": "Картиками",
+  "en": "Kartikami"
+ },
+ "settlement::კარწახი-მრაგვალი": {
+  "ru": "Карцахи-Мрагвали",
+  "en": "Kartsakhi-Mragvali"
+ },
+ "church::წმ. კარაპეტის": {
+  "ru": "Св. Карапета",
+  "en": "St. Karapet"
+ },
+ "settlement::კორხი": {
+  "ru": "Корхи",
+  "en": "Korkhi"
+ },
+ "settlement::ლომატურცხი-გოდოლარი": {
+  "ru": "Ломатурцхи-Годолари",
+  "en": "Lomaturtskhi-Godolari"
+ },
+ "church::წმ. ნარეკაცის": {
+  "ru": "Св. Нарекаци",
+  "en": "St. Narekatsi"
+ },
+ "settlement::მაჭატია და თახჩა": {
+  "ru": "Мачатиа и Тахча",
+  "en": "Machatia and Takcha"
+ },
+ "church::სამი მღვდელთმთავრის": {
+  "ru": "Трех Святителей",
+  "en": "Three Hierarchs"
+ },
+ "settlement::ოლავერდი": {
+  "ru": "Олаверди",
+  "en": "Olaverdi"
+ },
+ "settlement::სამსარი": {
+  "ru": "Самсари",
+  "en": "Samsari"
+ },
+ "settlement::ჩამდურა (ჩამძვრალა)": {
+  "ru": "Чамдура (Чамдзрала)",
+  "en": "Chamdura (Chamdzrala)"
+ },
+ "church::წმ. ჯვრის": {
+  "ru": "Св. Креста",
+  "en": "Holy Cross"
+ },
+ "church::წმ. პეტრესა და პავლეს": {
+  "ru": "Св. Петра и Павла",
+  "en": "St. Peter and Paul"
+ },
+ "church::წმ. ფრკიჩის": {
+  "ru": "Св. Фркичи",
+  "en": "St. Frkichi"
+ },
+ "church::ვარდანანცის": {
+  "ru": "Вардананц",
+  "en": "Vardanants"
+ },
+ "church::ღთისმშობლის": {
+  "ru": "Богородицы",
+  "en": "Theotokos"
+ },
+ "church::წმ. მარინეს": {
+  "ru": "Св. Марины",
+  "en": "St. Marine"
+ },
+ "church::ღვთისმშობლის მიძინების/წმ. გიორგის": {
+  "ru": "Успения Богородицы / Св. Георгия",
+  "en": "Dormition of the Theotokos / St. George"
+ },
+ "church::სინაგოგა": {
+  "ru": "Синагога",
+  "en": "Synagogue"
+ },
+ "church::წმ. ჯვრის ამაღლების": {
+  "ru": "Воздвижения Св. Креста",
+  "en": "Exaltation of the Holy Cross"
+ },
+ "church::ღვთისმშობლის შობის": {
+  "ru": "Рождества Богородицы",
+  "en": "Nativity of the Theotokos"
+ },
+ "settlement::ივლიტა": {
+  "ru": "Ивлита",
+  "en": "Ivlita"
+ },
+ "settlement::პატარა პამაჯი": {
+  "ru": "Патара Памаджи",
+  "en": "Patara Pamaji"
+ },
+ "settlement::საფარა": {
+  "ru": "Сафара",
+  "en": "Sapara"
+ },
+ "church::წმ. საბა განწმენდილის": {
+  "ru": "Св. Саввы Освященного",
+  "en": "St. Sabbas the Sanctified"
+ },
+ "settlement::სხვილისი": {
+  "ru": "Схвилиси",
+  "en": "Skhvilisi"
+ },
+ "settlement::წუღრუთი": {
+  "ru": "Цугрути",
+  "en": "Tsugruti"
+ },
+ "church::ღვთისმშობლის მიძინების / თეთრი წმ. გიორგის": {
+  "ru": "Успения Богородицы / Белого Св. Георгия",
+  "en": "Dormition of the Theotokos / White St. George"
+ },
+ "church::წმ. კვირიკესა და ივლიტას": {
+  "ru": "Св. Квирике и Ивлиты",
+  "en": "St. Kvirike and Ivlita"
+ },
+ "church::წმ. ჯვრის გამოჩინების": {
+  "ru": "Явления Св. Креста",
+  "en": "Appearance of the Holy Cross"
+ },
+ "settlement::ბოჭორნა": {
+  "ru": "Бочорна",
+  "en": "Boch'orna"
+ },
+ "settlement::გომეწრის ხეობა": {
+  "ru": "Гомецарская долина",
+  "en": "Gometsari Valley"
+ },
+ "church::ღვთისმშობლის/ წმ. გიორგის/წმ. იოანე ნათლისმცემლის": {
+  "ru": "Богородицы/Св. Георгия/Св. Иоанна Крестителя",
+  "en": "Theotokos/St. George/St. John the Baptist"
+ },
+ "church::წმ. იოანე ნათლისმცემლის/ წმ. გიორგის": {
+  "ru": "Св. Иоанна Крестителя/Св. Георгия",
+  "en": "St. John the Baptist/St. George"
+ },
+ "settlement::კოღოთო": {
+  "ru": "Когото",
+  "en": "Kogoto"
+ },
+ "settlement::პანკისი (ხეობა)": {
+  "ru": "Панкисское ущелье",
+  "en": "Pankisi Gorge"
+ },
+ "church::წმ. კონსტანტინეს/წმ. გიორგის": {
+  "ru": "Св. Константина/Св. Георгия",
+  "en": "St. Constantine/St. George"
+ },
+ "settlement::ქისტაური": {
+  "ru": "Кистаури",
+  "en": "Kistauri"
+ },
+ "church::წმ. ნინოს": {
+  "ru": "Св. Нины",
+  "en": "St. Nino"
+ },
+ "settlement::ქისტაური (მატანი)": {
+  "ru": "Кистаури (Матани)",
+  "en": "Kistauri (Matani)"
+ },
+ "church::ღვთისმშობლის მიძინების/ წმ. გიორგის": {
+  "ru": "Успения Богородицы/Св. Георгия",
+  "en": "Dormition of the Theotokos/St. George"
+ },
+ "settlement::კიკნაველეთი": {
+  "ru": "Кикнавелети",
+  "en": "Kiknaveleti"
+ },
+ "settlement::ფერსათი": {
+  "ru": "Ферсати",
+  "en": "Fersati"
+ },
+ "settlement::შუბანი": {
+  "ru": "Шубани",
+  "en": "Shubani"
+ },
+ "church::წმ. ოლღას": {
+  "ru": "Св. Ольги",
+  "en": "St. Olga"
+ },
+ "settlement::გუჯარეთი": {
+  "ru": "Гуджарети",
+  "en": "Gudzhareti"
+ },
+ "church::წმ. ნიკოლოზის": {
+  "ru": "Св. Николая",
+  "en": "St. Nicholas"
+ },
+ "settlement::საკირე (კზილ-ქილისა)": {
+  "ru": "Сакире (Кзыл-Килиса)",
+  "en": "Sakire (Kzyl-Kilisa)"
+ },
+ "settlement::ყვიბისი": {
+  "ru": "Квибиси",
+  "en": "Kvibisi"
+ },
+ "church::წმ. თომას/წმ. თეოდორე ტირონის": {
+  "ru": "Св. Фомы/Св. Феодора Тирона",
+  "en": "St. Thomas/St. Theodore Tyron"
+ },
+ "settlement::ლის-დიღომი": {
+  "ru": "Лис-Дигоми",
+  "en": "Lis-Digomi"
+ },
+ "church::წმ. თომას": {
+  "ru": "Св. Фомы",
+  "en": "St. Thomas"
+ },
+ "church::სტეფანოს-ქარაშენი": {
+  "ru": "Стефанос-Карашени",
+  "en": "Stephanos-Karasheni"
+ },
+ "church::სტეფანოს-ჰნაშენი": {
+  "ru": "Стефанос-Хнашени",
+  "en": "Stephanos-Hnasheni"
+ },
+ "settlement::გორიჯვარი": {
+  "ru": "Гориджвари",
+  "en": "Gorijvari"
+ },
+ "settlement::დიდი მეჯვრისხევი": {
+  "ru": "Диди Меджврисхеви",
+  "en": "Didi Mejvriskhevi"
+ },
+ "settlement::კარალეთი": {
+  "ru": "Каралети",
+  "en": "Karaleti"
+ },
+ "settlement::კირბალი": {
+  "ru": "Кирбали",
+  "en": "Kirbali"
+ },
+ "church::წმ. თომა მოციქულის": {
+  "ru": "Св. Апостола Фомы",
+  "en": "St. Thomas the Apostle"
+ },
+ "settlement::ოქონა": {
+  "ru": "Окона",
+  "en": "Okona"
+ },
+ "settlement::საქაშეთი": {
+  "ru": "Сакашети",
+  "en": "Sakasheti"
+ },
+ "settlement::ტინისხიდი": {
+  "ru": "Тинисхиди",
+  "en": "Tiniskhidi"
+ },
+ "settlement::ტირძნისი": {
+  "ru": "Тирдзниси",
+  "en": "Tirdznisi"
+ },
+ "church::წმ. ნიშნის": {
+  "ru": "Св. Знамения",
+  "en": "St. Sign"
+ },
+ "settlement::ფლავი": {
+  "ru": "Плави",
+  "en": "Plavi"
+ },
+ "settlement::ქვახვრელი": {
+  "ru": "Квацврели",
+  "en": "Kvatsvreli"
+ },
+ "settlement::ქვემო ხვითი": {
+  "ru": "Квемо Хвити",
+  "en": "Kvemo Khviti"
+ },
+ "settlement::ქიწნისი": {
+  "ru": "Кицниси",
+  "en": "Kitsnisi"
+ },
+ "settlement::ყელქცეული": {
+  "ru": "Келкцеули",
+  "en": "Kelktseuli"
+ },
+ "settlement::ჭვარები": {
+  "ru": "Чвареби",
+  "en": "Chvarebi"
+ },
+ "settlement::ხიდისთავი- ახალჯვრის": {
+  "ru": "Хидистави-Ахалджварис",
+  "en": "Khidistavi-Akhaldjvaris"
+ },
+ "settlement::ხიდისთავი- წედისის": {
+  "ru": "Хидистави-Цедзисис",
+  "en": "Khidistavi-Tsedzisis"
+ },
+ "settlement::ხურვალეთი": {
+  "ru": "Хурвалети",
+  "en": "Khurvaleti"
+ },
+ "church::წმ. სარქისის": {
+  "ru": "Св. Саркиса",
+  "en": "St. Sarkis"
+ },
+ "church::წმ. იოანე ღვთისმეტყველის": {
+  "ru": "Св. Иоанна Богослова",
+  "en": "St. John the Theologian"
+ },
+ "church::წმ. გიორგის/სვეტიცხოვლის": {
+  "ru": "Св. Георгия/Светицховели",
+  "en": "St. George/Svetitskhoveli"
+ },
+ "settlement::კარდენახი": {
+  "ru": "Карденахи",
+  "en": "Kardenakhi"
+ },
+ "church::ღვთისმშობლის მიძინების (I)": {
+  "ru": "Успения Богородицы (I)",
+  "en": "Dormition of Theotokos (I)"
+ },
+ "church::ღვთისმშობლის მიძინების (II)": {
+  "ru": "Успения Богородицы (II)",
+  "en": "Dormition of the Theotokos (II)"
+ },
+ "church::წმ. საბას": {
+  "ru": "Св. Саввы",
+  "en": "St. Sabbas"
+ },
+ "settlement::ქოდალო": {
+  "ru": "Кодало",
+  "en": "Kodalo"
+ },
+ "church::ღვთისმშობლის ტაძრად მიყვანების": {
+  "ru": "Введения во храм Пресвятой Богородицы",
+  "en": "Presentation of the Theotokos"
+ },
+ "settlement::ჩალაუბანი": {
+  "ru": "Чалаубани",
+  "en": "Chalaubani"
+ },
+ "settlement::ჯიმითი": {
+  "ru": "Джимити",
+  "en": "Jimiti"
+ },
+ "church::წმ. გიორგის (I)": {
+  "ru": "Св. Георгия (I)",
+  "en": "St. George (I)"
+ },
+ "church::წმ. გიორგის (II)": {
+  "ru": "Св. Георгия (II)",
+  "en": "St. George (II)"
+ },
+ "church::წმ. სერაფიმე საროველის": {
+  "ru": "Св. Серафима Саровского",
+  "en": "St. Seraphim of Sarov"
+ },
+ "church::წმ. ვასილის": {
+  "ru": "Св. Василия",
+  "en": "St. Basil"
+ },
+ "settlement::ყალამშა (განთიადი)": {
+  "ru": "Каламша (Гантиади)",
+  "en": "Kalamsha (Gantiadi)"
+ },
+ "settlement::კაიშაური": {
+  "ru": "Каишаури",
+  "en": "Kaishauri"
+ },
+ "settlement::კობიანთკარი": {
+  "ru": "Кобиантк’ари",
+  "en": "Kobiantkari"
+ },
+ "settlement::ლაკათხევი": {
+  "ru": "Лакатхеви",
+  "en": "Lakatkhevi"
+ },
+ "church::წმ. გრიგოლ ღვთისმეტყველის": {
+  "ru": "Св. Григория Богослова",
+  "en": "St. Gregory the Theologian"
+ },
+ "settlement::მუქო": {
+  "ru": "Муко",
+  "en": "Muko"
+ },
+ "church::წმ. ილია წინასწარმეტყველის": {
+  "ru": "Св. Пророка Илии",
+  "en": "St. Prophet Elijah"
+ },
+ "settlement::ქოლოთი": {
+  "ru": "К’олоти",
+  "en": "Koloti"
+ },
+ "settlement::ღული": {
+  "ru": "Гхули",
+  "en": "Ghuli"
+ },
+ "church::ღვთისმშობლის/წმ. გიორგის": {
+  "ru": "Богородицы/Св. Георгия",
+  "en": "Theotokos/St. George"
+ },
+ "settlement::ჩირიკი": {
+  "ru": "Чирики",
+  "en": "Chiriki"
+ },
+ "settlement::ჭილურტ-ებნისი": {
+  "ru": "Чилурт-Эбниси",
+  "en": "Chilurt-Ebnisi"
+ },
+ "church::წმ. მარინეს/მაცხოვრის": {
+  "ru": "Св. Марины/Спасителя",
+  "en": "St. Marina/Savior"
+ },
+ "settlement::გადიდი": {
+  "ru": "Гадиди",
+  "en": "Gadidi"
+ },
+ "church::მთავარანგელოზის/მაცხოვრის": {
+  "ru": "Архангела/Спасителя",
+  "en": "Archangel/Savior"
+ },
+ "church::ჯვარცმის": {
+  "ru": "Распятия",
+  "en": "Crucifixion"
+ },
+ "settlement::საპაიჭაო (ყუმური)": {
+  "ru": "Сапаичао (Кумури)",
+  "en": "Sap'aich'ao (K'umuri)"
+ },
+ "church::წმ. კვირიკესა და ივლიტას/წმ. გიორგის": {
+  "ru": "Св. Квирике и Ивлиты/Св. Георгия",
+  "en": "St. Kvirike and Ivlita/St. George"
+ },
+ "settlement::ბოსლევი": {
+  "ru": "Бослеви",
+  "en": "Boslevi"
+ },
+ "settlement::ზესტაფონი (ყვირილა)": {
+  "ru": "Зестафони (Квирила)",
+  "en": "Zestafoni (Kvirila)"
+ },
+ "church::ნათლისმცემლის/წმ. დავითისა და კონსტანტინეს": {
+  "ru": "Иоанна Крестителя/Св. Давида и Константина",
+  "en": "John the Baptist/St. David and Constantine"
+ },
+ "settlement::კვალითი-დანეთი": {
+  "ru": "Квалити-Данети",
+  "en": "K'valiti-Daneti"
+ },
+ "settlement::კვალითი-ჭაბუკთა": {
+  "ru": "Квалити-Чабукта",
+  "en": "K'valiti-Ch'abukta"
+ },
+ "settlement::მარტოთუბანი": {
+  "ru": "Мартотубани",
+  "en": "Mart'otubani"
+ },
+ "settlement::საქარა": {
+  "ru": "Сакара",
+  "en": "Sak'ara"
+ },
+ "church::ამაღლების": {
+  "ru": "Вознесения",
+  "en": "Ascension"
+ },
+ "settlement::ცხრაწყარო": {
+  "ru": "Цхрацкаро",
+  "en": "Tskhratsk'aro"
+ },
+ "settlement::წევა": {
+  "ru": "Цева",
+  "en": "Tseva"
+ },
+ "church::წმ. ნიკოლოზის/წმ. გიორგის": {
+  "ru": "Св. Николая/Св. Георгия",
+  "en": "St. Nicholas/St. George"
+ },
+ "settlement::ალავერდი (II)": {
+  "ru": "Алаверди (II)",
+  "en": "Alaverdi (II)"
+ },
+ "settlement::განარჯიის მუხური": {
+  "ru": "Ганарджиис Мухури",
+  "en": "Ganarjiis Mukhuri"
+ },
+ "settlement::დიხაგუძუბა (დიდი ნეძი)": {
+  "ru": "Дихагудзуба (Диди Недзи)",
+  "en": "Dikhagudzuba (Didi Nedzi)"
+ },
+ "church::მაცხოვრის შობის": {
+  "ru": "Рождества Спасителя",
+  "en": "Nativity of the Savior"
+ },
+ "settlement::კორცხელი": {
+  "ru": "Корцхели",
+  "en": "K'ortskheli"
+ },
+ "settlement::ნიკოსია": {
+  "ru": "Никосия",
+  "en": "Nik'osia"
+ },
+ "settlement::პატარა კოკი": {
+  "ru": "Патара Коки",
+  "en": "Pat'ara K'ok'i"
+ },
+ "settlement::რიყე": {
+  "ru": "Рике",
+  "en": "Rik'e"
+ },
+ "settlement::ყულიშკარი": {
+  "ru": "Кулишкари",
+  "en": "K'ulishk'ari"
+ },
+ "settlement::ჭაქვინჯი-სობოგა": {
+  "ru": "Чаквинджи-Собога",
+  "en": "Ch'ak'vinji-Soboga"
+ },
+ "settlement::ჭაქვინჯი-ქვატახტი": {
+  "ru": "Чаквинджи-Квататхти",
+  "en": "Ch'ak'vinji-K'vatakhti"
+ },
+ "settlement::ჭითაწყარი (ჭითაწყალი)": {
+  "ru": "Читаквари",
+  "en": "Chitakvari"
+ },
+ "settlement::ჯუმითი": {
+  "ru": "Джумити",
+  "en": "Jumiti"
+ },
+ "settlement::არდისუბანი": {
+  "ru": "Ардисубани",
+  "en": "Ardisubani"
+ },
+ "settlement::დაღეთ-ხაჩენი": {
+  "ru": "Дагет-Хачени",
+  "en": "Daghet-Khacheni"
+ },
+ "settlement::დიდი თონეთი": {
+  "ru": "Диди Тонети",
+  "en": "Didi Toneti"
+ },
+ "settlement::დურნუკი": {
+  "ru": "Дурнуки",
+  "en": "Durnuki"
+ },
+ "settlement::ერტისი": {
+  "ru": "Эртиси",
+  "en": "Ertisi"
+ },
+ "church::ღვთისმშობლის/წმ. კარაპეტის": {
+  "ru": "Богородицы/Св. Карапета",
+  "en": "Theotokos/St. Karapet"
+ },
+ "church::წმ. გიორგის/წმ. ალექსანდრე ნეველის": {
+  "ru": "Св. Георгия/Св. Александра Невского",
+  "en": "St. George/St. Alexander Nevsky"
+ },
+ "settlement::პატარა თონეთი": {
+  "ru": "Патара Тонети",
+  "en": "Patara Toneti"
+ },
+ "settlement::ართანა": {
+  "ru": "Артана",
+  "en": "Artana"
+ },
+ "church::ორმოცი მოწამის/აღდგომის": {
+  "ru": "Сорока Мучеников/Воскресенская",
+  "en": "Forty Martyrs/Resurrection"
+ },
+ "settlement::ბუშეტი": {
+  "ru": "Бушети",
+  "en": "Busheti"
+ },
+ "church::სვეტიცხოვლის": {
+  "ru": "Светицховели",
+  "en": "Svetitskhoveli"
+ },
+ "church::მაცხოვრის ხელთუქმნელი ხატის (ძელიცხოველი)": {
+  "ru": "Спаса Нерукотворного Образа (Дзелицховели)",
+  "en": "Savior Not Made by Hands (Dzelitskhoveli)"
+ },
+ "church::ძველი გალავანის წმ. გიორგის": {
+  "ru": "Старого Галавани Св. Георгия",
+  "en": "Old Galavani St. George"
+ },
+ "settlement::კურდღელაური": {
+  "ru": "Курдгелаури",
+  "en": "Kurdghelauri"
+ },
+ "church::წმ. თომა მოციქულის/წმ. გიორგის": {
+  "ru": "Св. Апостола Фомы/Св. Георгия",
+  "en": "St. Thomas the Apostle/St. George"
+ },
+ "settlement::ნაფარეული": {
+  "ru": "Напареули",
+  "en": "Napareuli"
+ },
+ "church::წმ. იაკობის": {
+  "ru": "Св. Иакова",
+  "en": "St. James"
+ },
+ "church::წმ. ესტატეს": {
+  "ru": "Св. Евстафия",
+  "en": "St. Eustathius"
+ },
+ "settlement::ალისუბანი": {
+  "ru": "Алисубани",
+  "en": "Alisubani"
+ },
+ "settlement::გოდოგანი": {
+  "ru": "Годогани",
+  "en": "Godogani"
+ },
+ "settlement::თხილთაწყარო": {
+  "ru": "Тхилтацкаро",
+  "en": "Tkhiltatskaro"
+ },
+ "settlement::კვახჭირი": {
+  "ru": "Квахчири",
+  "en": "Kvakhchiri"
+ },
+ "settlement::ნახშირღელე": {
+  "ru": "Нахширгеле",
+  "en": "Nakhshirgele"
+ },
+ "settlement::რუფოთი": {
+  "ru": "Руфоти",
+  "en": "Rufoti"
+ },
+ "settlement::საზანო (II)": {
+  "ru": "Сазано (II)",
+  "en": "Sazano (II)"
+ },
+ "settlement::საზანო (III)": {
+  "ru": "Сазано (III)",
+  "en": "Sazano (III)"
+ },
+ "settlement::სიმონეთი": {
+  "ru": "Симонети",
+  "en": "Simoneti"
+ },
+ "church::წმ. დავითისა და კონსტანტინეს": {
+  "ru": "Св. Давида и Константина",
+  "en": "St. David and Constantine"
+ },
+ "settlement::სიმონეთი-სათემო": {
+  "ru": "Симонети-Сатемо",
+  "en": "Simoneti-Satemo"
+ },
+ "settlement::ტელეფი": {
+  "ru": "Телефи",
+  "en": "Telefi"
+ },
+ "settlement::ღვანკითი": {
+  "ru": "Гванкити",
+  "en": "Gvankiti"
+ },
+ "settlement::ჩხარი-ოქონა": {
+  "ru": "Чхари-Окона",
+  "en": "Chkhari-Okona"
+ },
+ "church::ცხოველმყოფელის": {
+  "ru": "Животворящего Креста",
+  "en": "Life-Giving Cross"
+ },
+ "settlement::არტანოყვარი": {
+  "ru": "Артаноквари",
+  "en": "Artanokvari"
+ },
+ "settlement::ნაქალაქარი": {
+  "ru": "Накалакари",
+  "en": "Nakalakari"
+ },
+ "settlement::სიმონიანთხევი": {
+  "ru": "Симониантхеви",
+  "en": "Simoniankhevi"
+ },
+ "settlement::ყვარა": {
+  "ru": "Квара",
+  "en": "Kvara"
+ },
+ "settlement::მხურვალეთი": {
+  "ru": "Мхурвалети",
+  "en": "Mkhurvaleti"
+ },
+ "settlement::ყარაღაჯი": {
+  "ru": "Карагаджи",
+  "en": "Karagaji"
+ },
+ "settlement::ჩოჩეთი": {
+  "ru": "Чочети",
+  "en": "Chocheti"
+ },
+ "settlement::წინარეხი": {
+  "ru": "Цинарехи",
+  "en": "Tsinarekhi"
+ },
+ "settlement::ელისავეტინსკი": {
+  "ru": "Елисаветинский",
+  "en": "Elisavetinsky"
+ },
+ "settlement::კართუბანი (ყარსუბანი)": {
+  "ru": "Картубани (Карсубани)",
+  "en": "Kartubani (Karsubani)"
+ },
+ "church::წმ. ალექსანდრე ნეველის": {
+  "ru": "Св. Александра Невского",
+  "en": "St. Alexander Nevsky"
+ },
+ "settlement::აცანა-ოქონა": {
+  "ru": "Ацана-Окона",
+  "en": "Atsana-Okona"
+ },
+ "settlement::ბულუხვაური": {
+  "ru": "Булухваури",
+  "en": "Bulukhvauri"
+ },
+ "settlement::ზემო ჩიბათი": {
+  "ru": "Земо Чибати",
+  "en": "Zemo Chibati"
+ },
+ "settlement::კოკათი": {
+  "ru": "Кокати",
+  "en": "Kokati"
+ },
+ "church::წმ. გიორგის/მთავარანგელოზის": {
+  "ru": "Св. Георгия/Архангела",
+  "en": "St. George/Archangel"
+ },
+ "settlement::მოედანი": {
+  "ru": "Моэдани",
+  "en": "Moedani"
+ },
+ "settlement::ქვიანი": {
+  "ru": "Квиани",
+  "en": "Kviani"
+ },
+ "settlement::ჩანჩეთი": {
+  "ru": "Чанчети",
+  "en": "Chancheti"
+ },
+ "settlement::ჩიბათი (ქვემო)": {
+  "ru": "Чибати (Нижнее)",
+  "en": "Chibati (Lower)"
+ },
+ "church::მთავარმოწამე წმ. გიორგის": {
+  "ru": "Великомученика Св. Георгия",
+  "en": "Great Martyr St. George"
+ },
+ "settlement::ჯურუყვეთი": {
+  "ru": "Джурукуэти",
+  "en": "Jurukueti"
+ },
+ "settlement::ფაყი": {
+  "ru": "Факи",
+  "en": "Faki"
+ },
+ "settlement::ყვედრეში": {
+  "ru": "Квевреши",
+  "en": "Kvedreshi"
+ },
+ "church::მთვარანგელოზის": {
+  "ru": "Архангела",
+  "en": "Archangel"
+ },
+ "settlement::ოფრეთი": {
+  "ru": "Офрети",
+  "en": "Ofreti"
+ },
+ "settlement::შულავერი (შაუმიანი)": {
+  "ru": "Шулавери (Шаумяни)",
+  "en": "Shulaveri (Shaumiani)"
+ },
+ "church::წმ. მესროპის": {
+  "ru": "Св. Месропа",
+  "en": "St. Mesrop"
+ },
+ "settlement::გურძემი (I)": {
+  "ru": "Гурдземи (I)",
+  "en": "Gurdzemi (I)"
+ },
+ "settlement::გურძემი (II)": {
+  "ru": "Гурдземи (II)",
+  "en": "Gurdzemi (II)"
+ },
+ "settlement::თამაკონი (I)": {
+  "ru": "Тамакони (I)",
+  "en": "Tamakoni (I)"
+ },
+ "settlement::თამაკონი (II)": {
+  "ru": "Тамакони (II)",
+  "en": "Tamakoni (II)"
+ },
+ "settlement::კიწია": {
+  "ru": "Кициа",
+  "en": "Kitsia"
+ },
+ "settlement::კურზუ": {
+  "ru": "Курзу",
+  "en": "Kurzu"
+ },
+ "church::ღვთისმშობლის მიძინების/მთავარანგელოზის": {
+  "ru": "Успения Богородицы/Архангела",
+  "en": "Dormition of Theotokos/Archangel"
+ },
+ "settlement::ნალეფსაო": {
+  "ru": "Налепсао",
+  "en": "Nalepsao"
+ },
+ "settlement::ნამიკოლავო": {
+  "ru": "Намиколаво",
+  "en": "Namikolavo"
+ },
+ "settlement::ნახუნავო": {
+  "ru": "Нахунаво",
+  "en": "Nakhunavo"
+ },
+ "settlement::ნახუნავო - ჭაბურთა": {
+  "ru": "Нахунаво - Чабурта",
+  "en": "Nakhunavo - Chaburta"
+ },
+ "settlement::ორქა": {
+  "ru": "Орха",
+  "en": "Ork’a"
+ },
+ "settlement::საელიაო": {
+  "ru": "Саэлиао",
+  "en": "Saeliao"
+ },
+ "church::წმ. ხარლამპის": {
+  "ru": "Св. Харлампия",
+  "en": "St. Haralambos"
+ },
+ "settlement::ქვაითი": {
+  "ru": "Кваити",
+  "en": "K’vaiti"
+ },
+ "settlement::ჯოლევი (I)": {
+  "ru": "Джолеви (I)",
+  "en": "Dzholevi (I)"
+ },
+ "settlement::ჯოლევი (II)": {
+  "ru": "Джолеви (II)",
+  "en": "Dzholevi (II)"
+ },
+ "settlement::ლატალი": {
+  "ru": "Латали",
+  "en": "Latali"
+ },
+ "settlement::სვიფი": {
+  "ru": "Свифи",
+  "en": "Svifi"
+ },
+ "settlement::ბოკოწინი": {
+  "ru": "Бокоцони",
+  "en": "Bokotsoni"
+ },
+ "church::ღვთისმშობლის /წმ. ილია წინასწარმეტყველის": {
+  "ru": "Богородицы / Св. Илии Пророка",
+  "en": "Theotokos / St. Elijah the Prophet"
+ },
+ "church::წმ. ქეთევან დედოფლის": {
+  "ru": "Св. Царицы Кетеван",
+  "en": "St. Queen Ketevan"
+ },
+ "church::თორმეტი მოციქულის (სვეტიცხოველი)": {
+  "ru": "Двенадцати Апостолов (Светицховели)",
+  "en": "Twelve Apostles (Svetitskhoveli)"
+ },
+ "settlement::ნიჩბისი": {
+  "ru": "Ничбиси",
+  "en": "Nichbisi"
+ },
+ "settlement::ცხვარიჭამია": {
+  "ru": "Цхваричамиа",
+  "en": "Tskhvarichamia"
+ },
+ "settlement::აჭი": {
+  "ru": "Ачи",
+  "en": "Achi"
+ },
+ "settlement::ახალსაყდარი": {
+  "ru": "Ахалсакдари",
+  "en": "Ak’alsakdari"
+ },
+ "settlement::ბოგილი": {
+  "ru": "Богили",
+  "en": "Bogili"
+ },
+ "settlement::გვაბრითი": {
+  "ru": "Гвабрити",
+  "en": "Gvabriti"
+ },
+ "settlement::ექადი": {
+  "ru": "Экади",
+  "en": "Ekadi"
+ },
+ "church::წმ. კვირიკეს და ივლიტას": {
+  "ru": "Св. Квирике и Ивлиты",
+  "en": "St. Kvirike and Ivlita"
+ },
+ "settlement::კარისყური": {
+  "ru": "Карискури",
+  "en": "Kariskuri"
+ },
+ "settlement::კონჭკათი": {
+  "ru": "Кончкати",
+  "en": "Konchkat’i"
+ },
+ "settlement::მიქელგაბრიელი (შრომა)": {
+  "ru": "Микелгабриели (Шрома)",
+  "en": "Mikelgabrieli (Shroma)"
+ },
+ "settlement::ნაგომარი": {
+  "ru": "Нагомари",
+  "en": "Nagomari"
+ },
+ "settlement::ოქროსქედი": {
+  "ru": "Окроскеди",
+  "en": "Okroskedi"
+ },
+ "settlement::საღმრთო": {
+  "ru": "Сагмрто",
+  "en": "Saghmrto"
+ },
+ "settlement::უჩხუბი": {
+  "ru": "Учхуби",
+  "en": "Uchkhubi"
+ },
+ "settlement::ფამფალეთი": {
+  "ru": "Пампалети",
+  "en": "Pampaleti"
+ },
+ "settlement::ქაქუთი": {
+  "ru": "Какути",
+  "en": "Kakuti"
+ },
+ "settlement::ძიმითი": {
+  "ru": "Дзимити",
+  "en": "Dzimiti"
+ },
+ "settlement::ჭანეთი": {
+  "ru": "Чанети",
+  "en": "Chaneti"
+ },
+ "church::მთავარანგელოზის/წმ. გიორგის": {
+  "ru": "Архангела/Св. Георгия",
+  "en": "Archangel/St. George"
+ },
+ "settlement::ბოყვა": {
+  "ru": "Боква",
+  "en": "Bokva"
+ },
+ "settlement::კვაშხიეთი": {
+  "ru": "Квашхиети",
+  "en": "Kvashkhieti"
+ },
+ "settlement::ლაჩთა": {
+  "ru": "Лачта",
+  "en": "Lachta"
+ },
+ "settlement::ჟაშქვა": {
+  "ru": "Жашква",
+  "en": "Zhashkva"
+ },
+ "settlement::სომიწო": {
+  "ru": "Сомицо",
+  "en": "Somitso"
+ },
+ "settlement::ფარახეთი": {
+  "ru": "Парахетти",
+  "en": "Parakheti"
+ },
+ "settlement::ქორთა": {
+  "ru": "Корта",
+  "en": "Korta"
+ },
+ "settlement::ღარი": {
+  "ru": "Гари",
+  "en": "Ghari"
+ },
+ "settlement::ღები": {
+  "ru": "Геби",
+  "en": "Ghebi"
+ },
+ "settlement::წედისი": {
+  "ru": "Цедлиси",
+  "en": "Tsedisi"
+ },
+ "church::წმ. შიოს": {
+  "ru": "Св. Шио",
+  "en": "St. Shio"
+ },
+ "church::წმ. სვიმეონ მესვეტეს": {
+  "ru": "Св. Симеона Столпника",
+  "en": "St. Simeon the Stylite"
+ },
+ "settlement::ყანდაურა": {
+  "ru": "Кандаура",
+  "en": "Kandaura"
+ },
+ "settlement::ჩაილური": {
+  "ru": "Чаилури",
+  "en": "Chailuri"
+ },
+ "church::წმ. კოსმას და დამიანეს": {
+  "ru": "Св. Космы и Дамиана",
+  "en": "St. Cosmas and Damian"
+ },
+ "church::წმ. გიორგის (ქაშვეთის)": {
+  "ru": "Св. Георгия (Кашветская)",
+  "en": "St. George (Kashveti)"
+ },
+ "church::წმ. გიორგის (ეზოს ხატის)": {
+  "ru": "Св. Георгия (Эзос Хатис)",
+  "en": "St. George (Ezos Khati)"
+ },
+ "church::წმ. გიორგის/მთავარანგელოზის (დიდიძეების)": {
+  "ru": "Св. Георгия/Архангела (Дидидзеевых)",
+  "en": "St. George/Archangel (Dididzeebi)"
+ },
+ "church::წმ. გიორგის (სერგიეთის)": {
+  "ru": "Св. Георгия (Сергиетская)",
+  "en": "St. George (Sergieti)"
+ },
+ "settlement::კულაში": {
+  "ru": "Кулаши",
+  "en": "Kulashi"
+ },
+ "church::წმ. იოაკიმეს და ანას": {
+  "ru": "Св. Иоакима и Анны",
+  "en": "St. Joachim and Anna"
+ },
+ "settlement::ნაფაღაური": {
+  "ru": "Нафагаури",
+  "en": "Napagauri"
+ },
+ "settlement::ოფეთი": {
+  "ru": "Офети",
+  "en": "Opheti"
+ },
+ "settlement::ოფეთი (ახალი)": {
+  "ru": "Офети (Новый)",
+  "en": "Opheti (New)"
+ },
+ "church::წმ. პეტრეს და პავლეს": {
+  "ru": "Св. Петра и Павла",
+  "en": "St. Peter and Paul"
+ },
+ "settlement::საჭილაო-ილორი": {
+  "ru": "Сачилау-Илори",
+  "en": "Sachilao-Ilori"
+ },
+ "settlement::ღანირი (ახალი)": {
+  "ru": "Ганири (Новый)",
+  "en": "Ganiri (New)"
+ },
+ "settlement::ღანირი (ძველი)": {
+  "ru": "Ганири (Старый)",
+  "en": "Ganiri (Old)"
+ },
+ "settlement::წიაღუბანი": {
+  "ru": "Циагубани",
+  "en": "Tsiagubani"
+ },
+ "settlement::დარყა": {
+  "ru": "Дарка",
+  "en": "Darka"
+ },
+ "settlement::დუნთა": {
+  "ru": "Дунта",
+  "en": "Dunta"
+ },
+ "settlement::კორბოული": {
+  "ru": "Корбоули",
+  "en": "Korbouli"
+ },
+ "settlement::ორღული": {
+  "ru": "Оргули",
+  "en": "Orguli"
+ },
+ "church::წმ. გიორგის/წმ. ნიკოლოზის": {
+  "ru": "Св. Георгия/Св. Николая",
+  "en": "St. George/St. Nicholas"
+ },
+ "church::ღვთისმშობლის მიძინების/წმ. ნინოს": {
+  "ru": "Успения Богородицы/Св. Нины",
+  "en": "Dormition of Theotokos/St. Nino"
+ },
+ "settlement::სპეთი": {
+  "ru": "Спети",
+  "en": "Speti"
+ },
+ "settlement::ქორეთი": {
+  "ru": "Корети",
+  "en": "Koreti"
+ },
+ "church::მაცხოვრის/ წმ. გიორგის": {
+  "ru": "Спасителя/Св. Георгия",
+  "en": "Savior/St. George"
+ },
+ "settlement::ჩონთო": {
+  "ru": "Чонто",
+  "en": "Chonto"
+ },
+ "settlement::დიდი ზანა": {
+  "ru": "Диди Зана",
+  "en": "Didi Zana"
+ },
+ "settlement::კვაუთი": {
+  "ru": "Кваути",
+  "en": "Kvauti"
+ },
+ "settlement::ლებაღათურე": {
+  "ru": "Лебагатуре",
+  "en": "Lebagature"
+ },
+ "settlement::მოხაში": {
+  "ru": "Мохаши",
+  "en": "Mokhashi"
+ },
+ "church::წმ. სტეფანეს": {
+  "ru": "Св. Стефана",
+  "en": "St. Stephen"
+ },
+ "settlement::ნოსირი (I)": {
+  "ru": "Носири (I)",
+  "en": "Nosiri (I)"
+ },
+ "settlement::ნოსირი (II)": {
+  "ru": "Носири (II)",
+  "en": "Nosiri (II)"
+ },
+ "settlement::ნოსირი (III)": {
+  "ru": "Носири (III)",
+  "en": "Nosiri (III)"
+ },
+ "church::ორმოცი მოწამის": {
+  "ru": "Сорока Мучеников",
+  "en": "Forty Martyrs"
+ },
+ "settlement::საღვამიჩავო": {
+  "ru": "Сагвамичаво",
+  "en": "Sagvamichavo"
+ },
+ "settlement::ფოცხო (I)": {
+  "ru": "Поцхо (I)",
+  "en": "Potskho (I)"
+ },
+ "settlement::ფოცხო (II)": {
+  "ru": "Поцхо (II)",
+  "en": "Potskho (II)"
+ },
+ "settlement::ქვედა თეკლათი": {
+  "ru": "Кведа-Теклати",
+  "en": "Kveda-Teklati"
+ },
+ "settlement::ქვემო შხეფი": {
+  "ru": "Квемо-Шхепи",
+  "en": "Kvemo-Shkhepi"
+ },
+ "settlement::შხეფი (I)": {
+  "ru": "Шхепи (I)",
+  "en": "Shkhepi (I)"
+ },
+ "settlement::შხეფი (II)": {
+  "ru": "Шхепи (II)",
+  "en": "Shkhepi (II)"
+ },
+ "settlement::ჭალადიდი (I)": {
+  "ru": "Чаладиди (I)",
+  "en": "Chaladidi (I)"
+ },
+ "settlement::ხორში (II)": {
+  "ru": "Хорши (II)",
+  "en": "Khorshi (II)"
+ },
+ "settlement::ხორში (III)": {
+  "ru": "Хорши (III)",
+  "en": "Khorshi (III)"
+ },
+ "settlement::ხორში - საგუგუნაო": {
+  "ru": "Хорши-Сагугунао",
+  "en": "Khorshi-Sagugunao"
+ },
+ "settlement::ვაქირი": {
+  "ru": "Вакири",
+  "en": "Vakiri"
+ },
+ "settlement::კელმეჩური": {
+  "ru": "Келмечури",
+  "en": "Kelmechuri"
+ },
+ "church::წმ. სარგისის": {
+  "ru": "Св. Саргиса",
+  "en": "St. Sargis"
+ },
+ "settlement::საქობო": {
+  "ru": "Сакобо",
+  "en": "Sakobo"
+ },
+ "church::წმ. სტეფანეს/ მთავარანგელოზის": {
+  "ru": "Св. Стефана/Архангела",
+  "en": "St. Stephen/Archangel"
+ },
+ "settlement::ფანიანი": {
+  "ru": "Фаниани",
+  "en": "Faniani"
+ },
+ "settlement::ქვემო მაჩხაანი": {
+  "ru": "Квемо-Мачхаани",
+  "en": "Kvemo-Machkhaani"
+ },
+ "settlement::ჯუგაანი": {
+  "ru": "Джугаани",
+  "en": "Dzhugaani"
+ },
+ "settlement::სტეფანწმინდა (ყაზბეგი)": {
+  "ru": "Степанцминда (Казбеги)",
+  "en": "Stepantsminda (Kazbegi)"
+ },
+ "settlement::ლეყერეთი": {
+  "ru": "Легерети",
+  "en": "Legereti"
+ },
+ "settlement::საწირე": {
+  "ru": "Сацире",
+  "en": "Satsire"
+ },
+ "settlement::ძუყნური": {
+  "ru": "Дзукнури",
+  "en": "Dzuknuri"
+ },
+ "settlement::ჭყეპი": {
+  "ru": "Чкепи",
+  "en": "Chkepi"
+ },
+ "church::სამხედრო ეკლესია": {
+  "ru": "Военная",
+  "en": "Military"
+ },
+ "church::ბერძენთა საზოგადოების": {
+  "ru": "Греческого общества",
+  "en": "Greek Society"
+ },
+ "church::სასაფლაოს წმ. ნიკოლოზის": {
+  "ru": "Кладбищенская Св. Николая",
+  "en": "Cemetery St. Nicholas"
+ },
+ "church::წმ . ნიკოლოზის": {
+  "ru": "Св. Николая",
+  "en": "St. Nicholas"
+ },
+ "settlement::ბრეთი": {
+  "ru": "Бреты",
+  "en": "Breti"
+ },
+ "church::წყაროცხოვრების": {
+  "ru": "Живоносного Источника",
+  "en": "Life-Giving Spring"
+ },
+ "church::მთავარანგელოზის ტაძარი (სობორი)": {
+  "ru": "Архангела (Соборная)",
+  "en": "Archangel (Cathedral)"
+ },
+ "church::სასაფლაოს მთავარანგელოზის": {
+  "ru": "Кладбищенская Архангела",
+  "en": "Cemetery Archangel"
+ },
+ "church::კათოლიკური": {
+  "ru": "Католическая",
+  "en": "Catholic"
+ },
+ "church::სამხედრო ჰოსპიტალის (ღვთისმშობლის)": {
+  "ru": "Военного госпиталя (Богородицы)",
+  "en": "Military Hospital (Theotokos)"
+ },
+ "church::წმ. იოანე ნათლისმცემლის (ციხის)": {
+  "ru": "Св. Иоанна Крестителя (Тюремная)",
+  "en": "St. John the Baptist (Prison)"
+ },
+ "settlement::ქუთაისი/საფიჩხია": {
+  "ru": "Кутаиси/Сапичхия",
+  "en": "Kutaisi/Sapichkhia"
+ },
+ "settlement::ქუთაისი/საღორია": {
+  "ru": "Кутаиси/Сагория",
+  "en": "Kutaisi/Sagoria"
+ },
+ "church::წმ. ნინოს/მაცხოვრის ხელთუქმნელი ხატის": {
+  "ru": "Св. Нины/Нерукотворного Образа Спасителя",
+  "en": "St. Nino/Savior's Acheiropoietos Icon"
+ },
+ "settlement::ერისთავების": {
+  "ru": "Эриставов",
+  "en": "Eristavov"
+ },
+ "church::კარის ეკლესია": {
+  "ru": "Дворцовая",
+  "en": "Palace"
+ },
+ "church::წმ. დემეტრეს": {
+  "ru": "Св. Димитрия",
+  "en": "St. Demetrius"
+ },
+ "settlement::თავსურები": {
+  "ru": "Тавсуреби",
+  "en": "Tavsurebi"
+ },
+ "settlement::ნაბეღლავი": {
+  "ru": "Набеглави",
+  "en": "Nabeglavi"
+ },
+ "settlement::საჯავახო (I)": {
+  "ru": "Саджавахо (I)",
+  "en": "Sadjavakho (I)"
+ },
+ "settlement::საჯავახო (II)": {
+  "ru": "Саджавахо (II)",
+  "en": "Sadjavakho (II)"
+ },
+ "settlement::ჩომეთი": {
+  "ru": "Чомети",
+  "en": "Chometi"
+ },
+ "settlement::ჭაჭიეთი": {
+  "ru": "Чачиети",
+  "en": "Chachieti"
+ },
+ "settlement::ახუთი (I)": {
+  "ru": "Ахути (I)",
+  "en": "Akhuti (I)"
+ },
+ "settlement::ახუთი (II)": {
+  "ru": "Ахути (II)",
+  "en": "Akhuti (II)"
+ },
+ "settlement::ახუთი (III)": {
+  "ru": "Ахути (III)",
+  "en": "Akhuti (III)"
+ },
+ "settlement::თაია": {
+  "ru": "Таиа",
+  "en": "Taia"
+ },
+ "settlement::ლექარჩე": {
+  "ru": "Лекарче",
+  "en": "Lekarche"
+ },
+ "settlement::ლეღერცამე": {
+  "ru": "Легерцаме",
+  "en": "Legertsame"
+ },
+ "settlement::მუხური (I)": {
+  "ru": "Мухури (I)",
+  "en": "Mukhuri (I)"
+ },
+ "settlement::მუხური (II)": {
+  "ru": "Мухури (II)",
+  "en": "Mukhuri (II)"
+ },
+ "settlement::ნაფიჩხოვო": {
+  "ru": "Напичхово",
+  "en": "Napichkhovo"
+ },
+ "settlement::სარაქონი": {
+  "ru": "Саракъони",
+  "en": "Saraqoni"
+ },
+ "settlement::ჭოღა (I)": {
+  "ru": "Чога (I)",
+  "en": "Choga (I)"
+ },
+ "settlement::ჭოღა (II)": {
+  "ru": "Чога (II)",
+  "en": "Choga (II)"
+ },
+ "settlement::ხანწკი": {
+  "ru": "Ханцки",
+  "en": "Khantski"
+ },
+ "settlement::ჯუმითი (I)": {
+  "ru": "Джумити (I)",
+  "en": "Jumiti (I)"
+ },
+ "settlement::ჯუმითი (II)": {
+  "ru": "Джумити (II)",
+  "en": "Jumiti (II)"
+ },
+ "settlement::აღვი": {
+  "ru": "Агви",
+  "en": "Agvi"
+ },
+ "church::წმ. გიორგის/მთავარანგელოზის/ღვთისმშობლის": {
+  "ru": "Св. Георгия/Архангела/Богородицы",
+  "en": "St. George/Archangel/Theotokos"
+ },
+ "settlement::ზედა წიფერჩი": {
+  "ru": "Зеда Циферчи",
+  "en": "Zeda Tsiferchi"
+ },
+ "settlement::თაბორი": {
+  "ru": "Табори",
+  "en": "Tabori"
+ },
+ "settlement::კიბაბეული": {
+  "ru": "Кибабеули",
+  "en": "Kibabeuli"
+ },
+ "settlement::ლუხვანო": {
+  "ru": "Лухвано",
+  "en": "Lukhvano"
+ },
+ "settlement::ლუხვანო-ნაგომარი": {
+  "ru": "Лухвано-Нагомари",
+  "en": "Lukhvano-Nagomari"
+ },
+ "settlement::ოფიტარა": {
+  "ru": "Опитара",
+  "en": "Opitara"
+ },
+ "settlement::ქვედა წიფერჩი": {
+  "ru": "Кведа-Циферчи",
+  "en": "Kveda-Tsiferchi"
+ },
+ "settlement::ჩვალბეჩი": {
+  "ru": "Чвалбечи",
+  "en": "Chvalbechi"
+ },
+ "settlement::ჩქუმი": {
+  "ru": "Чкуми",
+  "en": "Chkumi"
+ },
+ "settlement::ცხეთა": {
+  "ru": "Цхета",
+  "en": "Tskheta"
+ },
+ "settlement::ეწერფერდი": {
+  "ru": "Эцерферди",
+  "en": "Etserferdi"
+ },
+ "church::წმ.გიორგის": {
+  "ru": "Св. Георгия",
+  "en": "St. George"
+ },
+ "settlement::მაზანდარა": {
+  "ru": "Мазандара",
+  "en": "Mazandara"
+ },
+ "settlement::ნაკიფუ": {
+  "ru": "Накифу",
+  "en": "Nakifu"
+ },
+ "settlement::საჩინო (საჭილაო)": {
+  "ru": "Сачино (Сачилао)",
+  "en": "Sachino (Sachilao)"
+ },
+ "settlement::ჯგალი": {
+  "ru": "Джгали",
+  "en": "Jgali"
+ },
+ "settlement::ბაშქოი (ბარეთი)": {
+  "ru": "Башкой (Барети)",
+  "en": "Bashkoy (Bareti)"
+ },
+ "settlement::დარაქოი": {
+  "ru": "Даракой",
+  "en": "Daracoy"
+ },
+ "settlement::ედიქილისა (საყდრიონი)": {
+  "ru": "Эдикилиса (Сакдриони)",
+  "en": "Edikilisa (Sakdrioni)"
+ },
+ "church::წმ. კოზმასა და დამიანეს": {
+  "ru": "Св. Космы и Дамиана",
+  "en": "St. Cosmas and Damian"
+ },
+ "settlement::კზილ-ქილისა": {
+  "ru": "Кзыл-Килиса",
+  "en": "Kzyl-Kilisa"
+ },
+ "church::ღვთისმშობლის (გრიგორიანული)": {
+  "ru": "Богородицы (Григорианская)",
+  "en": "Theotokos (Gregorian)"
+ },
+ "settlement::კუშჩი": {
+  "ru": "Кушчи",
+  "en": "Kushchi"
+ },
+ "church::სამი მღვდელმთავრის": {
+  "ru": "Трех Святителей",
+  "en": "Three Hierarchs"
+ },
+ "church::წმ. იოაკიმეს და ანნას": {
+  "ru": "Св. Иоакима и Анны",
+  "en": "St. Joachim and Anna"
+ },
+ "settlement::ტამალა": {
+  "ru": "Тамала",
+  "en": "Tamala"
+ },
+ "settlement::ღეპიურ-ტამალა": {
+  "ru": "Гепюр-Тамала",
+  "en": "Gepyur-Tamala"
+ },
+ "settlement::შიპიაკი (ჩრდილისუბანი)": {
+  "ru": "Шипиак (Чрдилубани)",
+  "en": "Shipiak (Chrdilubani)"
+ },
+ "settlement::ხაჩკოი": {
+  "ru": "Хачкои",
+  "en": "Khachkoy"
+ },
+ "settlement::გვიშტიბი": {
+  "ru": "Гвиштиби",
+  "en": "Gvishtibi"
+ },
+ "settlement::დღნორისა": {
+  "ru": "Дгнориса",
+  "en": "Dgnorisa"
+ },
+ "settlement::ზედა ქვიტირი": {
+  "ru": "Зеда-Квитири",
+  "en": "Zeda-Kvitiri"
+ },
+ "settlement::ოფურჩხეთი": {
+  "ru": "Офурчхети",
+  "en": "Ofurchkheti"
+ },
+ "settlement::საყულია": {
+  "ru": "Сакулиа",
+  "en": "Sakulia"
+ },
+ "settlement::საჩხეურა": {
+  "ru": "Сачхеура",
+  "en": "Sachkheura"
+ },
+ "settlement::ფარცხანაყანევი": {
+  "ru": "Парцханаканеви",
+  "en": "Partskhanakanevi"
+ },
+ "church::ქაშვეთის წმ. გიორგის": {
+  "ru": "Кашветская Св. Георгия",
+  "en": "Kashveti St. George"
+ },
+ "church::წმ. გიორგის (ძველი ამაღლების)": {
+  "ru": "Св. Георгия (старая Вознесенская)",
+  "en": "St. George (old Ascension)"
+ },
+ "settlement::ფარცხანაყანევი (ახალი)": {
+  "ru": "Парцханаканеви (Новый)",
+  "en": "Partskhanakanevi (New)"
+ },
+ "settlement::ქვედა მაღლაკი-ოქუნა": {
+  "ru": "Кведа-Маглаки-Окуна",
+  "en": "Kveda-Maglaki-Okuna"
+ },
+ "settlement::ქვედა მესხეთი": {
+  "ru": "Кведа-Месхети",
+  "en": "Kveda-Meskheti"
+ },
+ "settlement::ქვილიშორი": {
+  "ru": "Квилишор",
+  "en": "Kvilishori"
+ },
+ "settlement::ყუმისთავი": {
+  "ru": "Кумистави",
+  "en": "Kumistavi"
+ },
+ "settlement::შუა ქვიტირი": {
+  "ru": "Шуа-Квитири",
+  "en": "Shua-Kvitiri"
+ },
+ "settlement::ჩუნეში": {
+  "ru": "Чунеши",
+  "en": "Chuneshi"
+ },
+ "settlement::ბერეთისა": {
+  "ru": "Беретиса",
+  "en": "Beretisa"
+ },
+ "settlement::ვაჭევი": {
+  "ru": "Вачеви",
+  "en": "Vachevi"
+ },
+ "settlement::სარქველეთუბანი": {
+  "ru": "Сарквелетубани",
+  "en": "Sarkveletubani"
+ },
+ "settlement::ქვაციხე": {
+  "ru": "Квацихе",
+  "en": "Kvatsikhe"
+ },
+ "settlement::ჩხირაული": {
+  "ru": "Чхираули",
+  "en": "Chkhirauli"
+ },
+ "settlement::წირქვალი": {
+  "ru": "Циркваль",
+  "en": "Tsirkvali"
+ },
+ "settlement::ჯოყოეთი": {
+  "ru": "Джокоети",
+  "en": "Jokhoeti"
+ },
+ "settlement::ვერტყვილა": {
+  "ru": "Вертквила",
+  "en": "Vertkvila"
+ },
+ "settlement::იგორეთი": {
+  "ru": "Игорети",
+  "en": "Igoreti"
+ },
+ "church::წმ. გიორგის/ღვთისმშობლის": {
+  "ru": "Св. Георгия/Богородицы",
+  "en": "St. George/Theotokos"
+ },
+ "settlement::ლეღვანი": {
+  "ru": "Легвани",
+  "en": "Legvani"
+ },
+ "settlement::მაქათუბანი": {
+  "ru": "Макатубани",
+  "en": "Makatubani"
+ },
+ "church::წმ. გიორგის/წმ. თევდორეს": {
+  "ru": "Св. Георгия/Св. Феодора",
+  "en": "St. George/St. Theodore"
+ },
+ "settlement::ნებოძირი": {
+  "ru": "Небодзири",
+  "en": "Nebodziri"
+ },
+ "settlement::ფაქუთი": {
+  "ru": "Пакути",
+  "en": "Pakuti"
+ },
+ "settlement::ჩალხეეთი": {
+  "ru": "Чалхеети",
+  "en": "Chalkheeti"
+ },
+ "settlement::წიფა-ფონი": {
+  "ru": "Ципа-Фони",
+  "en": "Tsipa-Poni"
+ },
+ "settlement::ბროლოსანი": {
+  "ru": "Бролосани",
+  "en": "Brolosani"
+ },
+ "settlement::ვაყა": {
+  "ru": "Вака",
+  "en": "Vaka"
+ },
+ "church::ლუსავორიჩის": {
+  "ru": "Лусаворичи",
+  "en": "Lusavorichi"
+ },
+ "settlement::ტეზერი": {
+  "ru": "Тезери",
+  "en": "Tezeri"
+ },
+ "settlement::წაღვლი": {
+  "ru": "Цагвли",
+  "en": "Tsagvli"
+ },
+ "settlement::გაშფერდი": {
+  "ru": "Гашперди",
+  "en": "Gashperdi"
+ },
+ "settlement::გურიფული": {
+  "ru": "Гурипули",
+  "en": "Guripuli"
+ },
+ "settlement::ლარჩვა": {
+  "ru": "Ларчва",
+  "en": "Larchva"
+ },
+ "settlement::რედუტ-კალე": {
+  "ru": "Редут-Кале",
+  "en": "Redut-Kale"
+ },
+ "settlement::ქვალონი I": {
+  "ru": "Квалони I",
+  "en": "Kvaloni I"
+ },
+ "settlement::ქვალონი II": {
+  "ru": "Квалони II",
+  "en": "Kvaloni II"
+ },
+ "church::მთავარანგლოზის/წმ. გიორგის": {
+  "ru": "Архангела/Св. Георгия",
+  "en": "Archangel/St. George"
+ },
+ "settlement::ხეთა - საკვიკინიო": {
+  "ru": "Хета - Саквикинио",
+  "en": "Kheta - Sakvikinio"
+ },
+ "church::წმ. გიორგის/ მთავარანგელოზის": {
+  "ru": "Св. Георгия/Архангела",
+  "en": "St. George/Archangel"
+ },
+ "settlement::ხორგა I": {
+  "ru": "Хорга I",
+  "en": "Khorga I"
+ },
+ "settlement::ხორგა II": {
+  "ru": "Хорга II",
+  "en": "Khorga II"
+ },
+ "settlement::ხორგა III": {
+  "ru": "Хорга III",
+  "en": "Khorga III"
+ },
+ "settlement::ხორგა III/V": {
+  "ru": "Хорга III/V",
+  "en": "Khorga III/V"
+ },
+ "settlement::ხორგა IV": {
+  "ru": "Хорга IV",
+  "en": "Khorga IV"
+ },
+ "settlement::ჯაპშაქარი": {
+  "ru": "Джапшакари",
+  "en": "Japhshakari"
+ },
+ "settlement::გვაზაური": {
+  "ru": "Гвазаури",
+  "en": "Gvazauri"
+ },
+ "settlement::დიდღვაბუნა": {
+  "ru": "Дидгвабуна",
+  "en": "Didghvabuna"
+ },
+ "settlement::კონტუათი": {
+  "ru": "Контуати",
+  "en": "Kontuati"
+ },
+ "settlement::კუხი": {
+  "ru": "Кухи",
+  "en": "Kukhi"
+ },
+ "settlement::მაჭაკეთი": {
+  "ru": "Мачакети",
+  "en": "Machaketi"
+ },
+ "settlement::საწისქვილო": {
+  "ru": "Сацисквило",
+  "en": "Satsiskvilo"
+ },
+ "church::მაცხოვრის ფერისცვალ.": {
+  "ru": "Спасо-Преображенская",
+  "en": "Transfiguration of the Savior"
+ },
+ "settlement::ქუტირი": {
+  "ru": "Кутири",
+  "en": "Kutiri"
+ },
+ "church::ანდრია მოციქულის": {
+  "ru": "Св. Апостола Андрея",
+  "en": "St. Andrew the Apostle"
+ },
+ "settlement::ჯიხაიში (ფრიდონიანთ)": {
+  "ru": "Джихаиши (Фридониант)",
+  "en": "Jikhaishi (Fridoniant)"
+ },
+ "settlement::თბილისი": {
+  "ru": "Тифлис",
+  "en": "Tbilisi"
+ },
+ "church::ავლაბრის წმ. მარინეს": {
+  "ru": "Авлабарская Св. Марины",
+  "en": "Avlabari St. Marine"
+ },
+ "region::თბილისი": {
+  "ru": "Тифлисская губерния",
+  "en": "Tiflis Governorate"
+ },
+ "church::ავლაბრის წმ. პეტრესა და პავლეს": {
+  "ru": "Авлабарская Св. Петра и Павла",
+  "en": "Avlabari St. Peter and Paul"
+ },
+ "church::ავლაბრის მთავარანგელოზის": {
+  "ru": "Авлабарская Архангела",
+  "en": "Avlabari Archangel"
+ },
+ "church::ანჩისხატის ტაძარის": {
+  "ru": "Анчисхатского собора",
+  "en": "Anchiskhati Cathedral"
+ },
+ "church::კვირაცხოვლობის წმ. თომა მოციქულის": {
+  "ru": "Квирацховлобская Св. Апостола Фомы",
+  "en": "Kviratskhovloba St. Thomas the Apostle"
+ },
+ "church::ბაპტისტების თემის": {
+  "ru": "Баптистской общины",
+  "en": "Baptist Community"
+ },
+ "church::წმ. ეკატერინეს": {
+  "ru": "Св. Екатерины",
+  "en": "St. Catherine"
+ },
+ "church::დიდუბის ღვთისმშობლის შობის": {
+  "ru": "Дидубийская Рождества Богородицы",
+  "en": "Didube Nativity of the Theotokos"
+ },
+ "church::ვერის წმ. იოანე ღვთისმეტყველის": {
+  "ru": "Верийская Св. Иоанна Богослова",
+  "en": "Veri St. John the Theologian"
+ },
+ "church::ვერის წმ. ნიკოლოზის": {
+  "ru": "Верийская Св. Николая",
+  "en": "Veri St. Nicholas"
+ },
+ "church::იერუსალიმის ჯვრის ამაღლების": {
+  "ru": "Иерусалимская Воздвижения Креста",
+  "en": "Jerusalem Exaltation of the Cross"
+ },
+ "church::ღვთისმშობლის მიძინების (კათოლიკური)": {
+  "ru": "Успения Богородицы (Католическая)",
+  "en": "Dormition of the Theotokos (Catholic)"
+ },
+ "church::წმ. პეტრეს და პავლეს (კათოლიკური)": {
+  "ru": "Св. Петра и Павла (Католическая)",
+  "en": "St. Peter and Paul (Catholic)"
+ },
+ "church::კალოუბნის ღვთისმშობლის": {
+  "ru": "Калоубнис Богородицы",
+  "en": "Kaloubni Theotokos"
+ },
+ "church::კუკიის წმ. ალექსანდრე ნეველის": {
+  "ru": "Кукийская Св. Александра Невского",
+  "en": "Kukia St. Alexander Nevsky"
+ },
+ "church::კუკიის წმ. ნიკოლოზის": {
+  "ru": "Кукийская Св. Николая",
+  "en": "Kukia St. Nicholas"
+ },
+ "church::კუკიის წმ. ნინოს": {
+  "ru": "Кукийская Св. Нины",
+  "en": "Kukia St. Nino"
+ },
+ "church::კუკიის წმ. იოანე ნათლისმცემლის": {
+  "ru": "Кукийская Св. Иоанна Крестителя",
+  "en": "Kukia St. John the Baptist"
+ },
+ "church::მალაკნების სამლოცველო": {
+  "ru": "Молельня Молокан",
+  "en": "Molokan Prayer House"
+ },
+ "church::მეტეხის ღვთისმშობლის": {
+  "ru": "Метехская Богородицы",
+  "en": "Metekhi Theotokos"
+ },
+ "church::მისიონერების (I)": {
+  "ru": "Миссионерская (I)",
+  "en": "Missionary (I)"
+ },
+ "church::მისიონერების (II)": {
+  "ru": "Миссионерская (II)",
+  "en": "Missionary (II)"
+ },
+ "church::წმ. მიხეილ ტვერელის": {
+  "ru": "Св. Михаила Тверского",
+  "en": "St. Michael of Tver"
+ },
+ "church::მთაწმინდის მაცხოვრის ფერისცვალების": {
+  "ru": "Мтацминдская Преображения Спасителя",
+  "en": "Mtatsminda Transfiguration of the Savior"
+ },
+ "church::მთაწმინდის მამადავითის": {
+  "ru": "Мтацминдская Мамадавити",
+  "en": "Mtatsminda Mamadaviti"
+ },
+ "church::ნაძალადევის ივერიის ღვთისმშობლის": {
+  "ru": "Надзаладевская Иверской Богородицы",
+  "en": "Nadzaladevi Iverian Theotokos"
+ },
+ "church::ნავთლუღის წმ. ბარბარეს": {
+  "ru": "Навтлугская Св. Варвары",
+  "en": "Navtlugi St. Barbara"
+ },
+ "church::ორბელიანთკარის წმ. ნიკოლოზის": {
+  "ru": "Орбелианткарская Св. Николая",
+  "en": "Orbeliankari St. Nicholas"
+ },
+ "church::ამიერკავკასიის რკინიგზელთა": {
+  "ru": "Закавказских железнодорожников",
+  "en": "Transcaucasian Railway Workers"
+ },
+ "church::ვაჟთა (I) გიმნაზიის": {
+  "ru": "Мужской (I) гимназии",
+  "en": "Male (I) Gymnasium"
+ },
+ "church::მიქაელ მთავარანგელოზის": {
+  "ru": "Архангела Михаила",
+  "en": "Archangel Michael"
+ },
+ "church::წმ. ანდრია პირველწოდებულის": {
+  "ru": "Св. Андрея Первозванного",
+  "en": "St. Andrew the First-Called"
+ },
+ "church::თავად მიხეილ ნიკოლოზის ძის სამხედრო სასწავლებლის": {
+  "ru": "Военного училища князя Михаила Николаевича",
+  "en": "Military School of Prince Mikhail Nikolaevich"
+ },
+ "church::ფეხოსან იუნკერთა სასწავლებლის": {
+  "ru": "Училища пеших юнкеров",
+  "en": "School of Infantry Junkers"
+ },
+ "church::კადეტთა კორპუსის მთავარანგელოზის": {
+  "ru": "Кадетского корпуса Архангела",
+  "en": "Cadet Corps Archangel"
+ },
+ "church::ლეიბგრენადერთა ერევნის მე-13 პოლკის": {
+  "ru": "Лейб-гренадерского Эриванского 13-го полка",
+  "en": "Life-Grenadier Erivan 13th Regiment"
+ },
+ "church::კავკასიის არმიის გრენადერთა მე-14 ქართული პოლკის": {
+  "ru": "Кавказской армии гренадерского 14-го Грузинского полка",
+  "en": "Caucasian Army Grenadier 14th Georgian Regiment"
+ },
+ "church::კავკასიის არმიის გრენადერთა მე-15 ქართული პოლკის": {
+  "ru": "15-го Грузинского гренадерского полка Кавказской армии",
+  "en": "15th Georgian Grenadier Regiment of the Caucasian Army"
+ },
+ "church::კავკასიის არმიის გრენადერთა მე-16 ქართული პოლკის": {
+  "ru": "16-го Грузинского гренадерского полка Кавказской армии",
+  "en": "16th Georgian Grenadier Regiment of the Caucasian Army"
+ },
+ "church::დრაგუნთა მე-16 პოლკის ღვთისმშობლის": {
+  "ru": "Богородицы 16-го драгунского полка",
+  "en": "Theotokos of the 16th Dragoon Regiment"
+ },
+ "church::დრაგუნთა მე-17 პოლკის": {
+  "ru": "17-го драгунского полка",
+  "en": "17th Dragoon Regiment"
+ },
+ "church::ტვერის დრაგუნთა 43-ე პოლკის": {
+  "ru": "43-го Тверского драгунского полка",
+  "en": "43rd Tver Dragoon Regiment"
+ },
+ "church::ტვერის დრაგუნთა 44-ე პოლკის": {
+  "ru": "44-го Тверского драгунского полка",
+  "en": "44th Tver Dragoon Regiment"
+ },
+ "church::კავკასიის მსროლელთა მე-6 პოლკის": {
+  "ru": "6-го Кавказского стрелкового полка",
+  "en": "6th Caucasian Rifle Regiment"
+ },
+ "church::ქართველთა სათადარიგო პოლკის": {
+  "ru": "Грузинского запасного полка",
+  "en": "Georgian Reserve Regiment"
+ },
+ "church::ნავთლუღის სამხედრო სასაფლაოს": {
+  "ru": "Навтлугского военного кладбища",
+  "en": "Navtlugi Military Cemetery"
+ },
+ "church::წმ. ალექსანდრე ნეველის (სამხედრო) ტაძარი": {
+  "ru": "Св. Александра Невского (военная)",
+  "en": "St. Alexander Nevsky (military)"
+ },
+ "church::წმ. გიორგის (სამხედრო) ტაძარი": {
+  "ru": "Св. Георгия (военная)",
+  "en": "St. George (military)"
+ },
+ "church::საბურთალოს წმ. გიორგის": {
+  "ru": "Сабурталинская Св. Георгия",
+  "en": "Saburtalo St. George"
+ },
+ "church::სასახლის კარის წმ. გიორგის": {
+  "ru": "Дворцовая Св. Георгия",
+  "en": "Palace St. George"
+ },
+ "church::სიონის საკათედრო ტაძარის": {
+  "ru": "Сионского собора",
+  "en": "Sioni Cathedral"
+ },
+ "church::სოლოლაკის ჯვრის ამაღლების": {
+  "ru": "Сололакская Воздвижения Креста",
+  "en": "Sololaki Exaltation of the Cross"
+ },
+ "church::წმ. თეოდოსი ჩერნიგოველის": {
+  "ru": "Св. Феодосия Черниговского",
+  "en": "St. Theodosius of Chernigov"
+ },
+ "church::ხარფუხის წმ. ნიკოლოზის": {
+  "ru": "Харпухская Св. Николая",
+  "en": "Kharpukhi St. Nicholas"
+ },
+ "church::ბეთხაინის ღვთისმშობლის (დაბადება)": {
+  "ru": "Бетхаинская Богородицы (Рождества)",
+  "en": "Betkhaini Theotokos (Nativity)"
+ },
+ "church::წმ. გრიგორ ლუსავორიჩის (დაბადება)": {
+  "ru": "Св. Григория Просветителя (Рождества)",
+  "en": "St. Gregory the Illuminator (Nativity)"
+ },
+ "church::ეჩმიაძინის წმ. გიორგის (დაბადება)": {
+  "ru": "Эчмиадзинская Св. Георгия (Рождества)",
+  "en": "Echmiadzin St. George (Nativity)"
+ },
+ "church::ვანქის ღვთისმშობლის (დაბადება)": {
+  "ru": "Ванкская Богородицы (Рождества)",
+  "en": "Vank Theotokos (Nativity)"
+ },
+ "church::ვერის წმ. ჯვრის (დაბადება)": {
+  "ru": "Верийская Св. Креста (Рождества)",
+  "en": "Veri St. Cross (Nativity)"
+ },
+ "church::ზრკინიანის წმ. კარაპეტის (დაბადება)": {
+  "ru": "Зркинианская Св. Карапета (Рождества)",
+  "en": "Zrkiniant St. Karapet (Nativity)"
+ },
+ "church::ზორაბაშენის წმ. გიორგის (დაბადება)": {
+  "ru": "Зорабашенская Св. Георгия (Рождества)",
+  "en": "Zorabasheni St. George (Nativity)"
+ },
+ "church::თანდოიანის წმ. გიორგის (დაბადება)": {
+  "ru": "Тандоянская Св. Георгия (Рождества)",
+  "en": "Tandoyani St. George (Nativity)"
+ },
+ "church::მეიდნის წმ. გიორგის/ღვთისმშობლის (დაბადება)": {
+  "ru": "Меиданской Св. Георгия/Богородицы",
+  "en": "Meidan St. George/Theotokos"
+ },
+ "church::მუღნის წმ. გიორგის (დაბადება)": {
+  "ru": "Мугнинской Св. Георгия",
+  "en": "Mughni St. George"
+ },
+ "church::წმ. მინასის (დაბადება)": {
+  "ru": "Св. Минаса",
+  "en": "St. Minas"
+ },
+ "church::ნორაშენის ღვთისმშობლის (დაბადება)": {
+  "ru": "Норашенской Богородицы",
+  "en": "Norashen Theotokos"
+ },
+ "church::ნავთლუღის წმ. გიორგის (დაბადება)": {
+  "ru": "Навтлугской Св. Георгия",
+  "en": "Navtlugi St. George"
+ },
+ "church::წმ. ნიშნის (დაბადება)": {
+  "ru": "Св. Нишана",
+  "en": "St. Nishan"
+ },
+ "church::წმ. კარაპეტის (დაბადება)": {
+  "ru": "Св. Карапета",
+  "en": "St. Karapet"
+ },
+ "church::კუკიის ღვთისმშობლის (დაბადება)": {
+  "ru": "Кукийской Богородицы",
+  "en": "Kukia Theotokos"
+ },
+ "church::წმ. სარქისის (დაბადება)": {
+  "ru": "Св. Саркиса",
+  "en": "St. Sarkis"
+ },
+ "church::ქამოიანის წმ. გიორგის (დაბადება)": {
+  "ru": "Камоянской Св. Георгия",
+  "en": "Kamoyani St. George"
+ },
+ "church::ბეთხაინის ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Бетхаинской Богородицы",
+  "en": "Betkhaini Theotokos"
+ },
+ "church::ქარაფის წმ. გიორგის (დაბადება)": {
+  "ru": "Карафской Св. Георгия",
+  "en": "Karaphi St. George"
+ },
+ "church::ბეთხაინის ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Бетхаинской Богородицы",
+  "en": "Betkhaini Theotokos"
+ },
+ "church::ჩუღურეთის ღვთისმშობლის (დაბადება)": {
+  "ru": "Чугуретской Богородицы",
+  "en": "Chughureti Theotokos"
+ },
+ "church::წმ. გრიგორ ლუსავორიჩის (ჯვრისწერა)": {
+  "ru": "Св. Григора Лусаворича",
+  "en": "St. Grigor Lusavorich"
+ },
+ "church::წმ. გრიგორ ლუსავორიჩის (გარდაცვალება)": {
+  "ru": "Св. Григора Лусаворича",
+  "en": "St. Grigor Lusavorich"
+ },
+ "church::შამქორის ღვთისმშობლის (დაბადება)": {
+  "ru": "Шамхорской Богородицы",
+  "en": "Shamkori Theotokos"
+ },
+ "church::ეჩმიაძინის წმ. გიორგის (ჯვრისწერა)": {
+  "ru": "Эчмиадзинской Св. Георгия",
+  "en": "Echmiadzini St. George"
+ },
+ "church::ჰრეშტაკაპერტის მთავარანგელოზის (დაბადება)": {
+  "ru": "Хрештакапертской Архангела",
+  "en": "Hreshtakaperti Archangel"
+ },
+ "church::ეჩმიაძინის წმ. გიორგის (გარდაცვალება)": {
+  "ru": "Эчмиадзинской Св. Георгия",
+  "en": "Echmiadzini St. George"
+ },
+ "church::ვანქის ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Ванкской Богородицы",
+  "en": "Vank Theotokos"
+ },
+ "church::ვანქის ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Ванкской Богородицы",
+  "en": "Vank Theotokos"
+ },
+ "church::ვერის წმ. ჯვრის (ჯვრისწერა)": {
+  "ru": "Верской Св. Креста",
+  "en": "Veri Holy Cross"
+ },
+ "church::ვერის წმ. ჯვრის (გარდაცვალება)": {
+  "ru": "Верской Св. Креста",
+  "en": "Veri Holy Cross"
+ },
+ "church::ზრკინიანის წმ. კარაპეტის (ჯვრისწერა)": {
+  "ru": "Зркинианской Св. Карапета",
+  "en": "Zrkini St. Karapet"
+ },
+ "church::ზრკინიანის წმ. კარაპეტის (გარდაცვალება)": {
+  "ru": "Зркинианской Св. Карапета",
+  "en": "Zrkiniiani St. Karapet"
+ },
+ "church::ზორაბაშენის წმ. გიორგის (ჯვრისწერა)": {
+  "ru": "Зорабашенской Св. Георгия",
+  "en": "Zorabasheni St. George"
+ },
+ "church::ზორაბაშენის წმ. გიორგის (გარდაცვალება)": {
+  "ru": "Зорабашенской Св. Георгия",
+  "en": "Zorabasheni St. George"
+ },
+ "church::თანდოიანის წმ. გიორგის (ჯვრისწერა)": {
+  "ru": "Тандоянской Св. Георгия",
+  "en": "Tandoyani St. George"
+ },
+ "church::თანდოიანის წმ. გიორგის (გარდაცვალება)": {
+  "ru": "Тандоянской Св. Георгия",
+  "en": "Tandoyani St. George"
+ },
+ "church::მუღნის წმ. გიორგის (ჯვრისწერა)": {
+  "ru": "Мугнинской Св. Георгия",
+  "en": "Mugni St. George"
+ },
+ "church::მუღნის წმ. გიორგის (გარდაცვალება)": {
+  "ru": "Мугнинской Св. Георгия",
+  "en": "Mugni St. George"
+ },
+ "church::წმ. მინასის (ჯვრისწერა)": {
+  "ru": "Св. Минаса",
+  "en": "St. Minas"
+ },
+ "church::წმ. მინასის (გარდაცვალება)": {
+  "ru": "Св. Минаса",
+  "en": "St. Minas"
+ },
+ "church::ნორაშენის ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Норашенской Богородицы",
+  "en": "Norasheni Theotokos"
+ },
+ "church::ნორაშენის ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Норашенской Богородицы",
+  "en": "Norasheni Theotokos"
+ },
+ "church::ნავთლუღის წმ. გიორგის (ჯვრისწერა)": {
+  "ru": "Навтлугской Св. Георгия",
+  "en": "Navtlugi St. George"
+ },
+ "church::ნავთლუღის წმ. გიორგის (გარდაცვალება)": {
+  "ru": "Навтлугской Св. Георгия",
+  "en": "Navtlugi St. George"
+ },
+ "church::წმ. ნიშნის (ჯვრისწერა)": {
+  "ru": "Св. Нишана",
+  "en": "St. Nishan"
+ },
+ "church::წმ. ნიშნის (გარდაცვალება)": {
+  "ru": "Св. Нишана",
+  "en": "St. Nishan"
+ },
+ "church::წმ. კარაპეტის (ჯვრისწერა)": {
+  "ru": "Св. Карапета",
+  "en": "St. Karapet"
+ },
+ "church::წმ. კარაპეტის (გარდაცვალება)": {
+  "ru": "Св. Карапета",
+  "en": "St. Karapet"
+ },
+ "church::კუკიის ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Кукийской Богородицы",
+  "en": "Kukiis Theotokos"
+ },
+ "church::კუკიის ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Кукийской Богородицы",
+  "en": "Kukiis Theotokos"
+ },
+ "church::მეიდნის წმ. გიორგის/ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Мейданской Св. Георгия/Богородицы",
+  "en": "Meidani St. George/Theotokos"
+ },
+ "church::მეიდნის წმ. გიორგის/ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Мейданской Св. Георгия/Богородицы",
+  "en": "Meidani St. George/Theotokos"
+ },
+ "church::წმ. სარქისის (ჯვრისწერა)": {
+  "ru": "Св. Саркиса",
+  "en": "St. Sarkis"
+ },
+ "church::წმ. სარქისის (გარდაცვალება)": {
+  "ru": "Св. Саркиса",
+  "en": "St. Sarkis"
+ },
+ "church::ქამოიანის წმ. გიორგის (ჯვრისწერა)": {
+  "ru": "Камоянской Св. Георгия",
+  "en": "Kamoyani St. George"
+ },
+ "church::ქამოიანის წმ. გიორგის (გარდაცვალება)": {
+  "ru": "Камоянской Св. Георгия",
+  "en": "Kamoyani St. George"
+ },
+ "church::ქარაფის წმ. გიორგის (ჯვრისწერა)": {
+  "ru": "Св. Георгия Карафисской (браков)",
+  "en": "St. George of Karaphis (marriages)"
+ },
+ "church::ქარაფის წმ. გიორგის (გარდაცვალება)": {
+  "ru": "Св. Георгия Карафисской (умерших)",
+  "en": "St. George of Karaphis (deaths)"
+ },
+ "church::შამქორის ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Богородицы Шамхорской (браков)",
+  "en": "Theotokos of Shamkhor (marriages)"
+ },
+ "church::შამქორის ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Богородицы Шамхорской (умерших)",
+  "en": "Theotokos of Shamkhor (deaths)"
+ },
+ "church::ჩუღურეთის ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Богородицы Чугуретской (браков)",
+  "en": "Theotokos of Chughureti (marriages)"
+ },
+ "church::ჩუღურეთის ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Богородицы Чугуретской (умерших)",
+  "en": "Theotokos of Chughureti (deaths)"
+ },
+ "church::ჯიგრაშენის ღვთისმშობლის (ჯვრისწერა)": {
+  "ru": "Богородицы Джиграшенской (браков)",
+  "en": "Theotokos of Jigrashani (marriages)"
+ },
+ "church::ჯიგრაშენის ღვთისმშობლის (გარდაცვალება)": {
+  "ru": "Богородицы Джиграшенской (умерших)",
+  "en": "Theotokos of Jigrashani (deaths)"
+ },
+ "church::ჰრეშტაკაპერტის მთავარანგელოზის (ჯვრისწერა)": {
+  "ru": "Архангела Хрештакапертской (браков)",
+  "en": "Archangel of Khreshtakaperti (marriages)"
+ },
+ "church::ჰრეშტაკაპერტის მთავარანგელოზის (გარდაცვალება)": {
+  "ru": "Архангела Хрештакапертской (умерших)",
+  "en": "Archangel of Khreshtakaperti (deaths)"
+ },
+ "church::ამიერკავკასიის რკინიგზელთა აღდგომის": {
+  "ru": "Воскресенская Закавказских железнодорожников",
+  "en": "Resurrection of Transcaucasian Railwaymen"
+ },
+ "church::დავრდომილთა მეორე ხატის": {
+  "ru": "Второго образа Даврдомильской",
+  "en": "Second Icon of Davrdomili"
+ },
+ "church::ზემო ავჭალის წმ. იოანე ნათლისმცემლის": {
+  "ru": "Св. Иоанна Крестителя Земо-Авчальской",
+  "en": "St. John the Baptist of Zemo Avchala"
+ },
+ "church::ქვემო ავჭალის მთავარანგელოზის": {
+  "ru": "Архангела Квемо-Авчальской",
+  "en": "Archangel of Kvemo Avchala"
+ },
+ "church::გლდანის წმ. გიორგის": {
+  "ru": "Св. Георгия Глданской",
+  "en": "St. George of Gldani"
+ },
+ "church::გლდანის წმ. გრიგოლ ღვთისმეტყველის": {
+  "ru": "Св. Григория Богослова Глданской",
+  "en": "St. Gregory the Theologian of Gldani"
+ },
+ "church::დიღმის წმ. მარინეს": {
+  "ru": "Св. Марины Дигомской",
+  "en": "St. Marina of Digomi"
+ },
+ "church::დიდი ლილოს ღვთისმშობლის": {
+  "ru": "Богородицы Диди-Лилоской",
+  "en": "Theotokos of Didi Lilo"
+ },
+ "church::თელოვანის წმ. ნინოს": {
+  "ru": "Св. Нины Телованской",
+  "en": "St. Nino of Telovani"
+ },
+ "church::პატარა ლილოს წმ. გიორგის": {
+  "ru": "Св. Георгия Патара-Лилоской",
+  "en": "St. George of Patara Lilo"
+ },
+ "church::წავკისის წმ. მარინეს": {
+  "ru": "Св. Марины Цавкисской",
+  "en": "St. Marina of Tsavkisi"
+ },
+ "church::წყნეთის წმ. გიორგის": {
+  "ru": "Св. Георгия Цкнетской",
+  "en": "St. George of Tskneti"
+ },
+ "uezd::თბილისის მაზრა": {
+  "ru": "Тифлисский уезд",
+  "en": "Tiflis Uezd"
+ },
+ "settlement::ალექსანდროპოლი": {
+  "ru": "Александрополь",
+  "en": "Alexandropol"
+ },
+ "settlement::ალტაგაჩი": {
+  "ru": "Алтагач",
+  "en": "Altagach"
+ },
+ "settlement::ბაიანდური": {
+  "ru": "Баяндури",
+  "en": "Bayanduri"
+ },
+ "settlement::ბაინდური": {
+  "ru": "Баиндури",
+  "en": "Bainduri"
+ },
+ "settlement::გლდანი": {
+  "ru": "Глдани",
+  "en": "Gldani"
+ },
+ "settlement::დიდებაანთკარი": {
+  "ru": "Дидебаанткари",
+  "en": "Didebaantkari"
+ },
+ "settlement::ელიზაბეტთალი (ასურეთი)": {
+  "ru": "Елизаветталь (Асурети)",
+  "en": "Elizabethtal (Asureti)"
+ },
+ "settlement::ელიზავეტპოლსკი": {
+  "ru": "Елизаветпольский",
+  "en": "Elizavetpolsky"
+ },
+ "church::წმ. ზაქარიასა და ელისაბედის": {
+  "ru": "Св. Захарии и Елисаветы",
+  "en": "St. Zacharias and Elizabeth"
+ },
+ "church::ანჩისხატი (ღვთისმშობლის)": {
+  "ru": "Анчисхати (Богородицы)",
+  "en": "Anchiskhati (Theotokos)"
+ },
+ "church::იერუსალიმის წმ. ჯვრის ამაღლების": {
+  "ru": "Иерусалимская Св. Креста Воздвижения",
+  "en": "Jerusalem Holy Cross Exaltation"
+ },
+ "church::სასახლისკარის წმ. გიორგის": {
+  "ru": "Сасахлискарская Св. Георгия",
+  "en": "Sasakhliskari St. George"
+ },
+ "church::ღვთისმშობლის მიძინების/სიონი": {
+  "ru": "Успенская/Сионская",
+  "en": "Dormition/Sioni"
+ },
+ "settlement::თბილისი/ავლაბარი": {
+  "ru": "Тифлис/Авлабар",
+  "en": "Tiflis/Avlabar"
+ },
+ "settlement::თბილისი/გარეთუბანი": {
+  "ru": "Тифлис/Гаретубани",
+  "en": "Tiflis/Garetubani"
+ },
+ "settlement::თბილისი/კუკია": {
+  "ru": "Тифлис/Кукия",
+  "en": "Tiflis/Kukia"
+ },
+ "church::ჯვრის/წმ. ნიკოლოზის": {
+  "ru": "Крестовоздвиженская/Св. Николая",
+  "en": "Exaltation of the Cross/St. Nicholas"
+ },
+ "settlement::თბილისი/მთაწმინდა": {
+  "ru": "Тифлис/Мтацминда",
+  "en": "Tiflis/Mtatsminda"
+ },
+ "settlement::თბილისი/ნავთლუღი": {
+  "ru": "Тифлис/Навтлуги",
+  "en": "Tiflis/Navtlugi"
+ },
+ "settlement::თბილისი/ნაქულბაქევი": {
+  "ru": "Тифлис/Накулбакеви",
+  "en": "Tiflis/Nakulbakevi"
+ },
+ "settlement::თბილისი/სოლოლაკი": {
+  "ru": "Тифлис/Сололаки",
+  "en": "Tiflis/Sololaki"
+ },
+ "settlement::თბილისი/ჩუღურეთი": {
+  "ru": "Тифлис/Чугурети",
+  "en": "Tiflis/Chughureti"
+ },
+ "settlement::იაღდანი": {
+  "ru": "Ягдани",
+  "en": "Yagdani"
+ },
+ "settlement::კაისალარი": {
+  "ru": "Каисалари",
+  "en": "Kaisalary"
+ },
+ "settlement::კოსტრონი და კვირაცხოველი": {
+  "ru": "Кострони и Квирацховели",
+  "en": "Kostroni and Kviratskhoveli"
+ },
+ "church::წმ. კონსტანტინეს/ წმ. თომას": {
+  "ru": "Св. Константина/Св. Фомы",
+  "en": "St. Constantine/St. Thomas"
+ },
+ "settlement::ლენქორანი": {
+  "ru": "Ленкорань",
+  "en": "Lenkoran"
+ },
+ "church::წმ. ვლადიმირის": {
+  "ru": "Св. Владимира",
+  "en": "St. Vladimir"
+ },
+ "settlement::ნოვოროსისკი": {
+  "ru": "Новороссийск",
+  "en": "Novorossiysk"
+ },
+ "settlement::ნუხა": {
+  "ru": "Нуха",
+  "en": "Nukha"
+ },
+ "settlement::ორდუბათი": {
+  "ru": "Ордубад",
+  "en": "Ordubad"
+ },
+ "church::უფლის": {
+  "ru": "Господня",
+  "en": "Lord's"
+ },
+ "church::წმ. სვიმეონ მესვეტის": {
+  "ru": "Св. Симеона Столпника",
+  "en": "St. Simeon Stylites"
+ },
+ "settlement::სანთა და კირიაკი (ახალშენი)": {
+  "ru": "Санта и Кириаки (Ахалшени)",
+  "en": "Santa and Kiriaki (Akhalasheni)"
+ },
+ "settlement::ძმიანთკარი": {
+  "ru": "Дзмиантк’ари",
+  "en": "Dzmiantk'ari"
+ },
+ "settlement::წალასყური": {
+  "ru": "Цаласкури",
+  "en": "Tsalaskuri"
+ },
+ "settlement::აძვისი": {
+  "ru": "Адзвизи",
+  "en": "Adzvizi"
+ },
+ "settlement::გორისოქონა": {
+  "ru": "Горисокона",
+  "en": "Gorisokona"
+ },
+ "settlement::კოღოთა": {
+  "ru": "Когота",
+  "en": "Kogota"
+ },
+ "settlement::წაქვა": {
+  "ru": "Цаква",
+  "en": "Tsakva"
+ },
+ "church::მაცხოვრის აღდგომის": {
+  "ru": "Воскресения Спасителя",
+  "en": "Resurrection of the Savior"
+ },
+ "settlement::ბაიდაური": {
+  "ru": "Баидаури",
+  "en": "Baidauri"
+ },
+ "church::კვირაცხოვლის/წმ. თომას": {
+  "ru": "Квирацховлис/Св. Фомы",
+  "en": "Kviratskhovlis/St. Thomas"
+ },
+ "settlement::ვაქირი (?)": {
+  "ru": "Вакири",
+  "en": "Vakiri"
+ },
+ "settlement::მაჩხაანი": {
+  "ru": "Мачхаани",
+  "en": "Machkhaani"
+ },
+ "settlement::ციხი (?)": {
+  "ru": "Цихи",
+  "en": "Tsikhi"
+ },
+ "church::წმ. ნინოს/წმ. თომას/მაცხოვრის ფერიცვალების": {
+  "ru": "Св. Нины/Св. Фомы/Преображения Спасителя",
+  "en": "St. Nino/St. Thomas/Transfiguration of the Savior"
+ },
+ "settlement::პანკისი": {
+  "ru": "Панкиси",
+  "en": "Pankisi"
+ },
+ "church::წმ. კონსტანტინეს": {
+  "ru": "Св. Константина",
+  "en": "St. Constantine"
+ },
+ "church::წმ. ლაზარეს": {
+  "ru": "Св. Лазаря",
+  "en": "St. Lazarus"
+ },
+ "settlement::სიმონიანთხევი /ერწო/": {
+  "ru": "Симониантхеви /Эрцо/",
+  "en": "Simoniantkhevi /Ertso/"
+ },
+ "settlement::ტოღნიანი": {
+  "ru": "Тогниани",
+  "en": "Togniani"
+ },
+ "settlement::ფაშიანი /ფაშაანი/": {
+  "ru": "Пашиани",
+  "en": "Pashiani"
+ },
+ "settlement::ფხაკალყურე": {
+  "ru": "Пхакалхуре",
+  "en": "Pkhakalqure"
+ },
+ "settlement::ალეურთა": {
+  "ru": "Алеурта",
+  "en": "Aleurta"
+ },
+ "settlement::ალვანი (ეწიბო)": {
+  "ru": "Алвани (Эцибо)",
+  "en": "Alvani (Etsibo)"
+ },
+ "settlement::დიდებიანთკარი": {
+  "ru": "Дидебиантк’ари",
+  "en": "Didebiantk’ari"
+ },
+ "settlement::დოლათქედი": {
+  "ru": "Долатхеди",
+  "en": "Dolatkhedi"
+ },
+ "settlement::კორინთო /ალვანი/": {
+  "ru": "Коринто (Алвани)",
+  "en": "Korinto (Alvani)"
+ },
+ "church::წმ. გრიგოლ წინასწარმეტყველის": {
+  "ru": "Св. Григория Пророка",
+  "en": "St. Gregory the Prophet"
+ },
+ "settlement::ნაციხვარი /ჩაღმათხევი/": {
+  "ru": "Нацихвари (Чагматхеви)",
+  "en": "Natsikhvari (Chagmatkhevi)"
+ },
+ "settlement::უკანფშავი": {
+  "ru": "Уканпшави",
+  "en": "Ukanpshavi"
+ },
+ "settlement::ღვათხევი ?": {
+  "ru": "Гватхеви",
+  "en": "Gvatkhevi"
+ },
+ "settlement::ჩოქურთკარი /ნაღვარევი/": {
+  "ru": "Чокуртк’ари (Нагвареви)",
+  "en": "Chokurtk’ari (Nagvarevi)"
+ },
+ "settlement::ჭიკათკარი": {
+  "ru": "Чик’атк’ари",
+  "en": "Ch’ik’atk’ari"
+ },
+ "settlement::გაენათი": {
+  "ru": "Гаенати",
+  "en": "Gaenati"
+ },
+ "settlement::გამოღმა თუზი": {
+  "ru": "Гамогма Тузи",
+  "en": "Gamogma Tuzi"
+ },
+ "settlement::გაღმა თუზი": {
+  "ru": "Гагма Тузи",
+  "en": "Gagma Tuzi"
+ },
+ "church::მაცხოვრის ფერიცვალების/წმ. გიორგის": {
+  "ru": "Преображения Спасителя/Св. Георгия",
+  "en": "Transfiguration of the Savior/St. George"
+ },
+ "settlement::დილიკაური-ქველობანი": {
+  "ru": "Диликаури-Квелобани",
+  "en": "Dilikauri-Kvelobani"
+ },
+ "settlement::თავასა-ოქონა": {
+  "ru": "Таваса-Ок’она",
+  "en": "Tavasa-Ok’ona"
+ },
+ "settlement::თხილწყარო": {
+  "ru": "Тхилцкаро",
+  "en": "Tkhiltsqaro"
+ },
+ "settlement::კითხიჯი": {
+  "ru": "Китхиджи",
+  "en": "Kithiji"
+ },
+ "settlement::კოკა": {
+  "ru": "Кока",
+  "en": "Koka"
+ },
+ "settlement::მაღალაური": {
+  "ru": "Магалаури",
+  "en": "Magalauri"
+ },
+ "settlement::მესხეთი": {
+  "ru": "Месхети",
+  "en": "Meskheti"
+ },
+ "church::აღდგომის": {
+  "ru": "Воскресенская",
+  "en": "Resurrection"
+ },
+ "settlement::საკურწე": {
+  "ru": "Сакурце",
+  "en": "Sakurtse"
+ },
+ "settlement::ფერსათი-შუბანი": {
+  "ru": "Ферсати-Шубани",
+  "en": "Fersati-Shubani"
+ },
+ "settlement::ქვედა ზეგანი": {
+  "ru": "Кведа Зегани",
+  "en": "Kveda Zegani"
+ },
+ "church::მთავარანგელოზის ტაძარი": {
+  "ru": "Архангела",
+  "en": "Archangel"
+ },
+ "church::სასაფლაოს": {
+  "ru": "Кладбищенская",
+  "en": "Cemetery"
+ },
+ "settlement::შუყერი": {
+  "ru": "Шукери",
+  "en": "Shukeri"
+ },
+ "settlement::ჩხარი/ოქონის": {
+  "ru": "Чхари/Окони",
+  "en": "Chkhari/Okoni"
+ },
+ "settlement::ჭალატყე": {
+  "ru": "Чалатке",
+  "en": "Chalatke"
+ },
+ "settlement::ჯვარი-ეწერი": {
+  "ru": "Джвари-Эцери",
+  "en": "Jvari-Etseri"
+ },
+ "settlement::ზედა წესი": {
+  "ru": "Зеда Цеси",
+  "en": "Zeda Tsesi"
+ },
+ "settlement::კუდარო": {
+  "ru": "Кударо",
+  "en": "Kudaro"
+ },
+ "settlement::სადმელი I": {
+  "ru": "Садмели I",
+  "en": "Sadmeli I"
+ },
+ "settlement::სადმელი II": {
+  "ru": "Садмели II",
+  "en": "Sadmeli II"
+ },
+ "settlement::სამთისი II": {
+  "ru": "Самтиси II",
+  "en": "Samtisi II"
+ },
+ "settlement::სხვავა I": {
+  "ru": "Схвава I",
+  "en": "Skhvava I"
+ },
+ "settlement::სხვავა II": {
+  "ru": "Схвава II",
+  "en": "Skhvava II"
+ },
+ "settlement::სხვავა III": {
+  "ru": "Схвава III",
+  "en": "Skhvava III"
+ },
+ "settlement::ფარანეში": {
+  "ru": "Фаранеши",
+  "en": "Faraneshi"
+ },
+ "church::ბარაკონის ღვთისმშობლის მიძინების": {
+  "ru": "Бараконская Успенская Богородицы",
+  "en": "Barakoni Dormition of Theotokos"
+ },
+ "settlement::ხონჭიორი I": {
+  "ru": "Хончиори I",
+  "en": "Khonchiori I"
+ },
+ "settlement::ხონჭიორი II": {
+  "ru": "Хончиори II",
+  "en": "Khonchiori II"
+ },
+ "settlement::ზედა მესხეთი": {
+  "ru": "Зеда Месхети",
+  "en": "Zeda Meskheti"
+ },
+ "church::წმ. სვიმონის": {
+  "ru": "Св. Симона",
+  "en": "St. Simon"
+ },
+ "settlement::ნახახულევი": {
+  "ru": "Нахахулеви",
+  "en": "Nakhakhulevi"
+ },
+ "church::ამაღლების/წმ. გიორგის": {
+  "ru": "Вознесения/Св. Георгия",
+  "en": "Ascension/St. George"
+ },
+ "settlement::ფარცხანაყანევი ახალი": {
+  "ru": "Парцханаканаеви Ахали",
+  "en": "Partskhanakanaevi Akhali"
+ },
+ "settlement::ძლევისჯვარი": {
+  "ru": "Дзлевисджвари",
+  "en": "Dzlevisjvari"
+ },
+ "church::წმ. ილიას": {
+  "ru": "Св. Илии",
+  "en": "St. Elijah"
+ },
+ "settlement::გეზრული": {
+  "ru": "Гезрули",
+  "en": "Gezruli"
+ },
+ "settlement::დარბაიძეები": {
+  "ru": "Дарбаидзееби",
+  "en": "Darbaidzeebi"
+ },
+ "settlement::ეფო": {
+  "ru": "Эфо",
+  "en": "Efo"
+ },
+ "settlement::თაბაგრები": {
+  "ru": "Табагреби",
+  "en": "Tabagrebi"
+ },
+ "settlement::თვალუეთი": {
+  "ru": "Твалуэти",
+  "en": "Tvalueti"
+ },
+ "settlement::ირტავაზა": {
+  "ru": "Иртаваза",
+  "en": "Irtavaza"
+ },
+ "settlement::კალუათი": {
+  "ru": "Калуати",
+  "en": "Kaluati"
+ },
+ "settlement::სარქველთუბანი": {
+  "ru": "Сарквелттубани",
+  "en": "Sarkveltubani"
+ },
+ "settlement::ფაცხი": {
+  "ru": "Пацхи",
+  "en": "Patskhi"
+ },
+ "settlement::კოთელია": {
+  "ru": "Котелиа",
+  "en": "Kotelia"
+ },
+ "settlement::კვალით-დანეთი": {
+  "ru": "Квалит-Данети",
+  "en": "Kvalit-Daneti"
+ },
+ "settlement::კუშუპოური (კუშუბაური)": {
+  "ru": "Кушупоури (Кушубаури)",
+  "en": "Kushupouri (Kushubauri)"
+ },
+ "church::მაცხორის": {
+  "ru": "Спасителя",
+  "en": "Savior"
+ },
+ "settlement::ართანი": {
+  "ru": "Артани",
+  "en": "Artani"
+ },
+ "settlement::ნაქალაქარი (ნაქალაქევი)": {
+  "ru": "Накалакари (Накалакеви)",
+  "en": "Nakalakari (Nakalakevi)"
+ },
+ "settlement::ნაციხარი": {
+  "ru": "Нацихари",
+  "en": "Natsikhari"
+ },
+ "settlement::ბომბოთი": {
+  "ru": "Бомботи",
+  "en": "Bomboti"
+ },
+ "church::მაცხოვრის/ წმ. იოანე ნათლისმცემლის": {
+  "ru": "Спасителя/Св. Иоанна Крестителя",
+  "en": "Savior/St. John the Baptist"
+ },
+ "settlement::ილორი-საჭილაო": {
+  "ru": "Илори-Сачилау",
+  "en": "Ilori-Sachilao"
+ },
+ "settlement::კადარი": {
+  "ru": "Кадари",
+  "en": "Kadari"
+ },
+ "settlement::კვათანა": {
+  "ru": "Кватана",
+  "en": "Kvatana"
+ },
+ "settlement::ლეციცხვაია": {
+  "ru": "Лецицхвая",
+  "en": "Letsitskhvaya"
+ },
+ "settlement::ნაგვაზავო": {
+  "ru": "Нагвазаво",
+  "en": "Nagvazavo"
+ },
+ "settlement::ნალეფსავო": {
+  "ru": "Налепсаво",
+  "en": "Nalepsavo"
+ },
+ "settlement::ნახარებავო": {
+  "ru": "Нахаребаво",
+  "en": "Nakharebavo"
+ },
+ "church::წმ. კვირიკესა და ივლიტას/ წმ. კონსტანტინეს": {
+  "ru": "Св. Квирике и Ивлиты/Св. Константина",
+  "en": "St. Kvirike and Ivlita/St. Constantine"
+ },
+ "church::წმ. თეოდორე ტირონის/წმ. გიორგის": {
+  "ru": "Св. Феодора Тирона/Св. Георгия",
+  "en": "St. Theodore Tyron/St. George"
+ },
+ "settlement::საგვათუო": {
+  "ru": "Сагватуо",
+  "en": "Sagvatuo"
+ },
+ "settlement::საკაჭარავო": {
+  "ru": "Сакачараво",
+  "en": "Sakacharavo"
+ },
+ "settlement::საწულეისკირიო": {
+  "ru": "Сацулеискирио",
+  "en": "Satsuleiskirio"
+ },
+ "settlement::სირიაჩქონი": {
+  "ru": "Сирячкони",
+  "en": "Siryachkoni"
+ },
+ "church::მაცხოვრის/მთავარანგელოზის": {
+  "ru": "Спасителя/Архангела",
+  "en": "Savior/Archangel"
+ },
+ "settlement::შხეფი": {
+  "ru": "Шхефи",
+  "en": "Shkhefi"
+ },
+ "church::მთავარანგელოზის (I)": {
+  "ru": "Архангела (I)",
+  "en": "Archangel (I)"
+ },
+ "church::მთავარანგელოზის (II)": {
+  "ru": "Архангела (II)",
+  "en": "Archangel (II)"
+ },
+ "church::წმ. გიორგის/მაცხოვრის ჯვარცმის": {
+  "ru": "Св. Георгия/Распятия Спасителя",
+  "en": "St. George/Crucifixion of the Savior"
+ },
+ "church::მთავარანგელოზის/ღვთისმშობლის": {
+  "ru": "Архангела/Богородицы",
+  "en": "Archangel/Theotokos"
+ },
+ "settlement::ზედა ლუხვანო": {
+  "ru": "Зэда Лухвано",
+  "en": "Zeda Lukhvano"
+ },
+ "settlement::ნაყურალეში (ნაკურალეში)": {
+  "ru": "Накуралеши",
+  "en": "Nakuraleshi"
+ },
+ "settlement::სპათაგორი": {
+  "ru": "Спатагори",
+  "en": "Spatagori"
+ },
+ "settlement::ქვედა ლუხვანო": {
+  "ru": "Кведа Лухвано",
+  "en": "Kveda Lukhvano"
+ },
+ "settlement::ქორენიში": {
+  "ru": "Хорениши",
+  "en": "Khorenishi"
+ },
+ "settlement::ღვირიში": {
+  "ru": "Гвириши",
+  "en": "Gvirishi"
+ },
+ "settlement::ჩოლური": {
+  "ru": "Чолури",
+  "en": "Choluri"
+ },
+ "settlement::წიფერჩი": {
+  "ru": "Циферчи",
+  "en": "Tsiferchi"
+ },
+ "church::წმ. მოწამე სტეფანეს/წმ. იოანე ნათლისმცემლის": {
+  "ru": "Св. Мученика Стефана/Св. Иоанна Крестителя",
+  "en": "St. Martyr Stephen/St. John the Baptist"
+ },
+ "church::წმ. მოწამე სტეფანეს": {
+  "ru": "Св. Мученика Стефана",
+  "en": "St. Martyr Stephen"
+ },
+ "settlement::თამაკონი": {
+  "ru": "Тамакони",
+  "en": "Tamakoni"
+ },
+ "settlement::კირცხი-გაშიფერდი": {
+  "ru": "Кирцхи-Гашиферди",
+  "en": "Kirtskhi-Gashiferdi"
+ },
+ "settlement::კორცხო": {
+  "ru": "Корцхо",
+  "en": "Kortskho"
+ },
+ "settlement::ლედგებე": {
+  "ru": "Ледгебе",
+  "en": "Ledgebe"
+ },
+ "settlement::ნაკიანი": {
+  "ru": "Накиани",
+  "en": "Nakiani"
+ },
+ "settlement::ნიქოსი": {
+  "ru": "Нихоси",
+  "en": "Nikhosi"
+ },
+ "settlement::საგაბესკირიო": {
+  "ru": "Сагабескирио",
+  "en": "Sagabeskirio"
+ },
+ "church::მაცხოვრის/წმ. გიორგის": {
+  "ru": "Спаса/Св. Георгия",
+  "en": "Savior/St. George"
+ },
+ "settlement::საფაღავო": {
+  "ru": "Сафагаво",
+  "en": "Safagavo"
+ },
+ "settlement::საჭოჭუო": {
+  "ru": "Сачочуо",
+  "en": "Sachochuo"
+ },
+ "settlement::უფალკარი": {
+  "ru": "Уфалкари",
+  "en": "Ufalkari"
+ },
+ "church::წმ. გიორგის/წმ. მარინეს": {
+  "ru": "Св. Георгия/Св. Марины",
+  "en": "St. George/St. Marina"
+ },
+ "settlement::უჩაშონა": {
+  "ru": "Учашона",
+  "en": "Uchashona"
+ },
+ "settlement::ფუქი": {
+  "ru": "Фуки",
+  "en": "Fuki"
+ },
+ "settlement::ქვალონი": {
+  "ru": "Квалони",
+  "en": "Kvaloni"
+ },
+ "settlement::ქვატახტი (ჭაქვინჯი)": {
+  "ru": "Квататхти (Чаквинджи)",
+  "en": "Kvatakhti (Chakvinji)"
+ },
+ "settlement::ბულუხაური": {
+  "ru": "Булухаури",
+  "en": "Bulukhauri"
+ },
+ "settlement::გეშმანეთი": {
+  "ru": "Гешманети",
+  "en": "Geshmaneti"
+ },
+ "settlement::გვამბრითი": {
+  "ru": "Гвамбрити",
+  "en": "Gvambriti"
+ },
+ "settlement::გორისფერდი": {
+  "ru": "Горисферди",
+  "en": "Gorisferdi"
+ },
+ "settlement::ესაკეთი (?)": {
+  "ru": "Эсакети",
+  "en": "Esaketi"
+ },
+ "settlement::ექადია": {
+  "ru": "Экадиа",
+  "en": "Ekadia"
+ },
+ "settlement::ზემო ლანჩხუთი": {
+  "ru": "Земо Ланчхути",
+  "en": "Zemo Lanchkhuti"
+ },
+ "settlement::კაცხი (?)": {
+  "ru": "Кацхи",
+  "en": "Katskhi"
+ },
+ "settlement::კახური (?)": {
+  "ru": "Кахури",
+  "en": "Kakhuri"
+ },
+ "church::წმ. იაკობ მოციქულის": {
+  "ru": "Св. Апостола Иакова",
+  "en": "St. James the Apostle"
+ },
+ "settlement::მონასტერი (?)": {
+  "ru": "Монастырь",
+  "en": "Monasteri"
+ },
+ "settlement::ნიკოლაევი (?)": {
+  "ru": "Николаев",
+  "en": "Nikolaev"
+ },
+ "settlement::ორაგვე": {
+  "ru": "Орагве",
+  "en": "Oragve"
+ },
+ "settlement::ფიჩხისჯვარი": {
+  "ru": "Пичхисджвари",
+  "en": "Pichkhisjvari"
+ },
+ "settlement::ქაიჯვარი": {
+  "ru": "Каиджвари",
+  "en": "Kaijvari"
+ },
+ "settlement::ქვემო ჩიბათი": {
+  "ru": "Квемо-Чибати",
+  "en": "Kvemo Chibati"
+ },
+ "church::წმ. ანდრიას": {
+  "ru": "Св. Андрея",
+  "en": "St. Andrew"
+ },
+ "settlement::ყელა": {
+  "ru": "Кела",
+  "en": "Kela"
+ },
+ "church::ლომისკარის წმ. გიორგის": {
+  "ru": "Ломискарская Св. Георгия",
+  "en": "Lomiskari St. George"
+ },
+ "settlement::ჩანჩათი/ჩონჩათი": {
+  "ru": "Чанчати/Чончати",
+  "en": "Chanchati/Chonchati"
+ },
+ "settlement::ძლევისკარი": {
+  "ru": "Дзлевискари",
+  "en": "Dzleviskari"
+ },
+ "settlement::ჭაბუკჯვარი": {
+  "ru": "Чабукджвари",
+  "en": "Chabukjvari"
+ },
+ "settlement::ჯუნჯუათი (ჯუნეწერი)": {
+  "ru": "Джунджуати (Джунецери)",
+  "en": "Junjuati (Junetseri)"
+ },
+ "uezd::ზაქათალას ოლქი": {
+  "ru": "Закатальский округ",
+  "en": "Zakatal Uezd"
+ },
+ "settlement::ბელაქანი": {
+  "ru": "Белаканы",
+  "en": "Belakany"
+ },
+ "settlement::ენგიანი": {
+  "ru": "Энгианы",
+  "en": "Engiany"
+ },
+ "settlement::თასმალო": {
+  "ru": "Тасмало",
+  "en": "Tasmalo"
+ },
+ "settlement::ყორაღანი": {
+  "ru": "Кораганы",
+  "en": "Koragany"
+ },
+ "settlement::დიდი არაქალი": {
+  "ru": "Большой Аракал",
+  "en": "Didi Arakali"
+ },
+ "settlement::დიდი გონდრიო": {
+  "ru": "Большой Гондрио",
+  "en": "Didi Gondrio"
+ },
+ "settlement::დილიფი": {
+  "ru": "Дилифи",
+  "en": "Dilifi"
+ },
+ "settlement::ეშტია": {
+  "ru": "Эштия",
+  "en": "Eshtia"
+ },
+ "settlement::თორია": {
+  "ru": "Тория",
+  "en": "Toria"
+ },
+ "settlement::მამწვარა და ყულალისი": {
+  "ru": "Мамцвара и Кулалисы",
+  "en": "Mamtsvara and Kulalisi"
+ },
+ "church::წმ. ღევონდის": {
+  "ru": "Св. Гевонда",
+  "en": "St. Gevond"
+ },
+ "settlement::ხოჯაბეგი (ნინოწმინდა)": {
+  "ru": "Ходжабеги (Ниноцминда)",
+  "en": "Khojabegi (Ninotsminda)"
+ },
+ "settlement::თელეთი": {
+  "ru": "Телети",
+  "en": "Teleti"
+ },
+ "church::წმ. გიორგის/წმ. სამების": {
+  "ru": "Св. Георгия/Св. Троицы",
+  "en": "St. George/Holy Trinity"
+ },
+ "church::წმ. ანტონის": {
+  "ru": "Св. Антония",
+  "en": "St. Anthony"
+ },
+ "church::ღვთისმშობლის ხარების/წმ. გიორგის": {
+  "ru": "Благовещения Богородицы/Св. Георгия",
+  "en": "Annunciation of Theotokos/St. George"
+ },
+ "settlement::სართიჭალა (მარიენფელდი)": {
+  "ru": "Сартичала (Мариенфельд)",
+  "en": "Sartichala (Marienfeld)"
+ },
+ "church::ევანგელისტურ-ლუთერანული": {
+  "ru": "Евангелическо-лютеранская",
+  "en": "Evangelical-Lutheran"
+ },
+ "church::წმ. დავით გარეჯელის": {
+  "ru": "Св. Давида Гареджийского",
+  "en": "St. David Garejeli"
+ }
+}
