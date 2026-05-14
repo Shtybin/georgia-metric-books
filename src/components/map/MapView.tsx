@@ -1247,6 +1247,59 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 </ul>
               </div>
             )}
+
+            {hasHistory && (
+              <details className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 open:bg-amber-500/10">
+                <summary className="cursor-pointer list-none px-2.5 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
+                  ▾ {T.historyTitle}
+                </summary>
+                <div className="space-y-2 px-2.5 pb-2.5 pt-1 text-xs">
+                  {histName && (
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        {T.historyFormer}
+                      </div>
+                      <div className="text-foreground">{histName}</div>
+                    </div>
+                  )}
+                  {noteText && (
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        {T.historyNote}
+                      </div>
+                      <div className="whitespace-pre-line text-foreground">{noteText}</div>
+                    </div>
+                  )}
+                  {mismatches.length > 0 && (
+                    <div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        ⚠ {T.historyMatchTitle}
+                      </div>
+                      <p className="mb-1 text-muted-foreground">{T.historyMatchHint}</p>
+                      <ul className="space-y-1">
+                        {mismatches.map((m) => (
+                          <li key={m.id}>
+                            <button
+                              onClick={() => {
+                                const f = data?.features.find((x) => (x.id as number) === m.id);
+                                if (f) selectFeature(f as Feature);
+                              }}
+                              className="w-full rounded border border-border bg-background/60 px-2 py-1 text-left hover:bg-accent"
+                            >
+                              <div className="font-medium">{m.settlement}</div>
+                              <div className="text-[10px] text-muted-foreground">
+                                {[m.uezd, m.region].filter(Boolean).join(" · ")}
+                                {m.years ? ` · ${m.years}` : ""}
+                              </div>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </details>
+            )}
           </div>
 
           {/* Sticky footer */}
