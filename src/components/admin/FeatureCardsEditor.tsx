@@ -431,7 +431,7 @@ function EditDialog({
         : "";
 
   function setLang(
-    field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote",
+    field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "aliases" | "discrepancyNote",
     lang: "ru" | "en" | "ka",
     value: string,
   ) {
