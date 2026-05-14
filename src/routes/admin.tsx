@@ -6,7 +6,8 @@ import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { OsmLeafletDialog } from "@/components/map/OsmLeafletDialog";
 import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
 import { UezdCorrectionsModeration } from "@/components/admin/UezdCorrectionsModeration";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag } from "lucide-react";
+import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText } from "lucide-react";
 
 interface OsmActionProps {
   lat: number;
