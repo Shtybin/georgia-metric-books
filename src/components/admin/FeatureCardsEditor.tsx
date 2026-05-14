@@ -19,7 +19,7 @@ import {
   type FeatureOverride,
   type ValidationIssue,
 } from "@/lib/featureOverrides";
-import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle } from "lucide-react";
+import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle, Download } from "lucide-react";
 
 type BaseFeature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
