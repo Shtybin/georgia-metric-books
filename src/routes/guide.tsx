@@ -66,18 +66,25 @@ function GuidePage() {
         ) : !content ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (
-          <article
-            className="prose prose-neutral dark:prose-invert max-w-none
-              prose-headings:font-serif
-              prose-h1:text-3xl sm:prose-h1:text-4xl
-              prose-h2:mt-10 prose-h2:text-xl
-              prose-h3:mt-6 prose-h3:text-lg
-              prose-a:text-primary hover:prose-a:underline
-              prose-li:my-1
-              prose-hr:my-8
-              prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:text-[0.9em]"
-          >
-            <ReactMarkdown>{content}</ReactMarkdown>
+          <article className="max-w-none text-[15px] leading-relaxed text-foreground">
+            <ReactMarkdown
+              components={{
+                h1: (p) => <h1 className="mb-4 font-serif text-3xl font-semibold sm:text-4xl" {...p} />,
+                h2: (p) => <h2 className="mt-10 mb-3 font-serif text-xl font-semibold" {...p} />,
+                h3: (p) => <h3 className="mt-6 mb-2 font-serif text-lg font-semibold" {...p} />,
+                p: (p) => <p className="my-3 text-muted-foreground" {...p} />,
+                ul: (p) => <ul className="my-3 list-disc space-y-1 pl-6 text-muted-foreground" {...p} />,
+                ol: (p) => <ol className="my-3 list-decimal space-y-1 pl-6 text-muted-foreground" {...p} />,
+                li: (p) => <li className="leading-relaxed" {...p} />,
+                a: (p) => <a className="text-primary underline-offset-2 hover:underline" target="_blank" rel="noopener" {...p} />,
+                hr: () => <hr className="my-8 border-border" />,
+                strong: (p) => <strong className="font-semibold text-foreground" {...p} />,
+                code: (p) => <code className="rounded bg-muted px-1 py-0.5 text-[0.9em]" {...p} />,
+                blockquote: (p) => <blockquote className="my-4 border-l-2 border-border pl-4 italic text-muted-foreground" {...p} />,
+              }}
+            >
+              {content}
+            </ReactMarkdown>
           </article>
         )}
       </div>
