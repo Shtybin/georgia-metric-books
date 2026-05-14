@@ -181,7 +181,7 @@ export function FeatureImportDialog({
         const wb = XLSX.read(buf, { type: "array" });
         const ws = wb.Sheets[wb.SheetNames[0]];
         const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws, { defval: "", raw: false });
-        parsedRows = json.map((r) => {
+        parsedRows = json.map((r: Record<string, unknown>) => {
           const o: Row = {};
           for (const k of Object.keys(r)) o[k] = String(r[k] ?? "");
           return o;
