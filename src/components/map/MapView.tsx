@@ -1669,9 +1669,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 className="w-full"
                 onClick={() => setMissingDialogOpen(true)}
               >
-                ⚑ {T.suggestMissingAction}
               </Button>
-      </div>
+            </div>
+          </div>
 
           {/* Sticky footer */}
           <div className="border-t border-border px-4 py-3">
