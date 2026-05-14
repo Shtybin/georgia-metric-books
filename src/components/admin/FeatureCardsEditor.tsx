@@ -212,6 +212,9 @@ export function FeatureCardsEditor() {
           >
             <Download className="mr-1 h-4 w-4" /> Экспорт (все)
           </Button>
+          <Button size="sm" variant="outline" onClick={() => setImporting(true)}>
+            <Upload className="mr-1 h-4 w-4" /> Импорт CSV/Excel
+          </Button>
           <Button size="sm" onClick={() => setCreating(true)}>
             <Plus className="mr-1 h-4 w-4" /> Добавить точку
           </Button>
