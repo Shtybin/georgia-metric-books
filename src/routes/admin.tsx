@@ -246,8 +246,8 @@ function AdminPage() {
   }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
-    const { data: sess } = await supabase.auth.getSession();
-    const reviewer = sess.session?.user.id ?? null;
+    const { data: { user } } = await supabase.auth.getUser();
+    const reviewer = user?.id ?? null;
     const { error } = await supabase
       .from("problem_reports")
       .update({ status, reviewed_at: new Date().toISOString(), reviewed_by: reviewer })
