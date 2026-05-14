@@ -128,7 +128,7 @@ export const STRINGS = {
     subtitle: "Archival atlas 1819–1930",
     search: "Search settlement, church, uezd…",
     searchShort: "Search",
-    legend: "Start-year period",
+    legend: "Records start year",
     bucket: {
       "pre-1820": "before 1820",
       "1820-1835": "1821–1835",
