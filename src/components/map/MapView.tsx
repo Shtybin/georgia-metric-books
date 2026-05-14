@@ -1824,7 +1824,22 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </dl>
           </div>
         )}
+        </div>
       </div>
+
+      <Dialog open={docsOpen} onOpenChange={setDocsOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{T.docsTitle}</DialogTitle>
+          </DialogHeader>
+          <DialogDescription asChild>
+            <div
+              className="text-sm leading-relaxed text-foreground"
+              dangerouslySetInnerHTML={{ __html: T.docsBodyHtml }}
+            />
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
 
       {/* Size legend (bottom-left). Hidden when a point card is open
           (the card occupies the same corner) and on mobile (cramped). */}
