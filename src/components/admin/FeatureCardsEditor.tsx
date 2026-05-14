@@ -386,6 +386,19 @@ function EditDialog({
   const [data, setData] = useState<FeatureData>(() => row?.data ?? emptyFeatureData());
   const [publish, setPublish] = useState<boolean>(() => row?.override?.published ?? false);
   const [saving, setSaving] = useState(false);
+  const [showAllIssues, setShowAllIssues] = useState(false);
+
+  const issues = useMemo<ValidationIssue[]>(() => validateFeatureData(data), [data]);
+  const errors = issues.filter((i) => i.severity === "error");
+  const warnings = issues.filter((i) => i.severity === "warning");
+  const errFields = new Set(errors.map((i) => i.field));
+  const warnFields = new Set(warnings.map((i) => i.field));
+  const fieldClass = (f: ValidationIssue["field"]) =>
+    errFields.has(f)
+      ? "border-destructive focus-visible:ring-destructive"
+      : warnFields.has(f)
+        ? "border-amber-500 focus-visible:ring-amber-500"
+        : "";
 
   function setLang(
     field: "settlement" | "church" | "region" | "uezd" | "historicalName" | "discrepancyNote",
