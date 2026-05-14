@@ -212,6 +212,13 @@ export const STRINGS = {
         "All metric books on the map come from the National Historical Archive of Georgia (Tbilisi, 1 Vazha-Pshavela Ave). How to request documents and how the archive works — see the \u201CWhere to find documents?\u201D section at the bottom of the map.",
       metaTitle: "Georgian Parish Registers 1819–1930 · Archival Atlas",
       metaDesc: "An interactive map of Georgian parish metric books, 1819–1930: search, periods, 10 km neighbourhood analysis.",
+      historyTitle: "Historical name and discrepancies",
+      historyFormer: "Formerly",
+      historyNote: "Editor's note",
+      historyMatchTitle: "Possible match in another uezd",
+      historyMatchHint: "The dataset contains a settlement with the same name in a different uezd. Check whether this is the same place under a changed administrative attribution.",
+      historyBadgeFormer: "former name",
+      historyBadgeMatch: "possible match",
     },
   },
   ka: {
