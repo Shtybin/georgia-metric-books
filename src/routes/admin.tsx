@@ -452,7 +452,7 @@ function AdminPage() {
       {tab === "cards" ? (
         <FeatureCardsEditor />
       ) : tab === "uezd" ? (
-        <UezdCorrectionsModeration />
+        <MissingYearsSuggestionsModeration />
       ) : tab === "log" ? (
         <FeatureOverrideHistory currentUserId={currentUserId} />
       ) : tab === "coords" ? (
