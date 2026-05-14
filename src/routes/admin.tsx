@@ -169,15 +169,16 @@ function AdminPage() {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const { data: sess } = await supabase.auth.getSession();
-      if (!sess.session) {
+      // Server-validated user check (vs getSession which only reads storage)
+      const { data: { user }, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !user) {
         navigate({ to: "/login" });
         return;
       }
       const { admin, email: e } = await runDiagnostics();
       if (!mounted) return;
       setEmail(e);
-      setCurrentUserId(sess.session.user.id);
+      setCurrentUserId(user.id);
       setIsAdmin(admin);
       setChecking(false);
     })();
