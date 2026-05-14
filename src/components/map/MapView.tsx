@@ -12,7 +12,7 @@ import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
 import { usePublishedOverrides, applyOverrides } from "@/lib/featureOverrides";
-import { UezdCorrectionDialog } from "./UezdCorrectionDialog";
+import { MissingYearsSuggestionDialog } from "./MissingYearsSuggestionDialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
   BASEMAP_STYLE,
@@ -227,7 +227,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const overrides = usePublishedOverrides();
   const [submitToast, setSubmitToast] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [uezdDialogOpen, setUezdDialogOpen] = useState(false);
+  const [missingDialogOpen, setMissingDialogOpen] = useState(false);
   const [compareMode, setCompareMode] = useState<"after" | "base">("after");
   useEffect(() => {
     let mounted = true;
@@ -1662,18 +1662,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </details>
             )}
 
-            {isAdmin && (
-              <div className="mt-3">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => setUezdDialogOpen(true)}
-                >
-                  ⚑ {T.suggestUezdAction}
-                </Button>
-              </div>
-            )}
+            <div className="mt-3">
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full"
+                onClick={() => setMissingDialogOpen(true)}
+              >
+                ⚑ {T.suggestMissingAction}
+              </Button>
+            </div>
           </div>
 
           {/* Sticky footer */}
@@ -1698,14 +1696,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       })()}
 
       {selected && sel && (
-        <UezdCorrectionDialog
-          open={uezdDialogOpen}
-          onOpenChange={setUezdDialogOpen}
+        <MissingYearsSuggestionDialog
+          open={missingDialogOpen}
+          onOpenChange={setMissingDialogOpen}
           lang={lang}
           featureId={typeof selected.id === "number" ? (selected.id as number) : null}
           settlement={sel.settlement}
           region={sel.region}
-          currentUezd={sel.uezd}
+          currentMissing={sel.missingRaw?.[lang] || sel.missingRaw?.en || sel.missingRaw?.ru || ""}
           onSubmitted={(msg) => setSubmitToast(msg)}
         />
       )}

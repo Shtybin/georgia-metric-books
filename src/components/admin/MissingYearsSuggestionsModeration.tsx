@@ -5,13 +5,12 @@ import { Check, X, Trash2 } from "lucide-react";
 
 interface MultiLang { ru?: string; en?: string; ka?: string }
 
-interface Correction {
+interface Suggestion {
   id: string;
   feature_id: number | null;
-  settlement_snapshot: MultiLang;
-  region_snapshot: MultiLang;
-  current_uezd: MultiLang;
-  proposed_uezd: MultiLang;
+  settlement_snapshot: { settlement?: MultiLang; region?: MultiLang } | null;
+  current_missing: string;
+  proposed_missing: string;
   note: string | null;
   status: "pending" | "approved" | "rejected";
   created_at: string;
@@ -30,22 +29,22 @@ function ml(v: MultiLang | null | undefined) {
   return v.ru || v.en || v.ka || "—";
 }
 
-export function UezdCorrectionsModeration() {
+export function MissingYearsSuggestionsModeration() {
   const [filter, setFilter] = useState<Filter>("pending");
-  const [items, setItems] = useState<Correction[]>([]);
+  const [items, setItems] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
 
   async function load() {
     setLoading(true);
     let q = supabase
-      .from("uezd_corrections")
-      .select("id, feature_id, settlement_snapshot, region_snapshot, current_uezd, proposed_uezd, note, status, created_at, reviewed_at")
+      .from("missing_years_suggestions")
+      .select("id, feature_id, settlement_snapshot, current_missing, proposed_missing, note, status, created_at, reviewed_at")
       .order("created_at", { ascending: false })
       .limit(500);
     if (filter !== "all") q = q.eq("status", filter);
     const { data, error } = await q;
     if (error) console.error(error);
-    setItems((data as unknown as Correction[]) || []);
+    setItems((data as unknown as Suggestion[]) || []);
     setLoading(false);
   }
 
@@ -55,26 +54,25 @@ export function UezdCorrectionsModeration() {
     const { data: sess } = await supabase.auth.getSession();
     const reviewer = sess.session?.user.id ?? null;
     const { error } = await supabase
-      .from("uezd_corrections")
+      .from("missing_years_suggestions")
       .update({ status, reviewed_at: new Date().toISOString(), reviewed_by: reviewer })
       .eq("id", id);
     if (error) { alert(error.message); return; }
     setItems((prev) => prev.map((x) => (x.id === id ? { ...x, status } : x)));
   }
 
-  async function applyAsOverride(c: Correction) {
+  async function applyAsOverride(c: Suggestion) {
     if (c.feature_id == null) {
       alert("Нет привязки к точке geojson — примените вручную через вкладку «Карточки».");
       return;
     }
-    if (!confirm("Создать неопубликованную правку карточки с предложенным уездом?")) return;
+    if (!confirm("Создать неопубликованную правку карточки с предложенными пропущенными годами?")) return;
 
-    // Fetch the base feature from geojson
     let base: any = null;
     try {
       const fc = await fetch("/data/parishes.geojson").then((r) => r.json());
       base = fc.features.find((f: any) => f.id === c.feature_id);
-    } catch (e) {
+    } catch {
       alert("Не удалось загрузить базовый geojson"); return;
     }
     if (!base) { alert("Точка не найдена в geojson"); return; }
@@ -84,12 +82,13 @@ export function UezdCorrectionsModeration() {
       settlement: { ru: p.settlement?.ru ?? "", en: p.settlement?.en ?? "", ka: p.settlement?.ka ?? "" },
       church: { ru: p.church?.ru ?? "", en: p.church?.en ?? "", ka: p.church?.ka ?? "" },
       region: { ru: p.region?.ru ?? "", en: p.region?.en ?? "", ka: p.region?.ka ?? "" },
-      uezd: {
-        ru: c.proposed_uezd.ru || p.uezd?.ru || "",
-        en: c.proposed_uezd.en || p.uezd?.en || "",
-        ka: c.proposed_uezd.ka || p.uezd?.ka || "",
-      },
+      uezd: { ru: p.uezd?.ru ?? "", en: p.uezd?.en ?? "", ka: p.uezd?.ka ?? "" },
       yearsRaw: { ru: p.yearsRaw?.ru ?? "", en: p.yearsRaw?.en ?? "", ka: p.yearsRaw?.ka ?? "" },
+      missingYearsRaw: {
+        ru: c.proposed_missing,
+        en: c.proposed_missing,
+        ka: c.proposed_missing,
+      },
       startYear: typeof p.startYear === "number" ? p.startYear : 1900,
       endYear: typeof p.endYear === "number" ? p.endYear : 1900,
       lat, lon,
@@ -102,7 +101,7 @@ export function UezdCorrectionsModeration() {
       action: "edit",
       data: data as any,
       published: false,
-      notes: `From uezd_correction ${c.id}`,
+      notes: `From missing_years_suggestion ${c.id}`,
     });
     if (insErr) { alert(insErr.message); return; }
     await setStatus(c.id, "approved");
@@ -111,7 +110,7 @@ export function UezdCorrectionsModeration() {
 
   async function remove(id: string) {
     if (!confirm("Удалить предложение?")) return;
-    const { error } = await supabase.from("uezd_corrections").delete().eq("id", id);
+    const { error } = await supabase.from("missing_years_suggestions").delete().eq("id", id);
     if (error) { alert(error.message); return; }
     setItems((prev) => prev.filter((x) => x.id !== id));
   }
@@ -142,21 +141,18 @@ export function UezdCorrectionsModeration() {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="font-medium">
-                    {ml(c.settlement_snapshot)}
+                    {ml(c.settlement_snapshot?.settlement)}
                     <span className="ml-2 text-xs text-muted-foreground">
-                      {ml(c.region_snapshot)}
+                      {ml(c.settlement_snapshot?.region)}
                       {c.feature_id != null && <> · id {c.feature_id}</>}
                     </span>
                   </div>
                   <div className="mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-xs">
-                    <span className="text-muted-foreground">Текущий уезд</span>
-                    <span>{ml(c.current_uezd)}</span>
+                    <span className="text-muted-foreground">Сейчас в карточке</span>
+                    <span className="whitespace-pre-line break-words">{c.current_missing || "—"}</span>
                     <span className="text-muted-foreground">Предложено</span>
-                    <span className="font-medium text-amber-700 dark:text-amber-300">
-                      {ml(c.proposed_uezd)}
-                      <span className="ml-2 text-[10px] text-muted-foreground">
-                        {[c.proposed_uezd.ru, c.proposed_uezd.en, c.proposed_uezd.ka].filter(Boolean).join(" / ")}
-                      </span>
+                    <span className="whitespace-pre-line break-words font-medium text-amber-700 dark:text-amber-300">
+                      {c.proposed_missing}
                     </span>
                     {c.note && (<>
                       <span className="text-muted-foreground">Комментарий</span>

@@ -8,7 +8,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { t, type Lang } from "@/lib/i18n";
 
@@ -21,44 +20,39 @@ interface Props {
   featureId: number | null;
   settlement: MultiLang;
   region: MultiLang;
-  currentUezd: MultiLang;
+  /** Currently shown missing-years string (any one language is fine for context). */
+  currentMissing: string;
   onSubmitted?: (msg: string) => void;
 }
 
-export function UezdCorrectionDialog({
-  open, onOpenChange, lang, featureId, settlement, region, currentUezd, onSubmitted,
+export function MissingYearsSuggestionDialog({
+  open, onOpenChange, lang, featureId, settlement, region, currentMissing, onSubmitted,
 }: Props) {
   const T = t(lang);
-  const [proposed, setProposed] = useState<MultiLang>({ ru: "", en: "", ka: "" });
+  const [proposed, setProposed] = useState("");
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function submit() {
-    const has = (proposed.ru?.trim() || proposed.en?.trim() || proposed.ka?.trim());
-    if (!has) { setError(T.suggestUezdEmpty); return; }
+    if (!proposed.trim()) { setError(T.suggestMissingEmpty); return; }
     setError(null);
     setSaving(true);
     const { data: sess } = await supabase.auth.getSession();
     const uid = sess.session?.user.id ?? null;
-    const { error: err } = await supabase.from("uezd_corrections").insert({
+    const { error: err } = await supabase.from("missing_years_suggestions").insert({
       feature_id: featureId,
-      settlement_snapshot: settlement as any,
-      region_snapshot: region as any,
-      current_uezd: currentUezd as any,
-      proposed_uezd: {
-        ru: proposed.ru?.trim() || "",
-        en: proposed.en?.trim() || "",
-        ka: proposed.ka?.trim() || "",
-      } as any,
-      note: note.trim() || null,
+      settlement_snapshot: { settlement, region } as any,
+      current_missing: currentMissing.slice(0, 2000),
+      proposed_missing: proposed.trim().slice(0, 2000),
+      note: note.trim() ? note.trim().slice(0, 2000) : null,
       created_by: uid,
     });
     setSaving(false);
     if (err) { setError(err.message); return; }
-    setProposed({ ru: "", en: "", ka: "" });
+    setProposed("");
     setNote("");
-    onSubmitted?.(T.suggestUezdSubmitted);
+    onSubmitted?.(T.suggestMissingSubmitted);
     onOpenChange(false);
   }
 
@@ -66,41 +60,37 @@ export function UezdCorrectionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{T.suggestUezdTitle}</DialogTitle>
+          <DialogTitle>{T.suggestMissingTitle}</DialogTitle>
         </DialogHeader>
-        <p className="text-xs text-muted-foreground">{T.suggestUezdHint}</p>
+        <p className="text-xs text-muted-foreground">{T.suggestMissingHint}</p>
 
         <div className="mt-2 space-y-3 text-sm">
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {T.suggestUezdCurrent}
+              {T.suggestMissingCurrent}
             </div>
-            <div className="text-foreground">
-              {currentUezd[lang] || currentUezd.en || currentUezd.ru || "—"}
+            <div className="text-foreground whitespace-pre-line break-words">
+              {currentMissing.trim() || "—"}
             </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {T.suggestUezdProposed}
-            </div>
-            {(["ru", "en", "ka"] as const).map((l) => (
-              <div key={l} className="grid grid-cols-[2.5rem_1fr] items-center gap-2">
-                <label className="text-[10px] uppercase text-muted-foreground">{l}</label>
-                <Input
-                  value={proposed[l] ?? ""}
-                  onChange={(e) => setProposed((p) => ({ ...p, [l]: e.target.value }))}
-                  placeholder={currentUezd[l] ?? ""}
-                />
-              </div>
-            ))}
           </div>
 
           <div>
             <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {T.suggestUezdNote}
+              {T.suggestMissingProposed}
             </div>
-            <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
+            <Textarea
+              value={proposed}
+              onChange={(e) => setProposed(e.target.value)}
+              rows={3}
+              placeholder={T.suggestMissingPlaceholder}
+            />
+          </div>
+
+          <div>
+            <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {T.suggestMissingNote}
+            </div>
+            <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} />
           </div>
 
           {error && <p className="text-xs text-destructive">{error}</p>}
@@ -108,10 +98,10 @@ export function UezdCorrectionDialog({
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={saving}>
-            {T.suggestUezdCancel}
+            {T.suggestMissingCancel}
           </Button>
           <Button onClick={submit} disabled={saving}>
-            {T.suggestUezdSubmit}
+            {T.suggestMissingSubmit}
           </Button>
         </DialogFooter>
       </DialogContent>

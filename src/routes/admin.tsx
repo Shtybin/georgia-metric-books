@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AdminMiniMap } from "@/components/map/AdminMiniMap";
 import { OsmLeafletDialog } from "@/components/map/OsmLeafletDialog";
 import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
-import { UezdCorrectionsModeration } from "@/components/admin/UezdCorrectionsModeration";
+import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYearsSuggestionsModeration";
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText } from "lucide-react";
 
@@ -452,7 +452,7 @@ function AdminPage() {
       {tab === "cards" ? (
         <FeatureCardsEditor />
       ) : tab === "uezd" ? (
-        <UezdCorrectionsModeration />
+        <MissingYearsSuggestionsModeration />
       ) : tab === "log" ? (
         <FeatureOverrideHistory currentUserId={currentUserId} />
       ) : tab === "coords" ? (

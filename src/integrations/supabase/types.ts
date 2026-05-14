@@ -191,6 +191,51 @@ export type Database = {
         }
         Relationships: []
       }
+      missing_years_suggestions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          current_missing: string
+          feature_id: number | null
+          id: string
+          note: string | null
+          proposed_missing: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          settlement_snapshot: Json
+          status: Database["public"]["Enums"]["missing_years_suggestion_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          current_missing?: string
+          feature_id?: number | null
+          id?: string
+          note?: string | null
+          proposed_missing?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          settlement_snapshot?: Json
+          status?: Database["public"]["Enums"]["missing_years_suggestion_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          current_missing?: string
+          feature_id?: number | null
+          id?: string
+          note?: string | null
+          proposed_missing?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          settlement_snapshot?: Json
+          status?: Database["public"]["Enums"]["missing_years_suggestion_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       problem_report_history: {
         Row: {
           changed_at: string
@@ -368,6 +413,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      missing_years_suggestion_status: "pending" | "approved" | "rejected"
       report_status: "new" | "in_progress" | "resolved"
       suggestion_status: "pending" | "approved" | "rejected"
       uezd_correction_status: "pending" | "approved" | "rejected"
@@ -499,6 +545,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      missing_years_suggestion_status: ["pending", "approved", "rejected"],
       report_status: ["new", "in_progress", "resolved"],
       suggestion_status: ["pending", "approved", "rejected"],
       uezd_correction_status: ["pending", "approved", "rejected"],
