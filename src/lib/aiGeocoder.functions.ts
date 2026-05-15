@@ -101,14 +101,13 @@ function norm(s: string | undefined | null): string {
     .trim();
 }
 
-/** Returns true if any token of `needle` (≥3 chars) appears in `hay`. */
-function tokenOverlap(needle: string, hay: string): boolean {
+/** Returns true if any token of `needle` (≥minTokenLen chars) appears in `hay`. */
+function tokenOverlap(needle: string, hay: string, minTokenLen = 3): boolean {
   const n = norm(needle);
   const h = norm(hay);
   if (!n || !h) return false;
   if (h.includes(n)) return true;
-  // try word-by-word, ignore very short tokens
-  const tokens = n.split(" ").filter((t) => t.length >= 3);
+  const tokens = n.split(" ").filter((t) => t.length >= minTokenLen);
   return tokens.some((t) => h.includes(t));
 }
 
@@ -125,7 +124,7 @@ interface ValidationResult {
  *    названием (RU/EN/KA) исторического селения
  * Returns ok=false если 2 critical-проверки не прошли (явная ошибка совпадения).
  */
-function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit): ValidationResult {
+function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 3): ValidationResult {
   const warnings: string[] = [];
   const reasons: string[] = [];
   const addr = hit.address || {};
@@ -156,7 +155,7 @@ function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit): ValidationRes
     .filter((s) => s && s.trim().length > 0) as string[];
   const histGeoSet = histGeo.length > 0;
   const fullDisplay = `${addrRegionStr} ${hit.display_name}`;
-  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay));
+  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen));
   if (histGeoSet && !geoOk) {
     reasons.push(
       `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`,
@@ -168,7 +167,7 @@ function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit): ValidationRes
     .filter((s) => s && s.trim().length > 0) as string[];
   const nameSource = `${addrName} ${hit.display_name}`;
   const nameOk =
-    histNames.length === 0 || histNames.some((n) => tokenOverlap(n, nameSource));
+    histNames.length === 0 || histNames.some((n) => tokenOverlap(n, nameSource, minTokenLen));
   if (!nameOk) {
     reasons.push(
       `название не совпадает: ист. «${histNames.join(" / ")}» vs OSM «${addrName || hit.display_name}»`,
@@ -325,6 +324,10 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         uezd: z.string().max(200).optional(),
         minConfidence: z.number().min(0).max(1).default(0.55),
         offset: z.number().int().min(0).default(0),
+        /** Min length of a token to be considered when matching name/region. */
+        minTokenLen: z.number().int().min(2).max(10).default(3),
+        /** Conflict radius in meters around a candidate point. */
+        conflictRadiusM: z.number().int().min(0).max(5000).default(300),
       })
       .parse(input),
   )
@@ -421,7 +424,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         const lon = parseFloat(chosen.lon);
 
         // Per-edit consistency checks: region/uezd + name across RU/EN/KA
-        const validation = validateOsmMatch(item, chosen);
+        const validation = validateOsmMatch(item, chosen, data.minTokenLen);
         if (!validation.ok) {
           result.rejected++;
           result.log.push({
@@ -436,15 +439,17 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
           continue;
         }
 
-        // Conflict check: рядом уже есть запись с такими же координатами (±300м)
-        // в очереди (любой статус) — не дублируем.
+        // Conflict check: nearby existing record (configurable radius).
+        // 1° lat ≈ 111 km; 1° lon ≈ 111 km * cos(lat).
+        const radiusDegLat = data.conflictRadiusM / 111_000;
+        const radiusDegLon = data.conflictRadiusM / (111_000 * Math.max(0.1, Math.cos((lat * Math.PI) / 180)));
         const { data: nearby } = await supabaseAdmin
           .from("coord_suggestions")
           .select("id, settlement_ru, settlement_en, status")
-          .gte("lat", lat - 0.003)
-          .lte("lat", lat + 0.003)
-          .gte("lon", lon - 0.003)
-          .lte("lon", lon + 0.003)
+          .gte("lat", lat - radiusDegLat)
+          .lte("lat", lat + radiusDegLat)
+          .gte("lon", lon - radiusDegLon)
+          .lte("lon", lon + radiusDegLon)
           .limit(1);
         if (nearby && nearby.length > 0) {
           const n = nearby[0];

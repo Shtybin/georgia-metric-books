@@ -28,6 +28,8 @@ export function AiGeocoderPanel() {
   const [running, setRunning] = useState(false);
   const [limit, setLimit] = useState(10);
   const [minConfidence, setMinConfidence] = useState(0.6);
+  const [minTokenLen, setMinTokenLen] = useState(3);
+  const [conflictRadiusM, setConflictRadiusM] = useState(300);
   const [uezd, setUezd] = useState("");
   const [uezds, setUezds] = useState<{ uezd: string; count: number }[]>([]);
   const [result, setResult] = useState<BatchResult | null>(null);
@@ -58,6 +60,8 @@ export function AiGeocoderPanel() {
           data: {
             limit: Math.min(CHUNK, limit - acc.processed),
             minConfidence,
+            minTokenLen,
+            conflictRadiusM,
             uezd: uezd || undefined,
             offset,
           },
@@ -139,6 +143,37 @@ export function AiGeocoderPanel() {
                 </option>
               ))}
             </select>
+          </label>
+        </div>
+
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Мин. длина токена ({minTokenLen}) — короче = строже
+            </span>
+            <input
+              type="range"
+              min={2}
+              max={6}
+              step={1}
+              value={minTokenLen}
+              onChange={(e) => setMinTokenLen(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Радиус конфликта ({conflictRadiusM} м)
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={2000}
+              step={50}
+              value={conflictRadiusM}
+              onChange={(e) => setConflictRadiusM(parseInt(e.target.value))}
+              className="w-full"
+            />
           </label>
         </div>
 
