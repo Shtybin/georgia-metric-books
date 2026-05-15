@@ -154,9 +154,9 @@ export function AiGeocoderPanel() {
               </>
             )}
           </Button>
-          {running && (
+          {running && progress && (
             <p className="text-xs text-muted-foreground">
-              ~{Math.ceil(limit * 3.5)} сек. Не закрывайте вкладку.
+              {progress.done}/{progress.target} обработано · ~{Math.ceil((progress.target - progress.done) * 4)} сек. Не закрывайте вкладку.
             </p>
           )}
         </div>
