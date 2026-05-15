@@ -30,7 +30,7 @@ export function DataQualitySummary() {
           arr.push({ bucket: b, count: c, pct: t ? (c / t) * 100 : 0 });
         }
         // catch any unexpected buckets
-        const known = new Set(BUCKET_ORDER);
+        const known = new Set<string>(BUCKET_ORDER);
         for (const [b, c] of Object.entries(counts)) {
           if (!known.has(b)) {
             arr.push({ bucket: b, count: c, pct: t ? (c / t) * 100 : 0 });
