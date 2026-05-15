@@ -34,6 +34,8 @@ interface BatchResult {
   inserted: number;
   skipped: number;
   rejected: number;
+  /** How many candidates remain in the queue after this chunk (for client looping). */
+  remaining: number;
   errors: { settlement: string; reason: string }[];
   log: {
     settlement: string;
@@ -90,22 +92,24 @@ async function nominatimSearch(q: string, viewbox = true): Promise<NominatimHit[
 }
 
 async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
+  // Try names in priority order; stop at the first one that returns hits.
+  // Fewer Nominatim calls = much shorter per-item time (worker timeout safety).
   const names = [item.settlement.ka, item.settlement.en, item.settlement.ru]
     .map((s) => (s || "").trim())
     .filter(Boolean);
   const seen = new Map<string, NominatimHit>();
-  for (const name of names) {
+  for (let i = 0; i < names.length; i++) {
+    if (i > 0) await new Promise((r) => setTimeout(r, 1100)); // Nominatim 1 req/s
     try {
-      const hits = await nominatimSearch(name, true);
+      const hits = await nominatimSearch(names[i], true);
       for (const h of hits) {
         const k = `${h.lat},${h.lon}`;
         if (!seen.has(k)) seen.set(k, h);
       }
-    } catch (e) {
-      // continue with next variant
+      if (seen.size > 0) break; // got something — don't waste more requests
+    } catch {
+      // try next name
     }
-    // 1 req/s rate limit
-    await new Promise((r) => setTimeout(r, 1100));
   }
   return [...seen.values()].filter((h) => {
     const lat = parseFloat(h.lat);
@@ -263,13 +267,19 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
       );
     }
     candidates = candidates.filter((it) => !existingKeys.has(key(it)));
-    candidates = candidates.slice(data.offset, data.offset + data.limit);
+    // Hard chunk cap to stay within worker timeout (~30s).
+    // Each item ≈ 3-5s (Nominatim + AI). Client loops for larger batches.
+    const CHUNK_MAX = 3;
+    const effectiveLimit = Math.min(data.limit, CHUNK_MAX);
+    const totalRemaining = candidates.length;
+    candidates = candidates.slice(data.offset, data.offset + effectiveLimit);
 
     const result: BatchResult = {
       processed: 0,
       inserted: 0,
       skipped: 0,
       rejected: 0,
+      remaining: Math.max(0, totalRemaining - data.offset - effectiveLimit),
       errors: [],
       log: [],
     };
