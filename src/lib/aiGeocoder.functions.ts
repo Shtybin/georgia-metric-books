@@ -155,7 +155,7 @@ function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 
     .filter((s) => s && s.trim().length > 0) as string[];
   const histGeoSet = histGeo.length > 0;
   const fullDisplay = `${addrRegionStr} ${hit.display_name}`;
-  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay));
+  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen));
   if (histGeoSet && !geoOk) {
     reasons.push(
       `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`,
@@ -167,7 +167,7 @@ function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 
     .filter((s) => s && s.trim().length > 0) as string[];
   const nameSource = `${addrName} ${hit.display_name}`;
   const nameOk =
-    histNames.length === 0 || histNames.some((n) => tokenOverlap(n, nameSource));
+    histNames.length === 0 || histNames.some((n) => tokenOverlap(n, nameSource, minTokenLen));
   if (!nameOk) {
     reasons.push(
       `название не совпадает: ист. «${histNames.join(" / ")}» vs OSM «${addrName || hit.display_name}»`,
