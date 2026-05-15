@@ -8,6 +8,7 @@ import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
 import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYearsSuggestionsModeration";
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
 import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
+import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles } from "lucide-react";
 
 interface OsmActionProps {
@@ -458,6 +459,10 @@ function AdminPage() {
             )}
         </div>}
       </header>
+
+      <section className="mx-auto max-w-6xl px-4 pt-4">
+        <DataQualitySummary />
+      </section>
 
       {tab === "cards" ? (
         <FeatureCardsEditor />
