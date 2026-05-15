@@ -465,6 +465,8 @@ function AdminPage() {
         <MissingYearsSuggestionsModeration />
       ) : tab === "log" ? (
         <FeatureOverrideHistory currentUserId={currentUserId} />
+      ) : tab === "ai" ? (
+        <AiGeocoderPanel />
       ) : tab === "coords" ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           {loading ? (
