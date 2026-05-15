@@ -9,6 +9,7 @@ interface BatchResult {
   inserted: number;
   skipped: number;
   rejected: number;
+  remaining?: number;
   errors: { settlement: string; reason: string }[];
   log: {
     settlement: string;
