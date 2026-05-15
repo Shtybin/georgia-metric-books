@@ -34,6 +34,8 @@ interface BatchResult {
   inserted: number;
   skipped: number;
   rejected: number;
+  /** How many candidates remain in the queue after this chunk (for client looping). */
+  remaining: number;
   errors: { settlement: string; reason: string }[];
   log: {
     settlement: string;
