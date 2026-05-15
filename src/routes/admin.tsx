@@ -362,7 +362,7 @@ function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
           <div>
             <h1 className="font-serif text-lg font-semibold">
-              {tab === "coords" ? "Модерация координат" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : "Карточки и точки на карте"}
+              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : "Карточки и точки на карте"}
             </h1>
             <p className="text-xs text-muted-foreground">{email}</p>
           </div>
