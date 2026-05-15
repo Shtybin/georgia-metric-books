@@ -195,16 +195,6 @@ ${candidates.map((c, i) => `${i}. ${c.display_name} [${c.class}/${c.type}, lat=$
   }
 }
 
-async function ensureAdmin(supabase: any) {
-  const { data, error } = await supabase.rpc("has_role", {
-    _user_id: (await supabase.auth.getUser()).data.user?.id || "",
-    _role: "admin",
-  });
-  if (error || data !== true) {
-    throw new Response("Forbidden", { status: 403 });
-  }
-}
-
 async function fetchUnlocated(): Promise<UnlocatedItem[]> {
   // Read from same-origin /data/unlocated.json
   const req = getRequest();
