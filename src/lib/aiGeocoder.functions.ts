@@ -1,0 +1,395 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getRequest } from "@tanstack/react-start/server";
+
+// ---- Types -------------------------------------------------------------
+
+type LocaleStr = { en: string; ru: string; ka?: string };
+
+interface UnlocatedItem {
+  settlement: LocaleStr;
+  church: LocaleStr;
+  region: LocaleStr;
+  uezd: LocaleStr;
+  years: string;
+  startYear: number | null;
+  endYear: number | null;
+  count: number;
+}
+
+interface NominatimHit {
+  lat: string;
+  lon: string;
+  display_name: string;
+  type: string;
+  class: string;
+  importance?: number;
+  address?: Record<string, string>;
+}
+
+interface BatchResult {
+  processed: number;
+  inserted: number;
+  skipped: number;
+  rejected: number;
+  errors: { settlement: string; reason: string }[];
+  log: {
+    settlement: string;
+    uezd: string;
+    status: "inserted" | "skipped" | "rejected" | "error";
+    confidence?: number;
+    note?: string;
+    lat?: number;
+    lon?: number;
+  }[];
+}
+
+// ---- Helpers -----------------------------------------------------------
+
+const GEORGIA_BBOX = { minLat: 41.0, maxLat: 43.6, minLon: 40.0, maxLon: 46.8 };
+
+function inGeorgia(lat: number, lon: number) {
+  return (
+    lat >= GEORGIA_BBOX.minLat &&
+    lat <= GEORGIA_BBOX.maxLat &&
+    lon >= GEORGIA_BBOX.minLon &&
+    lon <= GEORGIA_BBOX.maxLon
+  );
+}
+
+function key(it: { settlement: LocaleStr; uezd: LocaleStr }) {
+  const s = (it.settlement.ru || it.settlement.en || "").toLocaleLowerCase().trim();
+  const u = (it.uezd.ru || it.uezd.en || "").toLocaleLowerCase().trim();
+  return `${s}|${u}`;
+}
+
+async function nominatimSearch(q: string, viewbox = true): Promise<NominatimHit[]> {
+  const params = new URLSearchParams({
+    q,
+    format: "json",
+    addressdetails: "1",
+    limit: "5",
+    countrycodes: "ge",
+  });
+  if (viewbox) {
+    // left,top,right,bottom
+    params.set("viewbox", "40.0,43.6,46.8,41.0");
+    params.set("bounded", "1");
+  }
+  const url = `https://nominatim.openstreetmap.org/search?${params.toString()}`;
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": "georgia-metric-books-atlas/1.0 (admin geocoder)",
+      "Accept-Language": "ru,en,ka",
+    },
+  });
+  if (!res.ok) throw new Error(`Nominatim ${res.status}`);
+  return (await res.json()) as NominatimHit[];
+}
+
+async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
+  const names = [item.settlement.ka, item.settlement.en, item.settlement.ru]
+    .map((s) => (s || "").trim())
+    .filter(Boolean);
+  const seen = new Map<string, NominatimHit>();
+  for (const name of names) {
+    try {
+      const hits = await nominatimSearch(name, true);
+      for (const h of hits) {
+        const k = `${h.lat},${h.lon}`;
+        if (!seen.has(k)) seen.set(k, h);
+      }
+    } catch (e) {
+      // continue with next variant
+    }
+    // 1 req/s rate limit
+    await new Promise((r) => setTimeout(r, 1100));
+  }
+  return [...seen.values()].filter((h) => {
+    const lat = parseFloat(h.lat);
+    const lon = parseFloat(h.lon);
+    return Number.isFinite(lat) && Number.isFinite(lon) && inGeorgia(lat, lon);
+  });
+}
+
+async function aiArbiter(
+  item: UnlocatedItem,
+  candidates: NominatimHit[],
+): Promise<{ index: number; confidence: number; reason: string } | null> {
+  if (candidates.length === 0) return null;
+
+  const apiKey = process.env.LOVABLE_API_KEY;
+  if (!apiKey) {
+    // Fallback: pick first candidate when only 1, else null
+    if (candidates.length === 1) {
+      return { index: 0, confidence: 0.6, reason: "single candidate (no AI)" };
+    }
+    return null;
+  }
+
+  const prompt = `Ты помогаешь определить географические координаты исторического селения в Грузии (XIX век) по списку современных кандидатов из OpenStreetMap.
+
+Историческое селение:
+- Название: ${item.settlement.ru || item.settlement.en} ${item.settlement.ka ? `(${item.settlement.ka})` : ""}
+- Уезд: ${item.uezd.ru || item.uezd.en || "не указан"}
+- Регион: ${item.region.ru || item.region.en || "не указан"}
+- Церковь: ${item.church.ru || item.church.en || "не указана"}
+- Годы метрических книг: ${item.years || "не указаны"}
+
+Кандидаты OpenStreetMap (все в Грузии):
+${candidates.map((c, i) => `${i}. ${c.display_name} [${c.class}/${c.type}, lat=${c.lat}, lon=${c.lon}]`).join("\n")}
+
+Выбери наиболее вероятного кандидата с учётом:
+- соответствия региону/уезду исторических данных (если указаны),
+- типа объекта (село, деревня предпочтительнее),
+- если ни один кандидат не подходит — верни index: -1.
+
+Ответь ТОЛЬКО валидным JSON без обрамления: {"index": <число от -1 до ${candidates.length - 1}>, "confidence": <число от 0 до 1>, "reason": "<краткое объяснение по-русски>"}`;
+
+  try {
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" },
+      }),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`AI ${res.status}: ${text.slice(0, 200)}`);
+    }
+    const data = (await res.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
+    const content = data.choices?.[0]?.message?.content || "{}";
+    const parsed = JSON.parse(content) as {
+      index?: number;
+      confidence?: number;
+      reason?: string;
+    };
+    if (
+      typeof parsed.index !== "number" ||
+      parsed.index < -1 ||
+      parsed.index >= candidates.length
+    ) {
+      return null;
+    }
+    if (parsed.index === -1) {
+      return { index: -1, confidence: 0, reason: parsed.reason || "AI rejected all" };
+    }
+    return {
+      index: parsed.index,
+      confidence: typeof parsed.confidence === "number" ? parsed.confidence : 0.5,
+      reason: parsed.reason || "",
+    };
+  } catch (e) {
+    console.error("[aiArbiter]", e);
+    return null;
+  }
+}
+
+async function ensureAdmin(supabase: any) {
+  const { data, error } = await supabase.rpc("has_role", {
+    _user_id: (await supabase.auth.getUser()).data.user?.id || "",
+    _role: "admin",
+  });
+  if (error || data !== true) {
+    throw new Response("Forbidden", { status: 403 });
+  }
+}
+
+async function fetchUnlocated(): Promise<UnlocatedItem[]> {
+  // Read from same-origin /data/unlocated.json
+  const req = getRequest();
+  const origin = req?.headers.get("origin") || (() => {
+    const proto = req?.headers.get("x-forwarded-proto") || "https";
+    const host = req?.headers.get("host");
+    return host ? `${proto}://${host}` : "";
+  })();
+  if (!origin) throw new Error("No origin to fetch unlocated.json");
+  const res = await fetch(`${origin}/data/unlocated.json`);
+  if (!res.ok) throw new Error(`unlocated.json ${res.status}`);
+  return (await res.json()) as UnlocatedItem[];
+}
+
+// ---- Server function ---------------------------------------------------
+
+export const runAiGeocoder = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        limit: z.number().int().min(1).max(50).default(10),
+        uezd: z.string().max(200).optional(),
+        minConfidence: z.number().min(0).max(1).default(0.55),
+        offset: z.number().int().min(0).default(0),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    // Verify admin role
+    const { data: isAdmin, error: roleErr } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    if (roleErr || isAdmin !== true) {
+      throw new Response("Forbidden", { status: 403 });
+    }
+
+    const items = await fetchUnlocated();
+
+    // Existing suggestion keys (any status) — to avoid duplicates
+    const { data: existing } = await supabaseAdmin
+      .from("coord_suggestions")
+      .select("settlement_ru, settlement_en, uezd_ru, uezd_en");
+    const existingKeys = new Set(
+      (existing || []).map((e) =>
+        `${(e.settlement_ru || e.settlement_en || "").toLocaleLowerCase().trim()}|${(e.uezd_ru || e.uezd_en || "").toLocaleLowerCase().trim()}`,
+      ),
+    );
+
+    let candidates = items.filter((it) => (it.settlement.ru || it.settlement.en).trim().length > 0);
+    if (data.uezd) {
+      const u = data.uezd.toLocaleLowerCase().trim();
+      candidates = candidates.filter(
+        (it) =>
+          (it.uezd.ru || "").toLocaleLowerCase().includes(u) ||
+          (it.uezd.en || "").toLocaleLowerCase().includes(u),
+      );
+    }
+    candidates = candidates.filter((it) => !existingKeys.has(key(it)));
+    candidates = candidates.slice(data.offset, data.offset + data.limit);
+
+    const result: BatchResult = {
+      processed: 0,
+      inserted: 0,
+      skipped: 0,
+      rejected: 0,
+      errors: [],
+      log: [],
+    };
+
+    for (const item of candidates) {
+      result.processed++;
+      const label = item.settlement.ru || item.settlement.en;
+      const uezdLabel = item.uezd.ru || item.uezd.en || "";
+      try {
+        const cands = await geocodeCandidates(item);
+        if (cands.length === 0) {
+          result.rejected++;
+          result.log.push({
+            settlement: label,
+            uezd: uezdLabel,
+            status: "rejected",
+            note: "Nominatim ничего не нашёл в Грузии",
+          });
+          continue;
+        }
+        const arb = await aiArbiter(item, cands);
+        if (!arb || arb.index === -1) {
+          result.rejected++;
+          result.log.push({
+            settlement: label,
+            uezd: uezdLabel,
+            status: "rejected",
+            note: arb?.reason || "AI отклонил всех кандидатов",
+          });
+          continue;
+        }
+        if (arb.confidence < data.minConfidence) {
+          result.skipped++;
+          result.log.push({
+            settlement: label,
+            uezd: uezdLabel,
+            status: "skipped",
+            confidence: arb.confidence,
+            note: `confidence ${arb.confidence.toFixed(2)} < ${data.minConfidence}`,
+          });
+          continue;
+        }
+        const chosen = cands[arb.index];
+        const lat = parseFloat(chosen.lat);
+        const lon = parseFloat(chosen.lon);
+
+        const { error: insErr } = await supabaseAdmin
+          .from("coord_suggestions")
+          .insert({
+            settlement_ru: item.settlement.ru || "",
+            settlement_en: item.settlement.en || "",
+            uezd_ru: item.uezd.ru || "",
+            uezd_en: item.uezd.en || "",
+            region_ru: item.region.ru || "",
+            region_en: item.region.en || "",
+            church_ru: item.church.ru || "",
+            church_en: item.church.en || "",
+            years: item.years || "",
+            start_year: item.startYear ?? null,
+            end_year: item.endYear ?? null,
+            lat,
+            lon,
+            status: "pending",
+            submitter_note: `AI-геокодер · confidence ${arb.confidence.toFixed(2)} · ${arb.reason} · OSM: ${chosen.display_name}`,
+          });
+        if (insErr) {
+          result.errors.push({ settlement: label, reason: insErr.message });
+          result.log.push({
+            settlement: label,
+            uezd: uezdLabel,
+            status: "error",
+            note: insErr.message,
+          });
+        } else {
+          result.inserted++;
+          result.log.push({
+            settlement: label,
+            uezd: uezdLabel,
+            status: "inserted",
+            confidence: arb.confidence,
+            note: arb.reason,
+            lat,
+            lon,
+          });
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        result.errors.push({ settlement: label, reason: msg });
+        result.log.push({
+          settlement: label,
+          uezd: uezdLabel,
+          status: "error",
+          note: msg,
+        });
+      }
+    }
+
+    return result;
+  });
+
+export const listUnlocatedUezds = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    if (isAdmin !== true) throw new Response("Forbidden", { status: 403 });
+    const items = await fetchUnlocated();
+    const set = new Map<string, number>();
+    for (const it of items) {
+      const u = (it.uezd.ru || it.uezd.en || "").trim();
+      if (!u) continue;
+      set.set(u, (set.get(u) || 0) + 1);
+    }
+    return [...set.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([uezd, count]) => ({ uezd, count }));
+  });
