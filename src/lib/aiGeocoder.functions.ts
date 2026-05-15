@@ -196,17 +196,24 @@ ${candidates.map((c, i) => `${i}. ${c.display_name} [${c.class}/${c.type}, lat=$
 }
 
 async function fetchUnlocated(): Promise<UnlocatedItem[]> {
-  // Read from same-origin /data/unlocated.json
-  const req = getRequest();
-  const origin = req?.headers.get("origin") || (() => {
+  // Try filesystem first (works in dev and when public/ is bundled)
+  try {
+    const fs = await import("node:fs/promises");
+    const path = await import("node:path");
+    const filePath = path.resolve(process.cwd(), "public/data/unlocated.json");
+    const text = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(text) as UnlocatedItem[];
+  } catch (fsErr) {
+    // Fallback: same-origin HTTP fetch (production worker)
+    const req = getRequest();
     const proto = req?.headers.get("x-forwarded-proto") || "https";
     const host = req?.headers.get("host");
-    return host ? `${proto}://${host}` : "";
-  })();
-  if (!origin) throw new Error("No origin to fetch unlocated.json");
-  const res = await fetch(`${origin}/data/unlocated.json`);
-  if (!res.ok) throw new Error(`unlocated.json ${res.status}`);
-  return (await res.json()) as UnlocatedItem[];
+    const origin = host ? `${proto}://${host}` : "";
+    if (!origin) throw new Error(`Cannot load unlocated.json: ${(fsErr as Error).message}`);
+    const res = await fetch(`${origin}/data/unlocated.json`);
+    if (!res.ok) throw new Error(`unlocated.json ${res.status}`);
+    return (await res.json()) as UnlocatedItem[];
+  }
 }
 
 // ---- Server function ---------------------------------------------------
