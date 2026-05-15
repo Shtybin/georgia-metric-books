@@ -420,6 +420,51 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         const lat = parseFloat(chosen.lat);
         const lon = parseFloat(chosen.lon);
 
+        // Per-edit consistency checks: region/uezd + name across RU/EN/KA
+        const validation = validateOsmMatch(item, chosen);
+        if (!validation.ok) {
+          result.rejected++;
+          result.log.push({
+            settlement: label,
+            uezd: uezdLabel,
+            status: "rejected",
+            confidence: arb.confidence,
+            note: `авто-проверка: ${validation.reasons.join("; ")}`,
+            lat,
+            lon,
+          });
+          continue;
+        }
+
+        // Conflict check: рядом уже есть запись с такими же координатами (±300м)
+        // в очереди (любой статус) — не дублируем.
+        const { data: nearby } = await supabaseAdmin
+          .from("coord_suggestions")
+          .select("id, settlement_ru, settlement_en, status")
+          .gte("lat", lat - 0.003)
+          .lte("lat", lat + 0.003)
+          .gte("lon", lon - 0.003)
+          .lte("lon", lon + 0.003)
+          .limit(1);
+        if (nearby && nearby.length > 0) {
+          const n = nearby[0];
+          result.skipped++;
+          result.log.push({
+            settlement: label,
+            uezd: uezdLabel,
+            status: "skipped",
+            confidence: arb.confidence,
+            note: `конфликт: рядом уже есть запись «${n.settlement_ru || n.settlement_en}» (${n.status})`,
+            lat,
+            lon,
+          });
+          continue;
+        }
+
+        const warnSuffix = validation.warnings.length > 0
+          ? ` · предупр.: ${validation.warnings.join(", ")}`
+          : "";
+
         const { error: insErr } = await supabaseAdmin
           .from("coord_suggestions")
           .insert({
