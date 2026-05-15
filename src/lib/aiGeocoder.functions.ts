@@ -90,22 +90,24 @@ async function nominatimSearch(q: string, viewbox = true): Promise<NominatimHit[
 }
 
 async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
+  // Try names in priority order; stop at the first one that returns hits.
+  // Fewer Nominatim calls = much shorter per-item time (worker timeout safety).
   const names = [item.settlement.ka, item.settlement.en, item.settlement.ru]
     .map((s) => (s || "").trim())
     .filter(Boolean);
   const seen = new Map<string, NominatimHit>();
-  for (const name of names) {
+  for (let i = 0; i < names.length; i++) {
+    if (i > 0) await new Promise((r) => setTimeout(r, 1100)); // Nominatim 1 req/s
     try {
-      const hits = await nominatimSearch(name, true);
+      const hits = await nominatimSearch(names[i], true);
       for (const h of hits) {
         const k = `${h.lat},${h.lon}`;
         if (!seen.has(k)) seen.set(k, h);
       }
-    } catch (e) {
-      // continue with next variant
+      if (seen.size > 0) break; // got something — don't waste more requests
+    } catch {
+      // try next name
     }
-    // 1 req/s rate limit
-    await new Promise((r) => setTimeout(r, 1100));
   }
   return [...seen.values()].filter((h) => {
     const lat = parseFloat(h.lat);
