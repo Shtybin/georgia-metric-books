@@ -91,6 +91,100 @@ async function nominatimSearch(q: string, viewbox = true): Promise<NominatimHit[
   return (await res.json()) as NominatimHit[];
 }
 
+// ---- Validation --------------------------------------------------------
+
+function norm(s: string | undefined | null): string {
+  return (s || "")
+    .toLocaleLowerCase()
+    .replace(/[ёе]/g, "е")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
+}
+
+/** Returns true if any token of `needle` (≥3 chars) appears in `hay`. */
+function tokenOverlap(needle: string, hay: string): boolean {
+  const n = norm(needle);
+  const h = norm(hay);
+  if (!n || !h) return false;
+  if (h.includes(n)) return true;
+  // try word-by-word, ignore very short tokens
+  const tokens = n.split(" ").filter((t) => t.length >= 3);
+  return tokens.some((t) => h.includes(t));
+}
+
+interface ValidationResult {
+  ok: boolean;
+  warnings: string[];
+  reasons: string[];
+}
+
+/**
+ * Per-edit consistency checks:
+ * 1. OSM address region/uezd overlap with historical region/uezd (if указаны)
+ * 2. OSM display_name / address name overlaps with хотя бы одним локализованным
+ *    названием (RU/EN/KA) исторического селения
+ * Returns ok=false если 2 critical-проверки не прошли (явная ошибка совпадения).
+ */
+function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit): ValidationResult {
+  const warnings: string[] = [];
+  const reasons: string[] = [];
+  const addr = hit.address || {};
+  const addrRegionStr = [
+    addr.county,
+    addr.state_district,
+    addr.state,
+    addr.region,
+    addr.municipality,
+    addr.province,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const addrName = [
+    addr.village,
+    addr.hamlet,
+    addr.town,
+    addr.city,
+    addr.suburb,
+    addr.locality,
+    addr.name,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  // 1. region/uezd
+  const histGeo = [item.uezd.ru, item.uezd.en, item.uezd.ka, item.region.ru, item.region.en, item.region.ka]
+    .filter((s) => s && s.trim().length > 0) as string[];
+  const histGeoSet = histGeo.length > 0;
+  const fullDisplay = `${addrRegionStr} ${hit.display_name}`;
+  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay));
+  if (histGeoSet && !geoOk) {
+    reasons.push(
+      `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`,
+    );
+  }
+
+  // 2. name match (RU/EN/KA)
+  const histNames = [item.settlement.ka, item.settlement.ru, item.settlement.en]
+    .filter((s) => s && s.trim().length > 0) as string[];
+  const nameSource = `${addrName} ${hit.display_name}`;
+  const nameOk =
+    histNames.length === 0 || histNames.some((n) => tokenOverlap(n, nameSource));
+  if (!nameOk) {
+    reasons.push(
+      `название не совпадает: ист. «${histNames.join(" / ")}» vs OSM «${addrName || hit.display_name}»`,
+    );
+  }
+
+  // Soft warning: localized historical strings inconsistent among themselves
+  // (e.g. uezd.ru заполнен, uezd.ka пуст) — не блокируем, но логируем.
+  const uezdLangs = [item.uezd.ru, item.uezd.en, item.uezd.ka].filter((s) => s && s.trim().length > 0).length;
+  if (uezdLangs > 0 && uezdLangs < 2) {
+    warnings.push("уезд указан только на одном языке");
+  }
+
+  return { ok: geoOk && nameOk, warnings, reasons };
+}
+
 async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
   // Try names in priority order; stop at the first one that returns hits.
   // Fewer Nominatim calls = much shorter per-item time (worker timeout safety).
