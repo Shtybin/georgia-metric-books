@@ -265,7 +265,12 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
       );
     }
     candidates = candidates.filter((it) => !existingKeys.has(key(it)));
-    candidates = candidates.slice(data.offset, data.offset + data.limit);
+    // Hard chunk cap to stay within worker timeout (~30s).
+    // Each item ≈ 3-5s (Nominatim + AI). Client loops for larger batches.
+    const CHUNK_MAX = 3;
+    const effectiveLimit = Math.min(data.limit, CHUNK_MAX);
+    const totalRemaining = candidates.length;
+    candidates = candidates.slice(data.offset, data.offset + effectiveLimit);
 
     const result: BatchResult = {
       processed: 0,
