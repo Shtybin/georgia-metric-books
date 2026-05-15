@@ -37,19 +37,48 @@ export function AiGeocoderPanel() {
     listFn({}).then(setUezds).catch((e) => console.error("[uezds]", e));
   }, [listFn]);
 
+  const [progress, setProgress] = useState<{ done: number; target: number } | null>(null);
+
   async function run() {
     setRunning(true);
     setError(null);
     setResult(null);
+    setProgress({ done: 0, target: limit });
+    // Server processes max 3 per call to stay within ~30s timeout.
+    // Loop client-side, accumulating logs, until target reached or queue empty.
+    const CHUNK = 3;
+    const acc: BatchResult = {
+      processed: 0, inserted: 0, skipped: 0, rejected: 0,
+      remaining: 0, errors: [], log: [],
+    };
     try {
-      const r = await runFn({
-        data: { limit, minConfidence, uezd: uezd || undefined },
-      });
-      setResult(r as BatchResult);
+      let offset = 0;
+      while (acc.processed < limit) {
+        const r = (await runFn({
+          data: {
+            limit: Math.min(CHUNK, limit - acc.processed),
+            minConfidence,
+            uezd: uezd || undefined,
+            offset,
+          },
+        })) as BatchResult;
+        acc.processed += r.processed;
+        acc.inserted += r.inserted;
+        acc.skipped += r.skipped;
+        acc.rejected += r.rejected;
+        acc.remaining = r.remaining ?? 0;
+        acc.errors.push(...r.errors);
+        acc.log.push(...r.log);
+        setResult({ ...acc });
+        setProgress({ done: acc.processed, target: limit });
+        if (r.processed === 0) break; // queue exhausted
+        offset += r.processed;
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
       setRunning(false);
+      setProgress(null);
     }
   }
 
