@@ -60,6 +60,8 @@ export function AiGeocoderPanel() {
           data: {
             limit: Math.min(CHUNK, limit - acc.processed),
             minConfidence,
+            minTokenLen,
+            conflictRadiusM,
             uezd: uezd || undefined,
             offset,
           },
