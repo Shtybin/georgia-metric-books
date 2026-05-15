@@ -101,14 +101,13 @@ function norm(s: string | undefined | null): string {
     .trim();
 }
 
-/** Returns true if any token of `needle` (≥3 chars) appears in `hay`. */
-function tokenOverlap(needle: string, hay: string): boolean {
+/** Returns true if any token of `needle` (≥minTokenLen chars) appears in `hay`. */
+function tokenOverlap(needle: string, hay: string, minTokenLen = 3): boolean {
   const n = norm(needle);
   const h = norm(hay);
   if (!n || !h) return false;
   if (h.includes(n)) return true;
-  // try word-by-word, ignore very short tokens
-  const tokens = n.split(" ").filter((t) => t.length >= 3);
+  const tokens = n.split(" ").filter((t) => t.length >= minTokenLen);
   return tokens.some((t) => h.includes(t));
 }
 
