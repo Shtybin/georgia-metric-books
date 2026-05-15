@@ -176,6 +176,8 @@ export function AiGeocoderPanel() {
             />
           </label>
         </div>
+
+        <div className="mt-3 flex items-center gap-3">
           <Button onClick={run} disabled={running} size="sm">
             {running ? (
               <>
