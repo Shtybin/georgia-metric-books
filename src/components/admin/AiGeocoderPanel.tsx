@@ -146,7 +146,36 @@ export function AiGeocoderPanel() {
           </label>
         </div>
 
-        <div className="mt-3 flex items-center gap-3">
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Мин. длина токена ({minTokenLen}) — короче = строже
+            </span>
+            <input
+              type="range"
+              min={2}
+              max={6}
+              step={1}
+              value={minTokenLen}
+              onChange={(e) => setMinTokenLen(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Радиус конфликта ({conflictRadiusM} м)
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={2000}
+              step={50}
+              value={conflictRadiusM}
+              onChange={(e) => setConflictRadiusM(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </label>
+        </div>
           <Button onClick={run} disabled={running} size="sm">
             {running ? (
               <>
