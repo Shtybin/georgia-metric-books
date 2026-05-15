@@ -124,7 +124,7 @@ interface ValidationResult {
  *    названием (RU/EN/KA) исторического селения
  * Returns ok=false если 2 critical-проверки не прошли (явная ошибка совпадения).
  */
-function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit): ValidationResult {
+function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 3): ValidationResult {
   const warnings: string[] = [];
   const reasons: string[] = [];
   const addr = hit.address || {};
