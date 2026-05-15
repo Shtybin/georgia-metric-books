@@ -7,7 +7,8 @@ import { OsmLeafletDialog } from "@/components/map/OsmLeafletDialog";
 import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
 import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYearsSuggestionsModeration";
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText } from "lucide-react";
+import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles } from "lucide-react";
 
 interface OsmActionProps {
   lat: number;
@@ -111,7 +112,7 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "reports" | "cards" | "uezd" | "log">("coords");
+  const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log">("coords");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
@@ -361,7 +362,7 @@ function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
           <div>
             <h1 className="font-serif text-lg font-semibold">
-              {tab === "coords" ? "Модерация координат" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : "Карточки и точки на карте"}
+              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : "Карточки и точки на карте"}
             </h1>
             <p className="text-xs text-muted-foreground">{email}</p>
           </div>
@@ -376,7 +377,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "reports", "cards", "uezd", "log"] as const).map((k) => (
+          {(["coords", "ai", "reports", "cards", "uezd", "log"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -387,7 +388,11 @@ function AdminPage() {
                   : "border-transparent text-muted-foreground hover:text-foreground")
               }
             >
-              {k === "coords" ? "Координаты" : k === "reports" ? (
+              {k === "coords" ? "Координаты" : k === "ai" ? (
+                <span className="inline-flex items-center gap-1">
+                  <Sparkles className="h-3.5 w-3.5" /> AI-геокодер
+                </span>
+              ) : k === "reports" ? (
                 <span className="inline-flex items-center gap-1">
                   <MessageSquare className="h-3.5 w-3.5" /> Сообщения
                 </span>
@@ -407,7 +412,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        {tab !== "cards" && tab !== "uezd" && tab !== "log" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -460,6 +465,8 @@ function AdminPage() {
         <MissingYearsSuggestionsModeration />
       ) : tab === "log" ? (
         <FeatureOverrideHistory currentUserId={currentUserId} />
+      ) : tab === "ai" ? (
+        <AiGeocoderPanel />
       ) : tab === "coords" ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           {loading ? (
