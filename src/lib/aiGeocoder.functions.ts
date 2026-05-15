@@ -482,7 +482,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
             lat,
             lon,
             status: "pending",
-            submitter_note: `AI-геокодер · confidence ${arb.confidence.toFixed(2)} · ${arb.reason} · OSM: ${chosen.display_name}`,
+            submitter_note: `AI-геокодер · confidence ${arb.confidence.toFixed(2)} · ${arb.reason} · OSM: ${chosen.display_name}${warnSuffix}`,
           });
         if (insErr) {
           result.errors.push({ settlement: label, reason: insErr.message });
