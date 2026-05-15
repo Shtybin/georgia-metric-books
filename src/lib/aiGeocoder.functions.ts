@@ -324,6 +324,10 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         uezd: z.string().max(200).optional(),
         minConfidence: z.number().min(0).max(1).default(0.55),
         offset: z.number().int().min(0).default(0),
+        /** Min length of a token to be considered when matching name/region. */
+        minTokenLen: z.number().int().min(2).max(10).default(3),
+        /** Conflict radius in meters around a candidate point. */
+        conflictRadiusM: z.number().int().min(0).max(5000).default(300),
       })
       .parse(input),
   )
