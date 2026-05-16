@@ -29,6 +29,8 @@ export function AiGeocoderPanel() {
   const [limit, setLimit] = useState(10);
   const [minConfidence, setMinConfidence] = useState(0.6);
   const [minTokenLen, setMinTokenLen] = useState(3);
+  const [prefixLen, setPrefixLen] = useState(5);
+  const [geoStrict, setGeoStrict] = useState(true);
   const [conflictRadiusM, setConflictRadiusM] = useState(300);
   const [uezd, setUezd] = useState("");
   const [uezds, setUezds] = useState<{ uezd: string; count: number }[]>([]);
