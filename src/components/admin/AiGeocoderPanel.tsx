@@ -167,6 +167,20 @@ export function AiGeocoderPanel() {
           </label>
           <label className="text-xs">
             <span className="mb-1 block text-muted-foreground">
+              Фаззи-префикс ({prefixLen}) — общий «корень» слова для матча словоформ
+            </span>
+            <input
+              type="range"
+              min={3}
+              max={8}
+              step={1}
+              value={prefixLen}
+              onChange={(e) => setPrefixLen(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
               Радиус конфликта ({conflictRadiusM} м)
             </span>
             <input
@@ -178,6 +192,19 @@ export function AiGeocoderPanel() {
               onChange={(e) => setConflictRadiusM(parseInt(e.target.value))}
               className="w-full"
             />
+          </label>
+          <label className="flex items-start gap-2 text-xs">
+            <input
+              type="checkbox"
+              checked={geoStrict}
+              onChange={(e) => setGeoStrict(e.target.checked)}
+              className="mt-0.5"
+            />
+            <span className="text-muted-foreground">
+              Строгая проверка региона/уезда. Выключите, чтобы пропускать кандидатов,
+              у которых совпадает название села, но историческое название уезда не
+              находится в адресе OSM (станет предупреждением).
+            </span>
           </label>
         </div>
 
