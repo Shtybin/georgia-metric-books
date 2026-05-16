@@ -101,14 +101,36 @@ function norm(s: string | undefined | null): string {
     .trim();
 }
 
-/** Returns true if any token of `needle` (≥minTokenLen chars) appears in `hay`. */
-function tokenOverlap(needle: string, hay: string, minTokenLen = 3): boolean {
+/**
+ * Returns true if `needle` and `hay` share a token with a common prefix of
+ * `prefixLen` chars (fuzzy stem match). Handles inflected forms like
+ * «Хашури» ↔ «Хашурский», «Терджола» ↔ «Терджолский».
+ * `minTokenLen` filters out short noise tokens before matching.
+ */
+function tokenOverlap(
+  needle: string,
+  hay: string,
+  minTokenLen = 3,
+  prefixLen = 5,
+): boolean {
   const n = norm(needle);
   const h = norm(hay);
   if (!n || !h) return false;
   if (h.includes(n)) return true;
-  const tokens = n.split(" ").filter((t) => t.length >= minTokenLen);
-  return tokens.some((t) => h.includes(t));
+  const nTokens = n.split(" ").filter((t) => t.length >= minTokenLen);
+  const hTokens = h.split(" ").filter((t) => t.length >= minTokenLen);
+  for (const nt of nTokens) {
+    if (h.includes(nt)) return true;
+    const nStem = nt.slice(0, Math.min(prefixLen, nt.length));
+    if (nStem.length < Math.min(prefixLen, minTokenLen)) continue;
+    for (const ht of hTokens) {
+      const hStem = ht.slice(0, Math.min(prefixLen, ht.length));
+      if (nStem === hStem) return true;
+      // Asymmetric: one is a prefix of the other (e.g. «хашур» ⊂ «хашурск»)
+      if (ht.startsWith(nStem) || nt.startsWith(hStem)) return true;
+    }
+  }
+  return false;
 }
 
 interface ValidationResult {
