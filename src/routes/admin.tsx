@@ -405,6 +405,10 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <Flag className="h-3.5 w-3.5" /> Уезды
                 </span>
+              ) : k === "quality" ? (
+                <span className="inline-flex items-center gap-1">
+                  <BarChart3 className="h-3.5 w-3.5" /> Качество
+                </span>
               ) : (
                 <span className="inline-flex items-center gap-1">
                   <ScrollText className="h-3.5 w-3.5" /> Журнал
