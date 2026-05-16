@@ -464,11 +464,11 @@ function AdminPage() {
         </div>}
       </header>
 
-      <section className="mx-auto max-w-6xl px-4 pt-4">
-        <DataQualitySummary />
-      </section>
-
-      {tab === "cards" ? (
+      {tab === "quality" ? (
+        <section className="mx-auto max-w-6xl px-4 py-4">
+          <DataQualitySummary />
+        </section>
+      ) : tab === "cards" ? (
         <FeatureCardsEditor />
       ) : tab === "uezd" ? (
         <MissingYearsSuggestionsModeration />
