@@ -354,6 +354,10 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         offset: z.number().int().min(0).default(0),
         /** Min length of a token to be considered when matching name/region. */
         minTokenLen: z.number().int().min(2).max(10).default(3),
+        /** Length of leading stem used for fuzzy token matching (e.g. «хашур» = «хашурск»). */
+        prefixLen: z.number().int().min(3).max(8).default(5),
+        /** If false, region/uezd mismatch becomes a warning instead of a hard reject. */
+        geoStrict: z.boolean().default(true),
         /** Conflict radius in meters around a candidate point. */
         conflictRadiusM: z.number().int().min(0).max(5000).default(300),
       })
