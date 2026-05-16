@@ -9,7 +9,7 @@ import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYea
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
 import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
 import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles } from "lucide-react";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3 } from "lucide-react";
 
 interface OsmActionProps {
   lat: number;
