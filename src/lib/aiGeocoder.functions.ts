@@ -101,14 +101,36 @@ function norm(s: string | undefined | null): string {
     .trim();
 }
 
-/** Returns true if any token of `needle` (≥minTokenLen chars) appears in `hay`. */
-function tokenOverlap(needle: string, hay: string, minTokenLen = 3): boolean {
+/**
+ * Returns true if `needle` and `hay` share a token with a common prefix of
+ * `prefixLen` chars (fuzzy stem match). Handles inflected forms like
+ * «Хашури» ↔ «Хашурский», «Терджола» ↔ «Терджолский».
+ * `minTokenLen` filters out short noise tokens before matching.
+ */
+function tokenOverlap(
+  needle: string,
+  hay: string,
+  minTokenLen = 3,
+  prefixLen = 5,
+): boolean {
   const n = norm(needle);
   const h = norm(hay);
   if (!n || !h) return false;
   if (h.includes(n)) return true;
-  const tokens = n.split(" ").filter((t) => t.length >= minTokenLen);
-  return tokens.some((t) => h.includes(t));
+  const nTokens = n.split(" ").filter((t) => t.length >= minTokenLen);
+  const hTokens = h.split(" ").filter((t) => t.length >= minTokenLen);
+  for (const nt of nTokens) {
+    if (h.includes(nt)) return true;
+    const nStem = nt.slice(0, Math.min(prefixLen, nt.length));
+    if (nStem.length < Math.min(prefixLen, minTokenLen)) continue;
+    for (const ht of hTokens) {
+      const hStem = ht.slice(0, Math.min(prefixLen, ht.length));
+      if (nStem === hStem) return true;
+      // Asymmetric: one is a prefix of the other (e.g. «хашур» ⊂ «хашурск»)
+      if (ht.startsWith(nStem) || nt.startsWith(hStem)) return true;
+    }
+  }
+  return false;
 }
 
 interface ValidationResult {
@@ -124,7 +146,14 @@ interface ValidationResult {
  *    названием (RU/EN/KA) исторического селения
  * Returns ok=false если 2 critical-проверки не прошли (явная ошибка совпадения).
  */
-function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 3): ValidationResult {
+function validateOsmMatch(
+  item: UnlocatedItem,
+  hit: NominatimHit,
+  opts: { minTokenLen?: number; prefixLen?: number; geoStrict?: boolean } = {},
+): ValidationResult {
+  const minTokenLen = opts.minTokenLen ?? 3;
+  const prefixLen = opts.prefixLen ?? 5;
+  const geoStrict = opts.geoStrict ?? true;
   const warnings: string[] = [];
   const reasons: string[] = [];
   const addr = hit.address || {};
@@ -150,38 +179,37 @@ function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 
     .filter(Boolean)
     .join(" ");
 
-  // 1. region/uezd
+  // 1. region/uezd — fuzzy prefix match handles «Хашури» ↔ «Хашурский».
   const histGeo = [item.uezd.ru, item.uezd.en, item.uezd.ka, item.region.ru, item.region.en, item.region.ka]
     .filter((s) => s && s.trim().length > 0) as string[];
   const histGeoSet = histGeo.length > 0;
   const fullDisplay = `${addrRegionStr} ${hit.display_name}`;
-  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen));
+  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen, prefixLen));
   if (histGeoSet && !geoOk) {
-    reasons.push(
-      `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`,
-    );
+    const msg = `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`;
+    if (geoStrict) reasons.push(msg);
+    else warnings.push(msg);
   }
 
-  // 2. name match (RU/EN/KA)
+  // 2. name match (RU/EN/KA) — always strict
   const histNames = [item.settlement.ka, item.settlement.ru, item.settlement.en]
     .filter((s) => s && s.trim().length > 0) as string[];
   const nameSource = `${addrName} ${hit.display_name}`;
   const nameOk =
-    histNames.length === 0 || histNames.some((n) => tokenOverlap(n, nameSource, minTokenLen));
+    histNames.length === 0 ||
+    histNames.some((n) => tokenOverlap(n, nameSource, minTokenLen, prefixLen));
   if (!nameOk) {
     reasons.push(
       `название не совпадает: ист. «${histNames.join(" / ")}» vs OSM «${addrName || hit.display_name}»`,
     );
   }
 
-  // Soft warning: localized historical strings inconsistent among themselves
-  // (e.g. uezd.ru заполнен, uezd.ka пуст) — не блокируем, но логируем.
   const uezdLangs = [item.uezd.ru, item.uezd.en, item.uezd.ka].filter((s) => s && s.trim().length > 0).length;
   if (uezdLangs > 0 && uezdLangs < 2) {
     warnings.push("уезд указан только на одном языке");
   }
 
-  return { ok: geoOk && nameOk, warnings, reasons };
+  return { ok: (geoStrict ? geoOk : true) && nameOk, warnings, reasons };
 }
 
 async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
@@ -326,6 +354,10 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         offset: z.number().int().min(0).default(0),
         /** Min length of a token to be considered when matching name/region. */
         minTokenLen: z.number().int().min(2).max(10).default(3),
+        /** Length of leading stem used for fuzzy token matching (e.g. «хашур» = «хашурск»). */
+        prefixLen: z.number().int().min(3).max(8).default(5),
+        /** If false, region/uezd mismatch becomes a warning instead of a hard reject. */
+        geoStrict: z.boolean().default(true),
         /** Conflict radius in meters around a candidate point. */
         conflictRadiusM: z.number().int().min(0).max(5000).default(300),
       })
@@ -424,7 +456,11 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         const lon = parseFloat(chosen.lon);
 
         // Per-edit consistency checks: region/uezd + name across RU/EN/KA
-        const validation = validateOsmMatch(item, chosen, data.minTokenLen);
+        const validation = validateOsmMatch(item, chosen, {
+          minTokenLen: data.minTokenLen,
+          prefixLen: data.prefixLen,
+          geoStrict: data.geoStrict,
+        });
         if (!validation.ok) {
           result.rejected++;
           result.log.push({
