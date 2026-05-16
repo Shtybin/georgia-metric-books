@@ -456,7 +456,11 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         const lon = parseFloat(chosen.lon);
 
         // Per-edit consistency checks: region/uezd + name across RU/EN/KA
-        const validation = validateOsmMatch(item, chosen, data.minTokenLen);
+        const validation = validateOsmMatch(item, chosen, {
+          minTokenLen: data.minTokenLen,
+          prefixLen: data.prefixLen,
+          geoStrict: data.geoStrict,
+        });
         if (!validation.ok) {
           result.rejected++;
           result.log.push({
