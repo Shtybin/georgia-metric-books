@@ -146,7 +146,14 @@ interface ValidationResult {
  *    названием (RU/EN/KA) исторического селения
  * Returns ok=false если 2 critical-проверки не прошли (явная ошибка совпадения).
  */
-function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 3): ValidationResult {
+function validateOsmMatch(
+  item: UnlocatedItem,
+  hit: NominatimHit,
+  opts: { minTokenLen?: number; prefixLen?: number; geoStrict?: boolean } = {},
+): ValidationResult {
+  const minTokenLen = opts.minTokenLen ?? 3;
+  const prefixLen = opts.prefixLen ?? 5;
+  const geoStrict = opts.geoStrict ?? true;
   const warnings: string[] = [];
   const reasons: string[] = [];
   const addr = hit.address || {};
@@ -172,38 +179,37 @@ function validateOsmMatch(item: UnlocatedItem, hit: NominatimHit, minTokenLen = 
     .filter(Boolean)
     .join(" ");
 
-  // 1. region/uezd
+  // 1. region/uezd — fuzzy prefix match handles «Хашури» ↔ «Хашурский».
   const histGeo = [item.uezd.ru, item.uezd.en, item.uezd.ka, item.region.ru, item.region.en, item.region.ka]
     .filter((s) => s && s.trim().length > 0) as string[];
   const histGeoSet = histGeo.length > 0;
   const fullDisplay = `${addrRegionStr} ${hit.display_name}`;
-  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen));
+  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen, prefixLen));
   if (histGeoSet && !geoOk) {
-    reasons.push(
-      `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`,
-    );
+    const msg = `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`;
+    if (geoStrict) reasons.push(msg);
+    else warnings.push(msg);
   }
 
-  // 2. name match (RU/EN/KA)
+  // 2. name match (RU/EN/KA) — always strict
   const histNames = [item.settlement.ka, item.settlement.ru, item.settlement.en]
     .filter((s) => s && s.trim().length > 0) as string[];
   const nameSource = `${addrName} ${hit.display_name}`;
   const nameOk =
-    histNames.length === 0 || histNames.some((n) => tokenOverlap(n, nameSource, minTokenLen));
+    histNames.length === 0 ||
+    histNames.some((n) => tokenOverlap(n, nameSource, minTokenLen, prefixLen));
   if (!nameOk) {
     reasons.push(
       `название не совпадает: ист. «${histNames.join(" / ")}» vs OSM «${addrName || hit.display_name}»`,
     );
   }
 
-  // Soft warning: localized historical strings inconsistent among themselves
-  // (e.g. uezd.ru заполнен, uezd.ka пуст) — не блокируем, но логируем.
   const uezdLangs = [item.uezd.ru, item.uezd.en, item.uezd.ka].filter((s) => s && s.trim().length > 0).length;
   if (uezdLangs > 0 && uezdLangs < 2) {
     warnings.push("уезд указан только на одном языке");
   }
 
-  return { ok: geoOk && nameOk, warnings, reasons };
+  return { ok: (geoStrict ? geoOk : true) && nameOk, warnings, reasons };
 }
 
 async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
