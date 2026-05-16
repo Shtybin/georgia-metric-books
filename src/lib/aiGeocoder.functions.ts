@@ -107,6 +107,13 @@ function norm(s: string | undefined | null): string {
  * «Хашури» ↔ «Хашурский», «Терджола» ↔ «Терджолский».
  * `minTokenLen` filters out short noise tokens before matching.
  */
+function commonPrefix(a: string, b: string): number {
+  const m = Math.min(a.length, b.length);
+  let i = 0;
+  while (i < m && a[i] === b[i]) i++;
+  return i;
+}
+
 function tokenOverlap(
   needle: string,
   hay: string,
@@ -121,13 +128,13 @@ function tokenOverlap(
   const hTokens = h.split(" ").filter((t) => t.length >= minTokenLen);
   for (const nt of nTokens) {
     if (h.includes(nt)) return true;
-    const nStem = nt.slice(0, Math.min(prefixLen, nt.length));
-    if (nStem.length < Math.min(prefixLen, minTokenLen)) continue;
     for (const ht of hTokens) {
-      const hStem = ht.slice(0, Math.min(prefixLen, ht.length));
-      if (nStem === hStem) return true;
-      // Asymmetric: one is a prefix of the other (e.g. «хашур» ⊂ «хашурск»)
-      if (ht.startsWith(nStem) || nt.startsWith(hStem)) return true;
+      const shorter = Math.min(nt.length, ht.length);
+      // Adaptive threshold: short tokens (e.g. «вани» 4ch) need len-2 shared
+      // prefix («ван» = 3) so «Вани» ↔ «Ванский» matches, while still rejecting
+      // unrelated pairs like «вани»/«вакир» (only 2 shared).
+      const threshold = Math.min(prefixLen, Math.max(3, shorter - 2));
+      if (commonPrefix(nt, ht) >= threshold) return true;
     }
   }
   return false;
