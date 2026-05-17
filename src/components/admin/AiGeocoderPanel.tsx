@@ -6,6 +6,7 @@ import { Loader2, Sparkles, CheckCircle2, XCircle, AlertCircle, MapPin } from "l
 
 interface BatchResult {
   processed: number;
+  scanned: number;
   inserted: number;
   skipped: number;
   rejected: number;
