@@ -403,6 +403,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
 
     const result: BatchResult = {
       processed: 0,
+      scanned: 0,
       inserted: 0,
       skipped: 0,
       rejected: 0,
@@ -412,7 +413,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
     };
 
     for (const item of candidates) {
-      result.processed++;
+      result.scanned++;
       const label = item.settlement.ru || item.settlement.en;
       const uezdLabel = item.uezd.ru || item.uezd.en || "";
       try {
