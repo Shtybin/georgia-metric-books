@@ -34,7 +34,10 @@ interface NominatimHit {
 }
 
 interface BatchResult {
+  /** Counts only successful attempts (inserted + skipped). Rejected items (not found / AI отклонил) do NOT count toward the limit. */
   processed: number;
+  /** How many queue items were consumed in total (used by client to advance offset). */
+  scanned: number;
   inserted: number;
   skipped: number;
   rejected: number;
