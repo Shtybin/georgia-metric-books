@@ -490,6 +490,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         if (nearby && nearby.length > 0) {
           const n = nearby[0];
           result.skipped++;
+          result.processed++;
           result.log.push({
             settlement: label,
             uezd: uezdLabel,
