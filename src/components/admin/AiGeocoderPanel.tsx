@@ -243,6 +243,9 @@ export function AiGeocoderPanel() {
         <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
           <div className="mb-3 flex flex-wrap gap-3 text-xs">
             <span className="rounded-full bg-muted px-2 py-0.5">
+              просмотрено: <b className="tabular-nums">{result.scanned}</b>
+            </span>
+            <span className="rounded-full bg-muted px-2 py-0.5">
               обработано: <b className="tabular-nums">{result.processed}</b>
             </span>
             <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-700 dark:text-emerald-300">
