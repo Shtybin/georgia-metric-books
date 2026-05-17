@@ -129,7 +129,7 @@
   :root {
     --map-top-bar-height: 3.5rem;
     --map-bottom-legend-height: 0rem;
-    --map-overlay-gap-top: calc(var(--map-safe-top) + var(--map-top-bar-height) + 1rem);
+    --map-overlay-gap-top: calc(var(--map-safe-top) + var(--map-top-bar-height) + 0.25rem);
     --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + 0.75rem);
     --map-overlay-gap-left: calc(var(--map-safe-left) + 0.75rem);
     --map-overlay-gap-right: calc(var(--map-safe-right) + 0.75rem);
