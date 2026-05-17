@@ -34,7 +34,10 @@ interface NominatimHit {
 }
 
 interface BatchResult {
+  /** Counts only successful attempts (inserted + skipped). Rejected items (not found / AI отклонил) do NOT count toward the limit. */
   processed: number;
+  /** How many queue items were consumed in total (used by client to advance offset). */
+  scanned: number;
   inserted: number;
   skipped: number;
   rejected: number;
@@ -400,6 +403,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
 
     const result: BatchResult = {
       processed: 0,
+      scanned: 0,
       inserted: 0,
       skipped: 0,
       rejected: 0,
@@ -409,7 +413,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
     };
 
     for (const item of candidates) {
-      result.processed++;
+      result.scanned++;
       const label = item.settlement.ru || item.settlement.en;
       const uezdLabel = item.uezd.ru || item.uezd.en || "";
       try {
@@ -437,6 +441,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         }
         if (arb.confidence < data.minConfidence) {
           result.skipped++;
+          result.processed++;
           result.log.push({
             settlement: label,
             uezd: uezdLabel,
@@ -485,6 +490,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         if (nearby && nearby.length > 0) {
           const n = nearby[0];
           result.skipped++;
+          result.processed++;
           result.log.push({
             settlement: label,
             uezd: uezdLabel,
@@ -530,6 +536,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
           });
         } else {
           result.inserted++;
+          result.processed++;
           result.log.push({
             settlement: label,
             uezd: uezdLabel,

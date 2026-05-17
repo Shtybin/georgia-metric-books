@@ -6,6 +6,7 @@ import { Loader2, Sparkles, CheckCircle2, XCircle, AlertCircle, MapPin } from "l
 
 interface BatchResult {
   processed: number;
+  scanned: number;
   inserted: number;
   skipped: number;
   rejected: number;
@@ -52,7 +53,7 @@ export function AiGeocoderPanel() {
     // Loop client-side, accumulating logs, until target reached or queue empty.
     const CHUNK = 3;
     const acc: BatchResult = {
-      processed: 0, inserted: 0, skipped: 0, rejected: 0,
+      processed: 0, scanned: 0, inserted: 0, skipped: 0, rejected: 0,
       remaining: 0, errors: [], log: [],
     };
     try {
@@ -60,7 +61,10 @@ export function AiGeocoderPanel() {
       while (acc.processed < limit) {
         const r = (await runFn({
           data: {
-            limit: Math.min(CHUNK, limit - acc.processed),
+            // Ask server for a full chunk on every call; the server caps per-chunk
+            // scan budget internally. We loop client-side until `processed`
+            // (inserted+skipped, excluding "not found") reaches the target.
+            limit: CHUNK,
             minConfidence,
             minTokenLen,
             prefixLen,
@@ -71,6 +75,7 @@ export function AiGeocoderPanel() {
           },
         })) as BatchResult;
         acc.processed += r.processed;
+        acc.scanned += r.scanned;
         acc.inserted += r.inserted;
         acc.skipped += r.skipped;
         acc.rejected += r.rejected;
@@ -79,8 +84,8 @@ export function AiGeocoderPanel() {
         acc.log.push(...r.log);
         setResult({ ...acc });
         setProgress({ done: acc.processed, target: limit });
-        if (r.processed === 0) break; // queue exhausted
-        offset += r.processed;
+        if (r.scanned === 0) break; // queue exhausted
+        offset += r.scanned;
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -237,6 +242,9 @@ export function AiGeocoderPanel() {
       {result && (
         <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
           <div className="mb-3 flex flex-wrap gap-3 text-xs">
+            <span className="rounded-full bg-muted px-2 py-0.5">
+              просмотрено: <b className="tabular-nums">{result.scanned}</b>
+            </span>
             <span className="rounded-full bg-muted px-2 py-0.5">
               обработано: <b className="tabular-nums">{result.processed}</b>
             </span>
