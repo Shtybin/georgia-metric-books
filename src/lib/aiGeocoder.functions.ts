@@ -2,7 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { getRequest } from "@tanstack/react-start/server";
+
+// Bundle the unlocated dataset so the worker doesn't depend on filesystem or
+// an internal HTTP fetch (which gets routed back to the SPA shell in preview).
+import unlocatedBundled from "../../public/data/unlocated.json";
+
 
 // ---- Types -------------------------------------------------------------
 
@@ -328,24 +332,8 @@ ${candidates.map((c, i) => `${i}. ${c.display_name} [${c.class}/${c.type}, lat=$
 }
 
 async function fetchUnlocated(): Promise<UnlocatedItem[]> {
-  // Try filesystem first (works in dev and when public/ is bundled)
-  try {
-    const fs = await import("node:fs/promises");
-    const path = await import("node:path");
-    const filePath = path.resolve(process.cwd(), "public/data/unlocated.json");
-    const text = await fs.readFile(filePath, "utf-8");
-    return JSON.parse(text) as UnlocatedItem[];
-  } catch (fsErr) {
-    // Fallback: same-origin HTTP fetch (production worker)
-    const req = getRequest();
-    const proto = req?.headers.get("x-forwarded-proto") || "https";
-    const host = req?.headers.get("host");
-    const origin = host ? `${proto}://${host}` : "";
-    if (!origin) throw new Error(`Cannot load unlocated.json: ${(fsErr as Error).message}`);
-    const res = await fetch(`${origin}/data/unlocated.json`);
-    if (!res.ok) throw new Error(`unlocated.json ${res.status}`);
-    return (await res.json()) as UnlocatedItem[];
-  }
+  // Primary source: bundled JSON (works in both Node dev and Cloudflare worker).
+  return unlocatedBundled as UnlocatedItem[];
 }
 
 // ---- Server function ---------------------------------------------------
