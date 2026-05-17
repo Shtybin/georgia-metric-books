@@ -536,6 +536,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
           });
         } else {
           result.inserted++;
+          result.processed++;
           result.log.push({
             settlement: label,
             uezd: uezdLabel,
