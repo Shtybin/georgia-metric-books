@@ -328,7 +328,7 @@ ${candidates.map((c, i) => `${i}. ${c.display_name} [${c.class}/${c.type}, lat=$
 }
 
 async function fetchUnlocated(): Promise<UnlocatedItem[]> {
-  // Try filesystem first (works in dev and when public/ is bundled)
+  // Try filesystem first (works in Node dev)
   try {
     const fs = await import("node:fs/promises");
     const path = await import("node:path");
@@ -336,15 +336,32 @@ async function fetchUnlocated(): Promise<UnlocatedItem[]> {
     const text = await fs.readFile(filePath, "utf-8");
     return JSON.parse(text) as UnlocatedItem[];
   } catch (fsErr) {
-    // Fallback: same-origin HTTP fetch (production worker)
+    // Fallback: same-origin HTTP fetch (production worker).
+    // In the Cloudflare Worker preview, an internal fetch can be routed back
+    // through SSR and return the SPA shell (HTML). Detect that explicitly.
     const req = getRequest();
     const proto = req?.headers.get("x-forwarded-proto") || "https";
     const host = req?.headers.get("host");
     const origin = host ? `${proto}://${host}` : "";
     if (!origin) throw new Error(`Cannot load unlocated.json: ${(fsErr as Error).message}`);
-    const res = await fetch(`${origin}/data/unlocated.json`);
-    if (!res.ok) throw new Error(`unlocated.json ${res.status}`);
-    return (await res.json()) as UnlocatedItem[];
+    const url = `${origin}/data/unlocated.json`;
+    const res = await fetch(url, { headers: { accept: "application/json" } });
+    if (!res.ok) throw new Error(`unlocated.json ${res.status} from ${url}`);
+    const ct = res.headers.get("content-type") || "";
+    const text = await res.text();
+    if (ct.includes("text/html") || text.startsWith("<!DOCTYPE") || text.startsWith("<html")) {
+      throw new Error(
+        `unlocated.json: got HTML instead of JSON from ${url} (content-type: ${ct}). ` +
+          `Static asset is not reachable from the worker — bundling required.`,
+      );
+    }
+    try {
+      return JSON.parse(text) as UnlocatedItem[];
+    } catch (parseErr) {
+      throw new Error(
+        `unlocated.json: failed to parse JSON from ${url}: ${(parseErr as Error).message}`,
+      );
+    }
   }
 }
 
