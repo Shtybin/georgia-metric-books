@@ -441,6 +441,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         }
         if (arb.confidence < data.minConfidence) {
           result.skipped++;
+          result.processed++;
           result.log.push({
             settlement: label,
             uezd: uezdLabel,
