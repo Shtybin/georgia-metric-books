@@ -3,6 +3,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { getRequest } from "@tanstack/react-start/server";
+// Bundle the unlocated dataset so the worker doesn't depend on filesystem or
+// an internal HTTP fetch (which gets routed back to the SPA shell in preview).
+import unlocatedBundled from "../../public/data/unlocated.json";
+
 
 // ---- Types -------------------------------------------------------------
 
