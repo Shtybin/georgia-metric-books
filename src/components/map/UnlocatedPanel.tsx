@@ -58,6 +58,7 @@ export function UnlocatedPanel({
   locatedIndex,
   onJumpToFeature,
   excludeKeys,
+  totalCount,
   onAddCoords,
 }: Props) {
   const T = t(lang);
