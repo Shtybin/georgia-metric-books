@@ -32,6 +32,9 @@ interface Props {
   onJumpToFeature: (featureId: number) => void;
   /** Keys of items already pinned by the user — should be hidden from the list. */
   excludeKeys: Set<string>;
+  /** Authoritative total count to display in the header (kept in sync with the
+   *  map button and legend). Falls back to visibleItems.length when omitted. */
+  totalCount?: number;
   /** User submits new coordinates for an item. */
   onAddCoords: (item: UnlocatedItem, lat: number, lon: number) => void;
 }
@@ -55,6 +58,7 @@ export function UnlocatedPanel({
   locatedIndex,
   onJumpToFeature,
   excludeKeys,
+  totalCount,
   onAddCoords,
 }: Props) {
   const T = t(lang);
@@ -154,7 +158,7 @@ export function UnlocatedPanel({
           <SheetTitle className="font-serif text-lg">
             {T.unlocatedTitle}{" "}
             <span className="text-sm font-normal text-muted-foreground">
-              · {visibleItems.length}
+              · {(totalCount ?? visibleItems.length).toLocaleString()}
             </span>
           </SheetTitle>
           <SheetDescription className="text-xs">
