@@ -1455,6 +1455,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         locatedIndex={locatedIndex}
         onJumpToFeature={jumpToFeature}
         excludeKeys={addedKeys}
+        totalCount={Math.max(
+          0,
+          (stats?.unlocatedGroups ?? stats?.withoutCoords ?? 0) - addedKeys.size,
+        )}
         onAddCoords={handleAddCoords}
       />
 
