@@ -1830,7 +1830,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </div>
             <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
               {(() => {
-                const extra = (approved?.length ?? 0) + userPinnedKeys.size;
+                const extra = addedKeys.size;
                 const total = stats.total;
                 const withC = Math.max(0, stats.total - stats.withoutCoords + extra);
                 const without = Math.max(0, stats.withoutCoords - extra);
