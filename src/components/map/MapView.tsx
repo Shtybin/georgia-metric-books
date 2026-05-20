@@ -1363,11 +1363,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           >
             <ListX className="h-3.5 w-3.5" />
             <span>{T.unlocatedButton}</span>
-            {(stats?.unlocatedGroups ?? stats?.withoutCoords) ? (
-              <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
-                {(stats!.unlocatedGroups ?? stats!.withoutCoords).toLocaleString()}
-              </span>
-            ) : null}
+            {(() => {
+              const base = stats?.unlocatedGroups ?? stats?.withoutCoords;
+              if (!base) return null;
+              const remaining = Math.max(0, base - userPinnedKeys.size);
+              return (
+                <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
+                  {remaining.toLocaleString()}
+                </span>
+              );
+            })()}
           </button>
           {overrides.length > 0 && (
             <button
