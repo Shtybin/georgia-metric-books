@@ -1387,7 +1387,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             {(() => {
               const base = stats?.unlocatedGroups ?? stats?.withoutCoords;
               if (!base) return null;
-              const remaining = Math.max(0, base - userPinnedKeys.size);
+              const remaining = Math.max(0, base - addedKeys.size);
               return (
                 <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
                   {remaining.toLocaleString()}
