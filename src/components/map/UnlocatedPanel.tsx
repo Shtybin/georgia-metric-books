@@ -32,6 +32,9 @@ interface Props {
   onJumpToFeature: (featureId: number) => void;
   /** Keys of items already pinned by the user — should be hidden from the list. */
   excludeKeys: Set<string>;
+  /** Authoritative total count to display in the header (kept in sync with the
+   *  map button and legend). Falls back to visibleItems.length when omitted. */
+  totalCount?: number;
   /** User submits new coordinates for an item. */
   onAddCoords: (item: UnlocatedItem, lat: number, lon: number) => void;
 }
