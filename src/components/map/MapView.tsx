@@ -479,7 +479,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     // Fire-and-forget submission to community moderation queue.
     submitSuggestion(item, lat, lon)
       .then(() => setSubmitToast(T.suggestionSent))
-      .catch((e) => console.error("[submitSuggestion]", e));
+      .catch((e) => {
+        console.error("[submitSuggestion]", e);
+        setSubmitToast(T.suggestionError);
+      });
     // Build a synthetic feature now so we can fly there immediately,
     // before React re-renders with the merged dataset.
     const tempId = 1_000_000 + Date.now();
