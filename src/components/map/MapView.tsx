@@ -446,6 +446,27 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     () => new Set(Object.keys(userCoords.records)),
     [userCoords.records],
   );
+  // Keys of community-approved suggestions already saved in DB —
+  // formatted identically to unlocatedKey() so we can dedupe against
+  // user pins and exclude them from the unlocated panel.
+  const approvedKeys = useMemo(() => {
+    const s = new Set<string>();
+    for (const a of approved) {
+      const settlement = (a.settlement_ru || a.settlement_en || "")
+        .toLocaleLowerCase()
+        .trim();
+      const uezd = (a.uezd_ru || a.uezd_en || "").toLocaleLowerCase().trim();
+      if (settlement) s.add(`${settlement}|${uezd}`);
+    }
+    return s;
+  }, [approved]);
+  // Unified set used by all three counters (button, panel, legend)
+  // and as the panel's excludeKeys. Deduped via Set union.
+  const addedKeys = useMemo(() => {
+    const s = new Set<string>(approvedKeys);
+    for (const k of userPinnedKeys) s.add(k);
+    return s;
+  }, [approvedKeys, userPinnedKeys]);
 
   const jumpToFeature = (id: number) => {
     const f = data?.features.find((x) => (x.id as number) === id);
@@ -458,7 +479,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     // Fire-and-forget submission to community moderation queue.
     submitSuggestion(item, lat, lon)
       .then(() => setSubmitToast(T.suggestionSent))
-      .catch((e) => console.error("[submitSuggestion]", e));
+      .catch((e) => {
+        console.error("[submitSuggestion]", e);
+        setSubmitToast(T.suggestionError);
+      });
     // Build a synthetic feature now so we can fly there immediately,
     // before React re-renders with the merged dataset.
     const tempId = 1_000_000 + Date.now();
@@ -1366,7 +1390,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             {(() => {
               const base = stats?.unlocatedGroups ?? stats?.withoutCoords;
               if (!base) return null;
-              const remaining = Math.max(0, base - userPinnedKeys.size);
+              const remaining = Math.max(0, base - addedKeys.size);
               return (
                 <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] tabular-nums text-muted-foreground">
                   {remaining.toLocaleString()}
@@ -1430,7 +1454,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         lang={lang}
         locatedIndex={locatedIndex}
         onJumpToFeature={jumpToFeature}
-        excludeKeys={userPinnedKeys}
+        excludeKeys={addedKeys}
         onAddCoords={handleAddCoords}
       />
 
@@ -1809,7 +1833,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </div>
             <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
               {(() => {
-                const extra = (approved?.length ?? 0) + userPinnedKeys.size;
+                const extra = addedKeys.size;
                 const total = stats.total;
                 const withC = Math.max(0, stats.total - stats.withoutCoords + extra);
                 const without = Math.max(0, stats.withoutCoords - extra);
