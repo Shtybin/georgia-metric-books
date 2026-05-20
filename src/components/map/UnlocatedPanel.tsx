@@ -158,7 +158,7 @@ export function UnlocatedPanel({
           <SheetTitle className="font-serif text-lg">
             {T.unlocatedTitle}{" "}
             <span className="text-sm font-normal text-muted-foreground">
-              · {visibleItems.length}
+              · {(totalCount ?? visibleItems.length).toLocaleString()}
             </span>
           </SheetTitle>
           <SheetDescription className="text-xs">
