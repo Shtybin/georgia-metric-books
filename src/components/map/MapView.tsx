@@ -1451,7 +1451,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         lang={lang}
         locatedIndex={locatedIndex}
         onJumpToFeature={jumpToFeature}
-        excludeKeys={userPinnedKeys}
+        excludeKeys={addedKeys}
         onAddCoords={handleAddCoords}
       />
 
