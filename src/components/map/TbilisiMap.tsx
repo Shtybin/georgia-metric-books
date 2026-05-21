@@ -209,8 +209,8 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       {/* Filters panel (sidebar on desktop, drawer on mobile) */}
       <div
         className={
-          "pointer-events-auto absolute z-20 flex flex-col gap-3 rounded-xl border border-border bg-card/95 p-3 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-20 max-h-[60vh] overflow-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 lg:flex " +
+          "pointer-events-auto absolute z-20 flex flex-col gap-2 rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur lg:gap-3 lg:p-3 " +
+          "left-3 right-3 top-[7.5rem] bottom-16 overflow-auto sm:left-auto sm:right-4 sm:top-20 sm:w-72 sm:bottom-16 lg:w-80 lg:bottom-20 lg:flex " +
           (filtersOpen ? "flex" : "hidden lg:flex")
         }
       >
