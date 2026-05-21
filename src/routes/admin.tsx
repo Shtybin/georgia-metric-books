@@ -379,7 +379,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "reports", "cards", "uezd", "log", "quality"] as const).map((k) => (
+          {(["coords", "ai", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -409,6 +409,10 @@ function AdminPage() {
               ) : k === "quality" ? (
                 <span className="inline-flex items-center gap-1">
                   <BarChart3 className="h-3.5 w-3.5" /> Качество
+                </span>
+              ) : k === "sources" ? (
+                <span className="inline-flex items-center gap-1">
+                  <BookOpen className="h-3.5 w-3.5" /> Источники
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1">
