@@ -496,6 +496,15 @@ function adminMatches(item: UnlocatedItem, target: FeatureData): { ok: boolean; 
       if (a === b) return { ok: true, how: `admin «${a}» совпал` };
     }
   }
+  // Алиасы: ист. «Они» ≡ совр. «Онский муниципалитет» и т.п.
+  const histRaw = [item.uezd.ru, item.uezd.en, item.uezd.ka, item.region.ru, item.region.en, item.region.ka].filter(Boolean) as string[];
+  const tgtRaw = [target.uezd.ru, target.uezd.en, target.uezd.ka, target.region.ru, target.region.en, target.region.ka].filter(Boolean) as string[];
+  for (const h of histRaw) {
+    for (const t of tgtRaw) {
+      const a = aliasMatches(h, t);
+      if (a.ok) return { ok: true, how: `admin alias «${a.matchedHist}» ↔ «${a.matchedModern}»` };
+    }
+  }
   // If both sides have no admin info at all, name+distance alone is too weak — refuse.
   if (buckets.length === 0 && tgtBuckets.length === 0) return { ok: false, how: "нет admin-полей" };
   return { ok: false, how: `admin расходится (ист. ${buckets.join("/") || "—"} vs ${tgtBuckets.join("/") || "—"})` };
