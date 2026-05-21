@@ -181,16 +181,31 @@ export function ReportProblemButton({ lang, getMapState, inline = false, classNa
 
   return (
     <>
-      <button
-        ref={btnRef}
-        onClick={() => setOpen(true)}
-        style={anchorStyle(anchor)}
-        className="pointer-events-auto absolute z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur transition-[top,bottom,left,right] duration-200 hover:bg-accent hover:text-foreground"
-        aria-label={T.reportButton}
-      >
-        <AlertCircle className="h-3.5 w-3.5" />
-        {T.reportButton}
-      </button>
+      {inline ? (
+        <button
+          ref={btnRef}
+          onClick={() => setOpen(true)}
+          className={
+            (className ?? "") +
+            " pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
+          }
+          aria-label={T.reportButton}
+        >
+          <AlertCircle className="h-3.5 w-3.5" />
+          {T.reportButton}
+        </button>
+      ) : (
+        <button
+          ref={btnRef}
+          onClick={() => setOpen(true)}
+          style={anchorStyle(anchor)}
+          className="pointer-events-auto absolute z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur transition-[top,bottom,left,right] duration-200 hover:bg-accent hover:text-foreground"
+          aria-label={T.reportButton}
+        >
+          <AlertCircle className="h-3.5 w-3.5" />
+          {T.reportButton}
+        </button>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-lg">
