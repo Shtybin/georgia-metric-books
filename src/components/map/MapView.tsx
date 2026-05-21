@@ -324,7 +324,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return (settlement: string, uezd: string): number | undefined => {
       const sN = normalizeName(settlement);
       if (!sN) return undefined;
-      const uN = normalizeName(uezd);
+      const uN = normalizeAdmin(uezd);
       // 1) exact name + matching uezd
       const exact = byName.get(sN);
       if (exact) {
