@@ -1,4 +1,4 @@
-declare module "*.geojson" {
-  const value: GeoJSON.FeatureCollection<GeoJSON.Point, any>;
+declare module "*.geojson?raw" {
+  const value: string;
   export default value;
 }
