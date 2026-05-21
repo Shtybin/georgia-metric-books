@@ -315,6 +315,9 @@ export function AiGeocoderPanel() {
                 {row.status === "inserted" && (
                   <CheckCircle2 className="mt-0.5 h-4 w-4 text-emerald-600" />
                 )}
+                {row.status === "merged" && (
+                  <GitMerge className="mt-0.5 h-4 w-4 text-sky-600" />
+                )}
                 {row.status === "skipped" && (
                   <AlertCircle className="mt-0.5 h-4 w-4 text-amber-600" />
                 )}
