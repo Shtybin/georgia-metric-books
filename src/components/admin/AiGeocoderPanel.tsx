@@ -293,6 +293,9 @@ export function AiGeocoderPanel() {
             <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-700 dark:text-emerald-300">
               добавлено в очередь: <b className="tabular-nums">{result.inserted}</b>
             </span>
+            <span className="rounded-full bg-sky-500/15 px-2 py-0.5 text-sky-700 dark:text-sky-300">
+              слито с опубликованными: <b className="tabular-nums">{result.merged}</b>
+            </span>
             <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-amber-700 dark:text-amber-300">
               пропущено (низкая уверенность): <b className="tabular-nums">{result.skipped}</b>
             </span>
