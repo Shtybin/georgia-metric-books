@@ -4,5 +4,6 @@
   "withoutCoords": 5073,
   "uniqueLocations": 1376,
   "unlocatedGroups": 5073,
-  "geocodingConfidence": 0.331754801368061
+  "geocodingConfidence": 0.331754801368061,
+  "unlocatedCount": 5061
 }
