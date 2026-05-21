@@ -25,6 +25,7 @@ import { circlePolygon, neighborsWithin } from "@/lib/geo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
+import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -1715,6 +1716,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 {T.suggestMissingAction}
               </Button>
             </div>
+
+            <ExternalSourcesList
+              lang={lang}
+              featureId={typeof selected.id === "number" ? (selected.id as number) : null}
+              uezdRu={(sel.uezd as { ru?: string; en?: string; ka?: string })?.ru ?? null}
+              uezdEn={(sel.uezd as { ru?: string; en?: string; ka?: string })?.en ?? null}
+            />
           </div>
 
           {/* Sticky footer */}

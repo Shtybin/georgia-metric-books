@@ -9,7 +9,8 @@ import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYea
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
 import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
 import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3 } from "lucide-react";
+import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen } from "lucide-react";
 
 interface OsmActionProps {
   lat: number;
@@ -113,7 +114,7 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log" | "quality">("coords");
+  const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources">("coords");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
@@ -363,7 +364,7 @@ function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
           <div>
             <h1 className="font-serif text-lg font-semibold">
-              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : "Карточки и точки на карте"}
+              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : tab === "sources" ? "Внешние источники (FamilySearch и др.)" : "Карточки и точки на карте"}
             </h1>
             <p className="text-xs text-muted-foreground">{email}</p>
           </div>
@@ -378,7 +379,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "reports", "cards", "uezd", "log", "quality"] as const).map((k) => (
+          {(["coords", "ai", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -409,6 +410,10 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <BarChart3 className="h-3.5 w-3.5" /> Качество
                 </span>
+              ) : k === "sources" ? (
+                <span className="inline-flex items-center gap-1">
+                  <BookOpen className="h-3.5 w-3.5" /> Источники
+                </span>
               ) : (
                 <span className="inline-flex items-center gap-1">
                   <ScrollText className="h-3.5 w-3.5" /> Журнал
@@ -417,7 +422,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "quality" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "quality" && tab !== "sources" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -468,6 +473,8 @@ function AdminPage() {
         <section className="mx-auto max-w-6xl px-4 py-4">
           <DataQualitySummary />
         </section>
+      ) : tab === "sources" ? (
+        <ExternalSourcesPanel />
       ) : tab === "cards" ? (
         <FeatureCardsEditor />
       ) : tab === "uezd" ? (
