@@ -66,6 +66,8 @@ export const TBILISI_STRINGS = {
     foundCount: (n: number, total: number) => `Показано: ${n} из ${total}`,
     showFilters: "Фильтры",
     hideFilters: "Скрыть",
+    showAll: "Показать все",
+    hideAll: "Убрать все",
     confessions: {
       orthodox_georgian: "Православие (Грузинский экзархат)",
       orthodox_russian: "Православие (Русский приход)",
