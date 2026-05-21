@@ -119,6 +119,42 @@ function norm(s: string | undefined | null): string {
 }
 
 /**
+ * Таблица административных эквивалентов.
+ * Слева — токены (RU/EN/KA), которыми историческое уезд/регион записан в
+ * исходных данных. Справа — токены, которые встречаются в OSM-адресе или в
+ * admin-полях уже опубликованных точек на карте. Если хотя бы один токен из
+ * `hist` нормализованно находится в исторической строке И хотя бы один токен
+ * из `modern` — в OSM/целевой строке, admin считается совпавшим (даже если
+ * fuzzy-проверка по общему префиксу не сработала).
+ *
+ * Добавляйте сюда новые правила по мере обнаружения расхождений.
+ */
+const ADMIN_ALIASES: { hist: string[]; modern: string[] }[] = [
+  // Они → Онский муниципалитет (Рача-Лечхуми и Нижняя Сванетия)
+  { hist: ["они", "oni", "ონი"], modern: ["онски", "oni", "рача", "racha", "лечхуми", "lechkhumi"] },
+  // Борджоми → Боржомский муниципалитет (Самцхе-Джавахети)
+  { hist: ["борджоми", "borjomi", "ბორჯომი"], modern: ["боржом", "borjom", "самцхе", "samtskhe", "джавахети", "javakheti"] },
+];
+
+/** Возвращает true, если пара (historical, modern) описана в ADMIN_ALIASES. */
+function aliasMatches(
+  historical: string,
+  modern: string,
+): { ok: boolean; matchedHist?: string; matchedModern?: string } {
+  const h = norm(historical);
+  const m = norm(modern);
+  if (!h || !m) return { ok: false };
+  for (const a of ADMIN_ALIASES) {
+    const hToken = a.hist.map(norm).find((t) => t && h.includes(t));
+    if (!hToken) continue;
+    const mToken = a.modern.map(norm).find((t) => t && m.includes(t));
+    if (!mToken) continue;
+    return { ok: true, matchedHist: hToken, matchedModern: mToken };
+  }
+  return { ok: false };
+}
+
+/**
  * Returns true if `needle` and `hay` share a token with a common prefix of
  * `prefixLen` chars (fuzzy stem match). Handles inflected forms like
  * «Хашури» ↔ «Хашурский», «Терджола» ↔ «Терджолский».
