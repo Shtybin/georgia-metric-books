@@ -213,10 +213,10 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       {/* Filters panel (sidebar on desktop, compact drawer on mobile/tablet) */}
       <div
         className={
-          "pointer-events-auto absolute z-20 flex-col gap-2 rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-[5.25rem] max-h-[calc(100dvh-7rem)] overflow-auto " +
-          "sm:left-auto sm:right-4 sm:top-20 sm:w-72 sm:max-h-[calc(100dvh-7rem)] " +
-          "lg:w-80 lg:p-3 lg:gap-3 lg:bottom-20 lg:max-h-none " +
+          "pointer-events-auto absolute z-20 flex-col rounded-xl border border-border bg-card/95 shadow-xl backdrop-blur " +
+          "left-3 right-3 top-[5.25rem] max-h-[9.25rem] gap-1.5 overflow-auto p-2 " +
+          "sm:left-auto sm:right-4 sm:top-20 sm:w-72 sm:max-h-[12rem] " +
+          "lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
           (filtersOpen ? "flex" : "hidden lg:flex")
         }
       >
@@ -260,7 +260,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           })}
         </div>
 
-        <div>
+        <div className="hidden lg:block">
           <label className="text-xs font-medium">{T.yearRange}: {yearMin}–{yearMax}</label>
           <div className="mt-1 grid grid-cols-2 gap-2">
             <input
@@ -280,7 +280,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5 text-xs">
+        <div className="hidden flex-col gap-1.5 text-xs lg:flex">
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={onlyPreserved} onChange={(e) => setOnlyPreserved(e.target.checked)} />
             {T.onlyPreserved}
@@ -291,7 +291,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </label>
         </div>
 
-        <div className="flex gap-2">
+        <div className="hidden gap-2 lg:flex">
           <Button
             size="sm" variant="outline" className="flex-1"
             onClick={() => {
