@@ -92,6 +92,29 @@
   "historicalNote": "Древнейшая сохранившаяся церковь Тбилиси (VI в.)."
  },
  {
+  "id": 5,
+  "name": {
+   "ka": "კვირაცხოვლობის წმ. თომა მოციქულის",
+   "ru": "Св. Фомы (Айсорская)",
+   "en": "St. Thomas the Apostle (Aysor/Assyrian)"
+  },
+  "confession": "assyrian",
+  "confessionRaw": "Kukia/Vera area",
+  "address": "Chughureti",
+  "district": "",
+  "lat": 41.711,
+  "lon": 44.795,
+  "preserved": "no",
+  "active": "no",
+  "recordYears": "1885-1921",
+  "startYear": 1885,
+  "endYear": 1921,
+  "missingYears": "1886-1890",
+  "note": "აისორების",
+  "confidence": "low_approx",
+  "historicalNote": "Исторический храм общины ассирийцев (айсоров). Уничтожен."
+ },
+ {
   "id": 6,
   "name": {
    "ka": "ბაპტისტების თემის",
