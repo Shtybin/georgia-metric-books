@@ -1715,6 +1715,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 {T.suggestMissingAction}
               </Button>
             </div>
+
+            <ExternalSourcesList
+              lang={lang}
+              featureId={typeof selected.id === "number" ? (selected.id as number) : null}
+              uezdRu={(sel.uezd as { ru?: string; en?: string; ka?: string })?.ru ?? null}
+              uezdEn={(sel.uezd as { ru?: string; en?: string; ka?: string })?.en ?? null}
+            />
           </div>
 
           {/* Sticky footer */}
