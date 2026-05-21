@@ -122,6 +122,8 @@ export const TBILISI_STRINGS = {
     foundCount: (n: number, total: number) => `Showing: ${n} of ${total}`,
     showFilters: "Filters",
     hideFilters: "Hide",
+    showAll: "Show all",
+    hideAll: "Hide all",
     confessions: {
       orthodox_georgian: "Orthodox (Georgian Exarchate)",
       orthodox_russian: "Orthodox (Russian parish)",
