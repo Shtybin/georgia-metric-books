@@ -242,22 +242,37 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </button>
         </div>
 
-        <div className="pointer-events-auto flex w-auto self-end items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur sm:self-auto">
-          <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
-          {(["ru", "en", "ka"] as const).map((l) => (
-            <button
-              key={l}
-              onClick={() => onLangChange(l)}
-              className={
-                "rounded px-2 py-1 text-xs uppercase " +
-                (lang === l
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent")
-              }
-            >
-              {l === "ka" ? "ქა" : l}
-            </button>
-          ))}
+        <div className="pointer-events-auto flex w-auto items-center gap-2 self-end sm:self-auto">
+          <div className="inline-flex w-fit items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
+            <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
+            {(["ru", "en", "ka"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => onLangChange(l)}
+                className={
+                  "rounded px-2 py-1 text-xs uppercase " +
+                  (lang === l
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-accent")
+                }
+              >
+                {l === "ka" ? "ქა" : l}
+              </button>
+            ))}
+          </div>
+          {/* Report button next to language switcher on tablet+ */}
+          <div className="hidden sm:block">
+            <ReportProblemButton
+              lang={lang}
+              getMapState={() => {
+                const m = mapRef.current;
+                if (!m) return null;
+                const c = m.getCenter();
+                return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+              }}
+              inline
+            />
+          </div>
         </div>
       </div>
 
