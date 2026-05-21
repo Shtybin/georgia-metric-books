@@ -161,6 +161,40 @@ function Index() {
           </div>
         </section>
 
+        {/* Tbilisi map CTA */}
+        <section className="mt-6">
+          <Link
+            to="/tbilisi"
+            search={{ lang }}
+            className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-card via-card to-primary/10 p-5 shadow-md transition-transform hover:-translate-y-0.5 sm:p-6"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+              <Landmark className="h-6 w-6" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-serif text-xs uppercase tracking-[0.18em] text-primary">
+                {lang === "en" ? "City focus" : lang === "ka" ? "ქალაქის ფოკუსი" : "Фокус города"}
+              </p>
+              <h3 className="mt-1 font-serif text-xl font-semibold sm:text-2xl">
+                {lang === "en"
+                  ? "Map of Tbilisi churches"
+                  : lang === "ka"
+                  ? "თბილისის ეკლესიების რუკა"
+                  : "Карта церквей Тбилиси"}
+              </h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {lang === "en"
+                  ? "108 parishes of all confessions — Orthodox, Armenian, Catholic, Lutheran, Jewish, Molokan and more — with parish-register years."
+                  : lang === "ka"
+                  ? "108 სამრევლო ყველა კონფესიის — მართლმადიდებლური, სომხური, კათოლიკური, ლუთერანული, იუდაური, მოლოკანური და სხვა — მეტრიკული წიგნების წლებით."
+                  : "108 приходов всех конфессий — православных, армянских, католических, лютеранских, иудейских, молоканских и других — с годами метрических книг."}
+              </p>
+            </div>
+            <ArrowRight className="hidden h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-1 sm:block" />
+          </Link>
+        </section>
+
+
         {/* Section: data source */}
         <section className="mt-16">
           <h2 className="font-serif text-lg font-semibold">{L.archiveTitle}</h2>
