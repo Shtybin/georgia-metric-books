@@ -1,86 +1,89 @@
-# Интеграция с FamilySearch — ссылки на метрические книги
+# План: Карта церквей Тбилиси (`/tbilisi`)
 
-## Что делаем
+## 1. Данные
 
-Добавляем курируемый каталог внешних ссылок (для начала на FamilySearch, с расчётом на будущие провайдеры — НИАГ, dlib и т.д.) и привязываем их к точкам карты или к уездам целиком. Пользователь на карте видит блок «Архивные источники» в попапе/панели точки и переходит по ссылке в FamilySearch, где авторизуется уже своим аккаунтом.
+Загруженный файл `Tiflis_Churches.txt` (107 церквей, ; как разделитель) очистить и сохранить как статический JSON для фронта.
 
-Скрейпинг и использование личного пароля не делаем — нарушает TOS FamilySearch. Параллельно подготовим черновик заявки на официальный FS API, чтобы позже можно было автоматически подтягивать новые коллекции.
+- Скрипт `scripts/build-tbilisi.ts`:
+  - Парсит CSV (учесть строки с лишними `;` внутри полей вроде `Confidence` — строки 6, где district попал в поле координат, и др. — нормализовать вручную/по эвристике).
+  - Нормализует поля: `confession` (канонические ключи: `orthodox_georgian`, `orthodox_russian`, `orthodox_military`, `armenian_apostolic`, `greek_orthodox`, `roman_catholic`, `lutheran`, `jewish`, `molokan`, `baptist`, `assyrian`).
+  - `confidence` → enum: `high | medium | low_district | low_approx`. Все, что не `High/Medium` → показывать предупреждение «точка приблизительная / по центру района».
+  - Выход: `public/data/tbilisi-churches.json` (массив объектов с локализованными именами + всеми полями).
 
-## Архитектура данных
+## 2. Маршрут и интеграция
 
-Новая таблица `external_sources` в Lovable Cloud:
+- `src/routes/tbilisi.tsx` — новый route с `validateSearch` (`lang`), `head()` (title, description, og:title/desc/url/image, canonical) — по образцу `src/routes/map.tsx`.
+- Обновить `src/routes/sitemap[.]xml.ts` — добавить `/tbilisi`.
+- В `src/routes/index.tsx`: добавить заметную CTA-карточку «Карта церквей Тбилиси» рядом с инструкцией (своя иконка, ссылка на `/tbilisi`).
+- В `src/components/map/MapView.tsx`:
+  - В попапе фичи, у которой `settlement` ∈ {Тифлис/Тбилиси} — кнопка «Открыть карту церквей Тбилиси».
+  - Дополнительно: слушатель `map.on('zoomend')` — если центр в bbox Тбилиси и `zoom ≥ 11`, показывать всплывающий floating-button (анимация fade+slide) в углу карты со ссылкой на `/tbilisi`.
 
-| Поле | Тип | Назначение |
-|---|---|---|
-| `id` | uuid PK | |
-| `provider` | text | `'familysearch'`, позже `'niag'`, `'other'` |
-| `scope` | text | `'feature'` (точка) или `'uezd'` |
-| `feature_id` | int, nullable | id фичи в parishes.geojson (если scope='feature') |
-| `uezd_ru` / `uezd_en` | text, nullable | имя уезда (если scope='uezd') |
-| `url` | text | прямая ссылка на каталог/коллекцию FS |
-| `title` | text | человеческий заголовок («Метрические книги Тифлисской епархии 1820–1917») |
-| `description` | text, nullable | краткое примечание |
-| `place_query` | text, nullable | поисковый запрос (`Тифлис`, `Кутаиси`) — для будущей синхронизации через API |
-| `requires_auth` | bool, default true | подсказка пользователю |
-| `created_by` / `created_at` / `updated_at` | служебные | |
+## 3. Компонент карты `src/components/map/TbilisiMap.tsx`
 
-RLS:
-- SELECT: `anon` + `authenticated` (публичные ссылки)
-- INSERT/UPDATE/DELETE: только `admin` (через `has_role`)
+MapLibre GL, базовая стилистика — `BASEMAP_STYLE` из `src/lib/map-style.ts`. Источник — GeoJSON из JSON-файла, слой circles с `match` по `confession` → цвет.
 
-## Backend (server functions)
+Палитра (Okabe-Ito + добавки, см. `map-style.ts`):
+- orthodox_georgian #0072B2, orthodox_russian #56B4E9, orthodox_military #009E73, armenian_apostolic #D55E00, greek_orthodox #CC79A7, roman_catholic #E69F00, lutheran #882255, jewish #117733, molokan #AA4499, baptist #44AA99, assyrian #999933.
 
-`src/lib/externalSources.functions.ts`:
-- `listSourcesForFeature(featureId, uezdRu)` — публичная, возвращает объединённый список (по feature_id + по uezd)
-- `listAllSources()` — admin, для модерации
-- `upsertSource(payload)` — admin, валидация через Zod
-- `deleteSource(id)` — admin
+### Панель управления (sidebar / drawer на mobile):
+- Поиск по названию (ru/en/ka), debounce.
+- Multi-select чипы по конфессиям (тык по цвету = toggle фильтра); кнопка «Все/Сбросить».
+- Диапазон лет (двойной слайдер 1818–1930) — фильтрует по пересечению `Record_Years`.
+- Чекбоксы: «Только сохранившиеся», «Действующие сейчас».
+- Языковой переключатель ru/en/ka (как на `/map`, через search-param).
 
-Все мутации — `requireSupabaseAuth` + проверка роли admin внутри хендлера.
+### Карточка точки (Popover/Sheet):
+- Локализованное название.
+- Конфессия (с цветной плашкой).
+- Годы ведения / пропущенные годы.
+- Сохранилась (Yes/No/Uncertain) + действующая.
+- Адрес, район, исторический комментарий, note.
+- Если `confidence ∈ {low_district, low_approx}` → жёлтый Alert «Точное местоположение неизвестно — точка по центру района/города».
+- Кнопка «Где искать оригиналы метрических книг» (текст копируем из общего попапа `MapView` / `ExternalSourcesList`) → ссылка на каталог FamilySearch с `q.place=Tiflis` + ссылка на НИАГ.
+- Кнопка «Сообщить о проблеме» → переиспользует `ReportProblemButton` (передаём контекст: feature id, координаты, lang).
 
-## UI
+### Адаптивность
+- Desktop ≥1024: sidebar 320px слева, карта справа.
+- Tablet 768–1023: collapsible top-bar с фильтрами, карта во всю ширину.
+- Mobile <768: bottom sheet (Drawer) с фильтрами; попап точки — полноэкранный Sheet снизу.
 
-### Карта (попап/панель точки)
-Новая секция «Архивные источники» в `MapView` (и `UnlocatedPanel` для уездов):
-- иконка `BookOpen` / `ExternalLink`
-- список ссылок: заголовок + провайдер + значок «требуется регистрация»
-- клик → `target="_blank" rel="noopener"`, открывается FS, пользователь логинится сам
-- если ссылок нет — секция скрыта
+## 4. i18n
 
-### Админка
-Новая вкладка в `/admin` — «Внешние источники»:
-- таблица всех записей с фильтром по провайдеру и уезду
-- форма добавления: provider, scope (точка/уезд), выбор feature через autocomplete или ввод uezd, url, title, description, place_query
-- быстрая кнопка «Добавить источник» прямо в попапе точки на карте (только для админов) — открывает диалог с предзаполненным feature_id/uezd
-- кнопка «Найти в FamilySearch» рядом с уездом — открывает FS-каталог с `q.place=<uezd>` в новой вкладке (без скрейпинга, просто удобный шорткат для ручного поиска)
+Добавить в `src/lib/i18n.ts` блок `tbilisi`: заголовки, лейблы фильтров, конфессии, статусы, тексты предупреждений, подсказка про оригиналы. Полностью на ru/en/ka.
 
-## Заявка на FS API (отдельный артефакт)
+## 5. SEO / безопасность
 
-Сгенерирую `docs/familysearch-api-application.md` — черновик заявки на developer.familysearch.org с описанием проекта, scope, целевой аудитории, чтобы ты мог подать её сам. Когда (если) одобрят и появится client_id/secret — добавлю серверную функцию `syncFamilySearchPlace(place_query)`, которая через OAuth-аутентифицированного пользователя будет искать новые коллекции и предлагать их к добавлению в `external_sources` (модерация админом).
+- `head()` с уникальными meta на ru/en/ka (как в `map.tsx`).
+- Canonical `https://metrics.datatells.info/tbilisi`.
+- JSON-LD `Map`/`Place` со списком церквей (упрощённо: WebPage + ItemList).
+- Добавить в `src/routes/sitemap[.]xml.ts`.
+- Никаких пользовательских данных не пишем — RLS не нужен. `problem_reports` уже имеет `INSERT for anon` с валидацией длины.
 
-## Изменения по файлам
+## 6. Технические детали
 
-**Миграция:**
-- создать таблицу `external_sources` + RLS + триггер `updated_at`
+- Цвета конфессий — добавить токены в `src/styles.css` (`--conf-orthodox-georgian` и т.д.) и использовать через `getComputedStyle` или прямо hex в MapLibre paint-выражении (как уже сделано в `map-style.ts`).
+- Кластеризация не требуется (107 точек), но включим `cluster: false` явно.
+- Bounds Тбилиси: `[[44.70, 41.63],[44.90, 41.78]]` — `fitBounds` на старте.
 
-**Новые файлы:**
-- `src/lib/externalSources.functions.ts` — server functions
-- `src/components/admin/ExternalSourcesPanel.tsx` — админка
-- `src/components/map/ExternalSourcesList.tsx` — секция в попапе/панели
-- `docs/familysearch-api-application.md` — черновик заявки
+## 7. Файлы
 
-**Правки:**
-- `src/routes/admin.tsx` — новая вкладка
-- `src/components/map/MapView.tsx` — рендер секции в попапе точки + admin-кнопка «Добавить источник»
-- `src/components/map/UnlocatedPanel.tsx` — секция для уезда
-- `src/lib/i18n.ts` — новые строки (ru/en/ka)
+Новые:
+- `scripts/build-tbilisi.ts`
+- `public/data/tbilisi-churches.json`
+- `src/routes/tbilisi.tsx`
+- `src/components/map/TbilisiMap.tsx`
+- `src/components/map/TbilisiFilters.tsx`
+- `src/components/map/TbilisiChurchCard.tsx`
 
-## Что НЕ делаем
+Изменяются:
+- `src/lib/i18n.ts` (блок `tbilisi`)
+- `src/styles.css` (цветовые токены конфессий)
+- `src/routes/index.tsx` (CTA-карточка)
+- `src/components/map/MapView.tsx` (кнопка в попапе Тифлиса + floating CTA на зуме)
+- `src/routes/sitemap[.]xml.ts` (добавить `/tbilisi`)
 
-- ❌ скрейпинг FS под твоим логином (бан + юридический риск)
-- ❌ автоматическая авторизация посетителей карты через твой аккаунт (невозможно, и не нужно — у каждого свой FS-аккаунт)
-- ❌ хранение FS-логинов/паролей пользователей
+## 8. Open questions
 
-## Объём
-
-Первая итерация (без API FS): миграция + server fns + админка + UI на карте + черновик заявки. После одобрения FS API — отдельный заход на автосинхронизацию.
+- Нужны ли отдельные OG-изображения для `/tbilisi` (по 3 языкам), или достаточно того же `og-map.jpg`?
+- Floating-кнопка «при зуме на Тбилиси» — оставить вместе с пунктом в попапе, или только одно из двух?
