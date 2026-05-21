@@ -19,10 +19,25 @@ import { t as tCore } from "@/lib/i18n";
 
 interface Props { lang: Lang; onLangChange: (l: Lang) => void; }
 
+function churchFeatureCollection(rows: TbilisiChurch[]) {
+  return {
+    type: "FeatureCollection",
+    features: rows
+      .filter((r) => Number.isFinite(r.lon) && Number.isFinite(r.lat))
+      .map((r) => ({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [r.lon, r.lat] },
+        properties: { id: r.id, confession: r.confession },
+      })),
+  };
+}
+
 export function TbilisiMap({ lang, onLangChange }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
+  const rowsRef = useRef<TbilisiChurch[] | null>(null);
+  const filteredRef = useRef<TbilisiChurch[]>([]);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
   const [selected, setSelected] = useState<TbilisiChurch | null>(null);
   const [query, setQuery] = useState("");
@@ -61,6 +76,9 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     });
   }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query]);
 
+  useEffect(() => { rowsRef.current = rows; }, [rows]);
+  useEffect(() => { filteredRef.current = filtered; }, [filtered]);
+
   // Build map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -93,6 +111,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           "circle-opacity": 0.92,
         },
       });
+      (map.getSource("churches") as any)?.setData(churchFeatureCollection(filteredRef.current));
       map.on("click", "churches", (e) => {
         const f = e.features?.[0];
         if (!f) return;
@@ -108,9 +127,6 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     ro.observe(containerRef.current);
     return () => { ro.disconnect(); map.remove(); mapRef.current = null; };
   }, []);
-
-  const rowsRef = useRef<TbilisiChurch[] | null>(null);
-  useEffect(() => { rowsRef.current = rows; }, [rows]);
 
   // Update map data on filter change
   useEffect(() => {
