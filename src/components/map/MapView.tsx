@@ -26,6 +26,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
+import { isInsideTbilisi, tT } from "@/lib/i18n-tbilisi";
+import { Link } from "@tanstack/react-router";
+import { Landmark } from "lucide-react";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -249,6 +252,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }, []);
   const T = t(lang);
   const isMobile = useIsMobileSm();
+  const [showTbilisiCta, setShowTbilisiCta] = useState(false);
+  useEffect(() => {
+    let detach: (() => void) | undefined;
+    const interval = setInterval(() => {
+      const m = mapRef.current;
+      if (!m) return;
+      clearInterval(interval);
+      const update = () => {
+        const c = m.getCenter();
+        setShowTbilisiCta(m.getZoom() >= 10.5 && isInsideTbilisi(c.lng, c.lat));
+      };
+      m.on("moveend", update);
+      m.on("zoomend", update);
+      update();
+      detach = () => { m.off("moveend", update); m.off("zoomend", update); };
+    }, 200);
+    return () => { clearInterval(interval); detach?.(); };
+  }, []);
 
   // Merge base GeoJSON with admin overrides + community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
