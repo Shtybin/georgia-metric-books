@@ -189,7 +189,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </button>
         </div>
 
-        <div className="pointer-events-auto flex items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
+        <div className="pointer-events-auto flex w-auto self-end items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur sm:self-auto">
           <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
           {(["ru", "en", "ka"] as const).map((l) => (
             <button
