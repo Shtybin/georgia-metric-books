@@ -396,18 +396,20 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
         </div>
       </div>
 
-      <ReportProblemButton
-        lang={lang}
-        getMapState={() => {
-          const m = mapRef.current;
-          if (!m) return null;
-          const c = m.getCenter();
-          return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
-        }}
-      />
-
-      {/* Bottom action bar */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-2 p-3 sm:p-4">
+      {/* Bottom action bar: Report (mobile only) above + archive button */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-2 p-3 sm:p-4">
+        <div className="sm:hidden">
+          <ReportProblemButton
+            lang={lang}
+            getMapState={() => {
+              const m = mapRef.current;
+              if (!m) return null;
+              const c = m.getCenter();
+              return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+            }}
+            inline
+          />
+        </div>
         <button
           onClick={() => setDocsOpen(true)}
           className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur hover:bg-accent"
