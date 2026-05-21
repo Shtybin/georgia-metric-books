@@ -114,6 +114,7 @@ function norm(s: string | undefined | null): string {
   return (s || "")
     .toLocaleLowerCase()
     .replace(/[ёе]/g, "е")
+    .replace(/дж/g, "ж") // борджоми ↔ боржоми, аджара ↔ ажара и т.п.
     .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
 }
