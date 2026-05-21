@@ -201,11 +201,13 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
         </div>
       </div>
 
-      {/* Filters panel (sidebar on desktop, drawer on mobile) */}
+      {/* Filters panel (sidebar on desktop, compact drawer on mobile/tablet) */}
       <div
         className={
-          "pointer-events-auto absolute z-20 flex flex-col gap-2 rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur lg:gap-3 lg:p-3 " +
-          "left-3 right-3 top-[7.5rem] bottom-16 overflow-auto sm:left-auto sm:right-4 sm:top-20 sm:w-72 sm:bottom-16 lg:w-80 lg:bottom-20 lg:flex " +
+          "pointer-events-auto absolute z-20 flex-col gap-2 rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur " +
+          "left-3 right-3 top-[5.25rem] max-h-[calc(100dvh-7rem)] overflow-auto " +
+          "sm:left-auto sm:right-4 sm:top-20 sm:w-72 sm:max-h-[calc(100dvh-7rem)] " +
+          "lg:w-80 lg:p-3 lg:gap-3 lg:bottom-20 lg:max-h-none " +
           (filtersOpen ? "flex" : "hidden lg:flex")
         }
       >
@@ -239,9 +241,10 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
                   (on ? "border-border bg-background" : "border-border/40 bg-muted/40 opacity-50")
                 }
                 title={T.confessions[c]}
+                aria-label={T.confessions[c]}
               >
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: CONFESSION_COLORS[c] }} />
-                <span className="max-w-[160px] truncate">{T.confessions[c]}</span>
+                <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
                 <span className="text-muted-foreground">{count}</span>
               </button>
             );
