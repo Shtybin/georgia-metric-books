@@ -42,24 +42,26 @@ interface NominatimHit {
 }
 
 interface BatchResult {
-  /** Counts only successful attempts (inserted + skipped). Rejected items (not found / AI отклонил) do NOT count toward the limit. */
+  /** Counts only successful attempts (inserted + skipped + merged). Rejected items (not found / AI отклонил) do NOT count toward the limit. */
   processed: number;
   /** How many queue items were consumed in total (used by client to advance offset). */
   scanned: number;
   inserted: number;
   skipped: number;
   rejected: number;
+  merged: number;
   /** How many candidates remain in the queue after this chunk (for client looping). */
   remaining: number;
   errors: { settlement: string; reason: string }[];
   log: {
     settlement: string;
     uezd: string;
-    status: "inserted" | "skipped" | "rejected" | "error";
+    status: "inserted" | "skipped" | "rejected" | "error" | "merged";
     confidence?: number;
     note?: string;
     lat?: number;
     lon?: number;
+    featureId?: number;
   }[];
 }
 
