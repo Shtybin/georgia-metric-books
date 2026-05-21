@@ -226,7 +226,7 @@ body[data-scroll-locked] {
 
 /* Tbilisi map: push MapLibre nav control below the top bar so it doesn't
  * collide with the "back to main map" button. */
-.tbilisi-map .maplibregl-ctrl-top-left { margin-top: 64px; }
+.tbilisi-map .maplibregl-ctrl-top-left { margin-top: 72px; }
 @media (min-width: 640px) {
-  .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 72px; }
+  .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 80px; }
 }
