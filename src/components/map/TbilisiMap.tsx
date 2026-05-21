@@ -135,14 +135,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     const apply = () => {
       const src = map.getSource("churches") as any;
       if (!src) return;
-      src.setData({
-        type: "FeatureCollection",
-        features: filtered.map((r) => ({
-          type: "Feature",
-          geometry: { type: "Point", coordinates: [r.lon, r.lat] },
-          properties: { id: r.id, confession: r.confession },
-        })),
-      });
+      src.setData(churchFeatureCollection(filtered));
     };
     if (map.isStyleLoaded() && map.getSource("churches")) apply();
     else map.once("idle", apply);
