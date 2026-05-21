@@ -40,7 +40,7 @@ function writeHistory(arr: number[]) {
   }
 }
 
-export function ReportProblemButton({ lang, getMapState }: Props) {
+export function ReportProblemButton({ lang, getMapState, inline = false, className }: Props) {
   const T = t(lang);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
