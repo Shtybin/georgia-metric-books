@@ -83,6 +83,57 @@ export type Database = {
         }
         Relationships: []
       }
+      external_sources: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          feature_id: number | null
+          id: string
+          place_query: string | null
+          provider: string
+          requires_auth: boolean
+          scope: string
+          title: string
+          uezd_en: string | null
+          uezd_ru: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          feature_id?: number | null
+          id?: string
+          place_query?: string | null
+          provider?: string
+          requires_auth?: boolean
+          scope: string
+          title?: string
+          uezd_en?: string | null
+          uezd_ru?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          feature_id?: number | null
+          id?: string
+          place_query?: string | null
+          provider?: string
+          requires_auth?: boolean
+          scope?: string
+          title?: string
+          uezd_en?: string | null
+          uezd_ru?: string | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       feature_override_history: {
         Row: {
           action: string | null
