@@ -373,7 +373,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       const b: Bucket = {
         id: f.id as number,
         nameN,
-        uezdN: normalizeName(p.uezd?.ru || p.uezd?.en),
+        uezdN: normalizeAdmin(p.uezd?.ru || p.uezd?.en),
         props: p,
       };
       allBuckets.push(b);
