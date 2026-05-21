@@ -120,8 +120,15 @@ export function AiGeocoderPanel() {
               type="number"
               min={1}
               max={100}
-              value={limit}
-              onChange={(e) => setLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
+              value={limit === 0 ? "" : limit}
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (raw === "") { setLimit(0); return; }
+                const n = parseInt(raw, 10);
+                if (Number.isNaN(n)) return;
+                setLimit(Math.min(100, Math.max(0, n)));
+              }}
+              onBlur={() => { if (!limit || limit < 1) setLimit(1); }}
               className="w-full rounded-md border border-border bg-background px-2 py-1 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </label>
