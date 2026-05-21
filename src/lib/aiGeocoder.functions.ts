@@ -114,8 +114,45 @@ function norm(s: string | undefined | null): string {
   return (s || "")
     .toLocaleLowerCase()
     .replace(/[ёе]/g, "е")
+    .replace(/дж/g, "ж") // борджоми ↔ боржоми, аджара ↔ ажара и т.п.
     .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
+}
+
+/**
+ * Таблица административных эквивалентов.
+ * Слева — токены (RU/EN/KA), которыми историческое уезд/регион записан в
+ * исходных данных. Справа — токены, которые встречаются в OSM-адресе или в
+ * admin-полях уже опубликованных точек на карте. Если хотя бы один токен из
+ * `hist` нормализованно находится в исторической строке И хотя бы один токен
+ * из `modern` — в OSM/целевой строке, admin считается совпавшим (даже если
+ * fuzzy-проверка по общему префиксу не сработала).
+ *
+ * Добавляйте сюда новые правила по мере обнаружения расхождений.
+ */
+const ADMIN_ALIASES: { hist: string[]; modern: string[] }[] = [
+  // Они → Онский муниципалитет (Рача-Лечхуми и Нижняя Сванетия)
+  { hist: ["они", "oni", "ონი"], modern: ["онски", "oni", "рача", "racha", "лечхуми", "lechkhumi"] },
+  // Борджоми → Боржомский муниципалитет (Самцхе-Джавахети)
+  { hist: ["борджоми", "borjomi", "ბორჯომი"], modern: ["боржом", "borjom", "самцхе", "samtskhe", "джавахети", "javakheti"] },
+];
+
+/** Возвращает true, если пара (historical, modern) описана в ADMIN_ALIASES. */
+function aliasMatches(
+  historical: string,
+  modern: string,
+): { ok: boolean; matchedHist?: string; matchedModern?: string } {
+  const h = norm(historical);
+  const m = norm(modern);
+  if (!h || !m) return { ok: false };
+  for (const a of ADMIN_ALIASES) {
+    const hToken = a.hist.map(norm).find((t) => t && h.includes(t));
+    if (!hToken) continue;
+    const mToken = a.modern.map(norm).find((t) => t && m.includes(t));
+    if (!mToken) continue;
+    return { ok: true, matchedHist: hToken, matchedModern: mToken };
+  }
+  return { ok: false };
 }
 
 /**
@@ -208,11 +245,24 @@ function validateOsmMatch(
     .filter((s) => s && s.trim().length > 0) as string[];
   const histGeoSet = histGeo.length > 0;
   const fullDisplay = `${addrRegionStr} ${hit.display_name}`;
-  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen, prefixLen));
+  let geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen, prefixLen));
+  let aliasNote = "";
+  if (histGeoSet && !geoOk) {
+    for (const g of histGeo) {
+      const a = aliasMatches(g, fullDisplay);
+      if (a.ok) {
+        geoOk = true;
+        aliasNote = ` (alias: «${a.matchedHist}» ↔ «${a.matchedModern}»)`;
+        break;
+      }
+    }
+  }
   if (histGeoSet && !geoOk) {
     const msg = `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`;
     if (geoStrict) reasons.push(msg);
     else warnings.push(msg);
+  } else if (aliasNote) {
+    warnings.push(`admin совпал по алиасу${aliasNote}`);
   }
 
   // 2. name match (RU/EN/KA) — always strict
@@ -444,6 +494,15 @@ function adminMatches(item: UnlocatedItem, target: FeatureData): { ok: boolean; 
   for (const a of buckets) {
     for (const b of tgtBuckets) {
       if (a === b) return { ok: true, how: `admin «${a}» совпал` };
+    }
+  }
+  // Алиасы: ист. «Они» ≡ совр. «Онский муниципалитет» и т.п.
+  const histRaw = [item.uezd.ru, item.uezd.en, item.uezd.ka, item.region.ru, item.region.en, item.region.ka].filter(Boolean) as string[];
+  const tgtRaw = [target.uezd.ru, target.uezd.en, target.uezd.ka, target.region.ru, target.region.en, target.region.ka].filter(Boolean) as string[];
+  for (const h of histRaw) {
+    for (const t of tgtRaw) {
+      const a = aliasMatches(h, t);
+      if (a.ok) return { ok: true, how: `admin alias «${a.matchedHist}» ↔ «${a.matchedModern}»` };
     }
   }
   // If both sides have no admin info at all, name+distance alone is too weak — refuse.
