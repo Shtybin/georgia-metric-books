@@ -223,3 +223,10 @@ body[data-scroll-locked] {
   overflow: hidden !important;
 }
 
+
+/* Tbilisi map: push MapLibre nav control below the top bar so it doesn't
+ * collide with the "back to main map" button. */
+.tbilisi-map .maplibregl-ctrl-top-left { margin-top: 64px; }
+@media (min-width: 640px) {
+  .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 72px; }
+}
