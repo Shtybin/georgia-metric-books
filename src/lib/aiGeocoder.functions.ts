@@ -2,10 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { isProbableMatch, normalizeAdmin } from "@/lib/fuzzyMatch";
+import { featureToData, type FeatureData, type FeatureOverride } from "@/lib/featureOverrides";
+import { parseYearsString } from "@/lib/userCoords";
 
 // Bundle the unlocated dataset so the worker doesn't depend on filesystem or
 // an internal HTTP fetch (which gets routed back to the SPA shell in preview).
 import unlocatedBundled from "../../public/data/unlocated.json";
+import parishesBundled from "../../public/data/parishes.geojson";
+
+
 
 
 // ---- Types -------------------------------------------------------------
