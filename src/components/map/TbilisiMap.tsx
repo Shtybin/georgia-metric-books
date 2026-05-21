@@ -147,7 +147,12 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       className="relative overflow-hidden bg-background"
       style={{ width: "100%", height: "100dvh" }}
     >
-      <div ref={containerRef} className="absolute inset-0" style={{ position: "absolute", inset: 0 }} />
+      {/* Push MapLibre navigation control below the top bar / back button */}
+      <style>{`
+        .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 64px; }
+        @media (min-width: 640px) { .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 72px; } }
+      `}</style>
+      <div ref={containerRef} className="tbilisi-map absolute inset-0" style={{ position: "absolute", inset: 0 }} />
 
       {/* Top bar */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-2 p-3 sm:flex-row sm:items-start sm:justify-between sm:p-4">
@@ -184,7 +189,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </button>
         </div>
 
-        <div className="pointer-events-auto flex items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
+        <div className="pointer-events-auto flex w-auto self-end items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur sm:self-auto">
           <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
           {(["ru", "en", "ka"] as const).map((l) => (
             <button
@@ -204,8 +209,8 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       {/* Filters panel (sidebar on desktop, drawer on mobile) */}
       <div
         className={
-          "pointer-events-auto absolute z-20 flex flex-col gap-3 rounded-xl border border-border bg-card/95 p-3 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-20 max-h-[60vh] overflow-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 lg:flex " +
+          "pointer-events-auto absolute z-20 flex flex-col gap-2 rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur lg:gap-3 lg:p-3 " +
+          "left-3 right-3 top-[7.5rem] bottom-16 overflow-auto sm:left-auto sm:right-4 sm:top-20 sm:w-72 sm:bottom-16 lg:w-80 lg:bottom-20 lg:flex " +
           (filtersOpen ? "flex" : "hidden lg:flex")
         }
       >
