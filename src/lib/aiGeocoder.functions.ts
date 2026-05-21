@@ -622,6 +622,23 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
     const totalRemaining = candidates.length;
     candidates = candidates.slice(data.offset, data.offset + effectiveLimit);
 
+    // Load published overrides + build spatial index of canonical features once per request.
+    const { data: ovRows } = await supabaseAdmin
+      .from("feature_overrides")
+      .select("id, feature_id, action, data, published, notes, created_at, updated_at")
+      .eq("published", true)
+      .order("updated_at", { ascending: true });
+    const published = (ovRows || []) as unknown as FeatureOverride[];
+    const featureList = buildFeatureIndex(published);
+    const featureIndex = buildSpatialIndex(featureList);
+    // For looking up existing edit overrides when we want to merge into a feature
+    // that already has one (must update, not insert second).
+    const editOverrideByFid = new Map<number, FeatureOverride>();
+    for (const o of published) {
+      if (o.action === "edit" && o.feature_id != null) editOverrideByFid.set(o.feature_id, o);
+    }
+
+
     const result: BatchResult = {
       processed: 0,
       scanned: 0,
