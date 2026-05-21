@@ -62,8 +62,11 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: BASEMAP_STYLE,
-      bounds: [[TBILISI_BBOX[0], TBILISI_BBOX[1]], [TBILISI_BBOX[2], TBILISI_BBOX[3]]],
-      fitBoundsOptions: { padding: 40 },
+      center: [
+        (TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2,
+        (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2,
+      ],
+      zoom: 11.5,
       attributionControl: { compact: true },
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
@@ -194,7 +197,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       <div
         className={
           "pointer-events-auto absolute z-20 flex flex-col gap-3 rounded-xl border border-border bg-card/95 p-3 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-20 max-h-[60vh] overflow-auto sm:left-4 sm:right-auto sm:top-20 sm:w-80 lg:flex " +
+          "left-3 right-3 top-20 max-h-[60vh] overflow-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 lg:flex " +
           (filtersOpen ? "flex" : "hidden lg:flex")
         }
       >
