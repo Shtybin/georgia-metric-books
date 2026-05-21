@@ -455,7 +455,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       const settlement = (a.settlement_ru || a.settlement_en || "")
         .toLocaleLowerCase()
         .trim();
-      const uezd = (a.uezd_ru || a.uezd_en || "").toLocaleLowerCase().trim();
+      // Use normalizeAdmin so уезд/район/district variants collapse to the
+      // same dedup key as unlocatedKey() produces.
+      const uezd = normalizeAdmin(a.uezd_ru || a.uezd_en);
       if (settlement) s.add(`${settlement}|${uezd}`);
     }
     return s;
