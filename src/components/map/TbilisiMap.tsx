@@ -242,37 +242,52 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </button>
         </div>
 
-        <div className="pointer-events-auto flex w-auto self-end items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur sm:self-auto">
-          <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
-          {(["ru", "en", "ka"] as const).map((l) => (
-            <button
-              key={l}
-              onClick={() => onLangChange(l)}
-              className={
-                "rounded px-2 py-1 text-xs uppercase " +
-                (lang === l
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent")
-              }
-            >
-              {l === "ka" ? "ქა" : l}
-            </button>
-          ))}
+        <div className="pointer-events-auto flex w-auto items-center gap-2 self-end sm:self-auto">
+          <div className="inline-flex w-fit items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
+            <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
+            {(["ru", "en", "ka"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => onLangChange(l)}
+                className={
+                  "rounded px-2 py-1 text-xs uppercase " +
+                  (lang === l
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-accent")
+                }
+              >
+                {l === "ka" ? "ქა" : l}
+              </button>
+            ))}
+          </div>
+          {/* Report button next to language switcher on tablet+ */}
+          <div className="hidden sm:block">
+            <ReportProblemButton
+              lang={lang}
+              getMapState={() => {
+                const m = mapRef.current;
+                if (!m) return null;
+                const c = m.getCenter();
+                return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+              }}
+              inline
+            />
+          </div>
         </div>
       </div>
 
-      {/* Filters panel (sidebar on desktop, compact drawer on mobile/tablet) */}
+      {/* Filters panel: horizontal compact strip on mobile/tablet, sidebar on desktop */}
       <div
         className={
           "pointer-events-auto absolute z-20 flex-col rounded-xl border border-border bg-card/95 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-[5.25rem] max-h-[9.25rem] gap-1.5 overflow-auto p-2 " +
-          "sm:left-auto sm:right-4 sm:top-[8.25rem] sm:w-72 sm:max-h-[12rem] " +
-          "lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
+          "left-3 right-3 top-[4.75rem] max-h-[8.5rem] gap-1.5 overflow-auto p-2 " +
+          "sm:left-3 sm:right-3 sm:top-[4.75rem] sm:max-h-[7rem] sm:w-auto sm:p-2 " +
+          "lg:left-auto lg:right-4 lg:top-20 lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
           "flex"
         }
       >
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-serif text-sm font-semibold">{T.legendTitle}</h2>
+          <h2 className="font-serif text-xs font-semibold sm:text-sm">{T.legendTitle}</h2>
           <div className="flex items-center gap-2">
             <button
               onClick={() =>
@@ -309,6 +324,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
                   className="h-2.5 w-2.5 rounded-full"
                   style={{ background: CONFESSION_COLORS[c] }}
                 />
+                <span className="max-w-[120px] truncate lg:hidden">{T.confessionsShort[c]}</span>
                 <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
                 <span className="text-muted-foreground">{count}</span>
               </button>
@@ -380,18 +396,20 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
         </div>
       </div>
 
-      <ReportProblemButton
-        lang={lang}
-        getMapState={() => {
-          const m = mapRef.current;
-          if (!m) return null;
-          const c = m.getCenter();
-          return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
-        }}
-      />
-
-      {/* Bottom action bar */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-2 p-3 sm:p-4">
+      {/* Bottom action bar: Report (mobile only) above + archive button */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-2 p-3 sm:p-4">
+        <div className="sm:hidden">
+          <ReportProblemButton
+            lang={lang}
+            getMapState={() => {
+              const m = mapRef.current;
+              if (!m) return null;
+              const c = m.getCenter();
+              return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+            }}
+            inline
+          />
+        </div>
         <button
           onClick={() => setDocsOpen(true)}
           className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur hover:bg-accent"
