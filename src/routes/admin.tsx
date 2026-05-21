@@ -473,6 +473,8 @@ function AdminPage() {
         <section className="mx-auto max-w-6xl px-4 py-4">
           <DataQualitySummary />
         </section>
+      ) : tab === "sources" ? (
+        <ExternalSourcesPanel />
       ) : tab === "cards" ? (
         <FeatureCardsEditor />
       ) : tab === "uezd" ? (
