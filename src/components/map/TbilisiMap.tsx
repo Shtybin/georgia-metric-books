@@ -38,6 +38,11 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
 
   useEffect(() => { fetchTbilisiChurches().then(setRows); }, []);
 
+  useEffect(() => {
+    document.body.dataset.fullscreenMap = "true";
+    return () => { delete document.body.dataset.fullscreenMap; };
+  }, []);
+
   const filtered = useMemo(() => {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
