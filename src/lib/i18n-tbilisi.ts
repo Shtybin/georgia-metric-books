@@ -178,6 +178,8 @@ export const TBILISI_STRINGS = {
     foundCount: (n: number, total: number) => `ნაჩვენებია: ${n} / ${total}`,
     showFilters: "ფილტრები",
     hideFilters: "დამალვა",
+    showAll: "ყველას ჩვენება",
+    hideAll: "ყველას დამალვა",
     confessions: {
       orthodox_georgian: "მართლმადიდებლური (ქართული ეგზარქატი)",
       orthodox_russian: "მართლმადიდებლური (რუსული სამრევლო)",
