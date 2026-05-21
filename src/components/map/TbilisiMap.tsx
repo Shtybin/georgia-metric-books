@@ -301,7 +301,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       <div
         className={
           "pointer-events-auto absolute z-20 flex-col rounded-xl border border-border bg-card/95 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-[4.75rem] max-h-[8.5rem] gap-1.5 overflow-auto p-2 " +
+          "left-3 right-3 top-[3.25rem] max-h-[7.5rem] gap-1.5 overflow-auto p-2 " +
           "sm:left-3 sm:right-3 sm:top-[4.75rem] sm:max-h-[7rem] sm:w-auto sm:p-2 " +
           "lg:left-auto lg:right-4 lg:top-20 lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
           "flex"
