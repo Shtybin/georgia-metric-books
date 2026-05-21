@@ -26,6 +26,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
+import { isInsideTbilisi, tT } from "@/lib/i18n-tbilisi";
+import { Link } from "@tanstack/react-router";
+import { Landmark } from "lucide-react";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -249,6 +252,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }, []);
   const T = t(lang);
   const isMobile = useIsMobileSm();
+  const [showTbilisiCta, setShowTbilisiCta] = useState(false);
+  useEffect(() => {
+    let detach: (() => void) | undefined;
+    const interval = setInterval(() => {
+      const m = mapRef.current;
+      if (!m) return;
+      clearInterval(interval);
+      const update = () => {
+        const c = m.getCenter();
+        setShowTbilisiCta(m.getZoom() >= 10.5 && isInsideTbilisi(c.lng, c.lat));
+      };
+      m.on("moveend", update);
+      m.on("zoomend", update);
+      update();
+      detach = () => { m.off("moveend", update); m.off("zoomend", update); };
+    }, 200);
+    return () => { clearInterval(interval); detach?.(); };
+  }, []);
 
   // Merge base GeoJSON with admin overrides + community-approved + user-pinned features.
   const data: FC | null = useMemo(() => {
@@ -1162,6 +1183,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
         </div>
       )}
+
+      {/* Floating CTA — appears when zoomed into Tbilisi */}
+      {showTbilisiCta && (
+        <Link
+          to="/tbilisi"
+          search={{ lang }}
+          className="pointer-events-auto absolute left-1/2 top-20 z-20 inline-flex -translate-x-1/2 animate-in fade-in slide-in-from-top-2 items-center gap-2 rounded-full border border-primary/40 bg-primary px-4 py-2 text-xs font-medium text-primary-foreground shadow-2xl hover:-translate-y-0.5 transition sm:top-24"
+        >
+          <Landmark className="h-4 w-4" />
+          {tT(lang).cityZoomCta}
+        </Link>
+      )}
+
 
       {/* Top bar: search + lang */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-stretch gap-2 p-3 sm:flex-row sm:items-start sm:justify-between sm:gap-3 sm:p-4">
