@@ -304,7 +304,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         const p: any = f.properties;
         const nameN = normalizeName(p.settlement?.ru || p.settlement?.en);
         if (!nameN) continue;
-        const uezdN = normalizeName(p.uezd?.ru || p.uezd?.en);
+        const uezdN = normalizeAdmin(p.uezd?.ru || p.uezd?.en);
         const e: Entry = { id: f.id as number, nameN, uezdN };
         all.push(e);
         const arr = byName.get(nameN) ?? [];
