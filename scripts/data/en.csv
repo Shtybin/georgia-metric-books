@@ -1,8 +1,5 @@
 ﻿Settlement,Church Name,Region,District (Uezd),Years,Start Year,Missing Years,Lattitude,Longtitude
 -,Eristavi's House Church,Chokhatauri,,1875-1886,1875,,42.0192103,42.2399471
-15 Grenadier Regiment,,,Kutaisskiy Uezd,1870,1870,,,
-2 Battalion,?,,Kutaisskiy Uezd,1841,1841,,,
-5 Battalion,,,Tifliskiy Uezd,1842,1842,,,
 Pakuti,,,Imeretia,"1857, 1860-1861, 1863-1865, 1868",1857,"1858-1859, 1862, 1866-1867",,
 Nikozi,St. George,,Goriyskiy Uezd,"1830-1835, 1837-1840, 1851-1856, 1858-1860",1830,"1836, 1841-1850, 1857",,
 Muskhi,,,Akhaltsikhskiy Uezd,1831-1837,1831,,41.57722222,43.07305556
@@ -1322,7 +1319,6 @@ Bashkoi (Bareti),40 Martyrs,Tsalka,,1842-1916,1842,,41.667797,44.1536263
 Bashkovo,,,Greek Settlements,1865,1865,,,
 Basileti,St. Basil,Chokhatauri,,1871-1916,1871,,41.95972222,42.17916667
 Bataiurti,,,Ossetian Commission,1869,1869,,,
-Batalion 2-nd,Resurrection of Christ,,Kutaisskiy Uezd,1840,1840,,,
 Batsaligo,St. George,Dusheti,,"1901, 1903-1918",1901,1902,42.55833333,44.96222222
 Bavra,Holy Cross,Akhalkalaki,,1908-1916,1908,,41.40361111,43.50861111
 Bazaleti,Dormition of the Mother of God | St. George,Dusheti,,"1871-1916, 1918",1871,1917,42.07333333,44.64861111
@@ -1975,7 +1971,6 @@ Dzveli Senaki,Ascension,Senaki,,1871-1916,1871,,42.295,42.14055556
 Dzveri-Etseri,Dormition of the Mother of God,Kutaisi Region,,1833,1833,,,
 Ebnisi,St. Marina,Tiflis Region,,1820,1820,,42.0575,44.60527778
 Edikilisa (Saqdrioni),Sts. Cosmas and Damian,Tsalka,,1842-1916,1842,,41.5946,44.08909
-Jaeger Regiment,Savior Transfigurations,,Tifliskiy Uezd,1832,1832,,,
 Ekadia,St. George,Ozurgeti Region,,1839-1869,1839,,41.9167749,41.9940471
 Ekadi,St. George,Ozurgeti,,1871-1920,1871,,41.92442,42.00682
 Eki-Imanieri,Savior,Senaki,,1871-1915,1871,,42.27042,42.0675
@@ -1998,29 +1993,10 @@ Elizabettal (Asureti),,Tiflis Region,,1863-1870,1863,,,
 Elizavetinski,Mother of God,Lagodekhi,,1915,1915,,41.82681,46.27667
 Elizavetpol,Sts. Zechariah and Elizabeth,Tiflis Region,,1825-1867,1825,,,
 Emgiani,,,Ossetian Commission,1859,1859,,,
-,,,Goriyskiy Uezd,1842,1842,,,
 ,,,,,,,42.60805556,44.585
-,,,Imeretia,1845,1845,,,
 ,,,,,,,42.65638889,42.00861111
-,,,Goriyskiy Uezd,1846,1846,,,
-,,,Megrelia,1846,1846,,,
-,,,Goriyskiy Uezd,1849,1849,,,
 ,,,,,,,39.5961111,48.9847222
-,,,Goriyskiy Uezd,1850,1850,,,
-,,,Ossetian Commission,1862,1862,,,
-,,,Signakhskiy Uezd,1863,1863,,,
-,,,Signakhskiy Uezd,1863,1863,,,
 ,,,,,,,41.91978,45.47315
-,,,Akhaltsikhskiy Uezd,1868,1868,,,
-,,,Akhaltsikhskiy Uezd,1868,1868,,,
-,,,Ossetian Commission,1869,1869,,,
-,,,Tifliskiy Uezd,1870,1870,,,
-,,,Kutaisskiy Uezd,1870,1870,,,
-,,,Ossetia,1833,1833,,,
-,,,Ossetia,1835,1835,,,
-,,,Ossetia,1836,1836,,,
-,,,Ossetia,1836,1836,,,
-,,,Dushetskiy Uezd,1836,1836,,,
 Enageti,St. George,Tetritskaro,,1871-1917,1871,,41.6,44.63333333
 Engiani,,Zaqatala Okrug,,1862-1863,1862,,41.46574,46.57376
 Eniseli,Archangel,Telavi Region,,1871-1921,1871,,42.00166667,45.66944444
@@ -2222,11 +2198,6 @@ Greek's Settlements,,,Telavskiy Uezd,1866,1866,,,
 Grecheskie Seleniya,,,Tifliskiy Uezd,1833,1833,,,
 Gremiskhevi,St. Marina,Dusheti,,1871-1920,1871,,42.0887806,44.5584425
 Gremi,Sts. Peter and Paul,Kvareli,,"1871-1917, 1919",1871,1918,42.01222222,45.67305556
-Grenadier Regiment,,,Megrelia,1859,1859,,,
-Georgian Battalion,Archangel Michael,,Tifliskiy Uezd,1839,1839,,,
-Georgian Battalion,St. George,,Tifliskiy Uezd,1840-1841,1840,,,
-Georgian Battalion,St. Nicholas,,Tifliskiy Uezd,"1839, 1841",1839,1840,,
-Georgian Battalion,,,Tifliskiy Uezd,1839,1839,,,
 Guba,St. George,,Tifliskiy Uezd,1865,1865,,41.3652778,48.5263889
 Guba,Assumption,,Ozurgetskiy Uezd,1856,1856,,41.3652778,48.5263889
 Guba,,,Goriyskiy Uezd,1861,1861,,41.3652778,48.5263889
@@ -2536,7 +2507,6 @@ Kaspi,Sts. Peter and Paul | St. Theodore Tyron,Kaspi,,"1886-1892, 1894-1910",188
 Katskhi,Archangel | St. George,Chiatura,,1871-1914,1871,,42.28416667,43.20833333
 Katskhi,Savior,Kutaisi Region,,1826-1831,1826,,42.28416667,43.20833333
 Katskhi,St. George,Ozurgeti Region,,1871-1914,1871,,42.28416667,43.20833333
-Caucasus Batallion,St. George,,Tifliskiy Uezd,1839,1839,,,
 Kavtiskhevi,Archangel | Mother of God | St. George,Kaspi,,"1871-1887, 1890-1896, 1898-1900, 1903-1919",1871,"1888-1889, 1897, 1901-1902",41.85972,44.44389
 Kavtiskhevi,St. John the Baptist,Gori Region,,1819-1870,1819,,41.85972,44.44389
 Kazauri,,,Telavskiy Uezd,1844,1844,,,
@@ -3353,9 +3323,6 @@ Mikelgabrieli (Shroma),Archangel,Ozurgeti,,1839-1916,1839,,41.92442,42.00682
 Milakhvriantkari,St. Gregory the Theologian | St. Gregory the Prophet,Dusheti,,1871-1920,1871,,42.08583,44.69583
 Miminoshvilebi,,,Senakskiy Uezd,1859,1859,,,
 Minasteri,,,Samurzakano,"1866, 1868",1866,1867,,
-Mingrelian Jaeger Regiment,Transfiguration,,Megrelia,1841,1841,,,
-Mingrelian Jaeger Regiment,Savior,,Megrelia,1846,1846,,,
-Mingrelian Regiment,,,Megrelia,1851,1851,,,
 Mirkmi,Presentation of the Lord /Avlabari/,,Tifliskiy Uezd,1840,1840,,,
 Mirkmi,Presentation of the Lord ,,Tifliskiy Uezd,"1832-1835, 1837, 1839",1832,"1836, 1838",,
 Mirkmi,Church,,Tifliskiy Uezd,"1841, 1848",1841,1842-1847,,
@@ -3656,8 +3623,6 @@ Nikoza,,,Ossetian Commission,1869,1869,,,
 Nikozi,St. Nicholas,Zugdidi Region,,"1863-1864, 1871-1915",1863,1865-1870,42.19723056,43.95802778
 Ninotsminda,St. Nino the Apostle,Sagarejo,,1871-1921,1871,,41.73333333,45.29583333
 Ninotsminda,St. Nino,Tiflis Region,,1871-1921,1871,,41.73333333,45.29583333
-Nizhny Novgorod Dragoon Regiment,,,Tifliskiy Uezd,1841-1844,1841,,,
-Nizhny Novgorod Regiment,Virgin Mary,,Tifliskiy Uezd,1831,1831,,,
 Nobachevi,,,Kutaisskiy Uezd,1870,1870,,,
 Nobakevi,,,Megrelia,1861,1861,,,
 Nobalevi,,,Ossetian Commission,1869,1869,,,
@@ -3944,10 +3909,6 @@ Poti,Greek Society | Military Church | St. Alexander Nevsky | St. Grigor Lusavor
 Potskho,Archangel,Senaki,,"1824-1855, 1857-1859, 1861-1862, 1864-1870",1824,"1856, 1860, 1863",42.431667,42.173333
 Pravoslavnoe,,,Tifliskiy Uezd,1869,1869,,,
 Prikhod,,,Goriyskiy Uezd,1830,1830,,,
-Prince of Württemberg Dragoon Regiment,Virgin Mary,,Tifliskiy Uezd,"1852, 1953",1852,1853-1952,,
-Prince of Württemberg Dragoon Regiment,,,Ossetian Commission,"1858, 1861",1858,1859-1860,,
-Prince of Württemberg Dragoon Regiment,,,Tifliskiy Uezd,"1851, 1854, 1857, 1859-1860",1851,"1852-1853, 1855-1856, 1858",,
-Prince of Württemberg Regiment,,,Tifliskiy Uezd,"1846, 1848-1850",1846,1847,,
 Privolnoye,Archangel,Tiflis Region,,"1871-1879, 1883",1871,1880-1882,41.146111,44.4425
 Pshaveli,St. Eustathius,Telavi,,"1871-1890, 1892-1916, 1918",1871,"1891, 1917",42.08,45.44
 Pshavi,,,Dushetskiy Uezd,1863,1863,,,
