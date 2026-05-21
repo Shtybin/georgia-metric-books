@@ -244,11 +244,24 @@ function validateOsmMatch(
     .filter((s) => s && s.trim().length > 0) as string[];
   const histGeoSet = histGeo.length > 0;
   const fullDisplay = `${addrRegionStr} ${hit.display_name}`;
-  const geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen, prefixLen));
+  let geoOk = !histGeoSet || histGeo.some((g) => tokenOverlap(g, fullDisplay, minTokenLen, prefixLen));
+  let aliasNote = "";
+  if (histGeoSet && !geoOk) {
+    for (const g of histGeo) {
+      const a = aliasMatches(g, fullDisplay);
+      if (a.ok) {
+        geoOk = true;
+        aliasNote = ` (alias: «${a.matchedHist}» ↔ «${a.matchedModern}»)`;
+        break;
+      }
+    }
+  }
   if (histGeoSet && !geoOk) {
     const msg = `регион/уезд не совпадает: ист. «${histGeo.join(" / ")}» vs OSM «${addrRegionStr || hit.display_name}»`;
     if (geoStrict) reasons.push(msg);
     else warnings.push(msg);
+  } else if (aliasNote) {
+    warnings.push(`admin совпал по алиасу${aliasNote}`);
   }
 
   // 2. name match (RU/EN/KA) — always strict
