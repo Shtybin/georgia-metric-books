@@ -417,6 +417,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
       inserted: 0,
       skipped: 0,
       rejected: 0,
+      merged: 0,
       remaining: Math.max(0, totalRemaining - data.offset - effectiveLimit),
       errors: [],
       log: [],
