@@ -304,22 +304,6 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
             </span>
           </div>
         </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() =>
-                setEnabled((prev) =>
-                  prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER),
-                )
-              }
-              className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-accent"
-            >
-              {enabled.size === CONFESSION_ORDER.length ? T.hideAll : T.showAll}
-            </button>
-            <span className="text-xs text-muted-foreground">
-              {T.foundCount(filtered.length, totalCount)}
-            </span>
-          </div>
-        </div>
         <div className="flex flex-wrap gap-1.5">
           {CONFESSION_ORDER.map((c) => {
             const on = enabled.has(c);
