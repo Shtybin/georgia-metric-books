@@ -107,7 +107,8 @@ export function AiGeocoderPanel() {
               и арбитрирует Lovable AI (Gemini). Подходящие кандидаты добавляются в
               очередь модерации на вкладке «Координаты» — со статусом ожидают.
               Ничего не публикуется автоматически. Скорость ≈ 3–4 секунды на село
-              (лимит Nominatim 1 запрос/сек).
+              (лимит Nominatim 1 запрос/сек). За один запуск можно обработать
+              не более 100 сёл.
             </p>
           </div>
         </div>
@@ -118,9 +119,9 @@ export function AiGeocoderPanel() {
             <input
               type="number"
               min={1}
-              max={50}
+              max={100}
               value={limit}
-              onChange={(e) => setLimit(Math.min(50, Math.max(1, parseInt(e.target.value) || 1)))}
+              onChange={(e) => setLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
               className="w-full rounded-md border border-border bg-background px-2 py-1 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </label>
