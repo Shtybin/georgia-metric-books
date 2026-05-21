@@ -9,7 +9,9 @@ import { parseYearsString } from "@/lib/userCoords";
 // Bundle the unlocated dataset so the worker doesn't depend on filesystem or
 // an internal HTTP fetch (which gets routed back to the SPA shell in preview).
 import unlocatedBundled from "../../public/data/unlocated.json";
-import parishesBundled from "../../public/data/parishes.geojson";
+import parishesRaw from "../../public/data/parishes.geojson?raw";
+
+const parishesBundled = JSON.parse(parishesRaw) as GeoJSON.FeatureCollection<GeoJSON.Point, any>;
 
 
 
