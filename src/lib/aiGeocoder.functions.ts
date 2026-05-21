@@ -714,6 +714,65 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
           continue;
         }
 
+        // --- Auto-merge: try to fold candidate into an existing published feature ---
+        const { match: mergeMatch, nearbyMiss } = findMergeTarget(
+          item, lat, lon, featureIndex, data.mergeRadiusM,
+        );
+        if (mergeMatch && arb.confidence >= data.minMergeConfidence) {
+          const existingOv = editOverrideByFid.get(mergeMatch.target.id);
+          // Use the latest data we have (either the edit override or the bundled feature).
+          const baseData = existingOv?.data ?? mergeMatch.target.data;
+          const merged = buildMergedFeatureData(baseData, item, chosen.display_name);
+          const notes = `AI auto-merge · confidence ${arb.confidence.toFixed(2)} · ${mergeMatch.reason} · ${Math.round(mergeMatch.distanceM)} м · OSM: ${chosen.display_name}`;
+          let writeErr: { message: string } | null = null;
+          if (existingOv) {
+            const { error } = await supabaseAdmin
+              .from("feature_overrides")
+              .update({ data: merged as unknown as Record<string, unknown>, notes, published: true })
+              .eq("id", existingOv.id);
+            writeErr = error;
+            if (!error) existingOv.data = merged;
+          } else {
+            const { data: inserted, error } = await supabaseAdmin
+              .from("feature_overrides")
+              .insert({
+                feature_id: mergeMatch.target.id,
+                action: "edit",
+                data: merged as unknown as Record<string, unknown>,
+                published: true,
+                notes,
+              })
+              .select("id, feature_id, action, data, published, notes, created_at, updated_at")
+              .single();
+            writeErr = error;
+            if (inserted) editOverrideByFid.set(mergeMatch.target.id, inserted as unknown as FeatureOverride);
+          }
+          // Keep the in-memory feature in sync so subsequent items in the same batch see the merged data.
+          mergeMatch.target.data = merged;
+          if (writeErr) {
+            result.errors.push({ settlement: label, reason: writeErr.message });
+            result.log.push({
+              settlement: label, uezd: uezdLabel, status: "error",
+              note: `авто-слияние не сохранилось: ${writeErr.message}`,
+              lat, lon, featureId: mergeMatch.target.id,
+            });
+          } else {
+            result.merged++;
+            result.processed++;
+            result.log.push({
+              settlement: label,
+              uezd: uezdLabel,
+              status: "merged",
+              confidence: arb.confidence,
+              note: `слито с #${mergeMatch.target.id} «${mergeMatch.target.data.settlement.ru || mergeMatch.target.data.settlement.en}» (${Math.round(mergeMatch.distanceM)} м, ${mergeMatch.reason})`,
+              lat, lon, featureId: mergeMatch.target.id,
+            });
+          }
+          continue;
+        }
+
+
+
         // Conflict check: nearby existing record (configurable radius).
         // 1° lat ≈ 111 km; 1° lon ≈ 111 km * cos(lat).
         const radiusDegLat = data.conflictRadiusM / 111_000;
