@@ -24,7 +24,7 @@ import {
 import { circlePolygon, neighborsWithin } from "@/lib/geo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { normalizeName, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
+import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
