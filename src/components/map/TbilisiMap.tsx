@@ -276,18 +276,34 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
         </div>
       </div>
 
-      {/* Filters panel (sidebar on desktop, compact drawer on mobile/tablet) */}
+      {/* Filters panel: horizontal compact strip on mobile/tablet, sidebar on desktop */}
       <div
         className={
           "pointer-events-auto absolute z-20 flex-col rounded-xl border border-border bg-card/95 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-[5.25rem] max-h-[9.25rem] gap-1.5 overflow-auto p-2 " +
-          "sm:left-auto sm:right-4 sm:top-[8.25rem] sm:w-72 sm:max-h-[12rem] " +
-          "lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
+          "left-3 right-3 top-[4.75rem] max-h-[8.5rem] gap-1.5 overflow-auto p-2 " +
+          "sm:left-3 sm:right-3 sm:top-[4.75rem] sm:max-h-[7rem] sm:w-auto sm:p-2 " +
+          "lg:left-auto lg:right-4 lg:top-20 lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
           "flex"
         }
       >
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-serif text-sm font-semibold">{T.legendTitle}</h2>
+          <h2 className="font-serif text-xs font-semibold sm:text-sm">{T.legendTitle}</h2>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() =>
+                setEnabled((prev) =>
+                  prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER),
+                )
+              }
+              className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-accent"
+            >
+              {enabled.size === CONFESSION_ORDER.length ? T.hideAll : T.showAll}
+            </button>
+            <span className="text-xs text-muted-foreground">
+              {T.foundCount(filtered.length, totalCount)}
+            </span>
+          </div>
+        </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() =>
