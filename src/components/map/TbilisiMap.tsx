@@ -324,6 +324,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
                   className="h-2.5 w-2.5 rounded-full"
                   style={{ background: CONFESSION_COLORS[c] }}
                 />
+                <span className="max-w-[120px] truncate lg:hidden">{T.confessionsShort[c]}</span>
                 <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
                 <span className="text-muted-foreground">{count}</span>
               </button>
