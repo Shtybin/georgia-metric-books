@@ -212,6 +212,34 @@ export function AiGeocoderPanel() {
               className="w-full"
             />
           </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Радиус авто-слияния ({mergeRadiusM} м) — рядом с опубликованной точкой
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={5000}
+              step={100}
+              value={mergeRadiusM}
+              onChange={(e) => setMergeRadiusM(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Мин. уверенность для слияния ({minMergeConfidence.toFixed(2)})
+            </span>
+            <input
+              type="range"
+              min={0.5}
+              max={1}
+              step={0.05}
+              value={minMergeConfidence}
+              onChange={(e) => setMinMergeConfidence(parseFloat(e.target.value))}
+              className="w-full"
+            />
+          </label>
           <label className="flex items-start gap-2 text-xs">
             <input
               type="checkbox"
