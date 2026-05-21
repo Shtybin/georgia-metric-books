@@ -72,7 +72,7 @@ export const TBILISI_STRINGS = {
       orthodox_military: "Православие (Военные храмы)",
       armenian_apostolic: "Армянская апостольская",
       greek_orthodox: "Греческая православная",
-      roman_catholic: "Римо-католическая",
+      roman_catholic: "Римско-Католическая",
       lutheran: "Лютеранская (кирха)",
       jewish: "Иудаизм (синагога)",
       molokan: "Молоканская",
