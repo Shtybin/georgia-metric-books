@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import maplibregl, { Map as MLMap, Popup } from "maplibre-gl";
+import maplibregl, { Map as MLMap, Popup, type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { BASEMAP_STYLE } from "@/lib/map-style";
 import {
@@ -34,13 +34,18 @@ interface Props {
   onLangChange: (l: Lang) => void;
 }
 
-function churchFeatureCollection(rows: TbilisiChurch[]) {
+type ChurchFeatureCollection = GeoJSON.FeatureCollection<
+  GeoJSON.Point,
+  { id: number; confession: Confession }
+>;
+
+function churchFeatureCollection(rows: TbilisiChurch[]): ChurchFeatureCollection {
   return {
     type: "FeatureCollection",
     features: rows
       .filter((r) => Number.isFinite(r.lon) && Number.isFinite(r.lat))
       .map((r) => ({
-        type: "Feature",
+        type: "Feature" as const,
         geometry: { type: "Point", coordinates: [r.lon, r.lat] },
         properties: { id: r.id, confession: r.confession },
       })),
@@ -116,14 +121,14 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     map.on("load", () => {
       map.addSource("churches", {
         type: "geojson",
-        data: { type: "FeatureCollection", features: [] } as any,
+        data: churchFeatureCollection([]),
       });
-      const colorExpr: any = [
+      const colorExpr = [
         "match",
         ["get", "confession"],
         ...CONFESSION_ORDER.flatMap((c) => [c, CONFESSION_COLORS[c]]),
         "#888",
-      ];
+      ] as unknown as string;
       map.addLayer({
         id: "churches",
         type: "circle",
@@ -136,11 +141,13 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           "circle-opacity": 0.92,
         },
       });
-      (map.getSource("churches") as any)?.setData(churchFeatureCollection(filteredRef.current));
+      (map.getSource("churches") as GeoJSONSource | undefined)?.setData(
+        churchFeatureCollection(filteredRef.current),
+      );
       map.on("click", "churches", (e) => {
         const f = e.features?.[0];
         if (!f) return;
-        const id = (f.properties as any).id as number;
+        const id = Number((f.properties as { id?: number | string }).id);
         const row = (rowsRef.current || []).find((r) => r.id === id);
         if (row) setSelected(row);
       });
@@ -166,7 +173,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     const map = mapRef.current;
     if (!map) return;
     const apply = () => {
-      const src = map.getSource("churches") as any;
+      const src = map.getSource("churches") as GeoJSONSource | undefined;
       if (!src) return;
       src.setData(churchFeatureCollection(filtered));
     };
