@@ -728,7 +728,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
           if (existingOv) {
             const { error } = await supabaseAdmin
               .from("feature_overrides")
-              .update({ data: merged as unknown as Record<string, unknown>, notes, published: true })
+              .update({ data: JSON.parse(JSON.stringify(merged)), notes, published: true })
               .eq("id", existingOv.id);
             writeErr = error;
             if (!error) existingOv.data = merged;
@@ -738,7 +738,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
               .insert({
                 feature_id: mergeMatch.target.id,
                 action: "edit",
-                data: merged as unknown as Record<string, unknown>,
+                data: JSON.parse(JSON.stringify(merged)),
                 published: true,
                 notes,
               })
