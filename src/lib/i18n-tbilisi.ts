@@ -66,6 +66,8 @@ export const TBILISI_STRINGS = {
     foundCount: (n: number, total: number) => `Показано: ${n} из ${total}`,
     showFilters: "Фильтры",
     hideFilters: "Скрыть",
+    showAll: "Показать все",
+    hideAll: "Убрать все",
     confessions: {
       orthodox_georgian: "Православие (Грузинский экзархат)",
       orthodox_russian: "Православие (Русский приход)",
@@ -120,6 +122,8 @@ export const TBILISI_STRINGS = {
     foundCount: (n: number, total: number) => `Showing: ${n} of ${total}`,
     showFilters: "Filters",
     hideFilters: "Hide",
+    showAll: "Show all",
+    hideAll: "Hide all",
     confessions: {
       orthodox_georgian: "Orthodox (Georgian Exarchate)",
       orthodox_russian: "Orthodox (Russian parish)",
@@ -174,6 +178,8 @@ export const TBILISI_STRINGS = {
     foundCount: (n: number, total: number) => `ნაჩვენებია: ${n} / ${total}`,
     showFilters: "ფილტრები",
     hideFilters: "დამალვა",
+    showAll: "ყველას ჩვენება",
+    hideAll: "ყველას დამალვა",
     confessions: {
       orthodox_georgian: "მართლმადიდებლური (ქართული ეგზარქატი)",
       orthodox_russian: "მართლმადიდებლური (რუსული სამრევლო)",
