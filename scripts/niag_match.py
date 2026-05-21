@@ -100,7 +100,12 @@ def norm(s: str) -> str:
 
 
 def keys(name: str) -> set[str]:
-    """Generate matchable keys from a name (full normalized + first 2 words)."""
+    """Generate matchable keys from a name.
+
+    For multi-word names we DO NOT add single-token keys — otherwise common
+    prefixes like ``ქვემო`` ("Lower") or ``ზემო`` ("Upper") match every
+    settlement that starts with them. Only single-word names get a single key.
+    """
     n = norm(name)
     if not n:
         return set()
@@ -108,9 +113,8 @@ def keys(name: str) -> set[str]:
     parts = n.split()
     if len(parts) >= 2:
         out.add(" ".join(parts[:2]))
-    if len(parts) >= 1:
-        out.add(parts[0])
     return out
+
 
 
 def scrape_all() -> list[dict]:
