@@ -242,7 +242,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </button>
         </div>
 
-        <div className="pointer-events-auto flex w-auto items-center gap-2 self-end sm:self-auto">
+        <div className="pointer-events-auto hidden w-auto items-center gap-2 self-end sm:flex sm:self-auto">
           <div className="inline-flex w-fit items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
             <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
             {(["ru", "en", "ka"] as const).map((l) => (
@@ -276,11 +276,32 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
         </div>
       </div>
 
+      {/* Mobile-only language switcher: below legend, left-aligned */}
+      <div className="pointer-events-auto absolute left-3 top-[11.5rem] z-20 sm:hidden">
+        <div className="inline-flex w-fit items-center gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
+          <Globe2 className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
+          {(["ru", "en", "ka"] as const).map((l) => (
+            <button
+              key={l}
+              onClick={() => onLangChange(l)}
+              className={
+                "rounded px-2 py-1 text-xs uppercase " +
+                (lang === l
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent")
+              }
+            >
+              {l === "ka" ? "ქა" : l}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Filters panel: horizontal compact strip on mobile/tablet, sidebar on desktop */}
       <div
         className={
           "pointer-events-auto absolute z-20 flex-col rounded-xl border border-border bg-card/95 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-[4.75rem] max-h-[8.5rem] gap-1.5 overflow-auto p-2 " +
+          "left-3 right-3 top-[3.25rem] max-h-[7.5rem] gap-1.5 overflow-auto p-2 " +
           "sm:left-3 sm:right-3 sm:top-[4.75rem] sm:max-h-[7rem] sm:w-auto sm:p-2 " +
           "lg:left-auto lg:right-4 lg:top-20 lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
           "flex"
