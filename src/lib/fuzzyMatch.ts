@@ -78,6 +78,48 @@ export function normalizeName(input: string | null | undefined): string {
   return s;
 }
 
+// Admin-division suffix/prefix tokens. Different historical sources label the
+// same territory as "уезд", "район", "округ", "губерния", "область",
+// "district", "county", "region", "okrug", "guberniya", "oblast", "mazra"
+// (georgian მაზრა), etc. These tokens carry no identity — they describe the
+// administrative *kind*, not the place. Strip them so that
+// "Тифлисский уезд" and "Тифлисский район" normalize to the same key and
+// merge during dedup.
+const ADMIN_TOKENS = [
+  // Russian
+  "уезд", "уезда", "уезде", "уезду", "уездов",
+  "район", "района", "районе", "районы", "районов",
+  "округ", "округа", "округе", "округу", "округов",
+  "губерния", "губернии", "губерниях", "губерний",
+  "область", "области", "областях", "областей", "обл",
+  "край", "края", "крае", "краев",
+  "волость", "волости",
+  // English
+  "uezd", "raion", "rayon", "okrug", "guberniya", "gubernia",
+  "oblast", "krai", "region", "district", "county", "province",
+  // Georgian
+  "მაზრა", "მაზრის", "ოლქი", "ოლქის", "რეგიონი", "რეგიონის",
+  "რაიონი", "რაიონის", "გუბერნია", "გუბერნიის",
+];
+
+const ADMIN_TOKEN_RE = new RegExp(
+  "(?:^|\\s)(?:" +
+    ADMIN_TOKENS.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") +
+    ")(?=\\s|$)",
+  "giu",
+);
+
+/** Normalize an admin-division label (uezd / район / округ / district / ...).
+ *  Returns a key suitable for equality comparison and bucketing: strips the
+ *  admin-kind token and applies the same folding as `normalizeName`. */
+export function normalizeAdmin(input: string | null | undefined): string {
+  if (!input) return "";
+  // First strip admin tokens, then run through name normalization so all the
+  // diacritic/punctuation/letter-folding rules apply consistently.
+  const stripped = String(input).replace(ADMIN_TOKEN_RE, " ");
+  return normalizeName(stripped);
+}
+
 /** Iterative Levenshtein with two rolling rows. O(n*m) time, O(min(n,m)) memory. */
 export function levenshtein(a: string, b: string): number {
   if (a === b) return 0;

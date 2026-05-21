@@ -24,7 +24,7 @@ import {
 import { circlePolygon, neighborsWithin } from "@/lib/geo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { normalizeName, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
+import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -304,7 +304,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         const p: any = f.properties;
         const nameN = normalizeName(p.settlement?.ru || p.settlement?.en);
         if (!nameN) continue;
-        const uezdN = normalizeName(p.uezd?.ru || p.uezd?.en);
+        const uezdN = normalizeAdmin(p.uezd?.ru || p.uezd?.en);
         const e: Entry = { id: f.id as number, nameN, uezdN };
         all.push(e);
         const arr = byName.get(nameN) ?? [];
@@ -324,7 +324,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     return (settlement: string, uezd: string): number | undefined => {
       const sN = normalizeName(settlement);
       if (!sN) return undefined;
-      const uN = normalizeName(uezd);
+      const uN = normalizeAdmin(uezd);
       // 1) exact name + matching uezd
       const exact = byName.get(sN);
       if (exact) {
@@ -373,7 +373,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       const b: Bucket = {
         id: f.id as number,
         nameN,
-        uezdN: normalizeName(p.uezd?.ru || p.uezd?.en),
+        uezdN: normalizeAdmin(p.uezd?.ru || p.uezd?.en),
         props: p,
       };
       allBuckets.push(b);
@@ -455,7 +455,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       const settlement = (a.settlement_ru || a.settlement_en || "")
         .toLocaleLowerCase()
         .trim();
-      const uezd = (a.uezd_ru || a.uezd_en || "").toLocaleLowerCase().trim();
+      // Use normalizeAdmin so уезд/район/district variants collapse to the
+      // same dedup key as unlocatedKey() produces.
+      const uezd = normalizeAdmin(a.uezd_ru || a.uezd_en);
       if (settlement) s.add(`${settlement}|${uezd}`);
     }
     return s;
