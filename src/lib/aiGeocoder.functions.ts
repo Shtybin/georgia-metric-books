@@ -349,6 +349,213 @@ async function fetchUnlocated(): Promise<UnlocatedItem[]> {
   return unlocatedBundled as UnlocatedItem[];
 }
 
+// ---- Auto-merge helpers ------------------------------------------------
+
+interface IndexedFeature {
+  id: number;
+  lat: number;
+  lon: number;
+  data: FeatureData;
+}
+
+/** Haversine distance in meters between two lat/lon pairs. */
+function haversineM(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6_371_000;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+const BUCKET_DEG = 0.05; // ≈ 5.5 km — guarantees radius ≤ ~5km hits its bucket + 1 ring
+function bucketKey(lat: number, lon: number): string {
+  return `${Math.floor(lat / BUCKET_DEG)}|${Math.floor(lon / BUCKET_DEG)}`;
+}
+
+function buildSpatialIndex(features: IndexedFeature[]): Map<string, IndexedFeature[]> {
+  const idx = new Map<string, IndexedFeature[]>();
+  for (const f of features) {
+    const k = bucketKey(f.lat, f.lon);
+    const arr = idx.get(k);
+    if (arr) arr.push(f); else idx.set(k, [f]);
+  }
+  return idx;
+}
+
+function bucketNeighbours(lat: number, lon: number): string[] {
+  const cy = Math.floor(lat / BUCKET_DEG);
+  const cx = Math.floor(lon / BUCKET_DEG);
+  const keys: string[] = [];
+  for (let dy = -1; dy <= 1; dy++) {
+    for (let dx = -1; dx <= 1; dx++) {
+      keys.push(`${cy + dy}|${cx + dx}`);
+    }
+  }
+  return keys;
+}
+
+/** Apply published edit/delete overrides to bundled parishes and return an indexable list. */
+function buildFeatureIndex(overrides: FeatureOverride[]): IndexedFeature[] {
+  const editMap = new Map<number, FeatureData>();
+  const deleteSet = new Set<number>();
+  for (const o of overrides) {
+    if (!o.published) continue;
+    if (o.action === "delete" && o.feature_id != null) deleteSet.add(o.feature_id);
+    else if (o.action === "edit" && o.feature_id != null && o.data) editMap.set(o.feature_id, o.data);
+  }
+  const out: IndexedFeature[] = [];
+  for (const f of parishesBundled.features) {
+    const fid = f.id as number;
+    if (deleteSet.has(fid)) continue;
+    const edited = editMap.get(fid);
+    const data = edited ?? featureToData(f as GeoJSON.Feature<GeoJSON.Point, any>);
+    if (!Number.isFinite(data.lat) || !Number.isFinite(data.lon)) continue;
+    out.push({ id: fid, lat: data.lat, lon: data.lon, data });
+  }
+  return out;
+}
+
+interface MergeMatch {
+  target: IndexedFeature;
+  distanceM: number;
+  reason: string;
+}
+
+function sameSettlement(item: UnlocatedItem, target: FeatureData): boolean {
+  const names: [string, string][] = [
+    [item.settlement.ru, target.settlement.ru],
+    [item.settlement.en, target.settlement.en],
+    [item.settlement.ka || "", target.settlement.ka || ""],
+  ];
+  return names.some(([a, b]) => a && b && isProbableMatch(a, b));
+}
+
+function adminMatches(item: UnlocatedItem, target: FeatureData): { ok: boolean; how: string } {
+  const itemU = normalizeAdmin(item.uezd.ru || item.uezd.en);
+  const itemR = normalizeAdmin(item.region.ru || item.region.en);
+  const tgtU = normalizeAdmin(target.uezd.ru || target.uezd.en);
+  const tgtR = normalizeAdmin(target.region.ru || target.region.en);
+  // Cross-match uezd/region — "уезд" vs "район" stripped, "Тифлисский" = "Тифлисский".
+  const buckets = [itemU, itemR].filter(Boolean);
+  const tgtBuckets = [tgtU, tgtR].filter(Boolean);
+  for (const a of buckets) {
+    for (const b of tgtBuckets) {
+      if (a === b) return { ok: true, how: `admin «${a}» совпал` };
+    }
+  }
+  // If both sides have no admin info at all, name+distance alone is too weak — refuse.
+  if (buckets.length === 0 && tgtBuckets.length === 0) return { ok: false, how: "нет admin-полей" };
+  return { ok: false, how: `admin расходится (ист. ${buckets.join("/") || "—"} vs ${tgtBuckets.join("/") || "—"})` };
+}
+
+function findMergeTarget(
+  item: UnlocatedItem,
+  lat: number,
+  lon: number,
+  index: Map<string, IndexedFeature[]>,
+  mergeRadiusM: number,
+): { match: MergeMatch | null; nearbyMiss: { target: IndexedFeature; distanceM: number; why: string } | null } {
+  let best: MergeMatch | null = null;
+  let nearbyMiss: { target: IndexedFeature; distanceM: number; why: string } | null = null;
+  for (const key of bucketNeighbours(lat, lon)) {
+    const arr = index.get(key);
+    if (!arr) continue;
+    for (const f of arr) {
+      const d = haversineM(lat, lon, f.lat, f.lon);
+      if (d > mergeRadiusM) continue;
+      const nameOk = sameSettlement(item, f.data);
+      if (!nameOk) {
+        if (!nearbyMiss || d < nearbyMiss.distanceM) {
+          nearbyMiss = { target: f, distanceM: d, why: "имя не совпадает" };
+        }
+        continue;
+      }
+      const adm = adminMatches(item, f.data);
+      if (!adm.ok) {
+        if (!nearbyMiss || d < nearbyMiss.distanceM) {
+          nearbyMiss = { target: f, distanceM: d, why: adm.how };
+        }
+        continue;
+      }
+      if (!best || d < best.distanceM) {
+        best = { target: f, distanceM: d, reason: `имя+${adm.how}` };
+      }
+    }
+  }
+  return { match: best, nearbyMiss };
+}
+
+/** Union two compact year strings into a deduplicated, range-compacted string. */
+function unionYearsRaw(a: string, b: string): string {
+  const years = Array.from(new Set([...parseYearsString(a), ...parseYearsString(b)])).sort((x, y) => x - y);
+  if (years.length === 0) return "";
+  const parts: string[] = [];
+  let start = years[0];
+  let prev = years[0];
+  for (let i = 1; i <= years.length; i++) {
+    const y = years[i];
+    if (y === prev + 1) { prev = y; continue; }
+    parts.push(start === prev ? `${start}` : `${start}-${prev}`);
+    start = prev = y;
+  }
+  return parts.join(", ");
+}
+
+function mergeStr(existing: string, incoming: string): string {
+  const a = (existing || "").trim();
+  const b = (incoming || "").trim();
+  if (!a) return b;
+  if (!b) return a;
+  if (a === b) return a;
+  // Avoid double-append if already contains.
+  if (a.toLocaleLowerCase().includes(b.toLocaleLowerCase())) return a;
+  return `${a} / ${b}`;
+}
+
+function buildMergedFeatureData(existing: FeatureData, item: UnlocatedItem, osmName: string): FeatureData {
+  void osmName;
+  const merged: FeatureData = {
+    ...existing,
+    settlement: { ...existing.settlement },
+    church: {
+      ru: mergeStr(existing.church.ru, item.church.ru),
+      en: mergeStr(existing.church.en, item.church.en),
+      ka: mergeStr(existing.church.ka, item.church.ka || ""),
+    },
+    region: {
+      ru: existing.region.ru || item.region.ru,
+      en: existing.region.en || item.region.en,
+      ka: existing.region.ka || item.region.ka || "",
+    },
+    uezd: {
+      ru: existing.uezd.ru || item.uezd.ru,
+      en: existing.uezd.en || item.uezd.en,
+      ka: existing.uezd.ka || item.uezd.ka || "",
+    },
+    yearsRaw: {
+      ru: unionYearsRaw(existing.yearsRaw.ru, item.years),
+      en: unionYearsRaw(existing.yearsRaw.en, item.years),
+      ka: existing.yearsRaw.ka || "",
+    },
+    startYear: existing.startYear,
+    endYear: existing.endYear,
+  };
+  // Refresh start/end from union if incoming widens the range.
+  const allYears = parseYearsString(merged.yearsRaw.ru || merged.yearsRaw.en || "");
+  if (allYears.length) {
+    merged.startYear = Math.min(merged.startYear || allYears[0], allYears[0]);
+    merged.endYear = Math.max(merged.endYear || allYears[allYears.length - 1], allYears[allYears.length - 1]);
+  }
+  if (item.startYear != null) merged.startYear = Math.min(merged.startYear, item.startYear);
+  if (item.endYear != null) merged.endYear = Math.max(merged.endYear, item.endYear);
+  return merged;
+}
+
+
+
 // ---- Server function ---------------------------------------------------
 
 export const runAiGeocoder = createServerFn({ method: "POST" })
