@@ -147,11 +147,6 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       className="relative overflow-hidden bg-background"
       style={{ width: "100%", height: "100dvh" }}
     >
-      {/* Push MapLibre navigation control below the top bar / back button */}
-      <style>{`
-        .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 64px; }
-        @media (min-width: 640px) { .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 72px; } }
-      `}</style>
       <div ref={containerRef} className="tbilisi-map absolute inset-0" style={{ position: "absolute", inset: 0 }} />
 
       {/* Top bar */}
