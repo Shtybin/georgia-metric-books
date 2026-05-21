@@ -69,7 +69,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       zoom: 11.5,
       attributionControl: { compact: true },
     });
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     map.on("load", () => {
       map.addSource("churches", { type: "geojson", data: { type: "FeatureCollection", features: [] } as any });
       const colorExpr: any = ["match", ["get", "confession"],
