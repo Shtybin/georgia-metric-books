@@ -57,7 +57,7 @@ export function AiGeocoderPanel() {
     // Loop client-side, accumulating logs, until target reached or queue empty.
     const CHUNK = 3;
     const acc: BatchResult = {
-      processed: 0, scanned: 0, inserted: 0, skipped: 0, rejected: 0,
+      processed: 0, scanned: 0, inserted: 0, skipped: 0, rejected: 0, merged: 0,
       remaining: 0, errors: [], log: [],
     };
     try {
@@ -65,15 +65,14 @@ export function AiGeocoderPanel() {
       while (acc.processed < limit) {
         const r = (await runFn({
           data: {
-            // Ask server for a full chunk on every call; the server caps per-chunk
-            // scan budget internally. We loop client-side until `processed`
-            // (inserted+skipped, excluding "not found") reaches the target.
             limit: CHUNK,
             minConfidence,
             minTokenLen,
             prefixLen,
             geoStrict,
             conflictRadiusM,
+            mergeRadiusM,
+            minMergeConfidence,
             uezd: uezd || undefined,
             offset,
           },
@@ -83,6 +82,7 @@ export function AiGeocoderPanel() {
         acc.inserted += r.inserted;
         acc.skipped += r.skipped;
         acc.rejected += r.rejected;
+        acc.merged += r.merged;
         acc.remaining = r.remaining ?? 0;
         acc.errors.push(...r.errors);
         acc.log.push(...r.log);
