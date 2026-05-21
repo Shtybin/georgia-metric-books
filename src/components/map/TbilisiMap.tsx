@@ -303,6 +303,15 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
         </div>
       </div>
 
+      <ReportProblemButton
+        lang={lang}
+        getMapState={() => {
+          const m = mapRef.current; if (!m) return null;
+          const c = m.getCenter();
+          return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+        }}
+      />
+
       {/* Bottom action bar */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-2 p-3 sm:p-4">
         <button
@@ -312,16 +321,6 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           <BookOpen className="h-3.5 w-3.5" />
           {T.archiveButton}
         </button>
-        <div className="pointer-events-auto">
-          <ReportProblemButton
-            lang={lang}
-            getMapState={() => {
-              const m = mapRef.current; if (!m) return null;
-              const c = m.getCenter();
-              return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
-            }}
-          />
-        </div>
       </div>
 
       {/* Selected church card */}
