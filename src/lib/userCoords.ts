@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import type { UnlocatedItem } from "@/components/map/UnlocatedPanel";
+import { normalizeAdmin } from "@/lib/fuzzyMatch";
 
 const STORAGE_KEY = "georgia-metric-books:user-coords:v1";
 
-export type UnlocatedKey = string; // `${settlementLower}|${uezdLower}`
+export type UnlocatedKey = string; // `${settlementLower}|${uezdNormalized}`
 
 export function unlocatedKey(item: UnlocatedItem): UnlocatedKey {
   const s = (item.settlement.ru || item.settlement.en || "").toLocaleLowerCase().trim();
-  const u = (item.uezd.ru || item.uezd.en || "").toLocaleLowerCase().trim();
+  // Normalize the admin token (уезд/район/district/...) so the same place
+  // labeled with different administrative kinds collapses to one key.
+  const u = normalizeAdmin(item.uezd.ru || item.uezd.en);
   return `${s}|${u}`;
 }
 
