@@ -1,8 +1,8 @@
 {
-  "total": 7602,
+  "total": 7600,
   "withCoords": 2522,
-  "withoutCoords": 5080,
+  "withoutCoords": 5078,
   "uniqueLocations": 1376,
-  "unlocatedGroups": 5080,
+  "unlocatedGroups": 5078,
   "geocodingConfidence": 0.331754801368061
 }
