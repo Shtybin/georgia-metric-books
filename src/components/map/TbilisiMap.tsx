@@ -1,10 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import maplibregl, { Map as MLMap, Popup } from "maplibre-gl";
+import maplibregl, { Map as MLMap, Popup, type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { BASEMAP_STYLE } from "@/lib/map-style";
-import { fetchTbilisiChurches, type TbilisiChurch, TBILISI_YEAR_MIN, TBILISI_YEAR_MAX } from "@/lib/tbilisiChurches";
 import {
-  CONFESSION_COLORS, CONFESSION_ORDER, tT, TBILISI_BBOX,
+  fetchTbilisiChurches,
+  type TbilisiChurch,
+  TBILISI_YEAR_MIN,
+  TBILISI_YEAR_MAX,
+} from "@/lib/tbilisiChurches";
+import {
+  CONFESSION_COLORS,
+  CONFESSION_ORDER,
+  tT,
+  TBILISI_BBOX,
   type Confession,
 } from "@/lib/i18n-tbilisi";
 import type { Lang } from "@/lib/i18n";
@@ -13,16 +21,43 @@ import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen } from "l
 import { Link } from "@tanstack/react-router";
 import { ReportProblemButton } from "@/components/map/ReportProblemButton";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { t as tCore } from "@/lib/i18n";
 
-interface Props { lang: Lang; onLangChange: (l: Lang) => void; }
+interface Props {
+  lang: Lang;
+  onLangChange: (l: Lang) => void;
+}
+
+type ChurchFeatureCollection = GeoJSON.FeatureCollection<
+  GeoJSON.Point,
+  { id: number; confession: Confession }
+>;
+
+function churchFeatureCollection(rows: TbilisiChurch[]): ChurchFeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: rows
+      .filter((r) => Number.isFinite(r.lon) && Number.isFinite(r.lat))
+      .map((r) => ({
+        type: "Feature" as const,
+        geometry: { type: "Point", coordinates: [r.lon, r.lat] },
+        properties: { id: r.id, confession: r.confession },
+      })),
+  };
+}
 
 export function TbilisiMap({ lang, onLangChange }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
+  const rowsRef = useRef<TbilisiChurch[] | null>(null);
+  const filteredRef = useRef<TbilisiChurch[]>([]);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
   const [selected, setSelected] = useState<TbilisiChurch | null>(null);
   const [query, setQuery] = useState("");
@@ -36,11 +71,15 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
   const T = tT(lang);
   const Tcore = tCore(lang);
 
-  useEffect(() => { fetchTbilisiChurches().then(setRows); }, []);
+  useEffect(() => {
+    fetchTbilisiChurches().then(setRows);
+  }, []);
 
   useEffect(() => {
     document.body.dataset.fullscreenMap = "true";
-    return () => { delete document.body.dataset.fullscreenMap; };
+    return () => {
+      delete document.body.dataset.fullscreenMap;
+    };
   }, []);
 
   const filtered = useMemo(() => {
@@ -61,26 +100,35 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     });
   }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query]);
 
+  useEffect(() => {
+    rowsRef.current = rows;
+  }, [rows]);
+  useEffect(() => {
+    filteredRef.current = filtered;
+  }, [filtered]);
+
   // Build map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: BASEMAP_STYLE,
-      center: [
-        (TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2,
-        (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2,
-      ],
+      center: [(TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2, (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2],
       zoom: 11.5,
       attributionControl: { compact: true },
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     map.on("load", () => {
-      map.addSource("churches", { type: "geojson", data: { type: "FeatureCollection", features: [] } as any });
-      const colorExpr: any = ["match", ["get", "confession"],
+      map.addSource("churches", {
+        type: "geojson",
+        data: churchFeatureCollection([]),
+      });
+      const colorExpr = [
+        "match",
+        ["get", "confession"],
         ...CONFESSION_ORDER.flatMap((c) => [c, CONFESSION_COLORS[c]]),
         "#888",
-      ];
+      ] as unknown as string;
       map.addLayer({
         id: "churches",
         type: "circle",
@@ -93,40 +141,41 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           "circle-opacity": 0.92,
         },
       });
+      (map.getSource("churches") as GeoJSONSource | undefined)?.setData(
+        churchFeatureCollection(filteredRef.current),
+      );
       map.on("click", "churches", (e) => {
         const f = e.features?.[0];
         if (!f) return;
-        const id = (f.properties as any).id as number;
+        const id = Number((f.properties as { id?: number | string }).id);
         const row = (rowsRef.current || []).find((r) => r.id === id);
         if (row) setSelected(row);
       });
-      map.on("mouseenter", "churches", () => { map.getCanvas().style.cursor = "pointer"; });
-      map.on("mouseleave", "churches", () => { map.getCanvas().style.cursor = ""; });
+      map.on("mouseenter", "churches", () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", "churches", () => {
+        map.getCanvas().style.cursor = "";
+      });
     });
     mapRef.current = map;
     const ro = new ResizeObserver(() => map.resize());
     ro.observe(containerRef.current);
-    return () => { ro.disconnect(); map.remove(); mapRef.current = null; };
+    return () => {
+      ro.disconnect();
+      map.remove();
+      mapRef.current = null;
+    };
   }, []);
-
-  const rowsRef = useRef<TbilisiChurch[] | null>(null);
-  useEffect(() => { rowsRef.current = rows; }, [rows]);
 
   // Update map data on filter change
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const apply = () => {
-      const src = map.getSource("churches") as any;
+      const src = map.getSource("churches") as GeoJSONSource | undefined;
       if (!src) return;
-      src.setData({
-        type: "FeatureCollection",
-        features: filtered.map((r) => ({
-          type: "Feature",
-          geometry: { type: "Point", coordinates: [r.lon, r.lat] },
-          properties: { id: r.id, confession: r.confession },
-        })),
-      });
+      src.setData(churchFeatureCollection(filtered));
     };
     if (map.isStyleLoaded() && map.getSource("churches")) apply();
     else map.once("idle", apply);
@@ -135,7 +184,8 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
   const toggleConfession = (c: Confession) => {
     setEnabled((prev) => {
       const next = new Set(prev);
-      if (next.has(c)) next.delete(c); else next.add(c);
+      if (next.has(c)) next.delete(c);
+      else next.add(c);
       return next;
     });
   };
@@ -147,7 +197,11 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       className="relative overflow-hidden bg-background"
       style={{ width: "100%", height: "100dvh" }}
     >
-      <div ref={containerRef} className="tbilisi-map absolute inset-0" style={{ position: "absolute", inset: 0 }} />
+      <div
+        ref={containerRef}
+        className="tbilisi-map absolute inset-0"
+        style={{ position: "absolute", inset: 0 }}
+      />
 
       {/* Top bar */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-2 p-3 sm:flex-row sm:items-start sm:justify-between sm:p-4">
@@ -170,7 +224,11 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
               className="w-full rounded-lg border border-border bg-card/95 py-2 pl-8 pr-8 text-sm shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
             {query && (
-              <button onClick={() => setQuery("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Clear">
+              <button
+                onClick={() => setQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear"
+              >
                 <X className="h-4 w-4" />
               </button>
             )}
@@ -192,7 +250,9 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
               onClick={() => onLangChange(l)}
               className={
                 "rounded px-2 py-1 text-xs uppercase " +
-                (lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent")
+                (lang === l
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent")
               }
             >
               {l === "ka" ? "ქა" : l}
@@ -204,11 +264,11 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       {/* Filters panel (sidebar on desktop, compact drawer on mobile/tablet) */}
       <div
         className={
-          "pointer-events-auto absolute z-20 flex-col gap-2 rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-[5.25rem] max-h-[calc(100dvh-7rem)] overflow-auto " +
-          "sm:left-auto sm:right-4 sm:top-20 sm:w-72 sm:max-h-[calc(100dvh-7rem)] " +
-          "lg:w-80 lg:p-3 lg:gap-3 lg:bottom-20 lg:max-h-none " +
-          (filtersOpen ? "flex" : "hidden lg:flex")
+          "pointer-events-auto absolute z-20 flex-col rounded-xl border border-border bg-card/95 shadow-xl backdrop-blur " +
+          "left-3 right-3 top-[5.25rem] max-h-[9.25rem] gap-1.5 overflow-auto p-2 " +
+          "sm:left-auto sm:right-4 sm:top-[8.25rem] sm:w-72 sm:max-h-[12rem] " +
+          "lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
+          "flex"
         }
       >
         <div className="flex items-center justify-between gap-2">
@@ -217,14 +277,16 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
             <button
               onClick={() =>
                 setEnabled((prev) =>
-                  prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER)
+                  prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER),
                 )
               }
               className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-accent"
             >
               {enabled.size === CONFESSION_ORDER.length ? T.hideAll : T.showAll}
             </button>
-            <span className="text-xs text-muted-foreground">{T.foundCount(filtered.length, totalCount)}</span>
+            <span className="text-xs text-muted-foreground">
+              {T.foundCount(filtered.length, totalCount)}
+            </span>
           </div>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -243,7 +305,10 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
                 title={T.confessions[c]}
                 aria-label={T.confessions[c]}
               >
-                <span className="h-2.5 w-2.5 rounded-full" style={{ background: CONFESSION_COLORS[c] }} />
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ background: CONFESSION_COLORS[c] }}
+                />
                 <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
                 <span className="text-muted-foreground">{count}</span>
               </button>
@@ -251,18 +316,24 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           })}
         </div>
 
-        <div>
-          <label className="text-xs font-medium">{T.yearRange}: {yearMin}–{yearMax}</label>
+        <div className="hidden lg:block">
+          <label className="text-xs font-medium">
+            {T.yearRange}: {yearMin}–{yearMax}
+          </label>
           <div className="mt-1 grid grid-cols-2 gap-2">
             <input
-              type="range" min={TBILISI_YEAR_MIN} max={TBILISI_YEAR_MAX}
+              type="range"
+              min={TBILISI_YEAR_MIN}
+              max={TBILISI_YEAR_MAX}
               value={yearMin}
               onChange={(e) => setYearMin(Math.min(Number(e.target.value), yearMax))}
               className="w-full"
               aria-label="Min year"
             />
             <input
-              type="range" min={TBILISI_YEAR_MIN} max={TBILISI_YEAR_MAX}
+              type="range"
+              min={TBILISI_YEAR_MIN}
+              max={TBILISI_YEAR_MAX}
               value={yearMax}
               onChange={(e) => setYearMax(Math.max(Number(e.target.value), yearMin))}
               className="w-full"
@@ -271,28 +342,53 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5 text-xs">
+        <div className="hidden flex-col gap-1.5 text-xs lg:flex">
           <label className="flex items-center gap-2">
-            <input type="checkbox" checked={onlyPreserved} onChange={(e) => setOnlyPreserved(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={onlyPreserved}
+              onChange={(e) => setOnlyPreserved(e.target.checked)}
+            />
             {T.onlyPreserved}
           </label>
           <label className="flex items-center gap-2">
-            <input type="checkbox" checked={onlyActive} onChange={(e) => setOnlyActive(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={onlyActive}
+              onChange={(e) => setOnlyActive(e.target.checked)}
+            />
             {T.onlyActive}
           </label>
         </div>
 
-        <div className="flex gap-2">
+        <div className="hidden gap-2 lg:flex">
           <Button
-            size="sm" variant="outline" className="flex-1"
+            size="sm"
+            variant="outline"
+            className="flex-1"
             onClick={() => {
               setEnabled(new Set(CONFESSION_ORDER));
-              setYearMin(TBILISI_YEAR_MIN); setYearMax(TBILISI_YEAR_MAX);
-              setOnlyPreserved(false); setOnlyActive(false); setQuery("");
+              setYearMin(TBILISI_YEAR_MIN);
+              setYearMax(TBILISI_YEAR_MAX);
+              setOnlyPreserved(false);
+              setOnlyActive(false);
+              setQuery("");
             }}
-          >{T.reset}</Button>
+          >
+            {T.reset}
+          </Button>
         </div>
       </div>
+
+      <ReportProblemButton
+        lang={lang}
+        getMapState={() => {
+          const m = mapRef.current;
+          if (!m) return null;
+          const c = m.getCenter();
+          return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+        }}
+      />
 
       {/* Bottom action bar */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-center gap-2 p-3 sm:p-4">
@@ -303,16 +399,6 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           <BookOpen className="h-3.5 w-3.5" />
           {T.archiveButton}
         </button>
-        <div className="pointer-events-auto">
-          <ReportProblemButton
-            lang={lang}
-            getMapState={() => {
-              const m = mapRef.current; if (!m) return null;
-              const c = m.getCenter();
-              return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
-            }}
-          />
-        </div>
       </div>
 
       {/* Selected church card */}
@@ -324,10 +410,18 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
               style={{ background: CONFESSION_COLORS[selected.confession] }}
             />
             <div className="min-w-0 flex-1">
-              <h3 className="font-serif text-base font-semibold leading-tight">{selected.name[lang]}</h3>
-              <p className="mt-0.5 text-xs text-muted-foreground">{T.confessions[selected.confession]}</p>
+              <h3 className="font-serif text-base font-semibold leading-tight">
+                {selected.name[lang]}
+              </h3>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {T.confessions[selected.confession]}
+              </p>
             </div>
-            <button onClick={() => setSelected(null)} aria-label="Close" className="text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setSelected(null)}
+              aria-label="Close"
+              className="text-muted-foreground hover:text-foreground"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -340,14 +434,42 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           )}
 
           <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-xs">
-            {selected.address && (<><dt className="text-muted-foreground">{T.fields.address}</dt><dd>{selected.address}</dd></>)}
-            {selected.district && (<><dt className="text-muted-foreground">{T.fields.district}</dt><dd>{selected.district}</dd></>)}
-            <dt className="text-muted-foreground">{T.fields.recordYears}</dt><dd>{selected.recordYears || "—"}</dd>
-            {selected.missingYears && (<><dt className="text-muted-foreground">{T.fields.missingYears}</dt><dd>{selected.missingYears}</dd></>)}
-            <dt className="text-muted-foreground">{T.fields.preserved}</dt><dd>{T.yesNo[selected.preserved]}</dd>
-            <dt className="text-muted-foreground">{T.fields.active}</dt><dd>{T.yesNo[selected.active]}</dd>
-            {selected.note && (<><dt className="text-muted-foreground">{T.fields.note}</dt><dd>{selected.note}</dd></>)}
-            {selected.historicalNote && (<><dt className="text-muted-foreground">{T.fields.historicalNote}</dt><dd>{selected.historicalNote}</dd></>)}
+            {selected.address && (
+              <>
+                <dt className="text-muted-foreground">{T.fields.address}</dt>
+                <dd>{selected.address}</dd>
+              </>
+            )}
+            {selected.district && (
+              <>
+                <dt className="text-muted-foreground">{T.fields.district}</dt>
+                <dd>{selected.district}</dd>
+              </>
+            )}
+            <dt className="text-muted-foreground">{T.fields.recordYears}</dt>
+            <dd>{selected.recordYears || "—"}</dd>
+            {selected.missingYears && (
+              <>
+                <dt className="text-muted-foreground">{T.fields.missingYears}</dt>
+                <dd>{selected.missingYears}</dd>
+              </>
+            )}
+            <dt className="text-muted-foreground">{T.fields.preserved}</dt>
+            <dd>{T.yesNo[selected.preserved]}</dd>
+            <dt className="text-muted-foreground">{T.fields.active}</dt>
+            <dd>{T.yesNo[selected.active]}</dd>
+            {selected.note && (
+              <>
+                <dt className="text-muted-foreground">{T.fields.note}</dt>
+                <dd>{selected.note}</dd>
+              </>
+            )}
+            {selected.historicalNote && (
+              <>
+                <dt className="text-muted-foreground">{T.fields.historicalNote}</dt>
+                <dd>{selected.historicalNote}</dd>
+              </>
+            )}
           </dl>
         </div>
       )}
@@ -357,7 +479,10 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           <DialogHeader>
             <DialogTitle>{Tcore.docsTitle}</DialogTitle>
             <DialogDescription asChild>
-              <div className="prose prose-sm dark:prose-invert" dangerouslySetInnerHTML={{ __html: Tcore.docsBodyHtml }} />
+              <div
+                className="prose prose-sm dark:prose-invert"
+                dangerouslySetInnerHTML={{ __html: Tcore.docsBodyHtml }}
+              />
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

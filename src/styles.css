@@ -109,11 +109,13 @@
   /* Heights reserved by floating UI on top of the map. Override on the map
    * container or via [data-*] state to shift overlays in lockstep when
    * the card or the legend appears/disappears. */
-  --map-top-bar-height: 9rem;     /* mobile: filters + search + actions row */
+  --map-top-bar-height: 9rem; /* mobile: filters + search + actions row */
   --map-bottom-legend-height: 5rem; /* mobile: 2-row bucket legend */
 
   --map-overlay-gap-top: calc(var(--map-safe-top) + var(--map-top-bar-height) + 0.5rem);
-  --map-overlay-gap-bottom: calc(var(--map-safe-bottom) + var(--map-bottom-legend-height) + 0.75rem);
+  --map-overlay-gap-bottom: calc(
+    var(--map-safe-bottom) + var(--map-bottom-legend-height) + 0.75rem
+  );
   --map-overlay-gap-left: calc(var(--map-safe-left) + 0.5rem);
   --map-overlay-gap-right: calc(var(--map-safe-right) + 0.5rem);
   --map-overlay-toast-offset: 2.5rem;
@@ -223,10 +225,13 @@ body[data-scroll-locked] {
   overflow: hidden !important;
 }
 
-
 /* Tbilisi map: push MapLibre nav control below the top bar so it doesn't
  * collide with the "back to main map" button. */
-.tbilisi-map .maplibregl-ctrl-top-left { margin-top: 64px; }
+.tbilisi-map .maplibregl-ctrl-top-left {
+  margin-top: 72px;
+}
 @media (min-width: 640px) {
-  .tbilisi-map .maplibregl-ctrl-top-left { margin-top: 72px; }
+  .tbilisi-map .maplibregl-ctrl-top-left {
+    margin-top: 80px;
+  }
 }
