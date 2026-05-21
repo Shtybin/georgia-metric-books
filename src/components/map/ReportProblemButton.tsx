@@ -12,6 +12,8 @@ import { pickAnchor, type Anchor } from "@/lib/collision-anchor";
 interface Props {
   lang: Lang;
   getMapState?: () => { lat: number; lon: number; zoom: number } | null;
+  inline?: boolean;
+  className?: string;
 }
 
 const STORAGE_KEY = "pr_submits_v1";
