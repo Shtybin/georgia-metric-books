@@ -38,6 +38,11 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
 
   useEffect(() => { fetchTbilisiChurches().then(setRows); }, []);
 
+  useEffect(() => {
+    document.body.dataset.fullscreenMap = "true";
+    return () => { delete document.body.dataset.fullscreenMap; };
+  }, []);
+
   const filtered = useMemo(() => {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
@@ -62,11 +67,14 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: BASEMAP_STYLE,
-      bounds: [[TBILISI_BBOX[0], TBILISI_BBOX[1]], [TBILISI_BBOX[2], TBILISI_BBOX[3]]],
-      fitBoundsOptions: { padding: 40 },
+      center: [
+        (TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2,
+        (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2,
+      ],
+      zoom: 11.5,
       attributionControl: { compact: true },
     });
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     map.on("load", () => {
       map.addSource("churches", { type: "geojson", data: { type: "FeatureCollection", features: [] } as any });
       const colorExpr: any = ["match", ["get", "confession"],
@@ -135,8 +143,11 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
   const totalCount = rows?.length ?? 0;
 
   return (
-    <div className="relative h-[100dvh] w-full overflow-hidden bg-background">
-      <div ref={containerRef} className="absolute inset-0" />
+    <div
+      className="relative overflow-hidden bg-background"
+      style={{ width: "100%", height: "100dvh" }}
+    >
+      <div ref={containerRef} className="absolute inset-0" style={{ position: "absolute", inset: 0 }} />
 
       {/* Top bar */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-2 p-3 sm:flex-row sm:items-start sm:justify-between sm:p-4">
@@ -194,7 +205,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       <div
         className={
           "pointer-events-auto absolute z-20 flex flex-col gap-3 rounded-xl border border-border bg-card/95 p-3 shadow-xl backdrop-blur " +
-          "left-3 right-3 top-20 max-h-[60vh] overflow-auto sm:left-4 sm:right-auto sm:top-20 sm:w-80 lg:flex " +
+          "left-3 right-3 top-20 max-h-[60vh] overflow-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 lg:flex " +
           (filtersOpen ? "flex" : "hidden lg:flex")
         }
       >
