@@ -2,10 +2,18 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { isProbableMatch, normalizeAdmin } from "@/lib/fuzzyMatch";
+import { featureToData, type FeatureData, type FeatureOverride } from "@/lib/featureOverrides";
+import { parseYearsString } from "@/lib/userCoords";
 
 // Bundle the unlocated dataset so the worker doesn't depend on filesystem or
 // an internal HTTP fetch (which gets routed back to the SPA shell in preview).
 import unlocatedBundled from "../../public/data/unlocated.json";
+import parishesRaw from "../../public/data/parishes.geojson?raw";
+
+const parishesBundled = JSON.parse(parishesRaw) as GeoJSON.FeatureCollection<GeoJSON.Point, any>;
+
+
 
 
 // ---- Types -------------------------------------------------------------
@@ -34,24 +42,26 @@ interface NominatimHit {
 }
 
 interface BatchResult {
-  /** Counts only successful attempts (inserted + skipped). Rejected items (not found / AI отклонил) do NOT count toward the limit. */
+  /** Counts only successful attempts (inserted + skipped + merged). Rejected items (not found / AI отклонил) do NOT count toward the limit. */
   processed: number;
   /** How many queue items were consumed in total (used by client to advance offset). */
   scanned: number;
   inserted: number;
   skipped: number;
   rejected: number;
+  merged: number;
   /** How many candidates remain in the queue after this chunk (for client looping). */
   remaining: number;
   errors: { settlement: string; reason: string }[];
   log: {
     settlement: string;
     uezd: string;
-    status: "inserted" | "skipped" | "rejected" | "error";
+    status: "inserted" | "skipped" | "rejected" | "error" | "merged";
     confidence?: number;
     note?: string;
     lat?: number;
     lon?: number;
+    featureId?: number;
   }[];
 }
 
@@ -339,6 +349,213 @@ async function fetchUnlocated(): Promise<UnlocatedItem[]> {
   return unlocatedBundled as UnlocatedItem[];
 }
 
+// ---- Auto-merge helpers ------------------------------------------------
+
+interface IndexedFeature {
+  id: number;
+  lat: number;
+  lon: number;
+  data: FeatureData;
+}
+
+/** Haversine distance in meters between two lat/lon pairs. */
+function haversineM(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6_371_000;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+const BUCKET_DEG = 0.05; // ≈ 5.5 km — guarantees radius ≤ ~5km hits its bucket + 1 ring
+function bucketKey(lat: number, lon: number): string {
+  return `${Math.floor(lat / BUCKET_DEG)}|${Math.floor(lon / BUCKET_DEG)}`;
+}
+
+function buildSpatialIndex(features: IndexedFeature[]): Map<string, IndexedFeature[]> {
+  const idx = new Map<string, IndexedFeature[]>();
+  for (const f of features) {
+    const k = bucketKey(f.lat, f.lon);
+    const arr = idx.get(k);
+    if (arr) arr.push(f); else idx.set(k, [f]);
+  }
+  return idx;
+}
+
+function bucketNeighbours(lat: number, lon: number): string[] {
+  const cy = Math.floor(lat / BUCKET_DEG);
+  const cx = Math.floor(lon / BUCKET_DEG);
+  const keys: string[] = [];
+  for (let dy = -1; dy <= 1; dy++) {
+    for (let dx = -1; dx <= 1; dx++) {
+      keys.push(`${cy + dy}|${cx + dx}`);
+    }
+  }
+  return keys;
+}
+
+/** Apply published edit/delete overrides to bundled parishes and return an indexable list. */
+function buildFeatureIndex(overrides: FeatureOverride[]): IndexedFeature[] {
+  const editMap = new Map<number, FeatureData>();
+  const deleteSet = new Set<number>();
+  for (const o of overrides) {
+    if (!o.published) continue;
+    if (o.action === "delete" && o.feature_id != null) deleteSet.add(o.feature_id);
+    else if (o.action === "edit" && o.feature_id != null && o.data) editMap.set(o.feature_id, o.data);
+  }
+  const out: IndexedFeature[] = [];
+  for (const f of parishesBundled.features) {
+    const fid = f.id as number;
+    if (deleteSet.has(fid)) continue;
+    const edited = editMap.get(fid);
+    const data = edited ?? featureToData(f as GeoJSON.Feature<GeoJSON.Point, any>);
+    if (!Number.isFinite(data.lat) || !Number.isFinite(data.lon)) continue;
+    out.push({ id: fid, lat: data.lat, lon: data.lon, data });
+  }
+  return out;
+}
+
+interface MergeMatch {
+  target: IndexedFeature;
+  distanceM: number;
+  reason: string;
+}
+
+function sameSettlement(item: UnlocatedItem, target: FeatureData): boolean {
+  const names: [string, string][] = [
+    [item.settlement.ru, target.settlement.ru],
+    [item.settlement.en, target.settlement.en],
+    [item.settlement.ka || "", target.settlement.ka || ""],
+  ];
+  return names.some(([a, b]) => a && b && isProbableMatch(a, b));
+}
+
+function adminMatches(item: UnlocatedItem, target: FeatureData): { ok: boolean; how: string } {
+  const itemU = normalizeAdmin(item.uezd.ru || item.uezd.en);
+  const itemR = normalizeAdmin(item.region.ru || item.region.en);
+  const tgtU = normalizeAdmin(target.uezd.ru || target.uezd.en);
+  const tgtR = normalizeAdmin(target.region.ru || target.region.en);
+  // Cross-match uezd/region — "уезд" vs "район" stripped, "Тифлисский" = "Тифлисский".
+  const buckets = [itemU, itemR].filter(Boolean);
+  const tgtBuckets = [tgtU, tgtR].filter(Boolean);
+  for (const a of buckets) {
+    for (const b of tgtBuckets) {
+      if (a === b) return { ok: true, how: `admin «${a}» совпал` };
+    }
+  }
+  // If both sides have no admin info at all, name+distance alone is too weak — refuse.
+  if (buckets.length === 0 && tgtBuckets.length === 0) return { ok: false, how: "нет admin-полей" };
+  return { ok: false, how: `admin расходится (ист. ${buckets.join("/") || "—"} vs ${tgtBuckets.join("/") || "—"})` };
+}
+
+function findMergeTarget(
+  item: UnlocatedItem,
+  lat: number,
+  lon: number,
+  index: Map<string, IndexedFeature[]>,
+  mergeRadiusM: number,
+): { match: MergeMatch | null; nearbyMiss: { target: IndexedFeature; distanceM: number; why: string } | null } {
+  let best: MergeMatch | null = null;
+  let nearbyMiss: { target: IndexedFeature; distanceM: number; why: string } | null = null;
+  for (const key of bucketNeighbours(lat, lon)) {
+    const arr = index.get(key);
+    if (!arr) continue;
+    for (const f of arr) {
+      const d = haversineM(lat, lon, f.lat, f.lon);
+      if (d > mergeRadiusM) continue;
+      const nameOk = sameSettlement(item, f.data);
+      if (!nameOk) {
+        if (!nearbyMiss || d < nearbyMiss.distanceM) {
+          nearbyMiss = { target: f, distanceM: d, why: "имя не совпадает" };
+        }
+        continue;
+      }
+      const adm = adminMatches(item, f.data);
+      if (!adm.ok) {
+        if (!nearbyMiss || d < nearbyMiss.distanceM) {
+          nearbyMiss = { target: f, distanceM: d, why: adm.how };
+        }
+        continue;
+      }
+      if (!best || d < best.distanceM) {
+        best = { target: f, distanceM: d, reason: `имя+${adm.how}` };
+      }
+    }
+  }
+  return { match: best, nearbyMiss };
+}
+
+/** Union two compact year strings into a deduplicated, range-compacted string. */
+function unionYearsRaw(a: string, b: string): string {
+  const years = Array.from(new Set([...parseYearsString(a), ...parseYearsString(b)])).sort((x, y) => x - y);
+  if (years.length === 0) return "";
+  const parts: string[] = [];
+  let start = years[0];
+  let prev = years[0];
+  for (let i = 1; i <= years.length; i++) {
+    const y = years[i];
+    if (y === prev + 1) { prev = y; continue; }
+    parts.push(start === prev ? `${start}` : `${start}-${prev}`);
+    start = prev = y;
+  }
+  return parts.join(", ");
+}
+
+function mergeStr(existing: string, incoming: string): string {
+  const a = (existing || "").trim();
+  const b = (incoming || "").trim();
+  if (!a) return b;
+  if (!b) return a;
+  if (a === b) return a;
+  // Avoid double-append if already contains.
+  if (a.toLocaleLowerCase().includes(b.toLocaleLowerCase())) return a;
+  return `${a} / ${b}`;
+}
+
+function buildMergedFeatureData(existing: FeatureData, item: UnlocatedItem, osmName: string): FeatureData {
+  void osmName;
+  const merged: FeatureData = {
+    ...existing,
+    settlement: { ...existing.settlement },
+    church: {
+      ru: mergeStr(existing.church.ru, item.church.ru),
+      en: mergeStr(existing.church.en, item.church.en),
+      ka: mergeStr(existing.church.ka, item.church.ka || ""),
+    },
+    region: {
+      ru: existing.region.ru || item.region.ru,
+      en: existing.region.en || item.region.en,
+      ka: existing.region.ka || item.region.ka || "",
+    },
+    uezd: {
+      ru: existing.uezd.ru || item.uezd.ru,
+      en: existing.uezd.en || item.uezd.en,
+      ka: existing.uezd.ka || item.uezd.ka || "",
+    },
+    yearsRaw: {
+      ru: unionYearsRaw(existing.yearsRaw.ru, item.years),
+      en: unionYearsRaw(existing.yearsRaw.en, item.years),
+      ka: existing.yearsRaw.ka || "",
+    },
+    startYear: existing.startYear,
+    endYear: existing.endYear,
+  };
+  // Refresh start/end from union if incoming widens the range.
+  const allYears = parseYearsString(merged.yearsRaw.ru || merged.yearsRaw.en || "");
+  if (allYears.length) {
+    merged.startYear = Math.min(merged.startYear || allYears[0], allYears[0]);
+    merged.endYear = Math.max(merged.endYear || allYears[allYears.length - 1], allYears[allYears.length - 1]);
+  }
+  if (item.startYear != null) merged.startYear = Math.min(merged.startYear, item.startYear);
+  if (item.endYear != null) merged.endYear = Math.max(merged.endYear, item.endYear);
+  return merged;
+}
+
+
+
 // ---- Server function ---------------------------------------------------
 
 export const runAiGeocoder = createServerFn({ method: "POST" })
@@ -346,7 +563,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
       .object({
-        limit: z.number().int().min(1).max(50).default(10),
+        limit: z.number().int().min(1).max(100).default(10),
         uezd: z.string().max(200).optional(),
         minConfidence: z.number().min(0).max(1).default(0.55),
         offset: z.number().int().min(0).default(0),
@@ -356,8 +573,12 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         prefixLen: z.number().int().min(3).max(8).default(5),
         /** If false, region/uezd mismatch becomes a warning instead of a hard reject. */
         geoStrict: z.boolean().default(true),
-        /** Conflict radius in meters around a candidate point. */
+        /** Conflict radius in meters around a candidate point (against pending suggestions). */
         conflictRadiusM: z.number().int().min(0).max(5000).default(300),
+        /** Radius for auto-merging into an existing published feature. */
+        mergeRadiusM: z.number().int().min(0).max(5000).default(1500),
+        /** Min AI confidence required to auto-merge into a published feature. */
+        minMergeConfidence: z.number().min(0).max(1).default(0.75),
       })
       .parse(input),
   )
@@ -401,12 +622,30 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
     const totalRemaining = candidates.length;
     candidates = candidates.slice(data.offset, data.offset + effectiveLimit);
 
+    // Load published overrides + build spatial index of canonical features once per request.
+    const { data: ovRows } = await supabaseAdmin
+      .from("feature_overrides")
+      .select("id, feature_id, action, data, published, notes, created_at, updated_at")
+      .eq("published", true)
+      .order("updated_at", { ascending: true });
+    const published = (ovRows || []) as unknown as FeatureOverride[];
+    const featureList = buildFeatureIndex(published);
+    const featureIndex = buildSpatialIndex(featureList);
+    // For looking up existing edit overrides when we want to merge into a feature
+    // that already has one (must update, not insert second).
+    const editOverrideByFid = new Map<number, FeatureOverride>();
+    for (const o of published) {
+      if (o.action === "edit" && o.feature_id != null) editOverrideByFid.set(o.feature_id, o);
+    }
+
+
     const result: BatchResult = {
       processed: 0,
       scanned: 0,
       inserted: 0,
       skipped: 0,
       rejected: 0,
+      merged: 0,
       remaining: Math.max(0, totalRemaining - data.offset - effectiveLimit),
       errors: [],
       log: [],
@@ -474,6 +713,65 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
           });
           continue;
         }
+
+        // --- Auto-merge: try to fold candidate into an existing published feature ---
+        const { match: mergeMatch, nearbyMiss } = findMergeTarget(
+          item, lat, lon, featureIndex, data.mergeRadiusM,
+        );
+        if (mergeMatch && arb.confidence >= data.minMergeConfidence) {
+          const existingOv = editOverrideByFid.get(mergeMatch.target.id);
+          // Use the latest data we have (either the edit override or the bundled feature).
+          const baseData = existingOv?.data ?? mergeMatch.target.data;
+          const merged = buildMergedFeatureData(baseData, item, chosen.display_name);
+          const notes = `AI auto-merge · confidence ${arb.confidence.toFixed(2)} · ${mergeMatch.reason} · ${Math.round(mergeMatch.distanceM)} м · OSM: ${chosen.display_name}`;
+          let writeErr: { message: string } | null = null;
+          if (existingOv) {
+            const { error } = await supabaseAdmin
+              .from("feature_overrides")
+              .update({ data: JSON.parse(JSON.stringify(merged)), notes, published: true })
+              .eq("id", existingOv.id);
+            writeErr = error;
+            if (!error) existingOv.data = merged;
+          } else {
+            const { data: inserted, error } = await supabaseAdmin
+              .from("feature_overrides")
+              .insert({
+                feature_id: mergeMatch.target.id,
+                action: "edit",
+                data: JSON.parse(JSON.stringify(merged)),
+                published: true,
+                notes,
+              })
+              .select("id, feature_id, action, data, published, notes, created_at, updated_at")
+              .single();
+            writeErr = error;
+            if (inserted) editOverrideByFid.set(mergeMatch.target.id, inserted as unknown as FeatureOverride);
+          }
+          // Keep the in-memory feature in sync so subsequent items in the same batch see the merged data.
+          mergeMatch.target.data = merged;
+          if (writeErr) {
+            result.errors.push({ settlement: label, reason: writeErr.message });
+            result.log.push({
+              settlement: label, uezd: uezdLabel, status: "error",
+              note: `авто-слияние не сохранилось: ${writeErr.message}`,
+              lat, lon, featureId: mergeMatch.target.id,
+            });
+          } else {
+            result.merged++;
+            result.processed++;
+            result.log.push({
+              settlement: label,
+              uezd: uezdLabel,
+              status: "merged",
+              confidence: arb.confidence,
+              note: `слито с #${mergeMatch.target.id} «${mergeMatch.target.data.settlement.ru || mergeMatch.target.data.settlement.en}» (${Math.round(mergeMatch.distanceM)} м, ${mergeMatch.reason})`,
+              lat, lon, featureId: mergeMatch.target.id,
+            });
+          }
+          continue;
+        }
+
+
 
         // Conflict check: nearby existing record (configurable radius).
         // 1° lat ≈ 111 km; 1° lon ≈ 111 km * cos(lat).

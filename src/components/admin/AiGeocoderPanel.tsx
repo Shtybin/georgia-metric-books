@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { runAiGeocoder, listUnlocatedUezds } from "@/lib/aiGeocoder.functions";
 import { Button } from "@/components/ui/button";
-import { Loader2, Sparkles, CheckCircle2, XCircle, AlertCircle, MapPin } from "lucide-react";
+import { Loader2, Sparkles, CheckCircle2, XCircle, AlertCircle, MapPin, GitMerge } from "lucide-react";
 
 interface BatchResult {
   processed: number;
@@ -10,16 +10,18 @@ interface BatchResult {
   inserted: number;
   skipped: number;
   rejected: number;
+  merged: number;
   remaining?: number;
   errors: { settlement: string; reason: string }[];
   log: {
     settlement: string;
     uezd: string;
-    status: "inserted" | "skipped" | "rejected" | "error";
+    status: "inserted" | "skipped" | "rejected" | "error" | "merged";
     confidence?: number;
     note?: string;
     lat?: number;
     lon?: number;
+    featureId?: number;
   }[];
 }
 
@@ -33,6 +35,8 @@ export function AiGeocoderPanel() {
   const [prefixLen, setPrefixLen] = useState(5);
   const [geoStrict, setGeoStrict] = useState(true);
   const [conflictRadiusM, setConflictRadiusM] = useState(300);
+  const [mergeRadiusM, setMergeRadiusM] = useState(1500);
+  const [minMergeConfidence, setMinMergeConfidence] = useState(0.75);
   const [uezd, setUezd] = useState("");
   const [uezds, setUezds] = useState<{ uezd: string; count: number }[]>([]);
   const [result, setResult] = useState<BatchResult | null>(null);
@@ -53,7 +57,7 @@ export function AiGeocoderPanel() {
     // Loop client-side, accumulating logs, until target reached or queue empty.
     const CHUNK = 3;
     const acc: BatchResult = {
-      processed: 0, scanned: 0, inserted: 0, skipped: 0, rejected: 0,
+      processed: 0, scanned: 0, inserted: 0, skipped: 0, rejected: 0, merged: 0,
       remaining: 0, errors: [], log: [],
     };
     try {
@@ -61,15 +65,14 @@ export function AiGeocoderPanel() {
       while (acc.processed < limit) {
         const r = (await runFn({
           data: {
-            // Ask server for a full chunk on every call; the server caps per-chunk
-            // scan budget internally. We loop client-side until `processed`
-            // (inserted+skipped, excluding "not found") reaches the target.
             limit: CHUNK,
             minConfidence,
             minTokenLen,
             prefixLen,
             geoStrict,
             conflictRadiusM,
+            mergeRadiusM,
+            minMergeConfidence,
             uezd: uezd || undefined,
             offset,
           },
@@ -79,6 +82,7 @@ export function AiGeocoderPanel() {
         acc.inserted += r.inserted;
         acc.skipped += r.skipped;
         acc.rejected += r.rejected;
+        acc.merged += r.merged;
         acc.remaining = r.remaining ?? 0;
         acc.errors.push(...r.errors);
         acc.log.push(...r.log);
@@ -104,11 +108,13 @@ export function AiGeocoderPanel() {
             <h2 className="font-serif text-base font-semibold">AI-геокодер</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
               Берёт сёла из списка «без координат», ищет их в OpenStreetMap (Nominatim)
-              и арбитрирует Lovable AI (Gemini). Подходящие кандидаты добавляются в
-              очередь модерации на вкладке «Координаты» — со статусом ожидают.
-              Ничего не публикуется автоматически. Скорость ≈ 3–4 секунды на село
-              (лимит Nominatim 1 запрос/сек). За один запуск можно обработать
-              не более 100 сёл.
+              и арбитрирует Lovable AI (Gemini). Если рядом с найденной точкой уже есть
+              опубликованное село с тем же названием и совпавшим уездом или регионом —
+              данные <b>сливаются</b> в существующую точку (объединяются годы и церковь).
+              Иначе кандидат идёт в очередь модерации на вкладке «Координаты». Ничего
+              нового не публикуется автоматически. Скорость ≈ 3–4 секунды на село
+              (лимит Nominatim 1 запрос/сек). За один запуск можно обработать не более
+              100 сёл.
             </p>
           </div>
         </div>
@@ -206,6 +212,34 @@ export function AiGeocoderPanel() {
               className="w-full"
             />
           </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Радиус авто-слияния ({mergeRadiusM} м) — рядом с опубликованной точкой
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={5000}
+              step={100}
+              value={mergeRadiusM}
+              onChange={(e) => setMergeRadiusM(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-muted-foreground">
+              Мин. уверенность для слияния ({minMergeConfidence.toFixed(2)})
+            </span>
+            <input
+              type="range"
+              min={0.5}
+              max={1}
+              step={0.05}
+              value={minMergeConfidence}
+              onChange={(e) => setMinMergeConfidence(parseFloat(e.target.value))}
+              className="w-full"
+            />
+          </label>
           <label className="flex items-start gap-2 text-xs">
             <input
               type="checkbox"
@@ -259,6 +293,9 @@ export function AiGeocoderPanel() {
             <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-700 dark:text-emerald-300">
               добавлено в очередь: <b className="tabular-nums">{result.inserted}</b>
             </span>
+            <span className="rounded-full bg-sky-500/15 px-2 py-0.5 text-sky-700 dark:text-sky-300">
+              слито с опубликованными: <b className="tabular-nums">{result.merged}</b>
+            </span>
             <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-amber-700 dark:text-amber-300">
               пропущено (низкая уверенность): <b className="tabular-nums">{result.skipped}</b>
             </span>
@@ -277,6 +314,9 @@ export function AiGeocoderPanel() {
               <li key={i} className="flex items-start gap-2 py-2">
                 {row.status === "inserted" && (
                   <CheckCircle2 className="mt-0.5 h-4 w-4 text-emerald-600" />
+                )}
+                {row.status === "merged" && (
+                  <GitMerge className="mt-0.5 h-4 w-4 text-sky-600" />
                 )}
                 {row.status === "skipped" && (
                   <AlertCircle className="mt-0.5 h-4 w-4 text-amber-600" />
