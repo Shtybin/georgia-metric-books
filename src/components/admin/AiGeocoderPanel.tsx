@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { runAiGeocoder, listUnlocatedUezds } from "@/lib/aiGeocoder.functions";
 import { Button } from "@/components/ui/button";
-import { Loader2, Sparkles, CheckCircle2, XCircle, AlertCircle, MapPin } from "lucide-react";
+import { Loader2, Sparkles, CheckCircle2, XCircle, AlertCircle, MapPin, GitMerge } from "lucide-react";
 
 interface BatchResult {
   processed: number;
@@ -10,16 +10,18 @@ interface BatchResult {
   inserted: number;
   skipped: number;
   rejected: number;
+  merged: number;
   remaining?: number;
   errors: { settlement: string; reason: string }[];
   log: {
     settlement: string;
     uezd: string;
-    status: "inserted" | "skipped" | "rejected" | "error";
+    status: "inserted" | "skipped" | "rejected" | "error" | "merged";
     confidence?: number;
     note?: string;
     lat?: number;
     lon?: number;
+    featureId?: number;
   }[];
 }
 
@@ -33,6 +35,8 @@ export function AiGeocoderPanel() {
   const [prefixLen, setPrefixLen] = useState(5);
   const [geoStrict, setGeoStrict] = useState(true);
   const [conflictRadiusM, setConflictRadiusM] = useState(300);
+  const [mergeRadiusM, setMergeRadiusM] = useState(1500);
+  const [minMergeConfidence, setMinMergeConfidence] = useState(0.75);
   const [uezd, setUezd] = useState("");
   const [uezds, setUezds] = useState<{ uezd: string; count: number }[]>([]);
   const [result, setResult] = useState<BatchResult | null>(null);
