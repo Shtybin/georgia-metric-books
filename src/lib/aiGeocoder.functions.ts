@@ -563,7 +563,7 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
       .object({
-        limit: z.number().int().min(1).max(50).default(10),
+        limit: z.number().int().min(1).max(100).default(10),
         uezd: z.string().max(200).optional(),
         minConfidence: z.number().min(0).max(1).default(0.55),
         offset: z.number().int().min(0).default(0),
@@ -573,8 +573,12 @@ export const runAiGeocoder = createServerFn({ method: "POST" })
         prefixLen: z.number().int().min(3).max(8).default(5),
         /** If false, region/uezd mismatch becomes a warning instead of a hard reject. */
         geoStrict: z.boolean().default(true),
-        /** Conflict radius in meters around a candidate point. */
+        /** Conflict radius in meters around a candidate point (against pending suggestions). */
         conflictRadiusM: z.number().int().min(0).max(5000).default(300),
+        /** Radius for auto-merging into an existing published feature. */
+        mergeRadiusM: z.number().int().min(0).max(5000).default(1500),
+        /** Min AI confidence required to auto-merge into a published feature. */
+        minMergeConfidence: z.number().min(0).max(1).default(0.75),
       })
       .parse(input),
   )
