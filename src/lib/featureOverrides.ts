@@ -278,6 +278,8 @@ export function usePublishedOverrides() {
       .from("feature_overrides")
       .select("id, feature_id, action, data, published, notes, created_at, updated_at")
       .eq("published", true)
+      .order("updated_at", { ascending: true })
+      .eq("published", true)
       .then(({ data, error }) => {
         if (error) {
           console.error("[published overrides]", error);
