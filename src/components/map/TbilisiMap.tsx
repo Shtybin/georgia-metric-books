@@ -142,9 +142,6 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           "circle-opacity": 0.92,
         },
       });
-      (map.getSource("churches") as GeoJSONSource | undefined)?.setData(
-        churchFeatureCollection(filteredRef.current),
-      );
       map.on("click", "churches", (e) => {
         const f = e.features?.[0];
         if (!f) return;
@@ -158,6 +155,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       map.on("mouseleave", "churches", () => {
         map.getCanvas().style.cursor = "";
       });
+      setMapReady(true);
     });
     mapRef.current = map;
     const ro = new ResizeObserver(() => map.resize());
