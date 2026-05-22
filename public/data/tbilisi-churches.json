@@ -26,8 +26,8 @@
   "confidence": "low_district",
   "historicalNote": {
    "ru": "Утраченная приходская церковь в районе Авлабар.",
-   "en": "",
-   "ka": ""
+   "en": "Lost parish church in Avlabari district.",
+   "ka": "დაკარგული სამრევლო ეკლესია ავლაბრის რაიონში."
   }
  },
  {
@@ -57,8 +57,8 @@
   "confidence": "low_district",
   "historicalNote": {
    "ru": "Утрачена. Не путать с католическим храмом.",
-   "en": "",
-   "ka": ""
+   "en": "Lost. Not to be confused with the Catholic church.",
+   "ka": "დაკარგული. არ უნდა აგვერიოს კათოლიკურ ეკლესიაში."
   }
  },
  {
@@ -88,8 +88,8 @@
   "confidence": "low_district",
   "historicalNote": {
    "ru": "Утрачена в советский период.",
-   "en": "",
-   "ka": ""
+   "en": "Lost during the Soviet period.",
+   "ka": "დაკარგული საბჭოთა პერიოდში."
   }
  },
  {
@@ -119,8 +119,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Древнейшая сохранившаяся церковь Тбилиси (VI в.).",
-   "en": "",
-   "ka": ""
+   "en": "Oldest preserved church in Tbilisi (6th century).",
+   "ka": "თბილისის უძველესი შემორჩენილი ეკლესია (VI ს.)."
   }
  },
  {
@@ -144,14 +144,14 @@
   "missingYears": "1886-1890",
   "note": {
    "ru": "აისორების",
-   "en": "",
-   "ka": ""
+   "en": "Aisors",
+   "ka": "აისორების"
   },
   "confidence": "low_approx",
   "historicalNote": {
    "ru": "Исторический храм общины ассирийцев (айсоров). Уничтожен.",
-   "en": "",
-   "ka": ""
+   "en": "Historical church of the Assyrian (Aisor) community. Destroyed.",
+   "ka": "ასურული (აისორების) თემის ისტორიული ეკლესია. განადგურებული."
   }
  },
  {
@@ -181,8 +181,8 @@
   "confidence": "low_approx",
   "historicalNote": {
    "ru": "Молитвенный дом. В 1920-е годы община преследовалась.",
-   "en": "",
-   "ka": ""
+   "en": "House of prayer. In the 1920s, the community was persecuted.",
+   "ka": "სამლოცველო სახლი. 1920-იან წლებში თემი იდევნებოდა."
   }
  },
  {
@@ -206,14 +206,14 @@
   "missingYears": "1879, 1885, 1894, 1908",
   "note": {
    "ru": "ბერძნების",
-   "en": "",
-   "ka": ""
+   "en": "Greeks",
+   "ka": "ბერძნების"
   },
   "confidence": "low_district",
   "historicalNote": {
    "ru": "Греческий приход.",
-   "en": "",
-   "ka": ""
+   "en": "Greek parish.",
+   "ka": "ბერძნული სამრევლო."
   }
  },
  {
@@ -237,14 +237,14 @@
   "missingYears": "",
   "note": {
    "ru": "1875-1921 (ჯვრისწერა), 1873-1916 (გარდაცვალება)",
-   "en": "",
-   "ka": ""
+   "en": "1875-1921 (marriage), 1873-1916 (death)",
+   "ka": "1875-1921 (ჯვრისწერა), 1873-1916 (გარდაცვალება)"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Уничтожена в 1940-х годах немецкими военнопленными по приказу Советов.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed in the 1940s by German prisoners of war on the orders of the Soviets.",
+   "ka": "განადგურდა 1940-იან წლებში გერმანელი სამხედრო ტყვეების მიერ საბჭოთა ბრძანებით."
   }
  },
  {
@@ -268,8 +268,8 @@
   "missingYears": "1862",
   "note": {
    "ru": "ბერძნების",
-   "en": "",
-   "ka": ""
+   "en": "Greeks",
+   "ka": "ბერძნების"
   },
   "confidence": "low",
   "historicalNote": {
@@ -305,8 +305,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Ныне Пантеон общественных деятелей.",
-   "en": "",
-   "ka": ""
+   "en": "Now the Pantheon of Public Figures.",
+   "ka": "ამჟამად საზოგადო მოღვაწეთა პანთეონი."
   }
  },
  {
@@ -336,8 +336,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Действующая синагога ахалцихских евреев.",
-   "en": "",
-   "ka": ""
+   "en": "Operating synagogue of Akhalcikhian Jews.",
+   "ka": "ახალციხელი ებრაელების მოქმედი სინაგოგა."
   }
  },
  {
@@ -367,8 +367,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Исторический храм в районе Вера.",
-   "en": "",
-   "ka": ""
+   "en": "Historical church in Vera district.",
+   "ka": "ისტორიული ეკლესია ვერის რაიონში."
   }
  },
  {
@@ -429,8 +429,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Джварис Мама, бывшее подворье Иерусалимского патриархата.",
-   "en": "",
-   "ka": ""
+   "en": "Jvaris Mama, former dependency of the Jerusalem Patriarchate.",
+   "ka": "ჯვარის მამა, იერუსალიმის საპატრიარქოს ყოფილი მეტოქი."
   }
  },
  {
@@ -485,14 +485,14 @@
   "missingYears": "",
   "note": {
    "ru": "გარდაცვ. 1839-;  ჯვრისწერა 1894-;  დაბადება 1796-1844",
-   "en": "",
-   "ka": ""
+   "en": "Death 1839-; Marriage 1894-; Birth 1796-1844",
+   "ka": "გარდაცვ. 1839-; ჯვრისწერა 1894-; დაბადება 1796-1844"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Кафедральный католический собор. Старое здание разрушено, восстановлено в 1999 г.",
-   "en": "",
-   "ka": ""
+   "en": "Catholic Cathedral. Old building destroyed, restored in 1999.",
+   "ka": "კათოლიკური საკათედრო ტაძარი. ძველი შენობა დანგრეულია, აღდგენილია 1999 წელს."
   }
  },
  {
@@ -522,8 +522,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Построена за счет польской католической общины.",
-   "en": "",
-   "ka": ""
+   "en": "Built with funds from the Polish Catholic community.",
+   "ka": "აშენებულია პოლონური კათოლიკური თემის სახსრებით."
   }
  },
  {
@@ -553,8 +553,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Снесена в советское время, находилась в районе нынешнего кинотеатра Руставели.",
-   "en": "",
-   "ka": ""
+   "en": "Demolished in Soviet times, located in the area of the current Rustaveli Cinema.",
+   "ka": "დაინგრა საბჭოთა დროს, მდებარეობდა ამჟამინდელი რუსთაველის კინოთეატრის მიდა მიმდებარე ტერიტორიაზე."
   }
  },
  {
