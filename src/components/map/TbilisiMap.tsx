@@ -127,11 +127,24 @@ export function TbilisiMap({
   const [onlyActive, setOnlyActive] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+  const [districts, setDistricts] = useState<DistrictsFC | null>(null);
   const T = tT(lang);
   const Tcore = tCore(lang);
 
   useEffect(() => {
     fetchTbilisiChurches().then(setRows);
+  }, []);
+
+  // Load district polygons (silently no-op on 404 / empty)
+  useEffect(() => {
+    fetch(DISTRICTS_1898_URL)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && d.type === "FeatureCollection" && Array.isArray(d.features) && d.features.length) {
+          setDistricts(d as DistrictsFC);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
