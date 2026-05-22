@@ -15,9 +15,14 @@ import {
   TBILISI_BBOX,
   type Confession,
 } from "@/lib/i18n-tbilisi";
+import {
+  TBILISI_1898,
+  DISTRICTS_1898_URL,
+  type District1898Properties,
+} from "@/lib/tbilisi-historical";
 import type { Lang } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen } from "lucide-react";
+import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ReportProblemButton } from "@/components/map/ReportProblemButton";
 import {
@@ -32,6 +37,10 @@ import { t as tCore } from "@/lib/i18n";
 interface Props {
   lang: Lang;
   onLangChange: (l: Lang) => void;
+  historicalOn?: boolean;
+  historicalOpacity?: number;
+  districtsOn?: boolean;
+  onHistoricalChange?: (h: boolean, o: number, d: boolean) => void;
 }
 
 type ChurchFeatureCollection = GeoJSON.FeatureCollection<
@@ -52,7 +61,56 @@ function churchFeatureCollection(rows: TbilisiChurch[]): ChurchFeatureCollection
   };
 }
 
-export function TbilisiMap({ lang, onLangChange }: Props) {
+type DistrictsFC = GeoJSON.FeatureCollection<
+  GeoJSON.Polygon | GeoJSON.MultiPolygon,
+  District1898Properties
+>;
+
+/** Ray-casting point-in-polygon. Returns true if [lon,lat] is inside any ring of feature. */
+function pointInRing(point: [number, number], ring: number[][]): boolean {
+  const [x, y] = point;
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0],
+      yi = ring[i][1];
+    const xj = ring[j][0],
+      yj = ring[j][1];
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi || 1e-12) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+function pointInPolygon(point: [number, number], coords: GeoJSON.Polygon["coordinates"]): boolean {
+  if (!coords.length) return false;
+  if (!pointInRing(point, coords[0])) return false;
+  for (let i = 1; i < coords.length; i++) if (pointInRing(point, coords[i])) return false;
+  return true;
+}
+function findDistrictFor(
+  lon: number,
+  lat: number,
+  fc: DistrictsFC | null,
+): District1898Properties | null {
+  if (!fc) return null;
+  const p: [number, number] = [lon, lat];
+  for (const f of fc.features) {
+    const g = f.geometry;
+    if (g.type === "Polygon" && pointInPolygon(p, g.coordinates)) return f.properties;
+    if (g.type === "MultiPolygon") {
+      for (const poly of g.coordinates) if (pointInPolygon(p, poly)) return f.properties;
+    }
+  }
+  return null;
+}
+
+export function TbilisiMap({
+  lang,
+  onLangChange,
+  historicalOn = false,
+  historicalOpacity = 60,
+  districtsOn = true,
+  onHistoricalChange,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
@@ -69,11 +127,24 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
   const [onlyActive, setOnlyActive] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+  const [districts, setDistricts] = useState<DistrictsFC | null>(null);
   const T = tT(lang);
   const Tcore = tCore(lang);
 
   useEffect(() => {
     fetchTbilisiChurches().then(setRows);
+  }, []);
+
+  // Load district polygons (silently no-op on 404 / empty)
+  useEffect(() => {
+    fetch(DISTRICTS_1898_URL)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && d.type === "FeatureCollection" && Array.isArray(d.features) && d.features.length) {
+          setDistricts(d as DistrictsFC);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -120,6 +191,77 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     map.on("load", () => {
+      // Historical 1898 raster (below everything else but the basemap)
+      if (TBILISI_1898) {
+        if (TBILISI_1898.kind === "tiles") {
+          map.addSource("hist-1898", {
+            type: "raster",
+            tiles: [TBILISI_1898.tiles],
+            tileSize: 256,
+            minzoom: TBILISI_1898.minzoom ?? 10,
+            maxzoom: TBILISI_1898.maxzoom ?? 18,
+            attribution: TBILISI_1898.attribution ?? "Карта Тифлиса, 1898 г.",
+          });
+        } else {
+          map.addSource("hist-1898", {
+            type: "image",
+            url: TBILISI_1898.url,
+            coordinates: TBILISI_1898.coordinates,
+            attribution: TBILISI_1898.attribution ?? "Карта Тифлиса, 1898 г.",
+          } as maplibregl.ImageSourceSpecification);
+        }
+        map.addLayer({
+          id: "hist-1898",
+          type: "raster",
+          source: "hist-1898",
+          layout: { visibility: historicalOn ? "visible" : "none" },
+          paint: { "raster-opacity": Math.max(0, Math.min(1, historicalOpacity / 100)) },
+        });
+      }
+
+      // District polygons (1898). Source is added empty, populated when geojson loads.
+      map.addSource("districts-1898", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] } as DistrictsFC,
+      });
+      map.addLayer({
+        id: "districts-1898-fill",
+        type: "fill",
+        source: "districts-1898",
+        layout: { visibility: districtsOn ? "visible" : "none" },
+        paint: { "fill-color": "#b45309", "fill-opacity": 0.08 },
+      });
+      map.addLayer({
+        id: "districts-1898-line",
+        type: "line",
+        source: "districts-1898",
+        layout: { visibility: districtsOn ? "visible" : "none" },
+        paint: {
+          "line-color": "#92400e",
+          "line-width": 2,
+          "line-dasharray": [3, 2],
+          "line-opacity": 0.85,
+        },
+      });
+      map.addLayer({
+        id: "districts-1898-label",
+        type: "symbol",
+        source: "districts-1898",
+        layout: {
+          visibility: districtsOn ? "visible" : "none",
+          "text-field": ["coalesce", ["get", "name_latin"], ["get", "name_ru"]],
+          "text-size": 12,
+          "text-font": ["Noto Sans Regular"],
+          "text-letter-spacing": 0.08,
+          "text-transform": "uppercase",
+        },
+        paint: {
+          "text-color": "#78350f",
+          "text-halo-color": "#fef3c7",
+          "text-halo-width": 1.5,
+        },
+      });
+
       map.addSource("churches", {
         type: "geojson",
         data: churchFeatureCollection([]),
@@ -176,6 +318,45 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     if (!src) return;
     src.setData(churchFeatureCollection(filtered));
   }, [filtered, mapReady]);
+
+  // Push districts data when loaded
+  useEffect(() => {
+    if (!mapReady || !districts) return;
+    const map = mapRef.current;
+    if (!map) return;
+    const src = map.getSource("districts-1898") as GeoJSONSource | undefined;
+    if (src) src.setData(districts as unknown as GeoJSON.FeatureCollection);
+  }, [districts, mapReady]);
+
+  // Historical raster: visibility + opacity reactive to props
+  useEffect(() => {
+    if (!mapReady) return;
+    const map = mapRef.current;
+    if (!map || !map.getLayer("hist-1898")) return;
+    map.setLayoutProperty("hist-1898", "visibility", historicalOn ? "visible" : "none");
+    map.setPaintProperty(
+      "hist-1898",
+      "raster-opacity",
+      Math.max(0, Math.min(1, historicalOpacity / 100)),
+    );
+  }, [historicalOn, historicalOpacity, mapReady]);
+
+  // District polygons: visibility reactive
+  useEffect(() => {
+    if (!mapReady) return;
+    const map = mapRef.current;
+    if (!map) return;
+    for (const id of ["districts-1898-fill", "districts-1898-line", "districts-1898-label"]) {
+      if (map.getLayer(id)) {
+        map.setLayoutProperty(id, "visibility", districtsOn ? "visible" : "none");
+      }
+    }
+  }, [districtsOn, mapReady]);
+
+  const selectedDistrict = useMemo(
+    () => (selected ? findDistrictFor(selected.lon, selected.lat, districts) : null),
+    [selected, districts],
+  );
 
   const toggleConfession = (c: Confession) => {
     setEnabled((prev) => {
@@ -413,6 +594,61 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
         </div>
       </div>
 
+
+      {/* Historical 1898 controls — shown only when there's something to show */}
+      {(TBILISI_1898 || districts) && (
+        <div className="pointer-events-auto absolute right-3 z-20 w-[14rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur sm:right-4 sm:w-[16rem] bottom-[5.5rem] sm:bottom-24 lg:bottom-4">
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <Layers className="h-3.5 w-3.5 text-muted-foreground" />
+            <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
+          </div>
+          {TBILISI_1898 && (
+            <>
+              <label className="flex cursor-pointer items-center gap-2 text-xs">
+                <input
+                  type="checkbox"
+                  checked={historicalOn}
+                  onChange={(e) =>
+                    onHistoricalChange?.(e.target.checked, historicalOpacity, districtsOn)
+                  }
+                />
+                {T.historical.toggle}
+              </label>
+              {historicalOn && (
+                <div className="mt-1.5">
+                  <label className="flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span>{T.historical.opacity}</span>
+                    <span>{historicalOpacity}%</span>
+                  </label>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={historicalOpacity}
+                    onChange={(e) =>
+                      onHistoricalChange?.(historicalOn, Number(e.target.value), districtsOn)
+                    }
+                    className="w-full"
+                  />
+                </div>
+              )}
+            </>
+          )}
+          {districts && (
+            <label className="mt-1.5 flex cursor-pointer items-center gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={districtsOn}
+                onChange={(e) =>
+                  onHistoricalChange?.(historicalOn, historicalOpacity, e.target.checked)
+                }
+              />
+              {T.historical.districts}
+            </label>
+          )}
+        </div>
+      )}
+
       {/* Bottom action bar: Report (mobile only) above + archive button */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-2 p-3 sm:p-4">
         <div className="sm:hidden">
@@ -517,6 +753,15 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
                 </>
               ) : null;
             })()}
+            {selectedDistrict && (
+              <>
+                <dt className="text-muted-foreground">{T.historical.districtField}</dt>
+                <dd>
+                  {selectedDistrict[`name_${lang}` as "name_ru" | "name_en" | "name_ka"] ||
+                    selectedDistrict.name_latin}
+                </dd>
+              </>
+            )}
           </dl>
         </div>
       )}

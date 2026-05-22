@@ -117,6 +117,13 @@ export const TBILISI_STRINGS = {
     reportButton: "Сообщить о проблеме",
     legendTitle: "Легенда: конфессии",
     cityZoomCta: "Открыть карту церквей Тбилиси",
+    historical: {
+      title: "Карта Тифлиса 1898 г.",
+      toggle: "Показать карту 1898 г.",
+      opacity: "Прозрачность",
+      districts: "Границы участков",
+      districtField: "Участок (1898)",
+    },
   },
   en: {
     metaTitle: "Churches of Tbilisi (Tiflis) · Parish map 1818–1924",
@@ -187,6 +194,13 @@ export const TBILISI_STRINGS = {
     reportButton: "Report a problem",
     legendTitle: "Legend: confessions",
     cityZoomCta: "Open the Tbilisi churches map",
+    historical: {
+      title: "Tiflis 1898 map",
+      toggle: "Show 1898 map",
+      opacity: "Opacity",
+      districts: "District borders",
+      districtField: "District (1898)",
+    },
   },
   ka: {
     metaTitle: "თბილისის ეკლესიები · სამრევლოების რუკა 1818–1924",
@@ -257,6 +271,13 @@ export const TBILISI_STRINGS = {
     reportButton: "პრობლემის შეტყობინება",
     legendTitle: "ლეგენდა: კონფესიები",
     cityZoomCta: "თბილისის ეკლესიების რუკის გახსნა",
+    historical: {
+      title: "ტფილისის რუკა, 1898",
+      toggle: "1898 წლის რუკის ჩვენება",
+      opacity: "გამჭვირვალობა",
+      districts: "უბნების საზღვრები",
+      districtField: "უბანი (1898)",
+    },
   },
 } as const;
 
