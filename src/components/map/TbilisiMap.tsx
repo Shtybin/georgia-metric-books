@@ -319,6 +319,45 @@ export function TbilisiMap({
     src.setData(churchFeatureCollection(filtered));
   }, [filtered, mapReady]);
 
+  // Push districts data when loaded
+  useEffect(() => {
+    if (!mapReady || !districts) return;
+    const map = mapRef.current;
+    if (!map) return;
+    const src = map.getSource("districts-1898") as GeoJSONSource | undefined;
+    if (src) src.setData(districts as unknown as GeoJSON.FeatureCollection);
+  }, [districts, mapReady]);
+
+  // Historical raster: visibility + opacity reactive to props
+  useEffect(() => {
+    if (!mapReady) return;
+    const map = mapRef.current;
+    if (!map || !map.getLayer("hist-1898")) return;
+    map.setLayoutProperty("hist-1898", "visibility", historicalOn ? "visible" : "none");
+    map.setPaintProperty(
+      "hist-1898",
+      "raster-opacity",
+      Math.max(0, Math.min(1, historicalOpacity / 100)),
+    );
+  }, [historicalOn, historicalOpacity, mapReady]);
+
+  // District polygons: visibility reactive
+  useEffect(() => {
+    if (!mapReady) return;
+    const map = mapRef.current;
+    if (!map) return;
+    for (const id of ["districts-1898-fill", "districts-1898-line", "districts-1898-label"]) {
+      if (map.getLayer(id)) {
+        map.setLayoutProperty(id, "visibility", districtsOn ? "visible" : "none");
+      }
+    }
+  }, [districtsOn, mapReady]);
+
+  const selectedDistrict = useMemo(
+    () => (selected ? findDistrictFor(selected.lon, selected.lat, districts) : null),
+    [selected, districts],
+  );
+
   const toggleConfession = (c: Confession) => {
     setEnabled((prev) => {
       const next = new Set(prev);
