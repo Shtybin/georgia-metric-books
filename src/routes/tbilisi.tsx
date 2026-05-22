@@ -7,6 +7,12 @@ import type { Lang } from "@/lib/i18n";
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
+  /** historical raster on/off */
+  h: fallback(z.coerce.number().int().min(0).max(1), 0).default(0),
+  /** historical raster opacity 0–100 */
+  o: fallback(z.coerce.number().int().min(0).max(100), 60).default(60),
+  /** districts polygons on/off */
+  d: fallback(z.coerce.number().int().min(0).max(1), 1).default(1),
 });
 
 export const Route = createFileRoute("/tbilisi")({
@@ -34,13 +40,27 @@ export const Route = createFileRoute("/tbilisi")({
 });
 
 function TbilisiPage() {
-  const { lang } = Route.useSearch();
+  const search = Route.useSearch();
   const navigate = useNavigate({ from: "/tbilisi" });
   return (
     <main className="h-screen w-screen overflow-hidden bg-background">
       <TbilisiMap
-        lang={lang as Lang}
+        lang={search.lang as Lang}
         onLangChange={(l) => navigate({ search: (p: any) => ({ ...p, lang: l }) })}
+        historicalOn={search.h === 1}
+        historicalOpacity={search.o}
+        districtsOn={search.d === 1}
+        onHistoricalChange={(h, o, d) =>
+          navigate({
+            search: (p: any) => ({
+              ...p,
+              h: h ? 1 : 0,
+              o,
+              d: d ? 1 : 0,
+            }),
+            replace: true,
+          })
+        }
       />
     </main>
   );
