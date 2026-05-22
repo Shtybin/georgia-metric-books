@@ -61,7 +61,14 @@ function churchFeatureCollection(rows: TbilisiChurch[]): ChurchFeatureCollection
   };
 }
 
-export function TbilisiMap({ lang, onLangChange }: Props) {
+export function TbilisiMap({
+  lang,
+  onLangChange,
+  historicalOn = false,
+  historicalOpacity = 60,
+  districtsOn = true,
+  onHistoricalChange,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
