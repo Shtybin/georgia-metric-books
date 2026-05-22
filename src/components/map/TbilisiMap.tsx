@@ -594,6 +594,61 @@ export function TbilisiMap({
         </div>
       </div>
 
+
+      {/* Historical 1898 controls — shown only when there's something to show */}
+      {(TBILISI_1898 || districts) && (
+        <div className="pointer-events-auto absolute right-3 z-20 w-[14rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur sm:right-4 sm:w-[16rem] bottom-[5.5rem] sm:bottom-24 lg:bottom-4">
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <Layers className="h-3.5 w-3.5 text-muted-foreground" />
+            <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
+          </div>
+          {TBILISI_1898 && (
+            <>
+              <label className="flex cursor-pointer items-center gap-2 text-xs">
+                <input
+                  type="checkbox"
+                  checked={historicalOn}
+                  onChange={(e) =>
+                    onHistoricalChange?.(e.target.checked, historicalOpacity, districtsOn)
+                  }
+                />
+                {T.historical.toggle}
+              </label>
+              {historicalOn && (
+                <div className="mt-1.5">
+                  <label className="flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span>{T.historical.opacity}</span>
+                    <span>{historicalOpacity}%</span>
+                  </label>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={historicalOpacity}
+                    onChange={(e) =>
+                      onHistoricalChange?.(historicalOn, Number(e.target.value), districtsOn)
+                    }
+                    className="w-full"
+                  />
+                </div>
+              )}
+            </>
+          )}
+          {districts && (
+            <label className="mt-1.5 flex cursor-pointer items-center gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={districtsOn}
+                onChange={(e) =>
+                  onHistoricalChange?.(historicalOn, historicalOpacity, e.target.checked)
+                }
+              />
+              {T.historical.districts}
+            </label>
+          )}
+        </div>
+      )}
+
       {/* Bottom action bar: Report (mobile only) above + archive button */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-2 p-3 sm:p-4">
         <div className="sm:hidden">
@@ -698,6 +753,15 @@ export function TbilisiMap({
                 </>
               ) : null;
             })()}
+            {selectedDistrict && (
+              <>
+                <dt className="text-muted-foreground">{T.historical.districtField}</dt>
+                <dd>
+                  {selectedDistrict[`name_${lang}` as "name_ru" | "name_en" | "name_ka"] ||
+                    selectedDistrict.name_latin}
+                </dd>
+              </>
+            )}
           </dl>
         </div>
       )}
