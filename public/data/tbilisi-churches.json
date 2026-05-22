@@ -584,8 +584,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Единственный полностью русский православный храм Тбилиси (богослужения на ц.-славянском).",
-   "en": "",
-   "ka": ""
+   "en": "The only fully Russian Orthodox church in Tbilisi (services in Church Slavonic).",
+   "ka": "ერთადერთი მთლიანად რუსული მართლმადიდებლური ეკლესია თბილისში (წირვა-ლოცვა საეკლესიო სლავურ ენაზე)."
   }
  },
  {
@@ -615,8 +615,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Располагается на Кукийском кладбище.",
-   "en": "",
-   "ka": ""
+   "en": "Located in Kukia cemetery.",
+   "ka": "მდებარეობს კუკიის სასაფლაოზე."
   }
  },
  {
@@ -646,8 +646,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Кукийское кладбище.",
-   "en": "",
-   "ka": ""
+   "en": "Kukia cemetery.",
+   "ka": "კუკიის სასაფლაო."
   }
  },
  {
@@ -708,8 +708,8 @@
   "confidence": "low_approx",
   "historicalNote": {
    "ru": "Район исторического поселения молокан (Молоканский базар).",
-   "en": "",
-   "ka": ""
+   "en": "Area of historical Molokan settlement (Molokan Bazaar).",
+   "ka": "ისტორიული მოლოკანების დასახლების ტერიტორია (მოლოკანის ბაზარი)."
   }
  },
  {
@@ -733,14 +733,14 @@
   "missingYears": "1853, 1858-1859",
   "note": {
    "ru": "ციხის",
-   "en": "",
-   "ka": ""
+   "en": "prison's",
+   "ka": "ციხის"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Использовалась как церковь для заключенных Метехского замка.",
-   "en": "",
-   "ka": ""
+   "en": "Used as a church for prisoners of Metekhi Castle.",
+   "ka": "გამოიყენებოდა როგორც ეკლესია მეთეხის ციხის პატიმრებისთვის."
   }
  },
  {
@@ -770,8 +770,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Храм Общества восстановления православия на Кавказе.",
-   "en": "",
-   "ka": ""
+   "en": "Church of the Society for the Restoration of Orthodoxy in the Caucasus.",
+   "ka": "კავკასიაში მართლმადიდებლობის აღდგენის საზოგადოების ეკლესია."
   }
  },
  {
@@ -826,14 +826,14 @@
   "missingYears": "",
   "note": {
    "ru": "მიხაილოვის საავადმყოფოს",
-   "en": "",
-   "ka": ""
+   "en": "Mikhailov hospital's",
+   "ka": "მიხაილოვის საავადმყოფოს"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Домовая больничная церковь.",
-   "en": "",
-   "ka": ""
+   "en": "House church of the hospital.",
+   "ka": "საავადმყოფოს სამლოცველო."
   }
  },
  {
@@ -863,8 +863,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Построена русским архитектором, восстановлена в постсоветское время.",
-   "en": "",
-   "ka": ""
+   "en": "Built by a Russian architect, restored in post-Soviet times.",
+   "ka": "აშენებულია რუსი არქიტექტორის მიერ, აღდგენილია პოსტსაბჭოთა პერიოდში."
   }
  },
  {
@@ -894,8 +894,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Часть комплекса на горе Мтацминда.",
-   "en": "",
-   "ka": ""
+   "en": "Part of the complex on Mount Mtatsminda.",
+   "ka": "მთაწმინდის მთაზე არსებული კომპლექსის ნაწილი."
   }
  },
  {
@@ -925,8 +925,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Церковь Св. Давида Гареджийского (Пантеон).",
-   "en": "",
-   "ka": ""
+   "en": "Church of St. David Gareji (Pantheon).",
+   "ka": "წმ. დავით გარეჯელის ეკლესია (პანთეონი)."
   }
  },
  {
@@ -956,8 +956,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Исторический рабочий район (Нахаловка).",
-   "en": "",
-   "ka": ""
+   "en": "Historical working-class district (Nakhalovka).",
+   "ka": "ისტორიული მუშათა რაიონი (ნახალოვკა)."
   }
  },
  {
@@ -987,8 +987,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Действующий храм в районе старого Навтлуги.",
-   "en": "",
-   "ka": ""
+   "en": "Active church in the area of old Navtlughi.",
+   "ka": "მოქმედი ეკლესია ძველი ნავთლუღის ტერიტორიაზე."
   }
  },
  {
@@ -1018,8 +1018,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Снесена/перестроена.",
-   "en": "",
-   "ka": ""
+   "en": "Demolished/rebuilt.",
+   "ka": "დანგრეული/აღდგენილი."
   }
  },
  {
@@ -1043,14 +1043,14 @@
   "missingYears": "1888, 1893",
   "note": {
    "ru": "წმ. კონსტანტინეს და ელენეს სახელობის",
-   "en": "",
-   "ka": ""
+   "en": "named after Saints Constantine and Helen",
+   "ka": "წმ. კონსტანტინეს და ელენეს სახელობის"
   },
   "confidence": "low_approx",
   "historicalNote": {
    "ru": "Храм рабочих Закавказской Ж/Д.",
-   "en": "",
-   "ka": ""
+   "en": "Church of the Transcaucasian Railway workers.",
+   "ka": "ამიერკავკასიის რკინიგზის მუშათა ეკლესია."
   }
  },
  {
@@ -1080,8 +1080,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Домовая церковь в здании классической гимназии (ныне 1-я школа).",
-   "en": "",
-   "ka": ""
+   "en": "House church in the classical gymnasium building (now 1st school).",
+   "ka": "სახლის ეკლესია კლასიკური გიმნაზიის შენობაში (ამჟამად 1-ლი სკოლა)."
   }
  },
  {
@@ -1105,14 +1105,14 @@
   "missingYears": "",
   "note": {
    "ru": "სამხედრო გიმნაზიის",
-   "en": "",
-   "ka": ""
+   "en": "military gymnasium's",
+   "ka": "სამხედრო გიმნაზიის"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Домовая церковь военного ведомства.",
-   "en": "",
-   "ka": ""
+   "en": "House church of the military department.",
+   "ka": "სამხედრო უწყების კარის ეკლესია."
   }
  },
  {
@@ -1136,14 +1136,14 @@
   "missingYears": "1883",
   "note": {
    "ru": "სასულიერო სემინარიის",
-   "en": "",
-   "ka": ""
+   "en": "Theological Seminary's",
+   "ka": "სასულიერო სემინარიის"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "В здании старой семинарии (ныне Музей Искусств).",
-   "en": "",
-   "ka": ""
+   "en": "In the building of the old seminary (now the Museum of Arts).",
+   "ka": "ძველი სასულიერო სემინარიის შენობაში (ამჟამად ხელოვნების მუზეუმი)."
   }
  },
  {
@@ -1173,8 +1173,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Домовая церковь училища.",
-   "en": "",
-   "ka": ""
+   "en": "House church of the school.",
+   "ka": "სასწავლებლის სახლის ეკლესია."
   }
  },
  {
@@ -1204,8 +1204,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Домовая церковь.",
-   "en": "",
-   "ka": ""
+   "en": "House church.",
+   "ka": "სახლის ეკლესია."
   }
  },
  {
@@ -1229,14 +1229,14 @@
   "missingYears": "1868-1870, 1912-1913",
   "note": {
    "ru": "სამხედრო ჰოსპიტალის",
-   "en": "",
-   "ka": ""
+   "en": "Military Hospital's",
+   "ka": "სამხედრო ჰოსპიტალის"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Храм при госпитале (не путать с главным собором).",
-   "en": "",
-   "ka": ""
+   "en": "Church at the hospital (not to be confused with the main cathedral).",
+   "ka": "ეკლესია ჰოსპიტალთან (არ უნდა აგვერიოს მთავარ საკათედრო ტაძარში)."
   }
  },
  {
@@ -1266,8 +1266,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Уничтожена вместе с перестройкой корпуса.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed along with the reconstruction of the building.",
+   "ka": "განადგურდა შენობის რეკონსტრუქციასთან ერთად."
   }
  },
  {
@@ -1297,8 +1297,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Храм Петра и Павла в Манглиси. Снесен в 1930-х.",
-   "en": "",
-   "ka": ""
+   "en": "Church of Saints Peter and Paul in Manglisi. Demolished in the 1930s.",
+   "ka": "პეტრე-პავლეს ეკლესია მანგლისში. დაანგრიეს 1930-იან წლებში."
   }
  },
  {
@@ -1328,8 +1328,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Дислокация в Белом Ключе.",
-   "en": "",
-   "ka": ""
+   "en": "Deployment in Bely Klyuch.",
+   "ka": "დისლოკაცია ბელი კლიუჩში."
   }
  },
  {
@@ -1359,8 +1359,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Полковая церковь гарнизона.",
-   "en": "",
-   "ka": ""
+   "en": "Regimental church of the garrison.",
+   "ka": "გარნიზონის პოლკის ეკლესია."
   }
  },
  {
@@ -1390,8 +1390,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Казарменная домовая церковь.",
-   "en": "",
-   "ka": ""
+   "en": "Barracks house church.",
+   "ka": "ყაზარმის სახლის ეკლესია."
   }
  },
  {
@@ -1421,8 +1421,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Полковая церковь (Тверской/Нижегородский гарнизоны).",
-   "en": "",
-   "ka": ""
+   "en": "Regimental church (Tver/Nizhny Novgorod garrisons).",
+   "ka": "პოლკის ეკლესია (ტვერის/ნიჟნი ნოვგოროდის გარნიზონები)."
   }
  },
  {
@@ -1483,8 +1483,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Базировались в Царских Колодцах.",
-   "en": "",
-   "ka": ""
+   "en": "Based in Tsarskie Kolodtsy.",
+   "ka": "ბაზირებული იყო ცარსკიე კოლოდცში."
   }
  },
  {
@@ -1545,8 +1545,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Церковь времен Первой мировой.",
-   "en": "",
-   "ka": ""
+   "en": "Church from the First World War.",
+   "ka": "პირველი მსოფლიო ომის დროინდელი ეკლესია."
   }
  },
  {
@@ -1576,8 +1576,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Период Первой Демократической Республики (1918).",
-   "en": "",
-   "ka": ""
+   "en": "Period of the First Democratic Republic (1918).",
+   "ka": "პირველი დემოკრატიული რესპუბლიკის პერიოდი (1918)."
   }
  },
  {
@@ -1607,8 +1607,8 @@
   "confidence": "medium",
   "historicalNote": {
    "ru": "Военный погост.",
-   "en": "",
-   "ka": ""
+   "en": "Military cemetery.",
+   "ka": "სამხედრო სასაფლაო."
   }
  },
  {
@@ -1638,8 +1638,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Главный военный собор Кавказа. Уничтожен Берией в 1930 г.",
-   "en": "",
-   "ka": ""
+   "en": "Main military cathedral of the Caucasus. Destroyed by Beria in 1930.",
+   "ka": "კავკასიის მთავარი სამხედრო ტაძარი. განადგურდა ბერიას მიერ 1930 წელს."
   }
  },
  {
@@ -1669,8 +1669,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Период независимой Грузии (1920).",
-   "en": "",
-   "ka": ""
+   "en": "Period of independent Georgia (1920).",
+   "ka": "დამოუკიდებელი საქართველოს პერიოდი (1920)."
   }
  },
  {
@@ -1694,14 +1694,14 @@
   "missingYears": "1898-1899, 1912, 1917",
   "note": {
    "ru": "კავკასიის არმიის",
-   "en": "",
-   "ka": ""
+   "en": "Caucasus Army's",
+   "ka": "კავკასიის არმიის"
   },
   "confidence": "low",
   "historicalNote": {
    "ru": "Главный штабной храм.",
-   "en": "",
-   "ka": ""
+   "en": "Main staff church.",
+   "ka": "მთავარი შტაბის ეკლესია."
   }
  },
  {
