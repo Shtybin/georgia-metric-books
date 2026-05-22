@@ -1,0 +1,5 @@
+{
+  "type": "FeatureCollection",
+  "_comment": "Placeholder. Replace with real police-district polygons traced from the 1898 map. Each feature must have properties: name_latin, name_ru, name_en, name_ka.",
+  "features": []
+}
