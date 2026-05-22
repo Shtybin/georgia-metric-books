@@ -59,6 +59,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
   const rowsRef = useRef<TbilisiChurch[] | null>(null);
   const filteredRef = useRef<TbilisiChurch[]>([]);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
+  const [mapReady, setMapReady] = useState(false);
   const [selected, setSelected] = useState<TbilisiChurch | null>(null);
   const [query, setQuery] = useState("");
   const [enabled, setEnabled] = useState<Set<Confession>>(new Set(CONFESSION_ORDER));
@@ -141,9 +142,6 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
           "circle-opacity": 0.92,
         },
       });
-      (map.getSource("churches") as GeoJSONSource | undefined)?.setData(
-        churchFeatureCollection(filteredRef.current),
-      );
       map.on("click", "churches", (e) => {
         const f = e.features?.[0];
         if (!f) return;
@@ -157,6 +155,7 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
       map.on("mouseleave", "churches", () => {
         map.getCanvas().style.cursor = "";
       });
+      setMapReady(true);
     });
     mapRef.current = map;
     const ro = new ResizeObserver(() => map.resize());
@@ -168,18 +167,15 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     };
   }, []);
 
-  // Update map data on filter change
+  // Update map data on filter change (only after map source is ready)
   useEffect(() => {
+    if (!mapReady) return;
     const map = mapRef.current;
     if (!map) return;
-    const apply = () => {
-      const src = map.getSource("churches") as GeoJSONSource | undefined;
-      if (!src) return;
-      src.setData(churchFeatureCollection(filtered));
-    };
-    if (map.isStyleLoaded() && map.getSource("churches")) apply();
-    else map.once("idle", apply);
-  }, [filtered]);
+    const src = map.getSource("churches") as GeoJSONSource | undefined;
+    if (!src) return;
+    src.setData(churchFeatureCollection(filtered));
+  }, [filtered, mapReady]);
 
   const toggleConfession = (c: Confession) => {
     setEnabled((prev) => {
@@ -497,18 +493,30 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
             <dd>{T.yesNo[selected.preserved]}</dd>
             <dt className="text-muted-foreground">{T.fields.active}</dt>
             <dd>{T.yesNo[selected.active]}</dd>
-            {selected.note && (
-              <>
-                <dt className="text-muted-foreground">{T.fields.note}</dt>
-                <dd>{selected.note}</dd>
-              </>
-            )}
-            {selected.historicalNote && (
-              <>
-                <dt className="text-muted-foreground">{T.fields.historicalNote}</dt>
-                <dd>{selected.historicalNote}</dd>
-              </>
-            )}
+            {(() => {
+              const noteText =
+                typeof selected.note === "string"
+                  ? selected.note
+                  : selected.note?.[lang] || selected.note?.ru || "";
+              return noteText ? (
+                <>
+                  <dt className="text-muted-foreground">{T.fields.note}</dt>
+                  <dd>{noteText}</dd>
+                </>
+              ) : null;
+            })()}
+            {(() => {
+              const histText =
+                typeof selected.historicalNote === "string"
+                  ? selected.historicalNote
+                  : selected.historicalNote?.[lang] || selected.historicalNote?.ru || "";
+              return histText ? (
+                <>
+                  <dt className="text-muted-foreground">{T.fields.historicalNote}</dt>
+                  <dd>{histText}</dd>
+                </>
+              ) : null;
+            })()}
           </dl>
         </div>
       )}

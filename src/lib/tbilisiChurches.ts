@@ -13,9 +13,9 @@ export interface TbilisiChurch {
   startYear: number | null;
   endYear: number | null;
   missingYears: string;
-  note: string;
+  note: string | { ru: string; en: string; ka: string };
   confidence: import("./i18n-tbilisi").Confidence;
-  historicalNote: string;
+  historicalNote: string | { ru: string; en: string; ka: string };
 }
 
 let cache: TbilisiChurch[] | null = null;
