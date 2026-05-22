@@ -191,6 +191,77 @@ export function TbilisiMap({
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     map.on("load", () => {
+      // Historical 1898 raster (below everything else but the basemap)
+      if (TBILISI_1898) {
+        if (TBILISI_1898.kind === "tiles") {
+          map.addSource("hist-1898", {
+            type: "raster",
+            tiles: [TBILISI_1898.tiles],
+            tileSize: 256,
+            minzoom: TBILISI_1898.minzoom ?? 10,
+            maxzoom: TBILISI_1898.maxzoom ?? 18,
+            attribution: TBILISI_1898.attribution ?? "Карта Тифлиса, 1898 г.",
+          });
+        } else {
+          map.addSource("hist-1898", {
+            type: "image",
+            url: TBILISI_1898.url,
+            coordinates: TBILISI_1898.coordinates,
+            attribution: TBILISI_1898.attribution ?? "Карта Тифлиса, 1898 г.",
+          } as maplibregl.ImageSourceSpecification);
+        }
+        map.addLayer({
+          id: "hist-1898",
+          type: "raster",
+          source: "hist-1898",
+          layout: { visibility: historicalOn ? "visible" : "none" },
+          paint: { "raster-opacity": Math.max(0, Math.min(1, historicalOpacity / 100)) },
+        });
+      }
+
+      // District polygons (1898). Source is added empty, populated when geojson loads.
+      map.addSource("districts-1898", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] } as DistrictsFC,
+      });
+      map.addLayer({
+        id: "districts-1898-fill",
+        type: "fill",
+        source: "districts-1898",
+        layout: { visibility: districtsOn ? "visible" : "none" },
+        paint: { "fill-color": "#b45309", "fill-opacity": 0.08 },
+      });
+      map.addLayer({
+        id: "districts-1898-line",
+        type: "line",
+        source: "districts-1898",
+        layout: { visibility: districtsOn ? "visible" : "none" },
+        paint: {
+          "line-color": "#92400e",
+          "line-width": 2,
+          "line-dasharray": [3, 2],
+          "line-opacity": 0.85,
+        },
+      });
+      map.addLayer({
+        id: "districts-1898-label",
+        type: "symbol",
+        source: "districts-1898",
+        layout: {
+          visibility: districtsOn ? "visible" : "none",
+          "text-field": ["coalesce", ["get", "name_latin"], ["get", "name_ru"]],
+          "text-size": 12,
+          "text-font": ["Noto Sans Regular"],
+          "text-letter-spacing": 0.08,
+          "text-transform": "uppercase",
+        },
+        paint: {
+          "text-color": "#78350f",
+          "text-halo-color": "#fef3c7",
+          "text-halo-width": 1.5,
+        },
+      });
+
       map.addSource("churches", {
         type: "geojson",
         data: churchFeatureCollection([]),
