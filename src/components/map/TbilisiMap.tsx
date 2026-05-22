@@ -61,6 +61,48 @@ function churchFeatureCollection(rows: TbilisiChurch[]): ChurchFeatureCollection
   };
 }
 
+type DistrictsFC = GeoJSON.FeatureCollection<
+  GeoJSON.Polygon | GeoJSON.MultiPolygon,
+  District1898Properties
+>;
+
+/** Ray-casting point-in-polygon. Returns true if [lon,lat] is inside any ring of feature. */
+function pointInRing(point: [number, number], ring: number[][]): boolean {
+  const [x, y] = point;
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0],
+      yi = ring[i][1];
+    const xj = ring[j][0],
+      yj = ring[j][1];
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi || 1e-12) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+function pointInPolygon(point: [number, number], coords: GeoJSON.Polygon["coordinates"]): boolean {
+  if (!coords.length) return false;
+  if (!pointInRing(point, coords[0])) return false;
+  for (let i = 1; i < coords.length; i++) if (pointInRing(point, coords[i])) return false;
+  return true;
+}
+function findDistrictFor(
+  lon: number,
+  lat: number,
+  fc: DistrictsFC | null,
+): District1898Properties | null {
+  if (!fc) return null;
+  const p: [number, number] = [lon, lat];
+  for (const f of fc.features) {
+    const g = f.geometry;
+    if (g.type === "Polygon" && pointInPolygon(p, g.coordinates)) return f.properties;
+    if (g.type === "MultiPolygon") {
+      for (const poly of g.coordinates) if (pointInPolygon(p, poly)) return f.properties;
+    }
+  }
+  return null;
+}
+
 export function TbilisiMap({
   lang,
   onLangChange,
