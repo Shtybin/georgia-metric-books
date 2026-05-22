@@ -1725,14 +1725,14 @@
   "missingYears": "",
   "note": {
    "ru": "საგუბერნიო ციხის",
-   "en": "",
-   "ka": ""
+   "en": "Of the Gubernatorial Prison",
+   "ka": "საგუბერნიო ციხის"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Тюремная церковь Губернской тюрьмы (Ортачала).",
-   "en": "",
-   "ka": ""
+   "en": "Prison Church of the Gubernatorial Prison (Ortachala).",
+   "ka": "გუბერნიის ციხის ეკლესია (ორთაჭალა)."
   }
  },
  {
@@ -1793,8 +1793,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "При Дворце Наместника на Кавказе (ныне Дворец Молодежи).",
-   "en": "",
-   "ka": ""
+   "en": "At the Palace of the Viceroy in the Caucasus (now the Youth Palace).",
+   "ka": "კავკასიაში მეფისნაცვლის სასახლესთან (ამჟამად ახალგაზრდობის სასახლე)."
   }
  },
  {
@@ -1824,8 +1824,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Главный исторический собор Грузии.",
-   "en": "",
-   "ka": ""
+   "en": "The main historical cathedral of Georgia.",
+   "ka": "საქართველოს მთავარი ისტორიული ტაძარი."
   }
  },
  {
@@ -1886,8 +1886,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Один из старых приходов (не путать с современным собором).",
-   "en": "",
-   "ka": ""
+   "en": "One of the old parishes (not to be confused with the modern cathedral).",
+   "ka": "ერთ-ერთი ძველი სამრევლო (არ უნდა აგვერიოს თანამედროვე საკათედრო ტაძარში)."
   }
  },
  {
@@ -1917,8 +1917,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Посвящена русскому святому.",
-   "en": "",
-   "ka": ""
+   "en": "Dedicated to a Russian saint.",
+   "ka": "ეძღვნება რუს წმინდანს."
   }
  },
  {
@@ -1948,8 +1948,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Современное здание построено в 1910 г. архитектором Л. Бильфельдом.",
-   "en": "",
-   "ka": ""
+   "en": "The modern building was built in 1910 by architect L. Bilfeldt.",
+   "ka": "თანამედროვე შენობა ააგო 1910 წელს არქიტექტორმა ლ. ბილფელდტმა."
   }
  },
  {
@@ -1979,8 +1979,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Исторический район Харпухи.",
-   "en": "",
-   "ka": ""
+   "en": "Historical district Kharphukhi.",
+   "ka": "ისტორიული უბანი ხარფუხი."
   }
  },
  {
@@ -2004,14 +2004,14 @@
   "missingYears": "1878, 1885, 1889, 1900, 1902",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "",
-   "ka": ""
+   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
+   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხი, როგორც საქართველოს მართლმადიდებლური)."
   }
  },
  {
@@ -2035,14 +2035,14 @@
   "missingYears": "1869-1870, 1872-1876, 1888",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Разрушена в 1930-х. Находилась на нынешней площади Пушкина.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed in the 1930s. Located on the current Pushkin Square.",
+   "ka": "განადგურდა 1930-იან წლებში. მდებარეობდა ამჟამინდელ პუშკინის მოედანზე."
   }
  },
  {
@@ -2066,14 +2066,14 @@
   "missingYears": "1874-1876, 1880, 1898, 1906",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Действующий армянский храм в Авлабаре.",
-   "en": "",
-   "ka": ""
+   "en": "Active Armenian church in Avlabari.",
+   "ka": "მოქმედი სომხური ეკლესია ავლაბარში."
   }
  },
  {
@@ -2097,14 +2097,14 @@
   "missingYears": "1864,1866, 1867, 1885",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Главный армянский собор Тифлиса. Снесен в 1938 г. (сохранилась лишь колокольня).",
-   "en": "",
-   "ka": ""
+   "en": "Main Armenian cathedral of Tiflis. Demolished in 1938 (only the bell tower survived).",
+   "ka": "თბილისის მთავარი სომხური ტაძარი. დანგრეულია 1938 წელს (შემორჩენილია მხოლოდ სამრეკლო)."
   }
  },
  {
@@ -2128,14 +2128,14 @@
   "missingYears": "1902, 1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Ныне православный храм Св. Пантелеймона при кладбище.",
-   "en": "",
-   "ka": ""
+   "en": "Now the Orthodox Church of St. Panteleimon at the cemetery.",
+   "ka": "ამჟამად წმინდა პანტელეიმონის მართლმადიდებლური ეკლესია სასაფლაოზე."
   }
  },
  {
@@ -2159,14 +2159,14 @@
   "missingYears": "1866-1876",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Разрушена в советский период.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed during the Soviet period.",
+   "ka": "განადგურდა საბჭოთა პერიოდში."
   }
  },
  {
@@ -2190,14 +2190,14 @@
   "missingYears": "1878-1879, 1881, 1887, 1889",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Разрушена.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed.",
+   "ka": "დანგრეულია."
   }
  },
  {
@@ -2221,14 +2221,14 @@
   "missingYears": "1900",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "В руинах, спорный статус (реституционный спор).",
-   "en": "",
-   "ka": ""
+   "en": "In ruins, disputed status (restitution dispute).",
+   "ka": "ნანგრევებშია, სადავო სტატუსი (სარეტიტუციო დავა)."
   }
  },
  {
@@ -2252,14 +2252,14 @@
   "missingYears": "1874-1876, 1887",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Сурб Геворг (Кафедральный армянский собор).",
-   "en": "",
-   "ka": ""
+   "en": "Surb Gevorg (Armenian Cathedral).",
+   "ka": "სურბ გევორგი (სომხური საკათედრო ტაძარი)."
   }
  },
  {
@@ -2283,14 +2283,14 @@
   "missingYears": "1855-1863, 1866, 1869-1870, 1877, 1879, 1890, 1904-1905",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Руины. Обрушилась в 2009 году.",
-   "en": "",
-   "ka": ""
+   "en": "Ruins. Collapsed in 2009.",
+   "ka": "ნანგრევები. ჩამოინგრა 2009 წელს."
   }
  },
  {
@@ -2314,14 +2314,14 @@
   "missingYears": "",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "В районе Авлабар, аварийное состояние, спорный статус.",
-   "en": "",
-   "ka": ""
+   "en": "In Avlabari district, in disrepair, disputed status.",
+   "ka": "ავლაბრის რაიონში, ავარიულ მდგომარეობაში, სადავო სტატუსი."
   }
  },
  {
@@ -2345,14 +2345,14 @@
   "missingYears": "1866-1876, 1889, 1903",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Закрыта. Объект споров между армянской и грузинской общинами.",
-   "en": "",
-   "ka": ""
+   "en": "Closed. Object of disputes between Armenian and Georgian communities.",
+   "ka": "დახურულია. სომხურ და ქართულ თემებს შორის დავების ობიექტი."
   }
  },
  {
@@ -2376,14 +2376,14 @@
   "missingYears": "",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Разрушена.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed.",
+   "ka": "დანგრეულია."
   }
  },
  {
@@ -2407,14 +2407,14 @@
   "missingYears": "1871-1876, 1880-1881, 1886, 1920",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Полуразрушена (пострадала от пожаров), спорный статус.",
-   "en": "",
-   "ka": ""
+   "en": "Semi-ruined (damaged by fires), disputed status.",
+   "ka": "ნახევრად დანგრეული (დაზიანებულია ხანძრის შედეგად), სადავო სტატუსი."
   }
  },
  {
@@ -2438,14 +2438,14 @@
   "missingYears": "1885-1887, 1889, 1893, 1896, 1898, 1910",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "low",
   "historicalNote": {
    "ru": "Снесена.",
-   "en": "",
-   "ka": ""
+   "en": "Demolished.",
+   "ka": "დამონტაჟებულია."
   }
  },
  {
@@ -2469,14 +2469,14 @@
   "missingYears": "1866, 1868, 1871-1872, 1874, 1889, 1892, 1899, 1909, 1915",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Разрушена.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed.",
+   "ka": "დანგრეულია."
   }
  },
  {
@@ -2500,14 +2500,14 @@
   "missingYears": "1850-1860, 1889, 1891",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Разрушена в 1930-е.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed in the 1930s.",
+   "ka": "განადგურდა 1930-იან წლებში."
   }
  },
  {
@@ -2531,14 +2531,14 @@
   "missingYears": "1900-1902, 1904, 1908",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Разрушена.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed.",
+   "ka": "განადგურებულია."
   }
  },
  {
@@ -2562,14 +2562,14 @@
   "missingYears": "1878, 1886, 1890, 1904-1905",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "",
-   "ka": ""
+   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
+   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
   }
  },
  {
@@ -2593,14 +2593,14 @@
   "missingYears": "1892, 1900",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Клдисубани Св. Георгия. Ныне православный грузинский храм.",
-   "en": "",
-   "ka": ""
+   "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
+   "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
   }
  },
  {
@@ -2624,14 +2624,14 @@
   "missingYears": "1878, 1907, 1909, 1911-1912, 1915-1917, 1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "",
-   "ka": ""
+   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
+   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
   }
  },
  {
@@ -2655,14 +2655,14 @@
   "missingYears": "...",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Исторический армянский храм в Чугурети.",
-   "en": "",
-   "ka": ""
+   "en": "Historical Armenian church in Chughureti.",
+   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
   }
  },
  {
@@ -2686,14 +2686,14 @@
   "missingYears": "1879, 1890, 1907, 1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "low",
   "historicalNote": {
    "ru": "Вероятно, одна из Сурб Геворг (Мейдан или Мугни).",
-   "en": "",
-   "ka": ""
+   "en": "Probably one of Surb Gevorg (Maidan or Mugni).",
+   "ka": "სავარაუდოდ ერთ-ერთი სურბ გევორგი (მეიდანი ან მუღნი)."
   }
  },
  {
@@ -2717,14 +2717,14 @@
   "missingYears": "1862-1870, 1872-1877, 1898, 1913-1917, 1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Клдисубани Св. Георгия. Ныне православный грузинский храм.",
-   "en": "",
-   "ka": ""
+   "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
+   "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
   }
  },
  {
@@ -2748,14 +2748,14 @@
   "missingYears": "1883, 1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Руины (обрушилась в 1989 г.). Была самой высокой армянской церковью.",
-   "en": "",
-   "ka": ""
+   "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
+   "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
   }
  },
  {
@@ -2779,14 +2779,14 @@
   "missingYears": "1871, 1899-1901, 1911-1917, 1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Руины (обрушилась в 1989 г.). Была самой высокой армянской церковью.",
-   "en": "",
-   "ka": ""
+   "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
+   "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
   }
  },
  {
@@ -2810,14 +2810,14 @@
   "missingYears": "1862, 1870, 1890",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Исторический армянский храм в Чугурети.",
-   "en": "",
-   "ka": ""
+   "en": "Historic Armenian church in Chughureti.",
+   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
   }
  },
  {
@@ -2841,14 +2841,14 @@
   "missingYears": "1908, 1911-1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Исторический армянский храм в Чугурети.",
-   "en": "",
-   "ka": ""
+   "en": "Historic Armenian church in Chughureti.",
+   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
   }
  },
  {
@@ -2872,14 +2872,14 @@
   "missingYears": "1878, 1881-1890, 1914",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Разрушена в 1937 г.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed in 1937.",
+   "ka": "განადგურდა 1937 წელს."
   }
  },
  {
@@ -2903,14 +2903,14 @@
   "missingYears": "1878, 1887, 1890, 1911-1917, 1919",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "high",
   "historicalNote": {
    "ru": "Разрушена в 1937 г.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed in 1937.",
+   "ka": "განადგურდა 1937 წელს."
   }
  },
  {
@@ -2934,14 +2934,14 @@
   "missingYears": "1869-1871, 1873-1876, 1889, 1894",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Уничтожена.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed.",
+   "ka": "განადგურებული."
   }
  },
  {
@@ -2965,14 +2965,14 @@
   "missingYears": "1911-1912, 1915-1917",
   "note": {
    "ru": "გრიგორიანული",
-   "en": "",
-   "ka": ""
+   "en": "Gregorian",
+   "ka": "გრიგორიანული"
   },
   "confidence": "medium",
   "historicalNote": {
    "ru": "Уничтожена.",
-   "en": "",
-   "ka": ""
+   "en": "Destroyed.",
+   "ka": "განადგურებული."
   }
  },
  {
@@ -3002,8 +3002,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Храм при железной дороге.",
-   "en": "",
-   "ka": ""
+   "en": "Church near the railway.",
+   "ka": "ეკლესია რკინიგზასთან."
   }
  },
  {
@@ -3033,8 +3033,8 @@
   "confidence": "low",
   "historicalNote": {
    "ru": "Церковь при богадельне/больнице.",
-   "en": "",
-   "ka": ""
+   "en": "Church at the almshouse/hospital.",
+   "ka": "ეკლესია თავშესაფართან/საავადმყოფოსთან."
   }
  },
  {
@@ -3064,8 +3064,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Пригородный исторический храм.",
-   "en": "",
-   "ka": ""
+   "en": "Suburban historical church.",
+   "ka": "გარეუბნის ისტორიული ეკლესია."
   }
  },
  {
@@ -3188,8 +3188,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Древнее село Дигоми (ныне черта города).",
-   "en": "",
-   "ka": ""
+   "en": "Ancient village of Digomi (now within city limits).",
+   "ka": "ძველი სოფელი დიღომი (ახლანდელი ქალაქის ფარგლებში)."
   }
  },
  {
@@ -3219,8 +3219,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Поселок Лило (родина И. Сталина).",
-   "en": "",
-   "ka": ""
+   "en": "Lilo settlement (I. Stalin's birthplace).",
+   "ka": "ლილოს დასახლება (ი. სტალინის სამშობლო)."
   }
  },
  {
@@ -3250,8 +3250,8 @@
   "confidence": "high",
   "historicalNote": {
    "ru": "Крестово-купольный храм.",
-   "en": "",
-   "ka": ""
+   "en": "Cross-domed church.",
+   "ka": "ჯვარგუმბათოვანი ეკლესია."
   }
  },
  {
