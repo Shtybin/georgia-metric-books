@@ -497,18 +497,30 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
             <dd>{T.yesNo[selected.preserved]}</dd>
             <dt className="text-muted-foreground">{T.fields.active}</dt>
             <dd>{T.yesNo[selected.active]}</dd>
-            {selected.note && (
-              <>
-                <dt className="text-muted-foreground">{T.fields.note}</dt>
-                <dd>{selected.note}</dd>
-              </>
-            )}
-            {selected.historicalNote && (
-              <>
-                <dt className="text-muted-foreground">{T.fields.historicalNote}</dt>
-                <dd>{selected.historicalNote}</dd>
-              </>
-            )}
+            {(() => {
+              const noteText =
+                typeof selected.note === "string"
+                  ? selected.note
+                  : selected.note?.[lang] || selected.note?.ru || "";
+              return noteText ? (
+                <>
+                  <dt className="text-muted-foreground">{T.fields.note}</dt>
+                  <dd>{noteText}</dd>
+                </>
+              ) : null;
+            })()}
+            {(() => {
+              const histText =
+                typeof selected.historicalNote === "string"
+                  ? selected.historicalNote
+                  : selected.historicalNote?.[lang] || selected.historicalNote?.ru || "";
+              return histText ? (
+                <>
+                  <dt className="text-muted-foreground">{T.fields.historicalNote}</dt>
+                  <dd>{histText}</dd>
+                </>
+              ) : null;
+            })()}
           </dl>
         </div>
       )}
