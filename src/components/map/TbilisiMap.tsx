@@ -207,7 +207,6 @@ export function TbilisiMap({
             type: "image",
             url: TBILISI_1898.url,
             coordinates: TBILISI_1898.coordinates,
-            attribution: TBILISI_1898.attribution ?? "Карта Тифлиса, 1898 г.",
           } as maplibregl.ImageSourceSpecification);
         }
         map.addLayer({
