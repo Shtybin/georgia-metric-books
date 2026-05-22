@@ -15,9 +15,14 @@ import {
   TBILISI_BBOX,
   type Confession,
 } from "@/lib/i18n-tbilisi";
+import {
+  TBILISI_1898,
+  DISTRICTS_1898_URL,
+  type District1898Properties,
+} from "@/lib/tbilisi-historical";
 import type { Lang } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen } from "lucide-react";
+import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ReportProblemButton } from "@/components/map/ReportProblemButton";
 import {
@@ -32,6 +37,10 @@ import { t as tCore } from "@/lib/i18n";
 interface Props {
   lang: Lang;
   onLangChange: (l: Lang) => void;
+  historicalOn?: boolean;
+  historicalOpacity?: number;
+  districtsOn?: boolean;
+  onHistoricalChange?: (h: boolean, o: number, d: boolean) => void;
 }
 
 type ChurchFeatureCollection = GeoJSON.FeatureCollection<
