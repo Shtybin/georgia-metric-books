@@ -1,3350 +1,3350 @@
 [
- {
-  "id": 1,
-  "name": {
-   "ka": "ავლაბრის წმ. მარინეს",
-   "ru": "Св. Марины в Авлабаре",
-   "en": "St. Marina in Avlabari"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Avlabari",
-  "district": "Isani",
-  "lat": 41.6931,
-  "lon": 44.8152,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1818-1921",
-  "startYear": 1818,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low_district",
-  "historicalNote": {
-   "ru": "Утраченная приходская церковь в районе Авлабар.",
-   "en": "Lost parish church in Avlabari district.",
-   "ka": "დაკარგული სამრევლო ეკლესია ავლაბრის რაიონში."
+  {
+    "id": 1,
+    "name": {
+      "ka": "ავლაბრის წმ. მარინეს",
+      "ru": "Св. Марины в Авлабаре",
+      "en": "St. Marina in Avlabari"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Avlabari",
+    "district": "Isani",
+    "lat": 41.6931,
+    "lon": 44.8152,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1818-1921",
+    "startYear": 1818,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low_district",
+    "historicalNote": {
+      "ru": "Утраченная приходская церковь в районе Авлабар.",
+      "en": "Lost parish church in Avlabari district.",
+      "ka": "დაკარგული სამრევლო ეკლესია ავლაბრის რაიონში."
+    }
+  },
+  {
+    "id": 2,
+    "name": {
+      "ka": "ავლაბრის წმ. პეტრესა და პავლეს",
+      "ru": "Св. Петра и Павла в Авлабаре",
+      "en": "St. Peter and Paul in Avlabari"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Avlabari",
+    "district": "Isani",
+    "lat": 41.694,
+    "lon": 44.816,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1859-1921",
+    "startYear": 1859,
+    "endYear": 1921,
+    "missingYears": "1865-1868, 1871-1873, 1893",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low_district",
+    "historicalNote": {
+      "ru": "Утрачена. Не путать с католическим храмом.",
+      "en": "Lost. Not to be confused with the Catholic church.",
+      "ka": "დაკარგული. არ უნდა აგვერიოს კათოლიკურ ეკლესიაში."
+    }
+  },
+  {
+    "id": 3,
+    "name": {
+      "ka": "ავლაბრის მთავარანგელოზის",
+      "ru": "Архангелов в Авлабаре",
+      "en": "Archangel in Avlabari"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Avlabari",
+    "district": "Isani",
+    "lat": 41.695,
+    "lon": 44.817,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1920",
+    "startYear": 1877,
+    "endYear": 1920,
+    "missingYears": "1879, 1917",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low_district",
+    "historicalNote": {
+      "ru": "Утрачена в советский период.",
+      "en": "Lost during the Soviet period.",
+      "ka": "დაკარგული საბჭოთა პერიოდში."
+    }
+  },
+  {
+    "id": 4,
+    "name": {
+      "ka": "ანჩისხატის ტაძარის",
+      "ru": "Анчисхати (Рождества Девы Марии)",
+      "en": "Anchiskhati Basilica"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Ioane Shavteli St, 11",
+    "district": "Mtatsminda",
+    "lat": 41.6958,
+    "lon": 44.8066,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1818-1921",
+    "startYear": 1818,
+    "endYear": 1921,
+    "missingYears": "1860, 1862-1870",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Древнейшая сохранившаяся церковь Тбилиси (VI в.).",
+      "en": "Oldest preserved church in Tbilisi (6th century).",
+      "ka": "თბილისის უძველესი შემორჩენილი ეკლესია (VI ს.)."
+    }
+  },
+  {
+    "id": 5,
+    "name": {
+      "ka": "კვირაცხოვლობის წმ. თომა მოციქულის",
+      "ru": "Св. Фомы (Айсорская)",
+      "en": "St. Thomas the Apostle (Aysor/Assyrian)"
+    },
+    "confession": "assyrian",
+    "confessionRaw": "Kukia/Vera area",
+    "address": "Chughureti",
+    "district": "",
+    "lat": 41.711,
+    "lon": 44.795,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1885-1921",
+    "startYear": 1885,
+    "endYear": 1921,
+    "missingYears": "1886-1890",
+    "note": {
+      "ru": "айсоров (ассирийцев)",
+      "en": "Aisors",
+      "ka": "აისორების"
+    },
+    "confidence": "low_approx",
+    "historicalNote": {
+      "ru": "Исторический храм общины ассирийцев (айсоров). Уничтожен.",
+      "en": "Historical church of the Assyrian (Aisor) community. Destroyed.",
+      "ka": "ასურული (აისორების) თემის ისტორიული ეკლესია. განადგურებული."
+    }
+  },
+  {
+    "id": 6,
+    "name": {
+      "ka": "ბაპტისტების თემის",
+      "ru": "Баптистской общины",
+      "en": "Baptist Community"
+    },
+    "confession": "baptist",
+    "confessionRaw": "Baptist",
+    "address": "Chughureti",
+    "district": "Chughureti",
+    "lat": 41.71,
+    "lon": 44.798,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1908-1918",
+    "startYear": 1908,
+    "endYear": 1918,
+    "missingYears": "1915",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low_approx",
+    "historicalNote": {
+      "ru": "Молитвенный дом. В 1920-е годы община преследовалась.",
+      "en": "House of prayer. In the 1920s, the community was persecuted.",
+      "ka": "სამლოცველო სახლი. 1920-იან წლებში თემი იდევნებოდა."
+    }
+  },
+  {
+    "id": 7,
+    "name": {
+      "ka": "წმ. ეკატერინეს",
+      "ru": "Св. Екатерины (Греческая)",
+      "en": "St. Catherine (Greek)"
+    },
+    "confession": "greek_orthodox",
+    "confessionRaw": "Greek Orthodox",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.69,
+    "lon": 44.8,
+    "preserved": "uncertain",
+    "active": "no",
+    "recordYears": "1878-1909",
+    "startYear": 1878,
+    "endYear": 1909,
+    "missingYears": "1879, 1885, 1894, 1908",
+    "note": {
+      "ru": "греков",
+      "en": "Greeks",
+      "ka": "ბერძნების"
+    },
+    "confidence": "low_district",
+    "historicalNote": {
+      "ru": "Греческий приход.",
+      "en": "Greek parish.",
+      "ka": "ბერძნული სამრევლო."
+    }
+  },
+  {
+    "id": 8,
+    "name": {
+      "ka": "ევანგელისტურ-ლუთერანული",
+      "ru": "Евангелическо-Лютеранская (Кирха)",
+      "en": "Evangelical Lutheran Kirche"
+    },
+    "confession": "lutheran",
+    "confessionRaw": "Lutheran",
+    "address": "Marjanishvili St",
+    "district": "Chughureti",
+    "lat": 41.7107,
+    "lon": 44.7981,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1873-1921",
+    "startYear": 1873,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "1875–1921 (венчания), 1873–1916 (смерти)",
+      "en": "1875-1921 (marriage), 1873-1916 (death)",
+      "ka": "1875-1921 (ჯვრისწერა), 1873-1916 (გარდაცვალება)"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Уничтожена в 1940-х годах немецкими военнопленными по приказу Советов.",
+      "en": "Destroyed in the 1940s by German prisoners of war on the orders of the Soviets.",
+      "ka": "განადგურდა 1940-იან წლებში გერმანელი სამხედრო ტყვეების მიერ საბჭოთა ბრძანებით."
+    }
+  },
+  {
+    "id": 9,
+    "name": {
+      "ka": "წმ. ნიკოლოზის",
+      "ru": "Св. Николая (Греческая)",
+      "en": "St. Nicholas (Greek)"
+    },
+    "confession": "greek_orthodox",
+    "confessionRaw": "Greek Orthodox",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.69,
+    "lon": 44.8,
+    "preserved": "uncertain",
+    "active": "no",
+    "recordYears": "1835-1921",
+    "startYear": 1835,
+    "endYear": 1921,
+    "missingYears": "1862",
+    "note": {
+      "ru": "греков",
+      "en": "Greeks",
+      "ka": "ბერძნების"
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 10,
+    "name": {
+      "ka": "დიდუბის ღვთისმშობლის შობის",
+      "ru": "Рождества Богородицы в Дидубе",
+      "en": "Didube Virgin Mary"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Tsereteli Ave",
+    "district": "Didube",
+    "lat": 41.7319,
+    "lon": 44.7801,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1888-1921",
+    "startYear": 1888,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Ныне Пантеон общественных деятелей.",
+      "en": "Now the Pantheon of Public Figures.",
+      "ka": "ამჟამად საზოგადო მოღვაწეთა პანთეონი."
+    }
+  },
+  {
+    "id": 11,
+    "name": {
+      "ka": "სინაგოგა",
+      "ru": "Большая Синагога",
+      "en": "Great Synagogue"
+    },
+    "confession": "jewish",
+    "confessionRaw": "Jewish",
+    "address": "Kote Abkhazi St, 45",
+    "district": "Krtsanisi",
+    "lat": 41.689973,
+    "lon": 44.807267,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1880-1920",
+    "startYear": 1880,
+    "endYear": 1920,
+    "missingYears": "1918 (დაბ.), 1912-1915 (გარდ.)",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Действующая синагога ахалцихских евреев.",
+      "en": "Operating synagogue of Akhalcikhian Jews.",
+      "ka": "ახალციხელი ებრაელების მოქმედი სინაგოგა."
+    }
+  },
+  {
+    "id": 12,
+    "name": {
+      "ka": "ვერის წმ. იოანე ღვთისმეტყველის",
+      "ru": "Иоанна Богослова на Вере",
+      "en": "Vera St. John the Theologian"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Vera",
+    "district": "Mtatsminda",
+    "lat": 41.707684,
+    "lon": 44.788873,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1873-1921",
+    "startYear": 1873,
+    "endYear": 1921,
+    "missingYears": "1874",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Исторический храм в районе Вера.",
+      "en": "Historical church in Vera district.",
+      "ka": "ისტორიული ეკლესია ვერის რაიონში."
+    }
+  },
+  {
+    "id": 13,
+    "name": {
+      "ka": "ვერის წმ. ნიკოლოზის",
+      "ru": "Св. Николая на Вере",
+      "en": "Vera St. Nicholas"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Vera",
+    "district": "Mtatsminda",
+    "lat": 41.706,
+    "lon": 44.783,
+    "preserved": "uncertain",
+    "active": "uncertain",
+    "recordYears": "1876-1921",
+    "startYear": 1876,
+    "endYear": 1921,
+    "missingYears": "1877",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 14,
+    "name": {
+      "ka": "იერუსალიმის ჯვრის ამაღლების",
+      "ru": "Воздвижения Креста Иерусалимского",
+      "en": "Jerusalem Cross Elevation"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Jerusalem St",
+    "district": "Krtsanisi",
+    "lat": 41.6908,
+    "lon": 44.8049,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1870-1914",
+    "startYear": 1870,
+    "endYear": 1914,
+    "missingYears": "1904",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Джварис Мама, бывшее подворье Иерусалимского патриархата.",
+      "en": "Jvaris Mama, former dependency of the Jerusalem Patriarchate.",
+      "ka": "ჯვარის მამა, იერუსალიმის საპატრიარქოს ყოფილი მეტოქი."
+    }
+  },
+  {
+    "id": 15,
+    "name": {
+      "ka": "წმ. ილია წინასწარმეტყველის",
+      "ru": "Ильи Пророка",
+      "en": "St. Elijah the Prophet"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.69,
+    "lon": 44.8,
+    "preserved": "uncertain",
+    "active": "uncertain",
+    "recordYears": "1919-1920",
+    "startYear": 1919,
+    "endYear": 1920,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 16,
+    "name": {
+      "ka": "ღვთისმშობლის მიძინების (კათოლიკური)",
+      "ru": "Вознесения Девы Марии (Католическая)",
+      "en": "Catholic Assumption of Virgin Mary"
+    },
+    "confession": "roman_catholic",
+    "confessionRaw": "Roman Catholic",
+    "address": "Gia Abesadze St, 4",
+    "district": "Krtsanisi",
+    "lat": 41.6926,
+    "lon": 44.8021,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1796-1923",
+    "startYear": 1796,
+    "endYear": 1923,
+    "missingYears": "",
+    "note": {
+      "ru": "смерти 1839–; венчания 1894–; рождения 1796–1844",
+      "en": "Death 1839-; Marriage 1894-; Birth 1796-1844",
+      "ka": "გარდაცვ. 1839-; ჯვრისწერა 1894-; დაბადება 1796-1844"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Кафедральный католический собор. Старое здание разрушено, восстановлено в 1999 г.",
+      "en": "Catholic Cathedral. Old building destroyed, restored in 1999.",
+      "ka": "კათოლიკური საკათედრო ტაძარი. ძველი შენობა დანგრეულია, აღდგენილია 1999 წელს."
+    }
+  },
+  {
+    "id": 17,
+    "name": {
+      "ka": "წმ. პეტრეს და პავლეს (კათოლიკური)",
+      "ru": "Петра и Павла (Католическая)",
+      "en": "Catholic Sts. Peter and Paul"
+    },
+    "confession": "roman_catholic",
+    "confessionRaw": "Roman Catholic",
+    "address": "Javakhishvili St, 55",
+    "district": "Chughureti",
+    "lat": 41.709955,
+    "lon": 44.801822,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1877-1922",
+    "startYear": 1877,
+    "endYear": 1922,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Построена за счет польской католической общины.",
+      "en": "Built with funds from the Polish Catholic community.",
+      "ka": "აშენებულია პოლონური კათოლიკური თემის სახსრებით."
+    }
+  },
+  {
+    "id": 18,
+    "name": {
+      "ka": "კალოუბნის ღვთისმშობლის",
+      "ru": "Калоубанской Богоматери",
+      "en": "Kaloubani Virgin Mary"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Rustaveli Ave",
+    "district": "Mtatsminda",
+    "lat": 41.697,
+    "lon": 44.7985,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1861-1921",
+    "startYear": 1861,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Снесена в советское время, находилась в районе нынешнего кинотеатра Руставели.",
+      "en": "Demolished in Soviet times, located in the area of the current Rustaveli Cinema.",
+      "ka": "დაინგრა საბჭოთა დროს, მდებარეობდა ამჟამინდელი რუსთაველის კინოთეატრის მიდა მიმდებარე ტერიტორიაზე."
+    }
+  },
+  {
+    "id": 19,
+    "name": {
+      "ka": "კუკიის წმ. ალექსანდრე ნეველის",
+      "ru": "Св. Александра Невского (Кукия)",
+      "en": "Kukia St. Alexander Nevsky"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Marjanishvili St, 38",
+    "district": "Chughureti",
+    "lat": 41.711345,
+    "lon": 44.801023,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1864-1921",
+    "startYear": 1864,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Единственный полностью русский православный храм Тбилиси (богослужения на ц.-славянском).",
+      "en": "The only fully Russian Orthodox church in Tbilisi (services in Church Slavonic).",
+      "ka": "ერთადერთი მთლიანად რუსული მართლმადიდებლური ეკლესია თბილისში (წირვა-ლოცვა საეკლესიო სლავურ ენაზე)."
+    }
+  },
+  {
+    "id": 20,
+    "name": {
+      "ka": "კუკიის წმ. ნიკოლოზის",
+      "ru": "Св. Николая (Кукия)",
+      "en": "Kukia St. Nicholas"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Kukia Cemetery",
+    "district": "Chughureti",
+    "lat": 41.7109,
+    "lon": 44.8024,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1819-1921",
+    "startYear": 1819,
+    "endYear": 1921,
+    "missingYears": "1852, 1861-1869",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Располагается на Кукийском кладбище.",
+      "en": "Located in Kukia cemetery.",
+      "ka": "მდებარეობს კუკიის სასაფლაოზე."
+    }
+  },
+  {
+    "id": 21,
+    "name": {
+      "ka": "კუკიის წმ. ნინოს",
+      "ru": "Св. Нино (Кукия)",
+      "en": "Kukia St. Nino"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Kukia Cemetery",
+    "district": "Chughureti",
+    "lat": 41.714475,
+    "lon": 44.811002,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1891-1921",
+    "startYear": 1891,
+    "endYear": 1921,
+    "missingYears": "1892",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Кукийское кладбище.",
+      "en": "Kukia cemetery.",
+      "ka": "კუკიის სასაფლაო."
+    }
+  },
+  {
+    "id": 22,
+    "name": {
+      "ka": "კუკიის წმ. იოანე ნათლისმცემლის",
+      "ru": "Иоанна Крестителя (Кукия)",
+      "en": "Kukia St. John the Baptist"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Kukia",
+    "district": "Chughureti",
+    "lat": 41.712,
+    "lon": 44.803,
+    "preserved": "uncertain",
+    "active": "uncertain",
+    "recordYears": "1902-1916",
+    "startYear": 1902,
+    "endYear": 1916,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 23,
+    "name": {
+      "ka": "მალაკნების სამლოცველო",
+      "ru": "Молитвенный дом молокан",
+      "en": "Molokan Shrine"
+    },
+    "confession": "molokan",
+    "confessionRaw": "Molokan (Spiritual Christian)",
+    "address": "Pirosmani St area",
+    "district": "Chughureti",
+    "lat": 41.719,
+    "lon": 44.795,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1907-1924",
+    "startYear": 1907,
+    "endYear": 1924,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low_approx",
+    "historicalNote": {
+      "ru": "Район исторического поселения молокан (Молоканский базар).",
+      "en": "Area of historical Molokan settlement (Molokan Bazaar).",
+      "ka": "ისტორიული მოლოკანების დასახლების ტერიტორია (მოლოკანის ბაზარი)."
+    }
+  },
+  {
+    "id": 24,
+    "name": {
+      "ka": "მეტეხის ღვთისმშობლის",
+      "ru": "Метехской Богоматери (тюремная)",
+      "en": "Metekhi Virgin Mary (Prison)"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Metekhi Rise",
+    "district": "Isani",
+    "lat": 41.69,
+    "lon": 44.8115,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1845-1902",
+    "startYear": 1845,
+    "endYear": 1902,
+    "missingYears": "1853, 1858-1859",
+    "note": {
+      "ru": "тюрьмы",
+      "en": "prison's",
+      "ka": "ციხის"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Использовалась как церковь для заключенных Метехского замка.",
+      "en": "Used as a church for prisoners of Metekhi Castle.",
+      "ka": "გამოიყენებოდა როგორც ეკლესია მეთეხის ციხის პატიმრებისთვის."
+    }
+  },
+  {
+    "id": 25,
+    "name": {
+      "ka": "მისიონერების (I)",
+      "ru": "Миссионерская (I)",
+      "en": "Missionary Church (I)"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1892-1919",
+    "startYear": 1892,
+    "endYear": 1919,
+    "missingYears": "1918",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Храм Общества восстановления православия на Кавказе.",
+      "en": "Church of the Society for the Restoration of Orthodoxy in the Caucasus.",
+      "ka": "კავკასიაში მართლმადიდებლობის აღდგენის საზოგადოების ეკლესია."
+    }
+  },
+  {
+    "id": 26,
+    "name": {
+      "ka": "მისიონერების (II)",
+      "ru": "Миссионерская (II)",
+      "en": "Missionary Church (II)"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1900-1920",
+    "startYear": 1900,
+    "endYear": 1920,
+    "missingYears": "1919",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 27,
+    "name": {
+      "ka": "მთავარანგელოზის",
+      "ru": "Архангела Михайловской больницы",
+      "en": "Archangel of Mikhailov Hospital"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Aghmashenebeli Ave",
+    "district": "Chughureti",
+    "lat": 41.7118,
+    "lon": 44.7937,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1871-1920",
+    "startYear": 1871,
+    "endYear": 1920,
+    "missingYears": "",
+    "note": {
+      "ru": "Михайловской больницы",
+      "en": "Mikhailov hospital's",
+      "ka": "მიხაილოვის საავადმყოფოს"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Домовая больничная церковь.",
+      "en": "House church of the hospital.",
+      "ka": "საავადმყოფოს სამლოცველო."
+    }
+  },
+  {
+    "id": 28,
+    "name": {
+      "ka": "წმ. მიხეილ ტვერელის",
+      "ru": "Св. Михаила Тверского",
+      "en": "St. Michael of Tver"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Zaldastanishvili St",
+    "district": "Mtatsminda",
+    "lat": 41.700676,
+    "lon": 44.789029,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1913-1920",
+    "startYear": 1913,
+    "endYear": 1920,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Построена русским архитектором, восстановлена в постсоветское время.",
+      "en": "Built by a Russian architect, restored in post-Soviet times.",
+      "ka": "აშენებულია რუსი არქიტექტორის მიერ, აღდგენილია პოსტსაბჭოთა პერიოდში."
+    }
+  },
+  {
+    "id": 29,
+    "name": {
+      "ka": "მთაწმინდის მაცხოვრის ფერისცვალების",
+      "ru": "Спасо-Преображенская (Мтацминда)",
+      "en": "Mtatsminda Transfiguration"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Mtatsminda",
+    "district": "Mtatsminda",
+    "lat": 41.6953,
+    "lon": 44.7887,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1826-1921",
+    "startYear": 1826,
+    "endYear": 1921,
+    "missingYears": "1878-1902, 1904-1918",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Часть комплекса на горе Мтацминда.",
+      "en": "Part of the complex on Mount Mtatsminda.",
+      "ka": "მთაწმინდის მთაზე არსებული კომპლექსის ნაწილი."
+    }
+  },
+  {
+    "id": 30,
+    "name": {
+      "ka": "მთაწმინდის მამადავითის",
+      "ru": "Мамадавити (Мтацминда)",
+      "en": "Mamadaviti (Mtatsminda)"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Mtatsminda Pantheon",
+    "district": "Mtatsminda",
+    "lat": 41.69583,
+    "lon": 44.788872,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1874-1921",
+    "startYear": 1874,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Церковь Св. Давида Гареджийского (Пантеон).",
+      "en": "Church of St. David Gareji (Pantheon).",
+      "ka": "წმ. დავით გარეჯელის ეკლესია (პანთეონი)."
+    }
+  },
+  {
+    "id": 31,
+    "name": {
+      "ka": "ნაძალადევის ივერიის ღვთისმშობლის",
+      "ru": "Иверской Богоматери (Надзаладеви)",
+      "en": "Nadzaladevi Iveria Virgin Mary"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Nadzaladevi",
+    "district": "Nadzaladevi",
+    "lat": 41.7323,
+    "lon": 44.8003,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1900-1921",
+    "startYear": 1900,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Исторический рабочий район (Нахаловка).",
+      "en": "Historical working-class district (Nakhalovka).",
+      "ka": "ისტორიული მუშათა რაიონი (ნახალოვკა)."
+    }
+  },
+  {
+    "id": 32,
+    "name": {
+      "ka": "ნავთლუღის წმ. ბარბარეს",
+      "ru": "Св. Варвары (Навтлуги)",
+      "en": "Navtlughi St. Barbara"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Ketevan Tsamebuli Ave",
+    "district": "Isani",
+    "lat": 41.675755,
+    "lon": 44.852519,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1820-1922",
+    "startYear": 1820,
+    "endYear": 1922,
+    "missingYears": "1859",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Действующий храм в районе старого Навтлуги.",
+      "en": "Active church in the area of old Navtlughi.",
+      "ka": "მოქმედი ეკლესია ძველი ნავთლუღის ტერიტორიაზე."
+    }
+  },
+  {
+    "id": 33,
+    "name": {
+      "ka": "ორბელიანთკარის წმ. ნიკოლოზის",
+      "ru": "Св. Николая Орбелиани",
+      "en": "Orbelianubani St. Nicholas"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Atoneli St area",
+    "district": "Mtatsminda",
+    "lat": 41.698,
+    "lon": 44.801,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1865-1903",
+    "startYear": 1865,
+    "endYear": 1903,
+    "missingYears": "1888-1898",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Снесена/перестроена.",
+      "en": "Demolished/rebuilt.",
+      "ka": "დანგრეული/აღდგენილი."
+    }
+  },
+  {
+    "id": 34,
+    "name": {
+      "ka": "ამიერკავკასიის რკინიგზელთა",
+      "ru": "Св. Константина и Елены (Железнодорожная)",
+      "en": "Transcaucasian Railway St. Constantine and Helena"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Railway Station Area",
+    "district": "Didube/Chughureti",
+    "lat": 41.725,
+    "lon": 44.798,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1887-1901",
+    "startYear": 1887,
+    "endYear": 1901,
+    "missingYears": "1888, 1893",
+    "note": {
+      "ru": "во имя свв. Константина и Елены",
+      "en": "named after Saints Constantine and Helen",
+      "ka": "წმ. კონსტანტინეს და ელენეს სახელობის"
+    },
+    "confidence": "low_approx",
+    "historicalNote": {
+      "ru": "Храм рабочих Закавказской Ж/Д.",
+      "en": "Church of the Transcaucasian Railway workers.",
+      "ka": "ამიერკავკასიის რკინიგზის მუშათა ეკლესია."
+    }
+  },
+  {
+    "id": 35,
+    "name": {
+      "ka": "ვაჟთა (I) გიმნაზიის",
+      "ru": "1-й Мужской гимназии",
+      "en": "First Boys' Gymnasium"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Rustaveli Ave, 10",
+    "district": "Mtatsminda",
+    "lat": 41.6961,
+    "lon": 44.7988,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1879-1886",
+    "startYear": 1879,
+    "endYear": 1886,
+    "missingYears": "1880",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Домовая церковь в здании классической гимназии (ныне 1-я школа).",
+      "en": "House church in the classical gymnasium building (now 1st school).",
+      "ka": "სახლის ეკლესია კლასიკური გიმნაზიის შენობაში (ამჟამად 1-ლი სკოლა)."
+    }
+  },
+  {
+    "id": 36,
+    "name": {
+      "ka": "მიქაელ მთავარანგელოზის",
+      "ru": "Михаила Архангела (Военной гимназии)",
+      "en": "Archangel Michael (Military Gymnasium)"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Rustaveli Ave",
+    "district": "Mtatsminda",
+    "lat": 41.698,
+    "lon": 44.795,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1878-1886",
+    "startYear": 1878,
+    "endYear": 1886,
+    "missingYears": "",
+    "note": {
+      "ru": "военной гимназии",
+      "en": "military gymnasium's",
+      "ka": "სამხედრო გიმნაზიის"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Домовая церковь военного ведомства.",
+      "en": "House church of the military department.",
+      "ka": "სამხედრო უწყების კარის ეკლესია."
+    }
+  },
+  {
+    "id": 37,
+    "name": {
+      "ka": "წმ. ანდრია პირველწოდებულის",
+      "ru": "Андрея Первозванного (Духовной Семинарии)",
+      "en": "St. Andrew (Theological Seminary)"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Pushkin St",
+    "district": "Krtsanisi",
+    "lat": 41.6925,
+    "lon": 44.802,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1880-1885",
+    "startYear": 1880,
+    "endYear": 1885,
+    "missingYears": "1883",
+    "note": {
+      "ru": "духовной семинарии",
+      "en": "Theological Seminary's",
+      "ka": "სასულიერო სემინარიის"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "В здании старой семинарии (ныне Музей Искусств).",
+      "en": "In the building of the old seminary (now the Museum of Arts).",
+      "ka": "ძველი სასულიერო სემინარიის შენობაში (ამჟამად ხელოვნების მუზეუმი)."
+    }
+  },
+  {
+    "id": 38,
+    "name": {
+      "ka": "თავად მიხეილ ნიკოლოზის ძის...",
+      "ru": "Военного училища Вел. Кн. Михаила Николаевича",
+      "en": "Grand Duke Michael Nikolaevich Military School"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.79,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1912-1918",
+    "startYear": 1912,
+    "endYear": 1918,
+    "missingYears": "1915-1916",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Домовая церковь училища.",
+      "en": "House church of the school.",
+      "ka": "სასწავლებლის სახლის ეკლესია."
+    }
+  },
+  {
+    "id": 39,
+    "name": {
+      "ka": "ფეხოსან იუნკერთა სასწავლებლის",
+      "ru": "Пехотного юнкерского училища",
+      "en": "Infantry Junker School"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.79,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1903-1911",
+    "startYear": 1903,
+    "endYear": 1911,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Домовая церковь.",
+      "en": "House church.",
+      "ka": "სახლის ეკლესია."
+    }
+  },
+  {
+    "id": 40,
+    "name": {
+      "ka": "წმ. ალექსანდრე ნეველის",
+      "ru": "Св. Александра Невского (Военного госпиталя)",
+      "en": "St. Alexander Nevsky (Military Hospital)"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.71,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1856-1917",
+    "startYear": 1856,
+    "endYear": 1917,
+    "missingYears": "1868-1870, 1912-1913",
+    "note": {
+      "ru": "военного госпиталя",
+      "en": "Military Hospital's",
+      "ka": "სამხედრო ჰოსპიტალის"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Храм при госпитале (не путать с главным собором).",
+      "en": "Church at the hospital (not to be confused with the main cathedral).",
+      "ka": "ეკლესია ჰოსპიტალთან (არ უნდა აგვერიოს მთავარ საკათედრო ტაძარში)."
+    }
+  },
+  {
+    "id": 41,
+    "name": {
+      "ka": "კადეტთა კორპუსის მთავარანგელოზის",
+      "ru": "Архангельская Кадетского корпуса",
+      "en": "Cadet Corps Archangel"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Rustaveli Ave",
+    "district": "Mtatsminda",
+    "lat": 41.702,
+    "lon": 44.791,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1883-1899",
+    "startYear": 1883,
+    "endYear": 1899,
+    "missingYears": "1891-1898",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Уничтожена вместе с перестройкой корпуса.",
+      "en": "Destroyed along with the reconstruction of the building.",
+      "ka": "განადგურდა შენობის რეკონსტრუქციასთან ერთად."
+    }
+  },
+  {
+    "id": 42,
+    "name": {
+      "ka": "ლეიბგრენადერთა ერევნის მე-13 პოლკის",
+      "ru": "13-го Лейб-гренадерского Эриванского полка",
+      "en": "13th Erivan Grenadier Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Manglisi",
+    "district": "Kvemo Kartli",
+    "lat": 41.6985,
+    "lon": 44.3566,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1871-1901",
+    "startYear": 1871,
+    "endYear": 1901,
+    "missingYears": "1888-1891, 1897",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Храм Петра и Павла в Манглиси. Снесен в 1930-х.",
+      "en": "Church of Saints Peter and Paul in Manglisi. Demolished in the 1930s.",
+      "ka": "პეტრე-პავლეს ეკლესია მანგლისში. დაანგრიეს 1930-იან წლებში."
+    }
+  },
+  {
+    "id": 43,
+    "name": {
+      "ka": "კავკასიის არმიის გრენადერთა მე-14...",
+      "ru": "14-го Грузинского гренадерского полка",
+      "en": "14th Georgian Grenadier Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tetritskaro (Bely Klyuch)",
+    "district": "Kvemo Kartli",
+    "lat": 41.545,
+    "lon": 44.46,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1871-1906",
+    "startYear": 1871,
+    "endYear": 1906,
+    "missingYears": "1875,1879-1885, 1888-1893,1897, 1899",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Дислокация в Белом Ключе.",
+      "en": "Deployment in Bely Klyuch.",
+      "ka": "დისლოკაცია ბელი კლიუჩში."
+    }
+  },
+  {
+    "id": 44,
+    "name": {
+      "ka": "კავკასიის არმიის გრენადერთა მე-15...",
+      "ru": "15-го Тифлисского гренадерского полка",
+      "en": "15th Tiflis Grenadier Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi (Red Barracks)",
+    "district": "Isani",
+    "lat": 41.685,
+    "lon": 44.82,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1862-1910",
+    "startYear": 1862,
+    "endYear": 1910,
+    "missingYears": "1869",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Полковая церковь гарнизона.",
+      "en": "Regimental church of the garrison.",
+      "ka": "გარნიზონის პოლკის ეკლესია."
+    }
+  },
+  {
+    "id": 45,
+    "name": {
+      "ka": "კავკასიის არმიის გრენადერთა მე-16...",
+      "ru": "16-го Мингрельского гренадерского полка",
+      "en": "16th Mingrelian Grenadier Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.685,
+    "lon": 44.82,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1866-1912",
+    "startYear": 1866,
+    "endYear": 1912,
+    "missingYears": "1898",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Казарменная домовая церковь.",
+      "en": "Barracks house church.",
+      "ka": "ყაზარმის სახლის ეკლესია."
+    }
+  },
+  {
+    "id": 46,
+    "name": {
+      "ka": "დრაგუნთა მე-16 პოლკის ღვთისმშობლის",
+      "ru": "16-го драгунского полка (Богородицы)",
+      "en": "16th Dragoon Regiment (Virgin Mary)"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi/Dedoplistskaro",
+    "district": "Kakheti",
+    "lat": 41.46,
+    "lon": 46.1,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1866-1883",
+    "startYear": 1866,
+    "endYear": 1883,
+    "missingYears": "1872",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Полковая церковь (Тверской/Нижегородский гарнизоны).",
+      "en": "Regimental church (Tver/Nizhny Novgorod garrisons).",
+      "ka": "პოლკის ეკლესია (ტვერის/ნიჟნი ნოვგოროდის გარნიზონები)."
+    }
+  },
+  {
+    "id": 47,
+    "name": {
+      "ka": "დრაგუნთა მე-17 პოლკის",
+      "ru": "17-го драгунского (Нижегородского) полка",
+      "en": "17th Nizhegorod Dragoon Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi/Bely Klyuch",
+    "district": "Kvemo Kartli",
+    "lat": 41.545,
+    "lon": 44.46,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1856-1910",
+    "startYear": 1856,
+    "endYear": 1910,
+    "missingYears": "1857-1858, 1861-1903, 1905-1908",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 48,
+    "name": {
+      "ka": "ტვერის დრაგუნთა 43-ე პოლკის",
+      "ru": "43-го Тверского драгунского полка",
+      "en": "43rd Tver Dragoon Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Dedoplistskaro (Tsarskiye Kolodtsy)",
+    "district": "Kakheti",
+    "lat": 41.462,
+    "lon": 46.105,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1905",
+    "startYear": 1905,
+    "endYear": 1905,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Базировались в Царских Колодцах.",
+      "en": "Based in Tsarskie Kolodtsy.",
+      "ka": "ბაზირებული იყო ცარსკიე კოლოდცში."
+    }
+  },
+  {
+    "id": 49,
+    "name": {
+      "ka": "ტვერის დრაგუნთა 44-ე პოლკის",
+      "ru": "44-го Нижегородского драгунского полка",
+      "en": "44th Nizhegorod Dragoon Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi/Pyatigorsk",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1884-1906",
+    "startYear": 1884,
+    "endYear": 1906,
+    "missingYears": "1896",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 50,
+    "name": {
+      "ka": "კავკასიის მსროლელთა მე-6 პოლკის",
+      "ru": "6-го Кавказского стрелкового полка",
+      "en": "6th Caucasus Rifle Regiment"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1914-1915",
+    "startYear": 1914,
+    "endYear": 1915,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Церковь времен Первой мировой.",
+      "en": "Church from the First World War.",
+      "ka": "პირველი მსოფლიო ომის დროინდელი ეკლესია."
+    }
+  },
+  {
+    "id": 51,
+    "name": {
+      "ka": "ქართველთა სათადარიგო პოლკის",
+      "ru": "Грузинского запасного полка",
+      "en": "Georgian Reserve Regiment"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "uncertain",
+    "active": "no",
+    "recordYears": "1918",
+    "startYear": 1918,
+    "endYear": 1918,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Период Первой Демократической Республики (1918).",
+      "en": "Period of the First Democratic Republic (1918).",
+      "ka": "პირველი დემოკრატიული რესპუბლიკის პერიოდი (1918)."
+    }
+  },
+  {
+    "id": 52,
+    "name": {
+      "ka": "ნავთლუღის სამხედრო სასაფლაოს",
+      "ru": "Навтлугского военного кладбища",
+      "en": "Navtlughi Military Cemetery"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Navtlughi",
+    "district": "Isani",
+    "lat": 41.675,
+    "lon": 44.86,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1920",
+    "startYear": 1920,
+    "endYear": 1920,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Военный погост.",
+      "en": "Military cemetery.",
+      "ka": "სამხედრო სასაფლაო."
+    }
+  },
+  {
+    "id": 53,
+    "name": {
+      "ka": "წმ. ალექსანდრე ნეველის (სამხედრო) ტაძარი",
+      "ru": "Александро-Невский (Военный) Собор",
+      "en": "St. Alexander Nevsky Military Cathedral"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Rustaveli Ave, 8",
+    "district": "Mtatsminda",
+    "lat": 41.6966,
+    "lon": 44.7984,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1898-1920",
+    "startYear": 1898,
+    "endYear": 1920,
+    "missingYears": "1910",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Главный военный собор Кавказа. Уничтожен Берией в 1930 г.",
+      "en": "Main military cathedral of the Caucasus. Destroyed by Beria in 1930.",
+      "ka": "კავკასიის მთავარი სამხედრო ტაძარი. განადგურდა ბერიას მიერ 1930 წელს."
+    }
+  },
+  {
+    "id": 54,
+    "name": {
+      "ka": "წმ. გიორგის (სამხედრო) ტაძარი",
+      "ru": "Св. Георгия (Военный)",
+      "en": "St. George Military Temple"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Orthodox (Georgian/Military)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1920-1921",
+    "startYear": 1920,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Период независимой Грузии (1920).",
+      "en": "Period of independent Georgia (1920).",
+      "ka": "დამოუკიდებელი საქართველოს პერიოდი (1920)."
+    }
+  },
+  {
+    "id": 55,
+    "name": {
+      "ka": "წმ. ნიკოლოზის",
+      "ru": "Св. Николая (Кавказской армии)",
+      "en": "St. Nicholas of the Caucasus Army"
+    },
+    "confession": "orthodox_military",
+    "confessionRaw": "Russian Orthodox (Military)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1861-1919",
+    "startYear": 1861,
+    "endYear": 1919,
+    "missingYears": "1898-1899, 1912, 1917",
+    "note": {
+      "ru": "Кавказской армии",
+      "en": "Caucasus Army's",
+      "ka": "კავკასიის არმიის"
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Главный штабной храм.",
+      "en": "Main staff church.",
+      "ka": "მთავარი შტაბის ეკლესია."
+    }
+  },
+  {
+    "id": 56,
+    "name": {
+      "ka": "წმ. გიორგის",
+      "ru": "Св. Георгия (Губернской тюрьмы)",
+      "en": "St. George (Provincial Prison)"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian/Georgian)",
+    "address": "Ortachala",
+    "district": "Krtsanisi",
+    "lat": 41.678,
+    "lon": 44.829,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1892, 1915",
+    "startYear": 1892,
+    "endYear": 1915,
+    "missingYears": "",
+    "note": {
+      "ru": "губернской тюрьмы",
+      "en": "Of the Gubernatorial Prison",
+      "ka": "საგუბერნიო ციხის"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Тюремная церковь Губернской тюрьмы (Ортачала).",
+      "en": "Prison Church of the Gubernatorial Prison (Ortachala).",
+      "ka": "გუბერნიის ციხის ეკლესია (ორთაჭალა)."
+    }
+  },
+  {
+    "id": 57,
+    "name": {
+      "ka": "საბურთალოს წმ. გიორგის",
+      "ru": "Св. Георгия (Сабуртало)",
+      "en": "Saburtalo St. George"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Saburtalo",
+    "district": "Saburtalo",
+    "lat": 41.72781,
+    "lon": 44.77157,
+    "preserved": "uncertain",
+    "active": "uncertain",
+    "recordYears": "1911-1921",
+    "startYear": 1911,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "Координаты уточнены: действующий храм Св. Георгия в Сабуртало (район ул. Пекини).",
+      "en": "Coordinates verified: active Church of St. George in Saburtalo (Pekini Street area).",
+      "ka": "კოორდინატები დაზუსტებულია: საბურთალოს წმინდა გიორგის სახელობის მოქმედი ტაძარი (პეკინის ქუჩის რაიონი)."
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 58,
+    "name": {
+      "ka": "სასახლის კარის წმ. გიორგის",
+      "ru": "Дворцовая Св. Георгия",
+      "en": "Palace St. George"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Rustaveli Ave",
+    "district": "Mtatsminda",
+    "lat": 41.6955,
+    "lon": 44.799,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1873-1922",
+    "startYear": 1873,
+    "endYear": 1922,
+    "missingYears": "1887, 1898-1899, 1920",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "При Дворце Наместника на Кавказе (ныне Дворец Молодежи).",
+      "en": "At the Palace of the Viceroy in the Caucasus (now the Youth Palace).",
+      "ka": "კავკასიაში მეფისნაცვლის სასახლესთან (ამჟამად ახალგაზრდობის სასახლე)."
+    }
+  },
+  {
+    "id": 59,
+    "name": {
+      "ka": "სიონის საკათედრო ტაძარის",
+      "ru": "Сионский собор",
+      "en": "Sioni Cathedral"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Sioni St, 3",
+    "district": "Krtsanisi",
+    "lat": 41.691325,
+    "lon": 44.807526,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1818-1921",
+    "startYear": 1818,
+    "endYear": 1921,
+    "missingYears": "1867-1869, 1919",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Главный исторический собор Грузии.",
+      "en": "The main historical cathedral of Georgia.",
+      "ka": "საქართველოს მთავარი ისტორიული ტაძარი."
+    }
+  },
+  {
+    "id": 60,
+    "name": {
+      "ka": "სოლოლაკის ჯვრის ამაღლების",
+      "ru": "Воздвижения Креста (Сололаки)",
+      "en": "Sololaki Cross Elevation"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Sololaki",
+    "district": "Mtatsminda",
+    "lat": 41.6898,
+    "lon": 44.7997,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1921",
+    "startYear": 1871,
+    "endYear": 1921,
+    "missingYears": "1886, 1893, 1899, 1906",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 61,
+    "name": {
+      "ka": "წმ. სამების",
+      "ru": "Святой Троицы",
+      "en": "Holy Trinity (Sameba)"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.69,
+    "lon": 44.8,
+    "preserved": "uncertain",
+    "active": "uncertain",
+    "recordYears": "1818-1921",
+    "startYear": 1818,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Один из старых приходов (не путать с современным собором).",
+      "en": "One of the old parishes (not to be confused with the modern cathedral).",
+      "ka": "ერთ-ერთი ძველი სამრევლო (არ უნდა აგვერიოს თანამედროვე საკათედრო ტაძარში)."
+    }
+  },
+  {
+    "id": 62,
+    "name": {
+      "ka": "წმ. თეოდოსი ჩერნიგოველის",
+      "ru": "Св. Феодосия Черниговского",
+      "en": "St. Theodosius of Chernigov"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1902-1921",
+    "startYear": 1902,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Посвящена русскому святому.",
+      "en": "Dedicated to a Russian saint.",
+      "ka": "ეძღვნება რუს წმინდანს."
+    }
+  },
+  {
+    "id": 63,
+    "name": {
+      "ka": "ქაშვეთის წმ. გიორგის",
+      "ru": "Кашвети (Св. Георгия)",
+      "en": "Kashveti St. George"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Rustaveli Ave, 9",
+    "district": "Mtatsminda",
+    "lat": 41.698,
+    "lon": 44.7989,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1818-1921",
+    "startYear": 1818,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Современное здание построено в 1910 г. архитектором Л. Бильфельдом.",
+      "en": "The modern building was built in 1910 by architect L. Bilfeldt.",
+      "ka": "თანამედროვე შენობა ააგო 1910 წელს არქიტექტორმა ლ. ბილფელდტმა."
+    }
+  },
+  {
+    "id": 64,
+    "name": {
+      "ka": "ხარფუხის წმ. ნიკოლოზის",
+      "ru": "Св. Николая (Харпухи)",
+      "en": "Kharpukhi St. Nicholas"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Kharpukhi",
+    "district": "Krtsanisi",
+    "lat": 41.684589,
+    "lon": 44.820021,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1918, 1920",
+    "startYear": 1918,
+    "endYear": 1920,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Исторический район Харпухи.",
+      "en": "Historical district Kharphukhi.",
+      "ka": "ისტორიული უბანი ხარფუხი."
+    }
+  },
+  {
+    "id": 65,
+    "name": {
+      "ka": "ბეთხაინის ღვთისმშობლის (დაბადება)",
+      "ru": "Бетлемская Богоматери (рождение)",
+      "en": "Betlemi Virgin Mary (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Betlemi Rise, 15",
+    "district": "Krtsanisi",
+    "lat": 41.6893,
+    "lon": 44.8035,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1877-1920",
+    "startYear": 1877,
+    "endYear": 1920,
+    "missingYears": "1878, 1885, 1889, 1900, 1902",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
+      "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
+      "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხი, როგორც საქართველოს მართლმადიდებლური)."
+    }
+  },
+  {
+    "id": 66,
+    "name": {
+      "ka": "წმ. გრიგორ ლუსავორიჩის (დაბადება)",
+      "ru": "Сурб Григор Лусаворич (рождение)",
+      "en": "St. Gregory Lusavorich (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Pushkin Square",
+    "district": "Mtatsminda",
+    "lat": 41.693,
+    "lon": 44.802,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1868-1920",
+    "startYear": 1868,
+    "endYear": 1920,
+    "missingYears": "1869-1870, 1872-1876, 1888",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Разрушена в 1930-х. Находилась на нынешней площади Пушкина.",
+      "en": "Destroyed in the 1930s. Located on the current Pushkin Square.",
+      "ka": "განადგურდა 1930-იან წლებში. მდებარეობდა ამჟამინდელ პუშკინის მოედანზე."
+    }
+  },
+  {
+    "id": 67,
+    "name": {
+      "ka": "ეჩმიაძინის წმ. გიორგის (დაბადება)",
+      "ru": "Эчмиадзинская Сурб Геворг (рождение)",
+      "en": "Echmiadzin St. George (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Armazi St, 18",
+    "district": "Isani",
+    "lat": 41.6923,
+    "lon": 44.8143,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1872-1921",
+    "startYear": 1872,
+    "endYear": 1921,
+    "missingYears": "1874-1876, 1880, 1898, 1906",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Действующий армянский храм в Авлабаре.",
+      "en": "Active Armenian church in Avlabari.",
+      "ka": "მოქმედი სომხური ეკლესია ავლაბარში."
+    }
+  },
+  {
+    "id": 68,
+    "name": {
+      "ka": "ვანქის ღვთისმშობლის (დაბადება)",
+      "ru": "Ванкская Сурб Аствацацин (рождение)",
+      "en": "Vank Virgin Mary (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Atoneli St",
+    "district": "Mtatsminda",
+    "lat": 41.6985,
+    "lon": 44.8015,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1862-1922",
+    "startYear": 1862,
+    "endYear": 1922,
+    "missingYears": "1864,1866, 1867, 1885",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Главный армянский собор Тифлиса. Снесен в 1938 г. (сохранилась лишь колокольня).",
+      "en": "Main Armenian cathedral of Tiflis. Demolished in 1938 (only the bell tower survived).",
+      "ka": "თბილისის მთავარი სომხური ტაძარი. დანგრეულია 1938 წელს (შემორჩენილია მხოლოდ სამრეკლო)."
+    }
+  },
+  {
+    "id": 69,
+    "name": {
+      "ka": "ვერის წმ. ჯვრის (დაბადება)",
+      "ru": "Верийская Сурб Хач (рождение)",
+      "en": "Vera Holy Cross (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Vera Cemetery",
+    "district": "Mtatsminda",
+    "lat": 41.7088,
+    "lon": 44.7845,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1921",
+    "startYear": 1871,
+    "endYear": 1921,
+    "missingYears": "1902, 1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Ныне православный храм Св. Пантелеймона при кладбище.",
+      "en": "Now the Orthodox Church of St. Panteleimon at the cemetery.",
+      "ka": "ამჟამად წმინდა პანტელეიმონის მართლმადიდებლური ეკლესია სასაფლაოზე."
+    }
+  },
+  {
+    "id": 70,
+    "name": {
+      "ka": "ზრკინიანის წმ. კარაპეტის (დაბადება)",
+      "ru": "Зркинянц Сурб Карапет (рождение)",
+      "en": "Zrkiniani St. Karapet (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.69,
+    "lon": 44.805,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1865-1924",
+    "startYear": 1865,
+    "endYear": 1924,
+    "missingYears": "1866-1876",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Разрушена в советский период.",
+      "en": "Destroyed during the Soviet period.",
+      "ka": "განადგურდა საბჭოთა პერიოდში."
+    }
+  },
+  {
+    "id": 71,
+    "name": {
+      "ka": "ზორაბაშენის წმ. გიორგის (დაბადება)",
+      "ru": "Зорабашенская Сурб Геворг (рождение)",
+      "en": "Zorabasheni St. George (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.69,
+    "lon": 44.805,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1921",
+    "startYear": 1877,
+    "endYear": 1921,
+    "missingYears": "1878-1879, 1881, 1887, 1889",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Разрушена.",
+      "en": "Destroyed.",
+      "ka": "დანგრეულია."
+    }
+  },
+  {
+    "id": 72,
+    "name": {
+      "ka": "თანდოიანის წმ. გიორგის (დაბადება)",
+      "ru": "Тандоянц Сурб Аствацацин (рождение)",
+      "en": "Tandoiani St. Virgin (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Aghmashenebeli Ave, 38",
+    "district": "Chughureti",
+    "lat": 41.7115,
+    "lon": 44.7942,
+    "preserved": "yes",
+    "active": "no",
+    "recordYears": "1874-1921",
+    "startYear": 1874,
+    "endYear": 1921,
+    "missingYears": "1900",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "В руинах, спорный статус (реституционный спор).",
+      "en": "In ruins, disputed status (restitution dispute).",
+      "ka": "ნანგრევებშია, სადავო სტატუსი (სარეტიტუციო დავა)."
+    }
+  },
+  {
+    "id": 73,
+    "name": {
+      "ka": "მეიდნის წმ. გიორგის/ღვთისმშობლის (დაბადება)",
+      "ru": "Мейданская Сурб Геворг (рождение)",
+      "en": "Meidani St. George (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Samghebro St, 5",
+    "district": "Krtsanisi",
+    "lat": 41.688,
+    "lon": 44.809,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1873-1921",
+    "startYear": 1873,
+    "endYear": 1921,
+    "missingYears": "1874-1876, 1887",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Сурб Геворг (Кафедральный армянский собор).",
+      "en": "Surb Gevorg (Armenian Cathedral).",
+      "ka": "სურბ გევორგი (სომხური საკათედრო ტაძარი)."
+    }
+  },
+  {
+    "id": 74,
+    "name": {
+      "ka": "მუღნის წმ. გიორგის (დაბადება)",
+      "ru": "Мугнинская Сурб Геворг (рождение)",
+      "en": "Mughni St. George (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Beglar Akhospireli St",
+    "district": "Krtsanisi",
+    "lat": 41.6888,
+    "lon": 44.8039,
+    "preserved": "yes",
+    "active": "no",
+    "recordYears": "1854-1919",
+    "startYear": 1854,
+    "endYear": 1919,
+    "missingYears": "1855-1863, 1866, 1869-1870, 1877, 1879, 1890, 1904-1905",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Руины. Обрушилась в 2009 году.",
+      "en": "Ruins. Collapsed in 2009.",
+      "ka": "ნანგრევები. ჩამოინგრა 2009 წელს."
+    }
+  },
+  {
+    "id": 75,
+    "name": {
+      "ka": "წმ. მინასის (დაბადება)",
+      "ru": "Сурб Минас (рождение)",
+      "en": "St. Minas (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Gelati St",
+    "district": "Isani",
+    "lat": 41.6915,
+    "lon": 44.819,
+    "preserved": "yes",
+    "active": "no",
+    "recordYears": "1877-1921",
+    "startYear": 1877,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "В районе Авлабар, аварийное состояние, спорный статус.",
+      "en": "In Avlabari district, in disrepair, disputed status.",
+      "ka": "ავლაბრის რაიონში, ავარიულ მდგომარეობაში, სადავო სტატუსი."
+    }
+  },
+  {
+    "id": 76,
+    "name": {
+      "ka": "ნორაშენის ღვთისმშობლის (დაბადება)",
+      "ru": "Норашенская Сурб Аствацацин (рождение)",
+      "en": "Norashen Virgin Mary (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Kote Abkhazi St, 41",
+    "district": "Krtsanisi",
+    "lat": 41.691,
+    "lon": 44.8055,
+    "preserved": "yes",
+    "active": "no",
+    "recordYears": "1865-1921",
+    "startYear": 1865,
+    "endYear": 1921,
+    "missingYears": "1866-1876, 1889, 1903",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Закрыта. Объект споров между армянской и грузинской общинами.",
+      "en": "Closed. Object of disputes between Armenian and Georgian communities.",
+      "ka": "დახურულია. სომხურ და ქართულ თემებს შორის დავების ობიექტი."
+    }
+  },
+  {
+    "id": 77,
+    "name": {
+      "ka": "ნავთლუღის წმ. გიორგის (დაბადება)",
+      "ru": "Навтлугская Сурб Геворг (рождение)",
+      "en": "Navtlughi St. George (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Navtlughi",
+    "district": "Isani",
+    "lat": 41.675,
+    "lon": 44.857,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1921",
+    "startYear": 1877,
+    "endYear": 1921,
+    "missingYears": "",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Разрушена.",
+      "en": "Destroyed.",
+      "ka": "დანგრეულია."
+    }
+  },
+  {
+    "id": 78,
+    "name": {
+      "ka": "წმ. ნიშნის (დაბადება)",
+      "ru": "Сурб Ншан (рождение)",
+      "en": "St. Nishan (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Sultanishan St",
+    "district": "Krtsanisi",
+    "lat": 41.6924,
+    "lon": 44.8058,
+    "preserved": "yes",
+    "active": "no",
+    "recordYears": "1870-1922",
+    "startYear": 1870,
+    "endYear": 1922,
+    "missingYears": "1871-1876, 1880-1881, 1886, 1920",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Полуразрушена (пострадала от пожаров), спорный статус.",
+      "en": "Semi-ruined (damaged by fires), disputed status.",
+      "ka": "ნახევრად დანგრეული (დაზიანებულია ხანძრის შედეგად), სადავო სტატუსი."
+    }
+  },
+  {
+    "id": 79,
+    "name": {
+      "ka": "წმ. კარაპეტის (დაბადება)",
+      "ru": "Сурб Карапет (рождение)",
+      "en": "St. Karapet (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Chughureti/Kukia",
+    "district": "Chughureti",
+    "lat": 41.71,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1921",
+    "startYear": 1877,
+    "endYear": 1921,
+    "missingYears": "1885-1887, 1889, 1893, 1896, 1898, 1910",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Снесена.",
+      "en": "Demolished.",
+      "ka": "დამონტაჟებულია."
+    }
+  },
+  {
+    "id": 80,
+    "name": {
+      "ka": "კუკიის ღვთისმშობლის (დაბადება)",
+      "ru": "Кукийская Сурб Аствацацин (рождение)",
+      "en": "Kukia Virgin Mary (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Kukia",
+    "district": "Chughureti",
+    "lat": 41.711,
+    "lon": 44.802,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1864-1920",
+    "startYear": 1864,
+    "endYear": 1920,
+    "missingYears": "1866, 1868, 1871-1872, 1874, 1889, 1892, 1899, 1909, 1915",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Разрушена.",
+      "en": "Destroyed.",
+      "ka": "დანგრეულია."
+    }
+  },
+  {
+    "id": 81,
+    "name": {
+      "ka": "წმ. სარქისის (დაბადება)",
+      "ru": "Сурб Саркис (рождение)",
+      "en": "St. Sarkis (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Harpukhi/Gorgasali",
+    "district": "Krtsanisi",
+    "lat": 41.685,
+    "lon": 44.81,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1849-1921",
+    "startYear": 1849,
+    "endYear": 1921,
+    "missingYears": "1850-1860, 1889, 1891",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Разрушена в 1930-е.",
+      "en": "Destroyed in the 1930s.",
+      "ka": "განადგურდა 1930-იან წლებში."
+    }
+  },
+  {
+    "id": 82,
+    "name": {
+      "ka": "ქამოიანის წმ. გიორგის (დაბადება)",
+      "ru": "Камоянц Сурб Геворг (рождение)",
+      "en": "Kamoiani St. George (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Pushkin St area",
+    "district": "Mtatsminda",
+    "lat": 41.6935,
+    "lon": 44.8025,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1921",
+    "startYear": 1877,
+    "endYear": 1921,
+    "missingYears": "1900-1902, 1904, 1908",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Разрушена.",
+      "en": "Destroyed.",
+      "ka": "განადგურებულია."
+    }
+  },
+  {
+    "id": 83,
+    "name": {
+      "ka": "ბეთხაინის ღვთისმშობლის (ჯვრისწერა)",
+      "ru": "Бетлемская Богоматери (венчание)",
+      "en": "Betlemi Virgin Mary (Marriage)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Betlemi Rise, 15",
+    "district": "Krtsanisi",
+    "lat": 41.6893,
+    "lon": 44.8035,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1877-1920",
+    "startYear": 1877,
+    "endYear": 1920,
+    "missingYears": "1878, 1886, 1890, 1904-1905",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
+      "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
+      "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
+    }
+  },
+  {
+    "id": 84,
+    "name": {
+      "ka": "ქარაფის წმ. გიორგის (დაბადება)",
+      "ru": "Карапская Сурб Геворг (рождение)",
+      "en": "Karapi St. George (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Gomi St",
+    "district": "Krtsanisi",
+    "lat": 41.6885,
+    "lon": 44.8025,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1878-1921",
+    "startYear": 1878,
+    "endYear": 1921,
+    "missingYears": "1892, 1900",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Клдисубани Св. Георгия. Ныне православный грузинский храм.",
+      "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
+      "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
+    }
+  },
+  {
+    "id": 85,
+    "name": {
+      "ka": "ბეთხაინის ღვთისმშობლის (გარდაცვალება)",
+      "ru": "Бетлемская Богоматери (смерть)",
+      "en": "Betlemi Virgin Mary (Death)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Betlemi Rise, 15",
+    "district": "Krtsanisi",
+    "lat": 41.6893,
+    "lon": 44.8035,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1874-1920",
+    "startYear": 1874,
+    "endYear": 1920,
+    "missingYears": "1878, 1907, 1909, 1911-1912, 1915-1917, 1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
+      "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
+      "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
+    }
+  },
+  {
+    "id": 86,
+    "name": {
+      "ka": "ჩუღურეთის ღვთისმშობლის (დაბადება)",
+      "ru": "Чугуретская Богородицы (рождение)",
+      "en": "Chughureti Virgin Mary (Birth)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Chughureti",
+    "district": "Chughureti",
+    "lat": 41.71,
+    "lon": 44.798,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1861-1921",
+    "startYear": 1861,
+    "endYear": 1921,
+    "missingYears": "...",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Исторический армянский храм в Чугурети.",
+      "en": "Historical Armenian church in Chughureti.",
+      "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
+    }
+  },
+  {
+    "id": 124,
+    "name": {
+      "ka": "წმ. გიორგის (ჯვრისწერა)",
+      "ru": "Св. Георгия (венчание)",
+      "en": "St. George (Marriage)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.69,
+    "lon": 44.8,
+    "preserved": "uncertain",
+    "active": "uncertain",
+    "recordYears": "1878-1921",
+    "startYear": 1878,
+    "endYear": 1921,
+    "missingYears": "1879, 1890, 1907, 1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Вероятно, одна из Сурб Геворг (Мейдан или Мугни).",
+      "en": "Probably one of Surb Gevorg (Maidan or Mugni).",
+      "ka": "სავარაუდოდ ერთ-ერთი სურბ გევორგი (მეიდანი ან მუღნი)."
+    }
+  },
+  {
+    "id": 125,
+    "name": {
+      "ka": "ქარაფის წმ. გიორგის (გარდაცვალება)",
+      "ru": "Карапская Сурб Геворг (смерть)",
+      "en": "Karapi St. George (Death)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Gomi St",
+    "district": "Krtsanisi",
+    "lat": 41.6885,
+    "lon": 44.8025,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1861-1921",
+    "startYear": 1861,
+    "endYear": 1921,
+    "missingYears": "1862-1870, 1872-1877, 1898, 1913-1917, 1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Клдисубани Св. Георгия. Ныне православный грузинский храм.",
+      "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
+      "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
+    }
+  },
+  {
+    "id": 126,
+    "name": {
+      "ka": "შამქორის ღვთისმშობლის (ჯვრისწერა)",
+      "ru": "Шамхорская Кармир Аветаран (венчание)",
+      "en": "Shamkor Virgin Mary (Marriage)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Ketevan Tsamebuli Ave",
+    "district": "Isani",
+    "lat": 41.6942,
+    "lon": 44.8105,
+    "preserved": "yes",
+    "active": "no",
+    "recordYears": "1877-1920",
+    "startYear": 1877,
+    "endYear": 1920,
+    "missingYears": "1883, 1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Руины (обрушилась в 1989 г.). Была самой высокой армянской церковью.",
+      "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
+      "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
+    }
+  },
+  {
+    "id": 127,
+    "name": {
+      "ka": "შამქორის ღვთისმშობლის (გარდაცვალება)",
+      "ru": "Шамхорская Кармир Аветаран (смерть)",
+      "en": "Shamkor Virgin Mary (Death)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Ketevan Tsamebuli Ave",
+    "district": "Isani",
+    "lat": 41.6942,
+    "lon": 44.8105,
+    "preserved": "yes",
+    "active": "no",
+    "recordYears": "1870-1920",
+    "startYear": 1870,
+    "endYear": 1920,
+    "missingYears": "1871, 1899-1901, 1911-1917, 1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Руины (обрушилась в 1989 г.). Была самой высокой армянской церковью.",
+      "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
+      "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
+    }
+  },
+  {
+    "id": 128,
+    "name": {
+      "ka": "ჩუღურეთის ღვთისმშობლის (ჯვრისწერა)",
+      "ru": "Чугуретская Богородицы (венчание)",
+      "en": "Chughureti Virgin Mary (Marriage)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Chughureti",
+    "district": "Chughureti",
+    "lat": 41.71,
+    "lon": 44.798,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1861-1921",
+    "startYear": 1861,
+    "endYear": 1921,
+    "missingYears": "1862, 1870, 1890",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Исторический армянский храм в Чугурети.",
+      "en": "Historic Armenian church in Chughureti.",
+      "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
+    }
+  },
+  {
+    "id": 129,
+    "name": {
+      "ka": "ჩუღურეთის ღვთისმშობლის (გარდაცვალება)",
+      "ru": "Чугуретская Богородицы (смерть)",
+      "en": "Chughureti Virgin Mary (Death)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Chughureti",
+    "district": "Chughureti",
+    "lat": 41.71,
+    "lon": 44.798,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1920",
+    "startYear": 1877,
+    "endYear": 1920,
+    "missingYears": "1908, 1911-1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Исторический армянский храм в Чугурети.",
+      "en": "Historic Armenian church in Chughureti.",
+      "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
+    }
+  },
+  {
+    "id": 130,
+    "name": {
+      "ka": "ჯიგრაშენის ღვთისმშობლის (ჯვრისწერა)",
+      "ru": "Джиграшенская Сурб Аствацацин (венчание)",
+      "en": "Jigrasheni Virgin Mary (Marriage)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Leselidze/Kote Abkhazi",
+    "district": "Krtsanisi",
+    "lat": 41.69,
+    "lon": 44.805,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1921",
+    "startYear": 1877,
+    "endYear": 1921,
+    "missingYears": "1878, 1881-1890, 1914",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Разрушена в 1937 г.",
+      "en": "Destroyed in 1937.",
+      "ka": "განადგურდა 1937 წელს."
+    }
+  },
+  {
+    "id": 131,
+    "name": {
+      "ka": "ჯიგრაშენის ღვთისმშობლის (გარდაცვალება)",
+      "ru": "Джиграшенская Сурб Аствацацин (смерть)",
+      "en": "Jigrasheni Virgin Mary (Death)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Leselidze/Kote Abkhazi",
+    "district": "Krtsanisi",
+    "lat": 41.69,
+    "lon": 44.805,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1921",
+    "startYear": 1877,
+    "endYear": 1921,
+    "missingYears": "1878, 1887, 1890, 1911-1917, 1919",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Разрушена в 1937 г.",
+      "en": "Destroyed in 1937.",
+      "ka": "განადგურდა 1937 წელს."
+    }
+  },
+  {
+    "id": 132,
+    "name": {
+      "ka": "ჰრეშტაკაპერტის მთავარანგელოზის (ჯვრისწერა)",
+      "ru": "Сурб Хрештакапет (венчание)",
+      "en": "Hreshtakaper Archangels (Marriage)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Avlabari",
+    "district": "Isani",
+    "lat": 41.693,
+    "lon": 44.815,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1868-1919",
+    "startYear": 1868,
+    "endYear": 1919,
+    "missingYears": "1869-1871, 1873-1876, 1889, 1894",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Уничтожена.",
+      "en": "Destroyed.",
+      "ka": "განადგურებული."
+    }
+  },
+  {
+    "id": 133,
+    "name": {
+      "ka": "ჰრეშტაკაპერტის მთავარანგელოზის (გარდაცვალება)",
+      "ru": "Сурб Хрештакапет (смерть)",
+      "en": "Hreshtakaper Archangels (Death)"
+    },
+    "confession": "armenian_apostolic",
+    "confessionRaw": "Armenian Apostolic",
+    "address": "Avlabari",
+    "district": "Isani",
+    "lat": 41.693,
+    "lon": 44.815,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1877-1918",
+    "startYear": 1877,
+    "endYear": 1918,
+    "missingYears": "1911-1912, 1915-1917",
+    "note": {
+      "ru": "григорианская (Армянская апостольская)",
+      "en": "Gregorian",
+      "ka": "გრიგორიანული"
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "Уничтожена.",
+      "en": "Destroyed.",
+      "ka": "განადგურებული."
+    }
+  },
+  {
+    "id": 134,
+    "name": {
+      "ka": "ამიერკავკასიის რკინიგზელთა აღდგომის",
+      "ru": "Воскресения (Закавказской Ж/Д)",
+      "en": "Transcaucasian Railway Resurrection"
+    },
+    "confession": "orthodox_russian",
+    "confessionRaw": "Orthodox (Russian)",
+    "address": "Railway Area",
+    "district": "Didube",
+    "lat": 41.725,
+    "lon": 44.798,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1902-1917",
+    "startYear": 1902,
+    "endYear": 1917,
+    "missingYears": "1903",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Храм при железной дороге.",
+      "en": "Church near the railway.",
+      "ka": "ეკლესია რკინიგზასთან."
+    }
+  },
+  {
+    "id": 135,
+    "name": {
+      "ka": "დავრდომილთა მეორე ხატის",
+      "ru": "Второй иконы (богадельня)",
+      "en": "Second Icon of the Bedridden"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Tbilisi",
+    "district": "Tbilisi",
+    "lat": 41.7,
+    "lon": 44.8,
+    "preserved": "no",
+    "active": "no",
+    "recordYears": "1918-1920",
+    "startYear": 1918,
+    "endYear": 1920,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "low",
+    "historicalNote": {
+      "ru": "Церковь при богадельне/больнице.",
+      "en": "Church at the almshouse/hospital.",
+      "ka": "ეკლესია თავშესაფართან/საავადმყოფოსთან."
+    }
+  },
+  {
+    "id": 136,
+    "name": {
+      "ka": "ზემო ავჭალის წმ. იოანე ნათლისმცემლის",
+      "ru": "Иоанна Крестителя (Земо Авчала)",
+      "en": "Zemo Avchala St. John the Baptist"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Zemo Avchala",
+    "district": "Gldani",
+    "lat": 41.8,
+    "lon": 44.77,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1873-1910",
+    "startYear": 1873,
+    "endYear": 1910,
+    "missingYears": "1909",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Пригородный исторический храм.",
+      "en": "Suburban historical church.",
+      "ka": "გარეუბნის ისტორიული ეკლესია."
+    }
+  },
+  {
+    "id": 137,
+    "name": {
+      "ka": "ქვემო ავჭალის მთავარანგელოზის",
+      "ru": "Архангельская (Квемо Авчала)",
+      "en": "Kvemo Avchala Archangel"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Kvemo Avchala",
+    "district": "Gldani",
+    "lat": 41.78,
+    "lon": 44.78,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1906",
+    "startYear": 1871,
+    "endYear": 1906,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "medium",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 138,
+    "name": {
+      "ka": "გლდანის წმ. გიორგის",
+      "ru": "Св. Георгия (Глдани)",
+      "en": "Gldani St. George"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Gldani",
+    "district": "Gldani",
+    "lat": 41.800021,
+    "lon": 44.822505,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871",
+    "startYear": 1871,
+    "endYear": 1871,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 139,
+    "name": {
+      "ka": "გლდანის წმ. გრიგოლ ღვთისმეტყველის",
+      "ru": "Григория Богослова (Глдани)",
+      "en": "Gldani St. Gregory the Theologian"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Gldani",
+    "district": "Gldani",
+    "lat": 41.82768,
+    "lon": 44.82891,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1863-1899",
+    "startYear": 1863,
+    "endYear": 1899,
+    "missingYears": "",
+    "note": {
+      "ru": "Координаты уточнены: храм Св. Григория Богослова находится в северной части Глдани.",
+      "en": "Coordinates verified: Church of St. Gregory the Theologian is located in the northern part of Gldani.",
+      "ka": "კოორდინატები დაზუსტებულია: წმინდა გრიგოლ ღვთისმეტყველის ეკლესია მდებარეობს გლდანის ჩრდილოეთ ნაწილში."
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 140,
+    "name": {
+      "ka": "დიღმის წმ. მარინეს",
+      "ru": "Св. Марины (Дигоми)",
+      "en": "Dighomi St. Marina"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Dighomi",
+    "district": "Saburtalo",
+    "lat": 41.771749,
+    "lon": 44.736994,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1868-1899",
+    "startYear": 1868,
+    "endYear": 1899,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Древнее село Дигоми (ныне черта города).",
+      "en": "Ancient village of Digomi (now within city limits).",
+      "ka": "ძველი სოფელი დიღომი (ახლანდელი ქალაქის ფარგლებში)."
+    }
+  },
+  {
+    "id": 141,
+    "name": {
+      "ka": "დიდი ლილოს ღვთისმშობლის",
+      "ru": "Богоматери (Диди Лило)",
+      "en": "Didi Lilo Virgin Mary"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Didi Lilo",
+    "district": "Samgori",
+    "lat": 41.735,
+    "lon": 44.97,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1914",
+    "startYear": 1871,
+    "endYear": 1914,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Поселок Лило (родина И. Сталина).",
+      "en": "Lilo settlement (I. Stalin's birthplace).",
+      "ka": "ლილოს დასახლება (ი. სტალინის სამშობლო)."
+    }
+  },
+  {
+    "id": 142,
+    "name": {
+      "ka": "თელოვანის წმ. ნინოს",
+      "ru": "Св. Нино (Теловани)",
+      "en": "Telovani St. Nino"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Telovani",
+    "district": "Saburtalo",
+    "lat": 41.795,
+    "lon": 44.72,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1898",
+    "startYear": 1871,
+    "endYear": 1898,
+    "missingYears": "",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "Крестово-купольный храм.",
+      "en": "Cross-domed church.",
+      "ka": "ჯვარგუმბათოვანი ეკლესია."
+    }
+  },
+  {
+    "id": 143,
+    "name": {
+      "ka": "პატარა ლილოს წმ. გიორგის",
+      "ru": "Св. Георгия (Патара Лило)",
+      "en": "Patara Lilo St. George"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Patara Lilo",
+    "district": "Samgori",
+    "lat": 41.72,
+    "lon": 44.95,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1921",
+    "startYear": 1871,
+    "endYear": 1921,
+    "missingYears": "1917, 1919",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 144,
+    "name": {
+      "ka": "წავკისის წმ. მარინეს",
+      "ru": "Св. Марины (Цавкиси)",
+      "en": "Tsavkisi St. Marina"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Tsavkisi",
+    "district": "Mtatsminda",
+    "lat": 41.65,
+    "lon": 44.75,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1916",
+    "startYear": 1871,
+    "endYear": 1916,
+    "missingYears": "1902, 1909-1910, 1913",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
+  },
+  {
+    "id": 145,
+    "name": {
+      "ka": "წყნეთის წმ. გიორგის",
+      "ru": "Св. Георгия (Цхнети)",
+      "en": "Tskneti St. George"
+    },
+    "confession": "orthodox_georgian",
+    "confessionRaw": "Orthodox (Georgian Exarchate)",
+    "address": "Tskneti",
+    "district": "Vake",
+    "lat": 41.685,
+    "lon": 44.695,
+    "preserved": "yes",
+    "active": "yes",
+    "recordYears": "1871-1909",
+    "startYear": 1871,
+    "endYear": 1909,
+    "missingYears": "1892, 1901",
+    "note": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    },
+    "confidence": "high",
+    "historicalNote": {
+      "ru": "",
+      "en": "",
+      "ka": ""
+    }
   }
- },
- {
-  "id": 2,
-  "name": {
-   "ka": "ავლაბრის წმ. პეტრესა და პავლეს",
-   "ru": "Св. Петра и Павла в Авлабаре",
-   "en": "St. Peter and Paul in Avlabari"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Avlabari",
-  "district": "Isani",
-  "lat": 41.694,
-  "lon": 44.816,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1859-1921",
-  "startYear": 1859,
-  "endYear": 1921,
-  "missingYears": "1865-1868, 1871-1873, 1893",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low_district",
-  "historicalNote": {
-   "ru": "Утрачена. Не путать с католическим храмом.",
-   "en": "Lost. Not to be confused with the Catholic church.",
-   "ka": "დაკარგული. არ უნდა აგვერიოს კათოლიკურ ეკლესიაში."
-  }
- },
- {
-  "id": 3,
-  "name": {
-   "ka": "ავლაბრის მთავარანგელოზის",
-   "ru": "Архангелов в Авлабаре",
-   "en": "Archangel in Avlabari"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Avlabari",
-  "district": "Isani",
-  "lat": 41.695,
-  "lon": 44.817,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
-  "endYear": 1920,
-  "missingYears": "1879, 1917",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low_district",
-  "historicalNote": {
-   "ru": "Утрачена в советский период.",
-   "en": "Lost during the Soviet period.",
-   "ka": "დაკარგული საბჭოთა პერიოდში."
-  }
- },
- {
-  "id": 4,
-  "name": {
-   "ka": "ანჩისხატის ტაძარის",
-   "ru": "Анчисхати (Рождества Девы Марии)",
-   "en": "Anchiskhati Basilica"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Ioane Shavteli St, 11",
-  "district": "Mtatsminda",
-  "lat": 41.6958,
-  "lon": 44.8066,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1818-1921",
-  "startYear": 1818,
-  "endYear": 1921,
-  "missingYears": "1860, 1862-1870",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Древнейшая сохранившаяся церковь Тбилиси (VI в.).",
-   "en": "Oldest preserved church in Tbilisi (6th century).",
-   "ka": "თბილისის უძველესი შემორჩენილი ეკლესია (VI ს.)."
-  }
- },
- {
-  "id": 5,
-  "name": {
-   "ka": "კვირაცხოვლობის წმ. თომა მოციქულის",
-   "ru": "Св. Фомы (Айсорская)",
-   "en": "St. Thomas the Apostle (Aysor/Assyrian)"
-  },
-  "confession": "assyrian",
-  "confessionRaw": "Kukia/Vera area",
-  "address": "Chughureti",
-  "district": "",
-  "lat": 41.711,
-  "lon": 44.795,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1885-1921",
-  "startYear": 1885,
-  "endYear": 1921,
-  "missingYears": "1886-1890",
-  "note": {
-   "ru": "აისორების",
-   "en": "Aisors",
-   "ka": "აისორების"
-  },
-  "confidence": "low_approx",
-  "historicalNote": {
-   "ru": "Исторический храм общины ассирийцев (айсоров). Уничтожен.",
-   "en": "Historical church of the Assyrian (Aisor) community. Destroyed.",
-   "ka": "ასურული (აისორების) თემის ისტორიული ეკლესია. განადგურებული."
-  }
- },
- {
-  "id": 6,
-  "name": {
-   "ka": "ბაპტისტების თემის",
-   "ru": "Баптистской общины",
-   "en": "Baptist Community"
-  },
-  "confession": "baptist",
-  "confessionRaw": "Baptist",
-  "address": "Chughureti",
-  "district": "Chughureti",
-  "lat": 41.71,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1908-1918",
-  "startYear": 1908,
-  "endYear": 1918,
-  "missingYears": "1915",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low_approx",
-  "historicalNote": {
-   "ru": "Молитвенный дом. В 1920-е годы община преследовалась.",
-   "en": "House of prayer. In the 1920s, the community was persecuted.",
-   "ka": "სამლოცველო სახლი. 1920-იან წლებში თემი იდევნებოდა."
-  }
- },
- {
-  "id": 7,
-  "name": {
-   "ka": "წმ. ეკატერინეს",
-   "ru": "Св. Екатерины (Греческая)",
-   "en": "St. Catherine (Greek)"
-  },
-  "confession": "greek_orthodox",
-  "confessionRaw": "Greek Orthodox",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "no",
-  "recordYears": "1878-1909",
-  "startYear": 1878,
-  "endYear": 1909,
-  "missingYears": "1879, 1885, 1894, 1908",
-  "note": {
-   "ru": "ბერძნების",
-   "en": "Greeks",
-   "ka": "ბერძნების"
-  },
-  "confidence": "low_district",
-  "historicalNote": {
-   "ru": "Греческий приход.",
-   "en": "Greek parish.",
-   "ka": "ბერძნული სამრევლო."
-  }
- },
- {
-  "id": 8,
-  "name": {
-   "ka": "ევანგელისტურ-ლუთერანული",
-   "ru": "Евангелическо-Лютеранская (Кирха)",
-   "en": "Evangelical Lutheran Kirche"
-  },
-  "confession": "lutheran",
-  "confessionRaw": "Lutheran",
-  "address": "Marjanishvili St",
-  "district": "Chughureti",
-  "lat": 41.7107,
-  "lon": 44.7981,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1873-1921",
-  "startYear": 1873,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "1875-1921 (ჯვრისწერა), 1873-1916 (გარდაცვალება)",
-   "en": "1875-1921 (marriage), 1873-1916 (death)",
-   "ka": "1875-1921 (ჯვრისწერა), 1873-1916 (გარდაცვალება)"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Уничтожена в 1940-х годах немецкими военнопленными по приказу Советов.",
-   "en": "Destroyed in the 1940s by German prisoners of war on the orders of the Soviets.",
-   "ka": "განადგურდა 1940-იან წლებში გერმანელი სამხედრო ტყვეების მიერ საბჭოთა ბრძანებით."
-  }
- },
- {
-  "id": 9,
-  "name": {
-   "ka": "წმ. ნიკოლოზის",
-   "ru": "Св. Николая (Греческая)",
-   "en": "St. Nicholas (Greek)"
-  },
-  "confession": "greek_orthodox",
-  "confessionRaw": "Greek Orthodox",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "no",
-  "recordYears": "1835-1921",
-  "startYear": 1835,
-  "endYear": 1921,
-  "missingYears": "1862",
-  "note": {
-   "ru": "ბერძნების",
-   "en": "Greeks",
-   "ka": "ბერძნების"
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 10,
-  "name": {
-   "ka": "დიდუბის ღვთისმშობლის შობის",
-   "ru": "Рождества Богородицы в Дидубе",
-   "en": "Didube Virgin Mary"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Tsereteli Ave",
-  "district": "Didube",
-  "lat": 41.7319,
-  "lon": 44.7801,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1888-1921",
-  "startYear": 1888,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Ныне Пантеон общественных деятелей.",
-   "en": "Now the Pantheon of Public Figures.",
-   "ka": "ამჟამად საზოგადო მოღვაწეთა პანთეონი."
-  }
- },
- {
-  "id": 11,
-  "name": {
-   "ka": "სინაგოგა",
-   "ru": "Большая Синагога",
-   "en": "Great Synagogue"
-  },
-  "confession": "jewish",
-  "confessionRaw": "Jewish",
-  "address": "Kote Abkhazi St, 45",
-  "district": "Krtsanisi",
-  "lat": 41.689973,
-  "lon": 44.807267,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1880-1920",
-  "startYear": 1880,
-  "endYear": 1920,
-  "missingYears": "1918 (დაბ.), 1912-1915 (გარდ.)",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Действующая синагога ахалцихских евреев.",
-   "en": "Operating synagogue of Akhalcikhian Jews.",
-   "ka": "ახალციხელი ებრაელების მოქმედი სინაგოგა."
-  }
- },
- {
-  "id": 12,
-  "name": {
-   "ka": "ვერის წმ. იოანე ღვთისმეტყველის",
-   "ru": "Иоанна Богослова на Вере",
-   "en": "Vera St. John the Theologian"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Vera",
-  "district": "Mtatsminda",
-  "lat": 41.707684,
-  "lon": 44.788873,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1873-1921",
-  "startYear": 1873,
-  "endYear": 1921,
-  "missingYears": "1874",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Исторический храм в районе Вера.",
-   "en": "Historical church in Vera district.",
-   "ka": "ისტორიული ეკლესია ვერის რაიონში."
-  }
- },
- {
-  "id": 13,
-  "name": {
-   "ka": "ვერის წმ. ნიკოლოზის",
-   "ru": "Св. Николая на Вере",
-   "en": "Vera St. Nicholas"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Vera",
-  "district": "Mtatsminda",
-  "lat": 41.706,
-  "lon": 44.783,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1876-1921",
-  "startYear": 1876,
-  "endYear": 1921,
-  "missingYears": "1877",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 14,
-  "name": {
-   "ka": "იერუსალიმის ჯვრის ამაღლების",
-   "ru": "Воздвижения Креста Иерусалимского",
-   "en": "Jerusalem Cross Elevation"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Jerusalem St",
-  "district": "Krtsanisi",
-  "lat": 41.6908,
-  "lon": 44.8049,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1870-1914",
-  "startYear": 1870,
-  "endYear": 1914,
-  "missingYears": "1904",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Джварис Мама, бывшее подворье Иерусалимского патриархата.",
-   "en": "Jvaris Mama, former dependency of the Jerusalem Patriarchate.",
-   "ka": "ჯვარის მამა, იერუსალიმის საპატრიარქოს ყოფილი მეტოქი."
-  }
- },
- {
-  "id": 15,
-  "name": {
-   "ka": "წმ. ილია წინასწარმეტყველის",
-   "ru": "Ильи Пророка",
-   "en": "St. Elijah the Prophet"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1919-1920",
-  "startYear": 1919,
-  "endYear": 1920,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 16,
-  "name": {
-   "ka": "ღვთისმშობლის მიძინების (კათოლიკური)",
-   "ru": "Вознесения Девы Марии (Католическая)",
-   "en": "Catholic Assumption of Virgin Mary"
-  },
-  "confession": "roman_catholic",
-  "confessionRaw": "Roman Catholic",
-  "address": "Gia Abesadze St, 4",
-  "district": "Krtsanisi",
-  "lat": 41.6926,
-  "lon": 44.8021,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1796-1923",
-  "startYear": 1796,
-  "endYear": 1923,
-  "missingYears": "",
-  "note": {
-   "ru": "გარდაცვ. 1839-;  ჯვრისწერა 1894-;  დაბადება 1796-1844",
-   "en": "Death 1839-; Marriage 1894-; Birth 1796-1844",
-   "ka": "გარდაცვ. 1839-; ჯვრისწერა 1894-; დაბადება 1796-1844"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Кафедральный католический собор. Старое здание разрушено, восстановлено в 1999 г.",
-   "en": "Catholic Cathedral. Old building destroyed, restored in 1999.",
-   "ka": "კათოლიკური საკათედრო ტაძარი. ძველი შენობა დანგრეულია, აღდგენილია 1999 წელს."
-  }
- },
- {
-  "id": 17,
-  "name": {
-   "ka": "წმ. პეტრეს და პავლეს (კათოლიკური)",
-   "ru": "Петра и Павла (Католическая)",
-   "en": "Catholic Sts. Peter and Paul"
-  },
-  "confession": "roman_catholic",
-  "confessionRaw": "Roman Catholic",
-  "address": "Javakhishvili St, 55",
-  "district": "Chughureti",
-  "lat": 41.709955,
-  "lon": 44.801822,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1877-1922",
-  "startYear": 1877,
-  "endYear": 1922,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Построена за счет польской католической общины.",
-   "en": "Built with funds from the Polish Catholic community.",
-   "ka": "აშენებულია პოლონური კათოლიკური თემის სახსრებით."
-  }
- },
- {
-  "id": 18,
-  "name": {
-   "ka": "კალოუბნის ღვთისმშობლის",
-   "ru": "Калоубанской Богоматери",
-   "en": "Kaloubani Virgin Mary"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Rustaveli Ave",
-  "district": "Mtatsminda",
-  "lat": 41.697,
-  "lon": 44.7985,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1861-1921",
-  "startYear": 1861,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Снесена в советское время, находилась в районе нынешнего кинотеатра Руставели.",
-   "en": "Demolished in Soviet times, located in the area of the current Rustaveli Cinema.",
-   "ka": "დაინგრა საბჭოთა დროს, მდებარეობდა ამჟამინდელი რუსთაველის კინოთეატრის მიდა მიმდებარე ტერიტორიაზე."
-  }
- },
- {
-  "id": 19,
-  "name": {
-   "ka": "კუკიის წმ. ალექსანდრე ნეველის",
-   "ru": "Св. Александра Невского (Кукия)",
-   "en": "Kukia St. Alexander Nevsky"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Marjanishvili St, 38",
-  "district": "Chughureti",
-  "lat": 41.711345,
-  "lon": 44.801023,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1864-1921",
-  "startYear": 1864,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Единственный полностью русский православный храм Тбилиси (богослужения на ц.-славянском).",
-   "en": "The only fully Russian Orthodox church in Tbilisi (services in Church Slavonic).",
-   "ka": "ერთადერთი მთლიანად რუსული მართლმადიდებლური ეკლესია თბილისში (წირვა-ლოცვა საეკლესიო სლავურ ენაზე)."
-  }
- },
- {
-  "id": 20,
-  "name": {
-   "ka": "კუკიის წმ. ნიკოლოზის",
-   "ru": "Св. Николая (Кукия)",
-   "en": "Kukia St. Nicholas"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Kukia Cemetery",
-  "district": "Chughureti",
-  "lat": 41.7109,
-  "lon": 44.8024,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1819-1921",
-  "startYear": 1819,
-  "endYear": 1921,
-  "missingYears": "1852, 1861-1869",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Располагается на Кукийском кладбище.",
-   "en": "Located in Kukia cemetery.",
-   "ka": "მდებარეობს კუკიის სასაფლაოზე."
-  }
- },
- {
-  "id": 21,
-  "name": {
-   "ka": "კუკიის წმ. ნინოს",
-   "ru": "Св. Нино (Кукия)",
-   "en": "Kukia St. Nino"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Kukia Cemetery",
-  "district": "Chughureti",
-  "lat": 41.714475,
-  "lon": 44.811002,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1891-1921",
-  "startYear": 1891,
-  "endYear": 1921,
-  "missingYears": "1892",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Кукийское кладбище.",
-   "en": "Kukia cemetery.",
-   "ka": "კუკიის სასაფლაო."
-  }
- },
- {
-  "id": 22,
-  "name": {
-   "ka": "კუკიის წმ. იოანე ნათლისმცემლის",
-   "ru": "Иоанна Крестителя (Кукия)",
-   "en": "Kukia St. John the Baptist"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Kukia",
-  "district": "Chughureti",
-  "lat": 41.712,
-  "lon": 44.803,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1902-1916",
-  "startYear": 1902,
-  "endYear": 1916,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 23,
-  "name": {
-   "ka": "მალაკნების სამლოცველო",
-   "ru": "Молитвенный дом молокан",
-   "en": "Molokan Shrine"
-  },
-  "confession": "molokan",
-  "confessionRaw": "Molokan (Spiritual Christian)",
-  "address": "Pirosmani St area",
-  "district": "Chughureti",
-  "lat": 41.719,
-  "lon": 44.795,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1907-1924",
-  "startYear": 1907,
-  "endYear": 1924,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low_approx",
-  "historicalNote": {
-   "ru": "Район исторического поселения молокан (Молоканский базар).",
-   "en": "Area of historical Molokan settlement (Molokan Bazaar).",
-   "ka": "ისტორიული მოლოკანების დასახლების ტერიტორია (მოლოკანის ბაზარი)."
-  }
- },
- {
-  "id": 24,
-  "name": {
-   "ka": "მეტეხის ღვთისმშობლის",
-   "ru": "Метехской Богоматери (тюремная)",
-   "en": "Metekhi Virgin Mary (Prison)"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Metekhi Rise",
-  "district": "Isani",
-  "lat": 41.69,
-  "lon": 44.8115,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1845-1902",
-  "startYear": 1845,
-  "endYear": 1902,
-  "missingYears": "1853, 1858-1859",
-  "note": {
-   "ru": "ციხის",
-   "en": "prison's",
-   "ka": "ციხის"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Использовалась как церковь для заключенных Метехского замка.",
-   "en": "Used as a church for prisoners of Metekhi Castle.",
-   "ka": "გამოიყენებოდა როგორც ეკლესია მეთეხის ციხის პატიმრებისთვის."
-  }
- },
- {
-  "id": 25,
-  "name": {
-   "ka": "მისიონერების (I)",
-   "ru": "Миссионерская (I)",
-   "en": "Missionary Church (I)"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1892-1919",
-  "startYear": 1892,
-  "endYear": 1919,
-  "missingYears": "1918",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Храм Общества восстановления православия на Кавказе.",
-   "en": "Church of the Society for the Restoration of Orthodoxy in the Caucasus.",
-   "ka": "კავკასიაში მართლმადიდებლობის აღდგენის საზოგადოების ეკლესია."
-  }
- },
- {
-  "id": 26,
-  "name": {
-   "ka": "მისიონერების (II)",
-   "ru": "Миссионерская (II)",
-   "en": "Missionary Church (II)"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1900-1920",
-  "startYear": 1900,
-  "endYear": 1920,
-  "missingYears": "1919",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 27,
-  "name": {
-   "ka": "მთავარანგელოზის",
-   "ru": "Архангела Михайловской больницы",
-   "en": "Archangel of Mikhailov Hospital"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Aghmashenebeli Ave",
-  "district": "Chughureti",
-  "lat": 41.7118,
-  "lon": 44.7937,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1871-1920",
-  "startYear": 1871,
-  "endYear": 1920,
-  "missingYears": "",
-  "note": {
-   "ru": "მიხაილოვის საავადმყოფოს",
-   "en": "Mikhailov hospital's",
-   "ka": "მიხაილოვის საავადმყოფოს"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Домовая больничная церковь.",
-   "en": "House church of the hospital.",
-   "ka": "საავადმყოფოს სამლოცველო."
-  }
- },
- {
-  "id": 28,
-  "name": {
-   "ka": "წმ. მიხეილ ტვერელის",
-   "ru": "Св. Михаила Тверского",
-   "en": "St. Michael of Tver"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Zaldastanishvili St",
-  "district": "Mtatsminda",
-  "lat": 41.700676,
-  "lon": 44.789029,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1913-1920",
-  "startYear": 1913,
-  "endYear": 1920,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Построена русским архитектором, восстановлена в постсоветское время.",
-   "en": "Built by a Russian architect, restored in post-Soviet times.",
-   "ka": "აშენებულია რუსი არქიტექტორის მიერ, აღდგენილია პოსტსაბჭოთა პერიოდში."
-  }
- },
- {
-  "id": 29,
-  "name": {
-   "ka": "მთაწმინდის მაცხოვრის ფერისცვალების",
-   "ru": "Спасо-Преображенская (Мтацминда)",
-   "en": "Mtatsminda Transfiguration"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Mtatsminda",
-  "district": "Mtatsminda",
-  "lat": 41.6953,
-  "lon": 44.7887,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1826-1921",
-  "startYear": 1826,
-  "endYear": 1921,
-  "missingYears": "1878-1902, 1904-1918",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Часть комплекса на горе Мтацминда.",
-   "en": "Part of the complex on Mount Mtatsminda.",
-   "ka": "მთაწმინდის მთაზე არსებული კომპლექსის ნაწილი."
-  }
- },
- {
-  "id": 30,
-  "name": {
-   "ka": "მთაწმინდის მამადავითის",
-   "ru": "Мамадавити (Мтацминда)",
-   "en": "Mamadaviti (Mtatsminda)"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Mtatsminda Pantheon",
-  "district": "Mtatsminda",
-  "lat": 41.69583,
-  "lon": 44.788872,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1874-1921",
-  "startYear": 1874,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Церковь Св. Давида Гареджийского (Пантеон).",
-   "en": "Church of St. David Gareji (Pantheon).",
-   "ka": "წმ. დავით გარეჯელის ეკლესია (პანთეონი)."
-  }
- },
- {
-  "id": 31,
-  "name": {
-   "ka": "ნაძალადევის ივერიის ღვთისმშობლის",
-   "ru": "Иверской Богоматери (Надзаладеви)",
-   "en": "Nadzaladevi Iveria Virgin Mary"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Nadzaladevi",
-  "district": "Nadzaladevi",
-  "lat": 41.7323,
-  "lon": 44.8003,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1900-1921",
-  "startYear": 1900,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Исторический рабочий район (Нахаловка).",
-   "en": "Historical working-class district (Nakhalovka).",
-   "ka": "ისტორიული მუშათა რაიონი (ნახალოვკა)."
-  }
- },
- {
-  "id": 32,
-  "name": {
-   "ka": "ნავთლუღის წმ. ბარბარეს",
-   "ru": "Св. Варвары (Навтлуги)",
-   "en": "Navtlughi St. Barbara"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Ketevan Tsamebuli Ave",
-  "district": "Isani",
-  "lat": 41.675755,
-  "lon": 44.852519,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1820-1922",
-  "startYear": 1820,
-  "endYear": 1922,
-  "missingYears": "1859",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Действующий храм в районе старого Навтлуги.",
-   "en": "Active church in the area of old Navtlughi.",
-   "ka": "მოქმედი ეკლესია ძველი ნავთლუღის ტერიტორიაზე."
-  }
- },
- {
-  "id": 33,
-  "name": {
-   "ka": "ორბელიანთკარის წმ. ნიკოლოზის",
-   "ru": "Св. Николая Орбелиани",
-   "en": "Orbelianubani St. Nicholas"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Atoneli St area",
-  "district": "Mtatsminda",
-  "lat": 41.698,
-  "lon": 44.801,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1865-1903",
-  "startYear": 1865,
-  "endYear": 1903,
-  "missingYears": "1888-1898",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Снесена/перестроена.",
-   "en": "Demolished/rebuilt.",
-   "ka": "დანგრეული/აღდგენილი."
-  }
- },
- {
-  "id": 34,
-  "name": {
-   "ka": "ამიერკავკასიის რკინიგზელთა",
-   "ru": "Св. Константина и Елены (Железнодорожная)",
-   "en": "Transcaucasian Railway St. Constantine and Helena"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Railway Station Area",
-  "district": "Didube/Chughureti",
-  "lat": 41.725,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1887-1901",
-  "startYear": 1887,
-  "endYear": 1901,
-  "missingYears": "1888, 1893",
-  "note": {
-   "ru": "წმ. კონსტანტინეს და ელენეს სახელობის",
-   "en": "named after Saints Constantine and Helen",
-   "ka": "წმ. კონსტანტინეს და ელენეს სახელობის"
-  },
-  "confidence": "low_approx",
-  "historicalNote": {
-   "ru": "Храм рабочих Закавказской Ж/Д.",
-   "en": "Church of the Transcaucasian Railway workers.",
-   "ka": "ამიერკავკასიის რკინიგზის მუშათა ეკლესია."
-  }
- },
- {
-  "id": 35,
-  "name": {
-   "ka": "ვაჟთა (I) გიმნაზიის",
-   "ru": "1-й Мужской гимназии",
-   "en": "First Boys' Gymnasium"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Rustaveli Ave, 10",
-  "district": "Mtatsminda",
-  "lat": 41.6961,
-  "lon": 44.7988,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1879-1886",
-  "startYear": 1879,
-  "endYear": 1886,
-  "missingYears": "1880",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Домовая церковь в здании классической гимназии (ныне 1-я школа).",
-   "en": "House church in the classical gymnasium building (now 1st school).",
-   "ka": "სახლის ეკლესია კლასიკური გიმნაზიის შენობაში (ამჟამად 1-ლი სკოლა)."
-  }
- },
- {
-  "id": 36,
-  "name": {
-   "ka": "მიქაელ მთავარანგელოზის",
-   "ru": "Михаила Архангела (Военной гимназии)",
-   "en": "Archangel Michael (Military Gymnasium)"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Rustaveli Ave",
-  "district": "Mtatsminda",
-  "lat": 41.698,
-  "lon": 44.795,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1878-1886",
-  "startYear": 1878,
-  "endYear": 1886,
-  "missingYears": "",
-  "note": {
-   "ru": "სამხედრო გიმნაზიის",
-   "en": "military gymnasium's",
-   "ka": "სამხედრო გიმნაზიის"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Домовая церковь военного ведомства.",
-   "en": "House church of the military department.",
-   "ka": "სამხედრო უწყების კარის ეკლესია."
-  }
- },
- {
-  "id": 37,
-  "name": {
-   "ka": "წმ. ანდრია პირველწოდებულის",
-   "ru": "Андрея Первозванного (Духовной Семинарии)",
-   "en": "St. Andrew (Theological Seminary)"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Pushkin St",
-  "district": "Krtsanisi",
-  "lat": 41.6925,
-  "lon": 44.802,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1880-1885",
-  "startYear": 1880,
-  "endYear": 1885,
-  "missingYears": "1883",
-  "note": {
-   "ru": "სასულიერო სემინარიის",
-   "en": "Theological Seminary's",
-   "ka": "სასულიერო სემინარიის"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "В здании старой семинарии (ныне Музей Искусств).",
-   "en": "In the building of the old seminary (now the Museum of Arts).",
-   "ka": "ძველი სასულიერო სემინარიის შენობაში (ამჟამად ხელოვნების მუზეუმი)."
-  }
- },
- {
-  "id": 38,
-  "name": {
-   "ka": "თავად მიხეილ ნიკოლოზის ძის...",
-   "ru": "Военного училища Вел. Кн. Михаила Николаевича",
-   "en": "Grand Duke Michael Nikolaevich Military School"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.79,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1912-1918",
-  "startYear": 1912,
-  "endYear": 1918,
-  "missingYears": "1915-1916",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Домовая церковь училища.",
-   "en": "House church of the school.",
-   "ka": "სასწავლებლის სახლის ეკლესია."
-  }
- },
- {
-  "id": 39,
-  "name": {
-   "ka": "ფეხოსან იუნკერთა სასწავლებლის",
-   "ru": "Пехотного юнкерского училища",
-   "en": "Infantry Junker School"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.79,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1903-1911",
-  "startYear": 1903,
-  "endYear": 1911,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Домовая церковь.",
-   "en": "House church.",
-   "ka": "სახლის ეკლესია."
-  }
- },
- {
-  "id": 40,
-  "name": {
-   "ka": "წმ. ალექსანდრე ნეველის",
-   "ru": "Св. Александра Невского (Военного госпиталя)",
-   "en": "St. Alexander Nevsky (Military Hospital)"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.71,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1856-1917",
-  "startYear": 1856,
-  "endYear": 1917,
-  "missingYears": "1868-1870, 1912-1913",
-  "note": {
-   "ru": "სამხედრო ჰოსპიტალის",
-   "en": "Military Hospital's",
-   "ka": "სამხედრო ჰოსპიტალის"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Храм при госпитале (не путать с главным собором).",
-   "en": "Church at the hospital (not to be confused with the main cathedral).",
-   "ka": "ეკლესია ჰოსპიტალთან (არ უნდა აგვერიოს მთავარ საკათედრო ტაძარში)."
-  }
- },
- {
-  "id": 41,
-  "name": {
-   "ka": "კადეტთა კორპუსის მთავარანგელოზის",
-   "ru": "Архангельская Кадетского корпуса",
-   "en": "Cadet Corps Archangel"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Rustaveli Ave",
-  "district": "Mtatsminda",
-  "lat": 41.702,
-  "lon": 44.791,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1883-1899",
-  "startYear": 1883,
-  "endYear": 1899,
-  "missingYears": "1891-1898",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Уничтожена вместе с перестройкой корпуса.",
-   "en": "Destroyed along with the reconstruction of the building.",
-   "ka": "განადგურდა შენობის რეკონსტრუქციასთან ერთად."
-  }
- },
- {
-  "id": 42,
-  "name": {
-   "ka": "ლეიბგრენადერთა ერევნის მე-13 პოლკის",
-   "ru": "13-го Лейб-гренадерского Эриванского полка",
-   "en": "13th Erivan Grenadier Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Manglisi",
-  "district": "Kvemo Kartli",
-  "lat": 41.6985,
-  "lon": 44.3566,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1871-1901",
-  "startYear": 1871,
-  "endYear": 1901,
-  "missingYears": "1888-1891, 1897",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Храм Петра и Павла в Манглиси. Снесен в 1930-х.",
-   "en": "Church of Saints Peter and Paul in Manglisi. Demolished in the 1930s.",
-   "ka": "პეტრე-პავლეს ეკლესია მანგლისში. დაანგრიეს 1930-იან წლებში."
-  }
- },
- {
-  "id": 43,
-  "name": {
-   "ka": "კავკასიის არმიის გრენადერთა მე-14...",
-   "ru": "14-го Грузинского гренадерского полка",
-   "en": "14th Georgian Grenadier Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tetritskaro (Bely Klyuch)",
-  "district": "Kvemo Kartli",
-  "lat": 41.545,
-  "lon": 44.46,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1871-1906",
-  "startYear": 1871,
-  "endYear": 1906,
-  "missingYears": "1875,1879-1885, 1888-1893,1897, 1899",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Дислокация в Белом Ключе.",
-   "en": "Deployment in Bely Klyuch.",
-   "ka": "დისლოკაცია ბელი კლიუჩში."
-  }
- },
- {
-  "id": 44,
-  "name": {
-   "ka": "კავკასიის არმიის გრენადერთა მე-15...",
-   "ru": "15-го Тифлисского гренадерского полка",
-   "en": "15th Tiflis Grenadier Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi (Red Barracks)",
-  "district": "Isani",
-  "lat": 41.685,
-  "lon": 44.82,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1862-1910",
-  "startYear": 1862,
-  "endYear": 1910,
-  "missingYears": "1869",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Полковая церковь гарнизона.",
-   "en": "Regimental church of the garrison.",
-   "ka": "გარნიზონის პოლკის ეკლესია."
-  }
- },
- {
-  "id": 45,
-  "name": {
-   "ka": "კავკასიის არმიის გრენადერთა მე-16...",
-   "ru": "16-го Мингрельского гренадерского полка",
-   "en": "16th Mingrelian Grenadier Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.685,
-  "lon": 44.82,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1866-1912",
-  "startYear": 1866,
-  "endYear": 1912,
-  "missingYears": "1898",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Казарменная домовая церковь.",
-   "en": "Barracks house church.",
-   "ka": "ყაზარმის სახლის ეკლესია."
-  }
- },
- {
-  "id": 46,
-  "name": {
-   "ka": "დრაგუნთა მე-16 პოლკის ღვთისმშობლის",
-   "ru": "16-го драгунского полка (Богородицы)",
-   "en": "16th Dragoon Regiment (Virgin Mary)"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi/Dedoplistskaro",
-  "district": "Kakheti",
-  "lat": 41.46,
-  "lon": 46.1,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1866-1883",
-  "startYear": 1866,
-  "endYear": 1883,
-  "missingYears": "1872",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Полковая церковь (Тверской/Нижегородский гарнизоны).",
-   "en": "Regimental church (Tver/Nizhny Novgorod garrisons).",
-   "ka": "პოლკის ეკლესია (ტვერის/ნიჟნი ნოვგოროდის გარნიზონები)."
-  }
- },
- {
-  "id": 47,
-  "name": {
-   "ka": "დრაგუნთა მე-17 პოლკის",
-   "ru": "17-го драгунского (Нижегородского) полка",
-   "en": "17th Nizhegorod Dragoon Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi/Bely Klyuch",
-  "district": "Kvemo Kartli",
-  "lat": 41.545,
-  "lon": 44.46,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1856-1910",
-  "startYear": 1856,
-  "endYear": 1910,
-  "missingYears": "1857-1858, 1861-1903, 1905-1908",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 48,
-  "name": {
-   "ka": "ტვერის დრაგუნთა 43-ე პოლკის",
-   "ru": "43-го Тверского драгунского полка",
-   "en": "43rd Tver Dragoon Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Dedoplistskaro (Tsarskiye Kolodtsy)",
-  "district": "Kakheti",
-  "lat": 41.462,
-  "lon": 46.105,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1905",
-  "startYear": 1905,
-  "endYear": 1905,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Базировались в Царских Колодцах.",
-   "en": "Based in Tsarskie Kolodtsy.",
-   "ka": "ბაზირებული იყო ცარსკიე კოლოდცში."
-  }
- },
- {
-  "id": 49,
-  "name": {
-   "ka": "ტვერის დრაგუნთა 44-ე პოლკის",
-   "ru": "44-го Нижегородского драгунского полка",
-   "en": "44th Nizhegorod Dragoon Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi/Pyatigorsk",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1884-1906",
-  "startYear": 1884,
-  "endYear": 1906,
-  "missingYears": "1896",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 50,
-  "name": {
-   "ka": "კავკასიის მსროლელთა მე-6 პოლკის",
-   "ru": "6-го Кавказского стрелкового полка",
-   "en": "6th Caucasus Rifle Regiment"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1914-1915",
-  "startYear": 1914,
-  "endYear": 1915,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Церковь времен Первой мировой.",
-   "en": "Church from the First World War.",
-   "ka": "პირველი მსოფლიო ომის დროინდელი ეკლესია."
-  }
- },
- {
-  "id": 51,
-  "name": {
-   "ka": "ქართველთა სათადარიგო პოლკის",
-   "ru": "Грузинского запасного полка",
-   "en": "Georgian Reserve Regiment"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "no",
-  "recordYears": "1918",
-  "startYear": 1918,
-  "endYear": 1918,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Период Первой Демократической Республики (1918).",
-   "en": "Period of the First Democratic Republic (1918).",
-   "ka": "პირველი დემოკრატიული რესპუბლიკის პერიოდი (1918)."
-  }
- },
- {
-  "id": 52,
-  "name": {
-   "ka": "ნავთლუღის სამხედრო სასაფლაოს",
-   "ru": "Навтлугского военного кладбища",
-   "en": "Navtlughi Military Cemetery"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Navtlughi",
-  "district": "Isani",
-  "lat": 41.675,
-  "lon": 44.86,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1920",
-  "startYear": 1920,
-  "endYear": 1920,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Военный погост.",
-   "en": "Military cemetery.",
-   "ka": "სამხედრო სასაფლაო."
-  }
- },
- {
-  "id": 53,
-  "name": {
-   "ka": "წმ. ალექსანდრე ნეველის (სამხედრო) ტაძარი",
-   "ru": "Александро-Невский (Военный) Собор",
-   "en": "St. Alexander Nevsky Military Cathedral"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Rustaveli Ave, 8",
-  "district": "Mtatsminda",
-  "lat": 41.6966,
-  "lon": 44.7984,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1898-1920",
-  "startYear": 1898,
-  "endYear": 1920,
-  "missingYears": "1910",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Главный военный собор Кавказа. Уничтожен Берией в 1930 г.",
-   "en": "Main military cathedral of the Caucasus. Destroyed by Beria in 1930.",
-   "ka": "კავკასიის მთავარი სამხედრო ტაძარი. განადგურდა ბერიას მიერ 1930 წელს."
-  }
- },
- {
-  "id": 54,
-  "name": {
-   "ka": "წმ. გიორგის (სამხედრო) ტაძარი",
-   "ru": "Св. Георгия (Военный)",
-   "en": "St. George Military Temple"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Orthodox (Georgian/Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1920-1921",
-  "startYear": 1920,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Период независимой Грузии (1920).",
-   "en": "Period of independent Georgia (1920).",
-   "ka": "დამოუკიდებელი საქართველოს პერიოდი (1920)."
-  }
- },
- {
-  "id": 55,
-  "name": {
-   "ka": "წმ. ნიკოლოზის",
-   "ru": "Св. Николая (Кавказской армии)",
-   "en": "St. Nicholas of the Caucasus Army"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1861-1919",
-  "startYear": 1861,
-  "endYear": 1919,
-  "missingYears": "1898-1899, 1912, 1917",
-  "note": {
-   "ru": "კავკასიის არმიის",
-   "en": "Caucasus Army's",
-   "ka": "კავკასიის არმიის"
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Главный штабной храм.",
-   "en": "Main staff church.",
-   "ka": "მთავარი შტაბის ეკლესია."
-  }
- },
- {
-  "id": 56,
-  "name": {
-   "ka": "წმ. გიორგის",
-   "ru": "Св. Георгия (Губернской тюрьмы)",
-   "en": "St. George (Provincial Prison)"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian/Georgian)",
-  "address": "Ortachala",
-  "district": "Krtsanisi",
-  "lat": 41.678,
-  "lon": 44.829,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1892, 1915",
-  "startYear": 1892,
-  "endYear": 1915,
-  "missingYears": "",
-  "note": {
-   "ru": "საგუბერნიო ციხის",
-   "en": "Of the Gubernatorial Prison",
-   "ka": "საგუბერნიო ციხის"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Тюремная церковь Губернской тюрьмы (Ортачала).",
-   "en": "Prison Church of the Gubernatorial Prison (Ortachala).",
-   "ka": "გუბერნიის ციხის ეკლესია (ორთაჭალა)."
-  }
- },
- {
-  "id": 57,
-  "name": {
-   "ka": "საბურთალოს წმ. გიორგის",
-   "ru": "Св. Георгия (Сабуртало)",
-   "en": "Saburtalo St. George"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Saburtalo",
-  "district": "Saburtalo",
-  "lat": 41.72781,
-  "lon": 44.77157,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1911-1921",
-  "startYear": 1911,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "Координаты уточнены: действующий храм Св. Георгия в Сабуртало (район ул. Пекини).",
-   "en": "Coordinates verified: active Church of St. George in Saburtalo (Pekini Street area).",
-   "ka": "კოორდინატები დაზუსტებულია: საბურთალოს წმინდა გიორგის სახელობის მოქმედი ტაძარი (პეკინის ქუჩის რაიონი)."
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 58,
-  "name": {
-   "ka": "სასახლის კარის წმ. გიორგის",
-   "ru": "Дворцовая Св. Георгия",
-   "en": "Palace St. George"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Rustaveli Ave",
-  "district": "Mtatsminda",
-  "lat": 41.6955,
-  "lon": 44.799,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1873-1922",
-  "startYear": 1873,
-  "endYear": 1922,
-  "missingYears": "1887, 1898-1899, 1920",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "При Дворце Наместника на Кавказе (ныне Дворец Молодежи).",
-   "en": "At the Palace of the Viceroy in the Caucasus (now the Youth Palace).",
-   "ka": "კავკასიაში მეფისნაცვლის სასახლესთან (ამჟამად ახალგაზრდობის სასახლე)."
-  }
- },
- {
-  "id": 59,
-  "name": {
-   "ka": "სიონის საკათედრო ტაძარის",
-   "ru": "Сионский собор",
-   "en": "Sioni Cathedral"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Sioni St, 3",
-  "district": "Krtsanisi",
-  "lat": 41.691325,
-  "lon": 44.807526,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1818-1921",
-  "startYear": 1818,
-  "endYear": 1921,
-  "missingYears": "1867-1869, 1919",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Главный исторический собор Грузии.",
-   "en": "The main historical cathedral of Georgia.",
-   "ka": "საქართველოს მთავარი ისტორიული ტაძარი."
-  }
- },
- {
-  "id": 60,
-  "name": {
-   "ka": "სოლოლაკის ჯვრის ამაღლების",
-   "ru": "Воздвижения Креста (Сололаки)",
-   "en": "Sololaki Cross Elevation"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Sololaki",
-  "district": "Mtatsminda",
-  "lat": 41.6898,
-  "lon": 44.7997,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1921",
-  "startYear": 1871,
-  "endYear": 1921,
-  "missingYears": "1886, 1893, 1899, 1906",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 61,
-  "name": {
-   "ka": "წმ. სამების",
-   "ru": "Святой Троицы",
-   "en": "Holy Trinity (Sameba)"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1818-1921",
-  "startYear": 1818,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Один из старых приходов (не путать с современным собором).",
-   "en": "One of the old parishes (not to be confused with the modern cathedral).",
-   "ka": "ერთ-ერთი ძველი სამრევლო (არ უნდა აგვერიოს თანამედროვე საკათედრო ტაძარში)."
-  }
- },
- {
-  "id": 62,
-  "name": {
-   "ka": "წმ. თეოდოსი ჩერნიგოველის",
-   "ru": "Св. Феодосия Черниговского",
-   "en": "St. Theodosius of Chernigov"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1902-1921",
-  "startYear": 1902,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Посвящена русскому святому.",
-   "en": "Dedicated to a Russian saint.",
-   "ka": "ეძღვნება რუს წმინდანს."
-  }
- },
- {
-  "id": 63,
-  "name": {
-   "ka": "ქაშვეთის წმ. გიორგის",
-   "ru": "Кашвети (Св. Георгия)",
-   "en": "Kashveti St. George"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Rustaveli Ave, 9",
-  "district": "Mtatsminda",
-  "lat": 41.698,
-  "lon": 44.7989,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1818-1921",
-  "startYear": 1818,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Современное здание построено в 1910 г. архитектором Л. Бильфельдом.",
-   "en": "The modern building was built in 1910 by architect L. Bilfeldt.",
-   "ka": "თანამედროვე შენობა ააგო 1910 წელს არქიტექტორმა ლ. ბილფელდტმა."
-  }
- },
- {
-  "id": 64,
-  "name": {
-   "ka": "ხარფუხის წმ. ნიკოლოზის",
-   "ru": "Св. Николая (Харпухи)",
-   "en": "Kharpukhi St. Nicholas"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Kharpukhi",
-  "district": "Krtsanisi",
-  "lat": 41.684589,
-  "lon": 44.820021,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1918, 1920",
-  "startYear": 1918,
-  "endYear": 1920,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Исторический район Харпухи.",
-   "en": "Historical district Kharphukhi.",
-   "ka": "ისტორიული უბანი ხარფუხი."
-  }
- },
- {
-  "id": 65,
-  "name": {
-   "ka": "ბეთხაინის ღვთისმშობლის (დაბადება)",
-   "ru": "Бетлемская Богоматери (рождение)",
-   "en": "Betlemi Virgin Mary (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Betlemi Rise, 15",
-  "district": "Krtsanisi",
-  "lat": 41.6893,
-  "lon": 44.8035,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
-  "endYear": 1920,
-  "missingYears": "1878, 1885, 1889, 1900, 1902",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
-   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხი, როგორც საქართველოს მართლმადიდებლური)."
-  }
- },
- {
-  "id": 66,
-  "name": {
-   "ka": "წმ. გრიგორ ლუსავორიჩის (დაბადება)",
-   "ru": "Сурб Григор Лусаворич (рождение)",
-   "en": "St. Gregory Lusavorich (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Pushkin Square",
-  "district": "Mtatsminda",
-  "lat": 41.693,
-  "lon": 44.802,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1868-1920",
-  "startYear": 1868,
-  "endYear": 1920,
-  "missingYears": "1869-1870, 1872-1876, 1888",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Разрушена в 1930-х. Находилась на нынешней площади Пушкина.",
-   "en": "Destroyed in the 1930s. Located on the current Pushkin Square.",
-   "ka": "განადგურდა 1930-იან წლებში. მდებარეობდა ამჟამინდელ პუშკინის მოედანზე."
-  }
- },
- {
-  "id": 67,
-  "name": {
-   "ka": "ეჩმიაძინის წმ. გიორგის (დაბადება)",
-   "ru": "Эчмиадзинская Сурб Геворг (рождение)",
-   "en": "Echmiadzin St. George (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Armazi St, 18",
-  "district": "Isani",
-  "lat": 41.6923,
-  "lon": 44.8143,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1872-1921",
-  "startYear": 1872,
-  "endYear": 1921,
-  "missingYears": "1874-1876, 1880, 1898, 1906",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Действующий армянский храм в Авлабаре.",
-   "en": "Active Armenian church in Avlabari.",
-   "ka": "მოქმედი სომხური ეკლესია ავლაბარში."
-  }
- },
- {
-  "id": 68,
-  "name": {
-   "ka": "ვანქის ღვთისმშობლის (დაბადება)",
-   "ru": "Ванкская Сурб Аствацацин (рождение)",
-   "en": "Vank Virgin Mary (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Atoneli St",
-  "district": "Mtatsminda",
-  "lat": 41.6985,
-  "lon": 44.8015,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1862-1922",
-  "startYear": 1862,
-  "endYear": 1922,
-  "missingYears": "1864,1866, 1867, 1885",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Главный армянский собор Тифлиса. Снесен в 1938 г. (сохранилась лишь колокольня).",
-   "en": "Main Armenian cathedral of Tiflis. Demolished in 1938 (only the bell tower survived).",
-   "ka": "თბილისის მთავარი სომხური ტაძარი. დანგრეულია 1938 წელს (შემორჩენილია მხოლოდ სამრეკლო)."
-  }
- },
- {
-  "id": 69,
-  "name": {
-   "ka": "ვერის წმ. ჯვრის (დაბადება)",
-   "ru": "Верийская Сурб Хач (рождение)",
-   "en": "Vera Holy Cross (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Vera Cemetery",
-  "district": "Mtatsminda",
-  "lat": 41.7088,
-  "lon": 44.7845,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1921",
-  "startYear": 1871,
-  "endYear": 1921,
-  "missingYears": "1902, 1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Ныне православный храм Св. Пантелеймона при кладбище.",
-   "en": "Now the Orthodox Church of St. Panteleimon at the cemetery.",
-   "ka": "ამჟამად წმინდა პანტელეიმონის მართლმადიდებლური ეკლესია სასაფლაოზე."
-  }
- },
- {
-  "id": 70,
-  "name": {
-   "ka": "ზრკინიანის წმ. კარაპეტის (დაბადება)",
-   "ru": "Зркинянц Сурб Карапет (рождение)",
-   "en": "Zrkiniani St. Karapet (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.805,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1865-1924",
-  "startYear": 1865,
-  "endYear": 1924,
-  "missingYears": "1866-1876",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Разрушена в советский период.",
-   "en": "Destroyed during the Soviet period.",
-   "ka": "განადგურდა საბჭოთა პერიოდში."
-  }
- },
- {
-  "id": 71,
-  "name": {
-   "ka": "ზორაბაშენის წმ. გიორგის (დაბადება)",
-   "ru": "Зорабашенская Сурб Геворг (рождение)",
-   "en": "Zorabasheni St. George (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.805,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "1878-1879, 1881, 1887, 1889",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Разрушена.",
-   "en": "Destroyed.",
-   "ka": "დანგრეულია."
-  }
- },
- {
-  "id": 72,
-  "name": {
-   "ka": "თანდოიანის წმ. გიორგის (დაბადება)",
-   "ru": "Тандоянц Сурб Аствацацин (рождение)",
-   "en": "Tandoiani St. Virgin (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Aghmashenebeli Ave, 38",
-  "district": "Chughureti",
-  "lat": 41.7115,
-  "lon": 44.7942,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1874-1921",
-  "startYear": 1874,
-  "endYear": 1921,
-  "missingYears": "1900",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "В руинах, спорный статус (реституционный спор).",
-   "en": "In ruins, disputed status (restitution dispute).",
-   "ka": "ნანგრევებშია, სადავო სტატუსი (სარეტიტუციო დავა)."
-  }
- },
- {
-  "id": 73,
-  "name": {
-   "ka": "მეიდნის წმ. გიორგის/ღვთისმშობლის (დაბადება)",
-   "ru": "Мейданская Сурб Геворг (рождение)",
-   "en": "Meidani St. George (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Samghebro St, 5",
-  "district": "Krtsanisi",
-  "lat": 41.688,
-  "lon": 44.809,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1873-1921",
-  "startYear": 1873,
-  "endYear": 1921,
-  "missingYears": "1874-1876, 1887",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Сурб Геворг (Кафедральный армянский собор).",
-   "en": "Surb Gevorg (Armenian Cathedral).",
-   "ka": "სურბ გევორგი (სომხური საკათედრო ტაძარი)."
-  }
- },
- {
-  "id": 74,
-  "name": {
-   "ka": "მუღნის წმ. გიორგის (დაბადება)",
-   "ru": "Мугнинская Сурб Геворг (рождение)",
-   "en": "Mughni St. George (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Beglar Akhospireli St",
-  "district": "Krtsanisi",
-  "lat": 41.6888,
-  "lon": 44.8039,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1854-1919",
-  "startYear": 1854,
-  "endYear": 1919,
-  "missingYears": "1855-1863, 1866, 1869-1870, 1877, 1879, 1890, 1904-1905",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Руины. Обрушилась в 2009 году.",
-   "en": "Ruins. Collapsed in 2009.",
-   "ka": "ნანგრევები. ჩამოინგრა 2009 წელს."
-  }
- },
- {
-  "id": 75,
-  "name": {
-   "ka": "წმ. მინასის (დაბადება)",
-   "ru": "Сурб Минас (рождение)",
-   "en": "St. Minas (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Gelati St",
-  "district": "Isani",
-  "lat": 41.6915,
-  "lon": 44.819,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "В районе Авлабар, аварийное состояние, спорный статус.",
-   "en": "In Avlabari district, in disrepair, disputed status.",
-   "ka": "ავლაბრის რაიონში, ავარიულ მდგომარეობაში, სადავო სტატუსი."
-  }
- },
- {
-  "id": 76,
-  "name": {
-   "ka": "ნორაშენის ღვთისმშობლის (დაბადება)",
-   "ru": "Норашенская Сурб Аствацацин (рождение)",
-   "en": "Norashen Virgin Mary (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Kote Abkhazi St, 41",
-  "district": "Krtsanisi",
-  "lat": 41.691,
-  "lon": 44.8055,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1865-1921",
-  "startYear": 1865,
-  "endYear": 1921,
-  "missingYears": "1866-1876, 1889, 1903",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Закрыта. Объект споров между армянской и грузинской общинами.",
-   "en": "Closed. Object of disputes between Armenian and Georgian communities.",
-   "ka": "დახურულია. სომხურ და ქართულ თემებს შორის დავების ობიექტი."
-  }
- },
- {
-  "id": 77,
-  "name": {
-   "ka": "ნავთლუღის წმ. გიორგის (დაბადება)",
-   "ru": "Навтлугская Сурб Геворг (рождение)",
-   "en": "Navtlughi St. George (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Navtlughi",
-  "district": "Isani",
-  "lat": 41.675,
-  "lon": 44.857,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Разрушена.",
-   "en": "Destroyed.",
-   "ka": "დანგრეულია."
-  }
- },
- {
-  "id": 78,
-  "name": {
-   "ka": "წმ. ნიშნის (დაბადება)",
-   "ru": "Сурб Ншан (рождение)",
-   "en": "St. Nishan (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Sultanishan St",
-  "district": "Krtsanisi",
-  "lat": 41.6924,
-  "lon": 44.8058,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1870-1922",
-  "startYear": 1870,
-  "endYear": 1922,
-  "missingYears": "1871-1876, 1880-1881, 1886, 1920",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Полуразрушена (пострадала от пожаров), спорный статус.",
-   "en": "Semi-ruined (damaged by fires), disputed status.",
-   "ka": "ნახევრად დანგრეული (დაზიანებულია ხანძრის შედეგად), სადავო სტატუსი."
-  }
- },
- {
-  "id": 79,
-  "name": {
-   "ka": "წმ. კარაპეტის (დაბადება)",
-   "ru": "Сурб Карапет (рождение)",
-   "en": "St. Karapet (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Chughureti/Kukia",
-  "district": "Chughureti",
-  "lat": 41.71,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "1885-1887, 1889, 1893, 1896, 1898, 1910",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Снесена.",
-   "en": "Demolished.",
-   "ka": "დამონტაჟებულია."
-  }
- },
- {
-  "id": 80,
-  "name": {
-   "ka": "კუკიის ღვთისმშობლის (დაბადება)",
-   "ru": "Кукийская Сурб Аствацацин (рождение)",
-   "en": "Kukia Virgin Mary (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Kukia",
-  "district": "Chughureti",
-  "lat": 41.711,
-  "lon": 44.802,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1864-1920",
-  "startYear": 1864,
-  "endYear": 1920,
-  "missingYears": "1866, 1868, 1871-1872, 1874, 1889, 1892, 1899, 1909, 1915",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Разрушена.",
-   "en": "Destroyed.",
-   "ka": "დანგრეულია."
-  }
- },
- {
-  "id": 81,
-  "name": {
-   "ka": "წმ. სარქისის (დაბადება)",
-   "ru": "Сурб Саркис (рождение)",
-   "en": "St. Sarkis (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Harpukhi/Gorgasali",
-  "district": "Krtsanisi",
-  "lat": 41.685,
-  "lon": 44.81,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1849-1921",
-  "startYear": 1849,
-  "endYear": 1921,
-  "missingYears": "1850-1860, 1889, 1891",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Разрушена в 1930-е.",
-   "en": "Destroyed in the 1930s.",
-   "ka": "განადგურდა 1930-იან წლებში."
-  }
- },
- {
-  "id": 82,
-  "name": {
-   "ka": "ქამოიანის წმ. გიორგის (დაბადება)",
-   "ru": "Камоянц Сурб Геворг (рождение)",
-   "en": "Kamoiani St. George (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Pushkin St area",
-  "district": "Mtatsminda",
-  "lat": 41.6935,
-  "lon": 44.8025,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "1900-1902, 1904, 1908",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Разрушена.",
-   "en": "Destroyed.",
-   "ka": "განადგურებულია."
-  }
- },
- {
-  "id": 83,
-  "name": {
-   "ka": "ბეთხაინის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Бетлемская Богоматери (венчание)",
-   "en": "Betlemi Virgin Mary (Marriage)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Betlemi Rise, 15",
-  "district": "Krtsanisi",
-  "lat": 41.6893,
-  "lon": 44.8035,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
-  "endYear": 1920,
-  "missingYears": "1878, 1886, 1890, 1904-1905",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
-   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
-  }
- },
- {
-  "id": 84,
-  "name": {
-   "ka": "ქარაფის წმ. გიორგის (დაბადება)",
-   "ru": "Карапская Сурб Геворг (рождение)",
-   "en": "Karapi St. George (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Gomi St",
-  "district": "Krtsanisi",
-  "lat": 41.6885,
-  "lon": 44.8025,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1878-1921",
-  "startYear": 1878,
-  "endYear": 1921,
-  "missingYears": "1892, 1900",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Клдисубани Св. Георгия. Ныне православный грузинский храм.",
-   "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
-   "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
-  }
- },
- {
-  "id": 85,
-  "name": {
-   "ka": "ბეთხაინის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Бетлемская Богоматери (смерть)",
-   "en": "Betlemi Virgin Mary (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Betlemi Rise, 15",
-  "district": "Krtsanisi",
-  "lat": 41.6893,
-  "lon": 44.8035,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1874-1920",
-  "startYear": 1874,
-  "endYear": 1920,
-  "missingYears": "1878, 1907, 1909, 1911-1912, 1915-1917, 1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
-   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
-  }
- },
- {
-  "id": 86,
-  "name": {
-   "ka": "ჩუღურეთის ღვთისმშობლის (დაბადება)",
-   "ru": "Чугуретская Богородицы (рождение)",
-   "en": "Chughureti Virgin Mary (Birth)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Chughureti",
-  "district": "Chughureti",
-  "lat": 41.71,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1861-1921",
-  "startYear": 1861,
-  "endYear": 1921,
-  "missingYears": "...",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Исторический армянский храм в Чугурети.",
-   "en": "Historical Armenian church in Chughureti.",
-   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
-  }
- },
- {
-  "id": 124,
-  "name": {
-   "ka": "წმ. გიორგის (ჯვრისწერა)",
-   "ru": "Св. Георгия (венчание)",
-   "en": "St. George (Marriage)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1878-1921",
-  "startYear": 1878,
-  "endYear": 1921,
-  "missingYears": "1879, 1890, 1907, 1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Вероятно, одна из Сурб Геворг (Мейдан или Мугни).",
-   "en": "Probably one of Surb Gevorg (Maidan or Mugni).",
-   "ka": "სავარაუდოდ ერთ-ერთი სურბ გევორგი (მეიდანი ან მუღნი)."
-  }
- },
- {
-  "id": 125,
-  "name": {
-   "ka": "ქარაფის წმ. გიორგის (გარდაცვალება)",
-   "ru": "Карапская Сурб Геворг (смерть)",
-   "en": "Karapi St. George (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Gomi St",
-  "district": "Krtsanisi",
-  "lat": 41.6885,
-  "lon": 44.8025,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1861-1921",
-  "startYear": 1861,
-  "endYear": 1921,
-  "missingYears": "1862-1870, 1872-1877, 1898, 1913-1917, 1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Клдисубани Св. Георгия. Ныне православный грузинский храм.",
-   "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
-   "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
-  }
- },
- {
-  "id": 126,
-  "name": {
-   "ka": "შამქორის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Шамхорская Кармир Аветаран (венчание)",
-   "en": "Shamkor Virgin Mary (Marriage)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Ketevan Tsamebuli Ave",
-  "district": "Isani",
-  "lat": 41.6942,
-  "lon": 44.8105,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
-  "endYear": 1920,
-  "missingYears": "1883, 1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Руины (обрушилась в 1989 г.). Была самой высокой армянской церковью.",
-   "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
-   "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
-  }
- },
- {
-  "id": 127,
-  "name": {
-   "ka": "შამქორის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Шамхорская Кармир Аветаран (смерть)",
-   "en": "Shamkor Virgin Mary (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Ketevan Tsamebuli Ave",
-  "district": "Isani",
-  "lat": 41.6942,
-  "lon": 44.8105,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1870-1920",
-  "startYear": 1870,
-  "endYear": 1920,
-  "missingYears": "1871, 1899-1901, 1911-1917, 1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Руины (обрушилась в 1989 г.). Была самой высокой армянской церковью.",
-   "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
-   "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
-  }
- },
- {
-  "id": 128,
-  "name": {
-   "ka": "ჩუღურეთის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Чугуретская Богородицы (венчание)",
-   "en": "Chughureti Virgin Mary (Marriage)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Chughureti",
-  "district": "Chughureti",
-  "lat": 41.71,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1861-1921",
-  "startYear": 1861,
-  "endYear": 1921,
-  "missingYears": "1862, 1870, 1890",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Исторический армянский храм в Чугурети.",
-   "en": "Historic Armenian church in Chughureti.",
-   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
-  }
- },
- {
-  "id": 129,
-  "name": {
-   "ka": "ჩუღურეთის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Чугуретская Богородицы (смерть)",
-   "en": "Chughureti Virgin Mary (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Chughureti",
-  "district": "Chughureti",
-  "lat": 41.71,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
-  "endYear": 1920,
-  "missingYears": "1908, 1911-1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Исторический армянский храм в Чугурети.",
-   "en": "Historic Armenian church in Chughureti.",
-   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
-  }
- },
- {
-  "id": 130,
-  "name": {
-   "ka": "ჯიგრაშენის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Джиграшенская Сурб Аствацацин (венчание)",
-   "en": "Jigrasheni Virgin Mary (Marriage)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Leselidze/Kote Abkhazi",
-  "district": "Krtsanisi",
-  "lat": 41.69,
-  "lon": 44.805,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "1878, 1881-1890, 1914",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Разрушена в 1937 г.",
-   "en": "Destroyed in 1937.",
-   "ka": "განადგურდა 1937 წელს."
-  }
- },
- {
-  "id": 131,
-  "name": {
-   "ka": "ჯიგრაშენის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Джиграшенская Сурб Аствацацин (смерть)",
-   "en": "Jigrasheni Virgin Mary (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Leselidze/Kote Abkhazi",
-  "district": "Krtsanisi",
-  "lat": 41.69,
-  "lon": 44.805,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "1878, 1887, 1890, 1911-1917, 1919",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Разрушена в 1937 г.",
-   "en": "Destroyed in 1937.",
-   "ka": "განადგურდა 1937 წელს."
-  }
- },
- {
-  "id": 132,
-  "name": {
-   "ka": "ჰრეშტაკაპერტის მთავარანგელოზის (ჯვრისწერა)",
-   "ru": "Сурб Хрештакапет (венчание)",
-   "en": "Hreshtakaper Archangels (Marriage)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Avlabari",
-  "district": "Isani",
-  "lat": 41.693,
-  "lon": 44.815,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1868-1919",
-  "startYear": 1868,
-  "endYear": 1919,
-  "missingYears": "1869-1871, 1873-1876, 1889, 1894",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Уничтожена.",
-   "en": "Destroyed.",
-   "ka": "განადგურებული."
-  }
- },
- {
-  "id": 133,
-  "name": {
-   "ka": "ჰრეშტაკაპერტის მთავარანგელოზის (გარდაცვალება)",
-   "ru": "Сурб Хрештакапет (смерть)",
-   "en": "Hreshtakaper Archangels (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Avlabari",
-  "district": "Isani",
-  "lat": 41.693,
-  "lon": 44.815,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1918",
-  "startYear": 1877,
-  "endYear": 1918,
-  "missingYears": "1911-1912, 1915-1917",
-  "note": {
-   "ru": "გრიგორიანული",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Уничтожена.",
-   "en": "Destroyed.",
-   "ka": "განადგურებული."
-  }
- },
- {
-  "id": 134,
-  "name": {
-   "ka": "ამიერკავკასიის რკინიგზელთა აღდგომის",
-   "ru": "Воскресения (Закавказской Ж/Д)",
-   "en": "Transcaucasian Railway Resurrection"
-  },
-  "confession": "orthodox_russian",
-  "confessionRaw": "Orthodox (Russian)",
-  "address": "Railway Area",
-  "district": "Didube",
-  "lat": 41.725,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1902-1917",
-  "startYear": 1902,
-  "endYear": 1917,
-  "missingYears": "1903",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Храм при железной дороге.",
-   "en": "Church near the railway.",
-   "ka": "ეკლესია რკინიგზასთან."
-  }
- },
- {
-  "id": 135,
-  "name": {
-   "ka": "დავრდომილთა მეორე ხატის",
-   "ru": "Второй иконы (богадельня)",
-   "en": "Second Icon of the Bedridden"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1918-1920",
-  "startYear": 1918,
-  "endYear": 1920,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Церковь при богадельне/больнице.",
-   "en": "Church at the almshouse/hospital.",
-   "ka": "ეკლესია თავშესაფართან/საავადმყოფოსთან."
-  }
- },
- {
-  "id": 136,
-  "name": {
-   "ka": "ზემო ავჭალის წმ. იოანე ნათლისმცემლის",
-   "ru": "Иоанна Крестителя (Земо Авчала)",
-   "en": "Zemo Avchala St. John the Baptist"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Zemo Avchala",
-  "district": "Gldani",
-  "lat": 41.8,
-  "lon": 44.77,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1873-1910",
-  "startYear": 1873,
-  "endYear": 1910,
-  "missingYears": "1909",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Пригородный исторический храм.",
-   "en": "Suburban historical church.",
-   "ka": "გარეუბნის ისტორიული ეკლესია."
-  }
- },
- {
-  "id": 137,
-  "name": {
-   "ka": "ქვემო ავჭალის მთავარანგელოზის",
-   "ru": "Архангельская (Квемо Авчала)",
-   "en": "Kvemo Avchala Archangel"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Kvemo Avchala",
-  "district": "Gldani",
-  "lat": 41.78,
-  "lon": 44.78,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1906",
-  "startYear": 1871,
-  "endYear": 1906,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 138,
-  "name": {
-   "ka": "გლდანის წმ. გიორგის",
-   "ru": "Св. Георгия (Глдани)",
-   "en": "Gldani St. George"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Gldani",
-  "district": "Gldani",
-  "lat": 41.800021,
-  "lon": 44.822505,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871",
-  "startYear": 1871,
-  "endYear": 1871,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 139,
-  "name": {
-   "ka": "გლდანის წმ. გრიგოლ ღვთისმეტყველის",
-   "ru": "Григория Богослова (Глдани)",
-   "en": "Gldani St. Gregory the Theologian"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Gldani",
-  "district": "Gldani",
-  "lat": 41.82768,
-  "lon": 44.82891,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1863-1899",
-  "startYear": 1863,
-  "endYear": 1899,
-  "missingYears": "",
-  "note": {
-   "ru": "Координаты уточнены: храм Св. Григория Богослова находится в северной части Глдани.",
-   "en": "Coordinates verified: Church of St. Gregory the Theologian is located in the northern part of Gldani.",
-   "ka": "კოორდინატები დაზუსტებულია: წმინდა გრიგოლ ღვთისმეტყველის ეკლესია მდებარეობს გლდანის ჩრდილოეთ ნაწილში."
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 140,
-  "name": {
-   "ka": "დიღმის წმ. მარინეს",
-   "ru": "Св. Марины (Дигоми)",
-   "en": "Dighomi St. Marina"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Dighomi",
-  "district": "Saburtalo",
-  "lat": 41.771749,
-  "lon": 44.736994,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1868-1899",
-  "startYear": 1868,
-  "endYear": 1899,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Древнее село Дигоми (ныне черта города).",
-   "en": "Ancient village of Digomi (now within city limits).",
-   "ka": "ძველი სოფელი დიღომი (ახლანდელი ქალაქის ფარგლებში)."
-  }
- },
- {
-  "id": 141,
-  "name": {
-   "ka": "დიდი ლილოს ღვთისმშობლის",
-   "ru": "Богоматери (Диди Лило)",
-   "en": "Didi Lilo Virgin Mary"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Didi Lilo",
-  "district": "Samgori",
-  "lat": 41.735,
-  "lon": 44.97,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1914",
-  "startYear": 1871,
-  "endYear": 1914,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Поселок Лило (родина И. Сталина).",
-   "en": "Lilo settlement (I. Stalin's birthplace).",
-   "ka": "ლილოს დასახლება (ი. სტალინის სამშობლო)."
-  }
- },
- {
-  "id": 142,
-  "name": {
-   "ka": "თელოვანის წმ. ნინოს",
-   "ru": "Св. Нино (Теловани)",
-   "en": "Telovani St. Nino"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Telovani",
-  "district": "Saburtalo",
-  "lat": 41.795,
-  "lon": 44.72,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1898",
-  "startYear": 1871,
-  "endYear": 1898,
-  "missingYears": "",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Крестово-купольный храм.",
-   "en": "Cross-domed church.",
-   "ka": "ჯვარგუმბათოვანი ეკლესია."
-  }
- },
- {
-  "id": 143,
-  "name": {
-   "ka": "პატარა ლილოს წმ. გიორგის",
-   "ru": "Св. Георгия (Патара Лило)",
-   "en": "Patara Lilo St. George"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Patara Lilo",
-  "district": "Samgori",
-  "lat": 41.72,
-  "lon": 44.95,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1921",
-  "startYear": 1871,
-  "endYear": 1921,
-  "missingYears": "1917, 1919",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 144,
-  "name": {
-   "ka": "წავკისის წმ. მარინეს",
-   "ru": "Св. Марины (Цавкиси)",
-   "en": "Tsavkisi St. Marina"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Tsavkisi",
-  "district": "Mtatsminda",
-  "lat": 41.65,
-  "lon": 44.75,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1916",
-  "startYear": 1871,
-  "endYear": 1916,
-  "missingYears": "1902, 1909-1910, 1913",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- },
- {
-  "id": 145,
-  "name": {
-   "ka": "წყნეთის წმ. გიორგის",
-   "ru": "Св. Георгия (Цхнети)",
-   "en": "Tskneti St. George"
-  },
-  "confession": "orthodox_georgian",
-  "confessionRaw": "Orthodox (Georgian Exarchate)",
-  "address": "Tskneti",
-  "district": "Vake",
-  "lat": 41.685,
-  "lon": 44.695,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1871-1909",
-  "startYear": 1871,
-  "endYear": 1909,
-  "missingYears": "1892, 1901",
-  "note": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "",
-   "en": "",
-   "ka": ""
-  }
- }
 ]
