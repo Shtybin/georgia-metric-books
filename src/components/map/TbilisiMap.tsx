@@ -167,18 +167,15 @@ export function TbilisiMap({ lang, onLangChange }: Props) {
     };
   }, []);
 
-  // Update map data on filter change
+  // Update map data on filter change (only after map source is ready)
   useEffect(() => {
+    if (!mapReady) return;
     const map = mapRef.current;
     if (!map) return;
-    const apply = () => {
-      const src = map.getSource("churches") as GeoJSONSource | undefined;
-      if (!src) return;
-      src.setData(churchFeatureCollection(filtered));
-    };
-    if (map.isStyleLoaded() && map.getSource("churches")) apply();
-    else map.once("idle", apply);
-  }, [filtered]);
+    const src = map.getSource("churches") as GeoJSONSource | undefined;
+    if (!src) return;
+    src.setData(churchFeatureCollection(filtered));
+  }, [filtered, mapReady]);
 
   const toggleConfession = (c: Confession) => {
     setEnabled((prev) => {
