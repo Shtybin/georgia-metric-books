@@ -18,11 +18,12 @@ export const BUCKET_ORDER = [
   "post-1900",
 ] as const;
 
-// Free vector style — no API key required.
-// Raster basemap fallback — CARTO Positron (free, no API key, very reliable CDN).
-// Previously used https://tiles.openfreemap.org/styles/positron, but that host
-// has been intermittently returning "Failed to fetch" for /planet.
-export const BASEMAP_STYLE: any = {
+// Основная векторная подложка — OpenFreeMap Positron (бесплатно, без ключа).
+export const BASEMAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
+
+// Фолбэк-стиль на случай, если OpenFreeMap временно недоступен.
+// Растровые тайлы CARTO Positron — другой CDN, тот же визуальный язык.
+export const BASEMAP_STYLE_FALLBACK: any = {
   version: 8,
   sources: {
     "carto-positron": {
