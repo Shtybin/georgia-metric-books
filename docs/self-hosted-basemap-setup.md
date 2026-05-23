@@ -4,15 +4,25 @@
 карты. После настройки сайт перестаёт зависеть от внешних бесплатных сервисов
 (OpenFreeMap, CARTO) — карта работает, даже если они недоступны.
 
-Что получим:
+**Что получим:**
 - Один файл `.pmtiles` (~373 МБ) со всем Кавказом (зум 0–14).
 - Шрифты Noto Sans и спрайты Protomaps.
-- Хранение и раздача через Cloudflare R2: **бесплатный egress** + 10 ГБ free tier.
+- Хранение и раздача через Cloudflare R2: 10 ГБ free tier, бесплатный
+  egress, без переноса DNS — раздача идёт с встроенного домена
+  `https://pub-<хэш>.r2.dev`.
 - Визуально — стиль `Light` от Protomaps, почти неотличим от Positron.
+
+> **Почему не свой поддомен `tiles.datatells.info`?**
+> Чтобы R2 раздавал файлы с вашего домена, нужен Cloudflare Custom Domain,
+> а он работает только если DNS домена обслуживает Cloudflare целиком.
+> Subdomain delegation через NS-записи — Enterprise-only фича
+> ([источник](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/)).
+> Переносить весь `datatells.info` c Netlify не хочется → используем
+> встроенный `r2.dev`. Его rate limit на наш трафик не влияет.
 
 ---
 
-## 0. Что я уже сделал за вас
+## 0. Что я уже подготовил за вас
 
 В `/mnt/documents/basemap/` лежат два готовых артефакта — скачайте их к себе
 на компьютер:
@@ -25,92 +35,59 @@
 
 ---
 
-## 1. Создать Cloudflare R2 bucket
+## Шаг 1. Создать аккаунт Cloudflare и активировать R2
 
-1. Зарегистрируйтесь / войдите в [Cloudflare](https://dash.cloudflare.com).
-2. В левом меню выберите **R2 Object Storage** → **Create bucket**.
-3. Название: `metrics-basemap` (или любое своё, запомните).
-4. Регион: **Automatic** (Cloudflare выберет ближайший).
-5. Нажмите **Create**.
-
-> R2 free tier: 10 ГБ хранения, 1 млн операций записи/мес, 10 млн чтения/мес,
-> **бесплатный egress без лимита** — наши ~400 МБ и трафик легко укладываются.
-
----
-
-## 2. Включить публичный доступ
-
-R2 по умолчанию приватный. Два варианта раздачи:
-
-### Вариант A — быстро, через `r2.dev` поддомен
-
-1. Откройте созданный bucket → вкладка **Settings**.
-2. В разделе **Public access** → **R2.dev subdomain** → **Allow Access**.
-3. Подтвердите. Cloudflare выдаст URL вида
-   `https://pub-xxxxxxxxxxxx.r2.dev`.
-4. Это и будет ваш `VITE_BASEMAP_BASE_URL`.
-
-⚠️ Минус: на `*.r2.dev` стоит rate limit и Cloudflare не рекомендует его для
-прода. Подойдёт чтобы быстро проверить.
-
-### Вариант B — правильно, через свой поддомен (рекомендуется)
-
-Основной домен `datatells.info` живёт на **Netlify DNS**, и переносить его
-целиком в Cloudflare не нужно (и нельзя без простоя сайта/почты).
-Вместо этого делегируем Cloudflare **только один поддомен** `tiles.datatells.info`
-— стандартная схема *subdomain delegation*. Остальные записи
-(`datatells.info`, `www`, MX и т.д.) остаются на Netlify нетронутыми.
-
-#### B.1. Завести зону в Cloudflare для поддомена
-
-1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Add a site**.
-2. В поле ввести именно **`tiles.datatells.info`** (поддомен, не корень).
-3. План — **Free**.
-4. Cloudflare покажет 2 nameserver-а вида:
-   ```
-   xxx.ns.cloudflare.com
-   yyy.ns.cloudflare.com
-   ```
-   Запишите их — пригодятся на следующем шаге.
-
-#### B.2. Делегировать поддомен из Netlify DNS
-
-1. Netlify → **Domains** → выберите `datatells.info` → **Add new record**.
-2. Создайте **две `NS`-записи** (именно NS, не CNAME и не A):
-
-   ```
-   Type: NS   Name: tiles   Value: xxx.ns.cloudflare.com   TTL: 3600
-   Type: NS   Name: tiles   Value: yyy.ns.cloudflare.com   TTL: 3600
-   ```
-
-3. Сохраните. Подождите 5–30 минут — в дашборде Cloudflare статус зоны
-   `tiles.datatells.info` сменится с **Pending** на **Active**.
-
-Проверить, что делегирование прошло, можно командой:
-```bash
-dig NS tiles.datatells.info +short
-# должно вернуть оба ns.cloudflare.com
-```
-
-#### B.3. Подключить поддомен к R2 bucket
-
-1. R2 → ваш bucket → **Settings** → **Custom Domains** → **Connect Domain**.
-2. Введите `tiles.datatells.info`.
-3. Cloudflare сам создаст CNAME в своей зоне и выпустит SSL — 2–5 минут.
-4. Это будет ваш `VITE_BASEMAP_BASE_URL=https://tiles.datatells.info`.
-
-> Что НЕ затрагивает делегирование: сам сайт `datatells.info`, `www`,
-> почта (MX), все остальные DNS-записи. Netlify продолжает обслуживать
-> корневой домен, Cloudflare — только `tiles.*` ветку.
+1. Зарегистрируйтесь / войдите на [dash.cloudflare.com](https://dash.cloudflare.com).
+2. В левом сайдбаре выберите **R2 Object Storage**.
+3. При первом заходе Cloudflare покажет экран **Purchase R2** с кнопкой
+   **Purchase R2 Plan**. Несмотря на название, это **бесплатно** — Cloudflare
+   требует привязать платёжный метод (карту), но **списания не будет**, пока
+   вы не выйдете за free tier:
+   - 10 ГБ хранения / мес
+   - 1 000 000 операций записи (Class A) / мес
+   - 10 000 000 операций чтения (Class B) / мес
+   - **0 ₽ за egress** (исходящий трафик всегда бесплатный)
+4. Добавьте карту, нажмите **Purchase**. R2 активирован.
 
 ---
 
-## 3. Настроить CORS
+## Шаг 2. Создать bucket
 
-Браузер не сможет загружать тайлы из R2 без CORS-заголовков.
+1. R2 dashboard → правый верх → кнопка **Create bucket**.
+2. **Bucket name**: `metrics-basemap` (или своё, запомните).
+3. **Location**: оставьте **Automatic** — Cloudflare выберет ближайший регион.
+4. **Default Storage Class**: **Standard**.
+5. Нажмите **Create bucket**.
 
-1. В bucket → **Settings** → **CORS Policy** → **Add CORS Policy**.
-2. Вставьте JSON:
+---
+
+## Шаг 3. Включить публичный доступ через r2.dev
+
+R2 по умолчанию приватный. Включаем встроенный публичный URL.
+
+1. Откройте только что созданный bucket → вкладка **Settings** (верхняя
+   панель вкладок: *Objects · Metrics · Settings*).
+2. Прокрутите до секции **Public access**.
+3. В подсекции **R2.dev subdomain** нажмите **Allow Access**.
+4. Откроется модалка-предупреждение: r2.dev предназначен для разработки
+   и имеет rate limit. В поле подтверждения введите слово **`allow`**
+   (Cloudflare требует это явно) и нажмите **Allow**.
+5. После подтверждения в той же секции появится **Public R2.dev Bucket URL**
+   вида:
+   ```
+   https://pub-a1b2c3d4e5f6...r2.dev
+   ```
+   **Скопируйте его** — это будет ваш `VITE_BASEMAP_BASE_URL`.
+
+---
+
+## Шаг 4. Настроить CORS
+
+Браузер не сможет загружать тайлы без CORS-заголовков.
+
+1. Тот же экран bucket → **Settings** → секция **CORS Policy** → кнопка
+   **Add CORS policy**.
+2. Откроется JSON-редактор. Вставьте:
 
 ```json
 [
@@ -118,7 +95,7 @@ dig NS tiles.datatells.info +short
     "AllowedOrigins": [
       "https://metrics.datatells.info",
       "https://georgia-metric-books.lovable.app",
-      "https://*.lovable.app",
+      "https://id-preview--06eae1c2-9965-4ed0-99ab-88840253e0d3.lovable.app",
       "http://localhost:8080",
       "http://localhost:5173"
     ],
@@ -130,13 +107,13 @@ dig NS tiles.datatells.info +short
 ]
 ```
 
-3. Сохраните. Замените домены на свои, если у вас другие.
+3. Нажмите **Save**. Если позже добавите свои домены — отредактируйте список.
 
 ---
 
-## 4. Залить файлы
+## Шаг 5. Залить файлы
 
-Структура bucket должна выглядеть так:
+Финальная структура bucket должна быть такой:
 
 ```
 metrics-basemap/
@@ -159,63 +136,95 @@ metrics-basemap/
       ...
 ```
 
-### Через веб-интерфейс (просто, но медленно)
+### Вариант A — через веб-интерфейс (проще)
 
-1. В bucket → **Objects** → **Upload**.
-2. Загрузите `georgia.pmtiles` в корень.
-3. Создайте папку `fonts` → загрузите всё из распакованной `fonts/`.
-4. Создайте папку `sprites` → загрузите всё из распакованной `sprites/`.
+1. Bucket → вкладка **Objects** → кнопка **Upload** (правый верх).
+2. У кнопки Upload есть выпадающее меню — выберите:
+   - **Upload files** → выберите `georgia.pmtiles` → загрузится в корень.
+   - **Upload folder** → выберите распакованную папку `fonts/` целиком.
+     Cloudflare сохранит структуру.
+   - Ещё раз **Upload folder** → выберите папку `sprites/`.
 
-### Через `rclone` (быстрее, рекомендуется для шрифтов)
+> ⚠️ `georgia.pmtiles` — 373 МБ. Через браузер заливается одним куском
+> (R2 поддерживает multipart upload, но веб-UI делает это автоматически).
+> На медленном интернете может занять 10–30 минут. **Не закрывайте вкладку.**
 
-```bash
-# Установить rclone (Mac: brew install rclone; Linux: apt-get install rclone)
-rclone config
-# Создайте remote типа "Cloudflare R2", укажите Account ID + Access Key + Secret
-# (генерируются в R2 → Manage R2 API Tokens → Create API token, права: Object Read & Write)
+### Вариант B — через rclone (быстрее для сотен мелких файлов шрифтов)
 
-# Залить всё разом:
-rclone copy ./georgia.pmtiles r2:metrics-basemap/ --progress
-rclone copy ./fonts r2:metrics-basemap/fonts --progress
-rclone copy ./sprites r2:metrics-basemap/sprites --progress
-```
+1. Установить rclone (mac: `brew install rclone`; linux: `apt-get install rclone`).
+2. Получить ключи API:
+   - R2 dashboard → правый сайдбар → **Manage R2 API Tokens** → **Create
+     API token**.
+   - **Token name**: `rclone-upload`.
+   - **Permissions**: **Object Read & Write**.
+   - **Specify bucket(s)**: выберите `metrics-basemap` (ограничьте scope).
+   - **TTL**: можно оставить пустым.
+   - Нажмите **Create API Token** → Cloudflare покажет:
+     - **Access Key ID**
+     - **Secret Access Key**
+     - **Use jurisdiction-specific endpoints for S3 Clients** — там же
+       будет ваш Account ID и endpoint `https://<account>.r2.cloudflarestorage.com`.
+   - **Скопируйте всё сразу — Secret больше не покажут.**
+3. Сконфигурировать rclone:
+   ```bash
+   rclone config
+   # n) New remote
+   # name> r2
+   # Storage> s3
+   # provider> Cloudflare
+   # env_auth> false
+   # access_key_id> <Access Key ID из шага 2>
+   # secret_access_key> <Secret Access Key>
+   # region> auto
+   # endpoint> https://<account>.r2.cloudflarestorage.com
+   # остальное — Enter (по умолчанию)
+   ```
+4. Залить:
+   ```bash
+   rclone copy ./georgia.pmtiles r2:metrics-basemap/ --progress
+   rclone copy ./fonts r2:metrics-basemap/fonts --progress
+   rclone copy ./sprites r2:metrics-basemap/sprites --progress
+   ```
 
 ---
 
-## 5. Проверить, что работает
+## Шаг 6. Проверить, что файлы отдаются
 
-Откройте в браузере:
+Откройте в браузере (подставьте свой `pub-xxx.r2.dev`):
 
-- `https://<ваш-URL>/georgia.pmtiles` — должен начать качаться (или вернуть
-  ответ с `Content-Type: application/octet-stream`).
-- `https://<ваш-URL>/fonts/Noto%20Sans%20Regular/0-255.pbf` — должен вернуть
-  PBF файл (бинарный).
-- `https://<ваш-URL>/sprites/v4/light.json` — должен вернуть JSON.
+- `https://pub-xxx.r2.dev/georgia.pmtiles` — должен начать скачиваться
+  (или вернуть ответ с `Content-Type: application/octet-stream`).
+- `https://pub-xxx.r2.dev/fonts/Noto%20Sans%20Regular/0-255.pbf` — должен
+  вернуть бинарный PBF.
+- `https://pub-xxx.r2.dev/sprites/v4/light.json` — должен вернуть JSON.
 
-Если что-то возвращает 403 — проверьте, что Public Access включён.
-Если 404 на шрифт — проверьте, что папка названа в точности `Noto Sans Regular`
-(с пробелами, без подчёркиваний).
+| Что вернулось | Что не так |
+|---|---|
+| `403 Forbidden` | Public Access не активирован (шаг 3) |
+| `404 Not Found` на шрифт | Папка названа неправильно — должна быть `Noto Sans Regular` с пробелами, не `Noto_Sans_Regular` |
+| `404` на `georgia.pmtiles` | Файл не в корне bucket, а в подпапке |
 
 ---
 
-## 6. Прописать URL в проекте
+## Шаг 7. Прописать URL в проекте
 
 В файле `.env` (в корне проекта) добавьте:
 
 ```
-VITE_BASEMAP_BASE_URL=https://tiles.datatells.info
+VITE_BASEMAP_BASE_URL=https://pub-xxxxxxxxxxxxxxxxx.r2.dev
 ```
 
-(или ваш `pub-xxx.r2.dev`)
+Перезапустите dev-сервер (не hot reload, а полный `bun dev` заново).
+На продакшене — задеплойте, переменная подхватится автоматически.
 
-Перезапустите dev-сервер / задеплойте — карта должна загрузиться.
+После этого карта должна загрузиться вместо белой подложки.
 
 ---
 
-## 7. Обновление подложки в будущем
+## Шаг 8. Обновление подложки в будущем
 
-Protomaps пересобирает мир еженедельно (`https://build.protomaps.com/YYYYMMDD.pmtiles`).
-Чтобы обновить данные:
+Protomaps пересобирает мир еженедельно
+(`https://build.protomaps.com/YYYYMMDD.pmtiles`). Чтобы обновить данные:
 
 ```bash
 # Скачать pmtiles CLI: https://github.com/protomaps/go-pmtiles/releases
@@ -231,26 +240,29 @@ CLI скачивает только нужный регион (через HTTP r
 ## Troubleshooting
 
 **Карта белая, в консоли `Failed to fetch ... pmtiles`**
-→ CORS не настроен, либо URL не совпадает с тем, что в `.env`.
+→ CORS не настроен, либо URL в `.env` не совпадает с тем, что в R2.
 
 **Карта без подписей городов**
-→ Не загрузились шрифты. Проверьте `/fonts/Noto%20Sans%20Regular/0-255.pbf`.
+→ Не загрузились шрифты. Проверьте `/fonts/Noto%20Sans%20Regular/0-255.pbf`
+в браузере — должен возвращать PBF.
 
 **Карта серая, без иконок POI**
-→ Не загрузились спрайты. Проверьте, что `sprites/v4/light.json` доступен.
+→ Не загрузились спрайты. Проверьте `/sprites/v4/light.json`.
 
 **`VITE_BASEMAP_BASE_URL is not set` в консоли**
 → Переменная не подхватилась. После добавления в `.env` нужен полный
 перезапуск vite-сервера (не hot reload).
 
-**Зона `tiles.datatells.info` в Cloudflare висит Pending больше часа**
-→ NS-записи в Netlify не подхватились. Проверьте:
-```bash
-dig NS tiles.datatells.info +short
-```
-Должны вернуться оба `*.ns.cloudflare.com`. Если возвращается пусто или
-NS родительского домена — перепроверьте имя записи в Netlify (должно быть
-именно `tiles`, не `tiles.datatells.info`) и TTL (≤ 3600).
+**HTTP 429 / Too Many Requests от `pub-xxx.r2.dev`**
+→ Достигли rate limit r2.dev. На нашем трафике это маловероятно, но если
+случится — варианты:
+1. Перенести `datatells.info` целиком на Cloudflare DNS (Netlify
+   продолжит хостить сайт через A-запись на их load balancer) и
+   подключить R2 Custom Domain `tiles.datatells.info`.
+2. Перейти на Bunny.net Storage + CDN (~$0.01/ГБ, поддерживает CNAME
+   с любого DNS, не требует переноса домена).
 
-**R2 → Connect Domain не даёт подключить `tiles.datatells.info`**
-→ Зона ещё не Active. Дождитесь статуса Active в Cloudflare, потом повторите.
+**Не вижу кнопки `Allow Access` в Public access**
+→ Возможно, в вашем аккаунте уже отключена возможность r2.dev
+(администратор Cloudflare мог отключить на уровне аккаунта в
+**R2 → Settings → Managed public buckets**). Включите там же.
