@@ -21,51 +21,10 @@ export const BUCKET_ORDER = [
 // Основная векторная подложка — OpenFreeMap Positron (бесплатно, без ключа).
 export const BASEMAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 
-// Фолбэк-стиль на случай, если OpenFreeMap временно недоступен.
-// Растровые тайлы CARTO Positron — другой CDN, тот же визуальный язык.
-export const BASEMAP_STYLE_FALLBACK: any = {
-  version: 8,
-  sources: {
-    "carto-positron": {
-      type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-        "https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-      ],
-      tileSize: 256,
-      attribution:
-        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-    },
-  },
-  layers: [{ id: "carto-positron", type: "raster", source: "carto-positron" }],
-};
-
-/**
- * Подключает автоматический фолбэк: если основной стиль (OpenFreeMap)
- * не загрузился из-за сетевой ошибки — переключает карту на CARTO Positron.
- * Срабатывает один раз за жизнь карты.
- */
-export function attachBasemapFallback(map: any) {
-  let switched = false;
-  const onError = (e: any) => {
-    if (switched) return;
-    const err = e?.error || e;
-    const url: string | undefined = err?.url || err?.message;
-    if (typeof url === "string" && url.includes("openfreemap.org")) {
-      switched = true;
-      // eslint-disable-next-line no-console
-      console.warn("[basemap] OpenFreeMap unreachable — switching to CARTO fallback");
-      try {
-        map.setStyle(BASEMAP_STYLE_FALLBACK, { diff: false });
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error("[basemap] fallback switch failed", err);
-      }
-    }
-  };
-  map.on("error", onError);
+// No-op: фолбэк отключён по требованию. Если OpenFreeMap недоступен —
+// карта остаётся белой, пока не разберёмся с источником.
+export function attachBasemapFallback(_map: any) {
+  // intentionally empty
 }
 
 export const colorExpression: any = [
