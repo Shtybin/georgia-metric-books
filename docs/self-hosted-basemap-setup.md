@@ -87,7 +87,10 @@ R2 по умолчанию приватный. Включаем встроенн
 
 1. Тот же экран bucket → **Settings** → секция **CORS Policy** → кнопка
    **Add CORS policy**.
-2. Откроется JSON-редактор. Вставьте:
+2. Откроется JSON-редактор. Вставьте **ровно этот** JSON (Cloudflare R2
+   валидатор строгий: не любит `"*"` в `AllowedHeaders`, любит явный
+   список; origins должны быть в формате `scheme://host[:port]` без
+   завершающего слэша):
 
 ```json
 [
@@ -95,19 +98,28 @@ R2 по умолчанию приватный. Включаем встроенн
     "AllowedOrigins": [
       "https://metrics.datatells.info",
       "https://georgia-metric-books.lovable.app",
-      "https://id-preview--06eae1c2-9965-4ed0-99ab-88840253e0d3.lovable.app",
       "http://localhost:8080",
       "http://localhost:5173"
     ],
     "AllowedMethods": ["GET", "HEAD"],
-    "AllowedHeaders": ["*"],
-    "ExposeHeaders": ["ETag", "Content-Length", "Content-Range"],
+    "AllowedHeaders": ["Range", "If-Match", "If-None-Match"],
+    "ExposeHeaders": ["ETag", "Content-Length", "Content-Range", "Accept-Ranges"],
     "MaxAgeSeconds": 86400
   }
 ]
 ```
 
-3. Нажмите **Save**. Если позже добавите свои домены — отредактируйте список.
+3. Нажмите **Save**.
+
+> **Если получили `This policy is not valid`:**
+> - Уберите все origins со звёздочкой (`*` и `*.lovable.app` Cloudflare R2
+>   в dashboard не принимает — только точные URL).
+> - Origin не должен заканчиваться `/`.
+> - Не используйте `"*"` в `AllowedHeaders` — Cloudflare хочет явный список
+>   имён заголовков.
+> - Превью-URL Lovable меняется при каждом деплое. Если вам нужно
+>   подключить превью-домен — добавьте его точное значение отдельной
+>   строкой в `AllowedOrigins`.
 
 ---
 
