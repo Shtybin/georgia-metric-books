@@ -25,6 +25,7 @@ export function AdminMiniMap({ lat, lon, zoom, className }: Props) {
       interactive: false,
       attributionControl: false,
     });
+    attachBasemapFallback(map);
     mapRef.current = map;
     new maplibregl.Marker({ color: "#D55E00" }).setLngLat([lon, lat]).addTo(map);
     return () => {
