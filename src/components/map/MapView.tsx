@@ -16,6 +16,7 @@ import { MissingYearsSuggestionDialog } from "./MissingYearsSuggestionDialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
   BASEMAP_STYLE,
+  attachBasemapFallback,
   BUCKET_COLORS,
   BUCKET_ORDER,
   colorExpression,
