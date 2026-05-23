@@ -1,6 +1,3 @@
-import { Protocol } from "pmtiles";
-import maplibregl from "maplibre-gl";
-import layers from "protomaps-themes-base";
 import type { StyleSpecification } from "maplibre-gl";
 
 // Okabe-Ito categorical palette for start-year buckets.
@@ -24,82 +21,37 @@ export const BUCKET_ORDER = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Self-hosted Protomaps basemap (план Б).
+// Подложка карты: Stadia Maps — Alidade Smooth.
 //
-// Подложка раздаётся одним файлом `.pmtiles` с нашего собственного хранилища
-// (Cloudflare R2). Это убирает зависимость от чужих тайл-серверов
-// (OpenFreeMap, CARTO) — карта работает даже если они лежат.
+// Готовый хостинг тайлов + стиль; визуально близок к Positron/CARTO Light,
+// без необходимости самим заливать pmtiles.
 //
-// Конфигурация — через одну переменную окружения:
-//   VITE_BASEMAP_BASE_URL = https://tiles.datatells.info
-// На этом домене должны лежать:
-//   /georgia.pmtiles
-//   /fonts/{fontstack}/{range}.pbf
-//   /sprites/v4/light(.json|.png|@2x.json|@2x.png)
+// Лимиты бесплатного тарифа Stadia (на момент 2025):
+//   - 200 000 запросов тайлов в месяц
+//   - без карты у пользователя → нужен API ключ для прод-домена
+//   - localhost / *.lovable.app / *.netlify.app работают БЕЗ ключа
+//     (разрешённые dev-домены)
 //
-// Подробная инструкция по заливке на R2: docs/self-hosted-basemap-setup.md
+// Регистрация: https://client.stadiamaps.com/signup/
+// После регистрации в Property → "Authentication Configuration" добавить:
+//   - metrics.datatells.info
+//   - georgia-metric-books.lovable.app
+// Ключ положить в env как VITE_STADIA_API_KEY.
+//
+// Если ключ не задан — стиль грузится без него (работает на dev-доменах).
 // ---------------------------------------------------------------------------
 
-const BASEMAP_BASE_URL =
-  (import.meta.env.VITE_BASEMAP_BASE_URL as string | undefined)?.replace(/\/$/, "") || "";
+const STADIA_API_KEY = (import.meta.env.VITE_STADIA_API_KEY as string | undefined) || "";
 
-// Регистрируем `pmtiles://` протокол для MapLibre один раз на загрузку модуля.
-let protocolRegistered = false;
-function ensurePmtilesProtocol() {
-  if (protocolRegistered) return;
-  const protocol = new Protocol();
-  maplibregl.addProtocol("pmtiles", protocol.tile);
-  protocolRegistered = true;
-}
+const STADIA_STYLE_URL = STADIA_API_KEY
+  ? `https://tiles.stadiamaps.com/styles/alidade_smooth.json?api_key=${STADIA_API_KEY}`
+  : "https://tiles.stadiamaps.com/styles/alidade_smooth.json";
 
-function buildStyle(): StyleSpecification {
-  // Стиль слоёв (земля, вода, дороги, подписи) генерируется готовым пресетом
-  // protomaps-themes-base — он визуально близок к Positron.
-  const sourceName = "protomaps";
-  const styleLayers = layers(sourceName, "light", "en");
-  return {
-    version: 8,
-    glyphs: `${BASEMAP_BASE_URL}/fonts/{fontstack}/{range}.pbf`,
-    sprite: `${BASEMAP_BASE_URL}/sprites/v4/light`,
-    sources: {
-      [sourceName]: {
-        type: "vector",
-        url: `pmtiles://${BASEMAP_BASE_URL}/georgia.pmtiles`,
-        attribution:
-          '© <a href="https://openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>',
-      },
-    },
-    layers: styleLayers,
-  };
-}
+// MapLibre принимает либо StyleSpecification, либо строку с URL стиля.
+// Стиль Alidade Smooth — это полноценный JSON, который MapLibre сам скачает.
+export const BASEMAP_STYLE: StyleSpecification | string = STADIA_STYLE_URL;
 
-// Пустой стиль — используется, если VITE_BASEMAP_BASE_URL не задан.
-// Карта остаётся белой, ничего не падает.
-const EMPTY_STYLE: StyleSpecification = {
-  version: 8,
-  sources: {},
-  layers: [
-    { id: "background", type: "background", paint: { "background-color": "#ffffff" } },
-  ],
-};
-
-export const BASEMAP_STYLE: StyleSpecification = (() => {
-  if (!BASEMAP_BASE_URL) {
-    if (typeof console !== "undefined") {
-      console.warn(
-        "[basemap] VITE_BASEMAP_BASE_URL is not set — map will render blank. " +
-          "See docs/self-hosted-basemap-setup.md to configure the self-hosted Protomaps basemap.",
-      );
-    }
-    return EMPTY_STYLE;
-  }
-  ensurePmtilesProtocol();
-  return buildStyle();
-})();
-
-// Совместимость: ранее этот хелпер подключал автоматический фолбэк на CARTO,
-// сейчас не нужен — собственная подложка надёжна. Оставляем no-op чтобы не
-// ломать существующие вызовы в TbilisiMap / MapView / mini-map компонентах.
+// Совместимость со старыми вызовами — больше не нужен фолбэк, оставляем no-op.
 export function attachBasemapFallback(_map: unknown) {
   // intentionally empty
 }
