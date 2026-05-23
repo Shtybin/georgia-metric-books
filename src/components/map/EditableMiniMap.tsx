@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { BASEMAP_STYLE } from "@/lib/map-style";
+import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
 
 interface Props {
   lat: number;
