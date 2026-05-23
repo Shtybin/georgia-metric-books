@@ -1,83 +1,77 @@
-# План Б: Собственная подложка на Protomaps + Cloudflare R2
+# План: подключение R2 к tiles.datatells.info без переноса основного домена
 
-Полностью убираем зависимость от чужих тайл-серверов (OpenFreeMap, CARTO). Хостим один файл `.pmtiles` с регионом Кавказа на Cloudflare R2 и рендерим его клиентом через `protomaps-leaflet` / `pmtiles` плагин для MapLibre. Выглядит практически как нынешний Positron, шрифты те же (Noto Sans), плавный векторный зум.
+Основной домен `datatells.info` остаётся на Netlify DNS — туда не лезем.
+В Cloudflare заводим **только зону для одного поддомена** `tiles.datatells.info`,
+а в Netlify добавляем NS-записи, которые делегируют этот поддомен Cloudflare.
+Это стандартная схема subdomain delegation, она не ломает ни сайт на Netlify,
+ни почту, ни остальные DNS-записи.
 
----
+## Шаги (выполняет пользователь, я обновляю только документацию)
 
-## Что получим
+### 1. Cloudflare: создать зону для поддомена
+1. Cloudflare Dashboard → **Add a site** → ввести `tiles.datatells.info`
+   (именно поддомен, не корень).
+2. План — **Free**.
+3. Cloudflare выдаст 2 nameserver-а вида
+   `xxx.ns.cloudflare.com` и `yyy.ns.cloudflare.com`. Записать.
 
-- Карта работает, даже если OpenFreeMap, CARTO и любые другие сервисы лежат.
-- Нулевая стоимость на нашем трафике (R2 free tier: 10 ГБ хранения, 1 млн запросов класса A / 10 млн класса B в месяц, **бесплатный egress** — это ключевое отличие R2 от S3).
-- Тот же визуальный язык: «Light» стиль Protomaps ≈ Positron.
-- Контроль над шрифтами и спрайтами (тоже на R2).
+### 2. Netlify DNS: делегировать поддомен
+В панели Netlify → Domains → `datatells.info` → **Add new record**, создать
+**две NS-записи**:
 
-## Что сделаем — шаги
+```
+Type: NS   Name: tiles   Value: xxx.ns.cloudflare.com   TTL: 3600
+Type: NS   Name: tiles   Value: yyy.ns.cloudflare.com   TTL: 3600
+```
 
-### 1. Подготовка `.pmtiles` (один раз, локально)
+Всё. С этого момента Cloudflare управляет только `tiles.datatells.info`
+и его под-под-доменами, остальной DNS живёт на Netlify.
 
-- Скачать готовый билд мира Protomaps (`build-YYYYMMDD.pmtiles`, ~120 ГБ) **не нужно**. Вместо этого:
-- Использовать утилиту `pmtiles extract` чтобы вырезать только нужный bbox — Грузия + соседние районы Армении/Азербайджана/Турции/России (примерно lon 39–48, lat 38–44).
-- Результат: один файл `georgia.pmtiles` весом ~50–200 МБ (зависит от max zoom; для нашей карты достаточно z0–z14).
-- Файл кладём в `/mnt/documents/` для скачивания, дальше — на R2.
+Подождать 5–30 минут пока Cloudflare увидит делегирование
+(в дашборде статус зоны станет **Active**).
 
-### 2. Cloudflare R2 bucket
+### 3. R2: bucket + публичный доступ + custom domain
+1. Cloudflare → R2 → **Create bucket** `metrics-basemap`.
+2. Settings → **Custom Domains** → **Connect Domain** → ввести
+   `tiles.datatells.info`. Cloudflare сам создаст CNAME внутри своей зоны
+   и выпустит SSL за пару минут.
+3. Settings → **CORS Policy** — вставить JSON со списком наших origin-ов
+   (как в текущей инструкции).
 
-- Пользователь создаёт bucket `metrics-basemap` в своём Cloudflare аккаунте.
-- Включает **public access** через `r2.dev` поддомен (или привязывает свой поддомен, например `tiles.datatells.info`).
-- Включает CORS для `metrics.datatells.info` и preview-доменов Lovable.
-- Заливает `georgia.pmtiles` + папки `fonts/` (Noto Sans PBF glyphs) и `sprites/` (иконки Protomaps).
-- Подробную пошаговую инструкцию я приложу отдельным `.md` файлом — пользователю нужно будет выполнить её вручную (Lovable не имеет доступа к чужому Cloudflare).
+### 4. Залить файлы в bucket
+Через rclone или веб-интерфейс — структура та же:
+```
+metrics-basemap/
+  georgia.pmtiles
+  fonts/Noto Sans Regular/0-255.pbf  ...
+  sprites/v4/light.json  ...
+```
 
-### 3. Интеграция в код
+### 5. Прописать URL в проекте
+`.env`:
+```
+VITE_BASEMAP_BASE_URL=https://tiles.datatells.info
+```
 
-- `bun add pmtiles` — официальный пакет, регистрирует `pmtiles://` протокол в MapLibre.
-- В `src/lib/map-style.ts`:
-  - Импортировать `pmtiles` и зарегистрировать протокол один раз при старте.
-  - Заменить `BASEMAP_STYLE` на полноценный MapLibre style-объект, который ссылается на `pmtiles://https://tiles.datatells.info/georgia.pmtiles` как vector source.
-  - Стиль слоёв (земля, вода, дороги, подписи) взять из готового пресета `protomaps-themes-base` (npm пакет, который генерит layers под выбранный flavor — `light`, `dark`, `white`, `grayscale`). Берём `light` — он ближе всего к Positron.
-  - `glyphs` и `sprite` указывают на наш R2 (`https://tiles.datatells.info/fonts/{fontstack}/{range}.pbf`).
-- `attachBasemapFallback` оставляем no-op (или вообще убираем — теперь не нужен).
+Карта подхватится после редеплоя.
 
-### 4. Конфигурация через env
+## Что я меняю в коде
 
-URL тайлов выносим в `VITE_BASEMAP_PMTILES_URL`, чтобы можно было переключать между «локальной» dev-копией и продом без правок кода.
+Только документация — никакого React-кода трогать не нужно, реализация в
+`src/lib/map-style.ts` уже готова и не зависит от способа делегирования.
 
-### 5. Проверка
+- `docs/self-hosted-basemap-setup.md` — переписать раздел «Включить публичный
+  доступ»:
+  - убрать вариант «перенести весь домен в Cloudflare»;
+  - оставить **Вариант A** (`r2.dev` поддомен) как быстрый тест;
+  - заменить **Вариант B** на новый — **subdomain delegation**: шаги 1–3 выше
+    с конкретными скриншотными ориентирами в Netlify и Cloudflare;
+  - добавить troubleshooting: «зона в Cloudflare висит Pending» → проверить
+    NS-записи в Netlify через `dig NS tiles.datatells.info`.
 
-- Открыть `/map` и `/tbilisi`, убедиться что подложка грузится, подписи на месте, зум плавный.
-- Проверить mini-карты в админке.
-- Проверить, что при искусственной 404 на pmtiles карта остаётся белой (а не падает).
+## Что НЕ трогаем
 
----
-
-## Что потребуется от пользователя
-
-1. Аккаунт Cloudflare (бесплатный).
-2. Создать R2 bucket и публичный поддомен (по инструкции, которую я подготовлю).
-3. Залить туда 3 артефакта (pmtiles + fonts + sprites) — я их сгенерирую и положу в `/mnt/documents/` готовыми.
-4. Сообщить мне финальный URL — я подставлю его в `.env`.
-
-## Технические детали (для справки)
-
-- **Пакеты:** `pmtiles` (протокол), `protomaps-themes-base` (готовые слои стиля).
-- **Шрифты:** Noto Sans Regular + Medium + Italic в формате SDF PBF (стандарт MapLibre). Скачиваются одним архивом из `protomaps/basemaps-assets` репо.
-- **Файлы, которые поменяю:**
-  - `src/lib/map-style.ts` — основная переработка (style-объект, регистрация протокола).
-  - `package.json` — добавятся `pmtiles`, `protomaps-themes-base`.
-  - `.env.example` — добавлю `VITE_BASEMAP_PMTILES_URL`.
-  - `src/components/map/TbilisiMap.tsx`, `MapView.tsx`, `EditableMiniMap.tsx`, `AdminMiniMap.tsx` — мелкие правки: убрать импорты `attachBasemapFallback`, если решим его удалить.
-  - Новый файл `docs/self-hosted-basemap-setup.md` — инструкция по R2.
-
-## Что НЕ будем трогать
-
-- Слой исторической карты Тбилиси 1898 г. (он уже растровый, отдельный).
-- Логику кластеров, точек, фильтров, поиска.
-- Базу данных.
-
----
-
-## Альтернатива внутри плана Б
-
-Если не хочется возиться с Cloudflare R2 — можно положить `georgia.pmtiles` прямо в `public/` репозитория и раздавать его через Lovable hosting. Минусы: файл (~100 МБ) попадёт в git, замедлит деплой, и нагрузит наш собственный домен. R2 предпочтительнее, но это запасной запасной вариант.
-
-После вашего «ок» — начну с шага 1 (генерация pmtiles + assets) и подготовлю файлы и инструкцию для R2.
+- `src/lib/map-style.ts`, компоненты карты, регистрация `pmtiles://` —
+  всё это уже работает и не зависит от того, как настроен DNS.
+- Основные DNS-записи `datatells.info` в Netlify (A, MX, TXT и т.д.).
+- Деплой и хостинг сайта — он продолжает жить на Netlify/Lovable.
