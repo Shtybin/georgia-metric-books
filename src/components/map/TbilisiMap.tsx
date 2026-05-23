@@ -712,12 +712,9 @@ export function TbilisiMap({
                 <dd>{localizeAddress(selected.address, lang)}</dd>
               </>
             )}
-            {selected.district && (
-              <>
-                <dt className="text-muted-foreground">{T.fields.district}</dt>
-                <dd>{localizeDistrict(selected.district, lang)}</dd>
-              </>
-            )}
+            {/* Modern admin district (e.g. "Isani") intentionally hidden —
+                the address field already carries the historical quarter
+                (e.g. "Avlabari"), and showing both confused users. */}
             <dt className="text-muted-foreground">{T.fields.recordYears}</dt>
             <dd>{selected.recordYears || "—"}</dd>
             {selected.missingYears && (
