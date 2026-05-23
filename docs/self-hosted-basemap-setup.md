@@ -125,6 +125,13 @@ R2 по умолчанию приватный. Включаем встроенн
 
 ## Шаг 5. Залить файлы
 
+> ⚠️ **Важно про лимит R2 web-UI: 300 МБ на файл.**
+> `georgia.pmtiles` весит **373 МБ**, поэтому через браузерный
+> «Upload» его залить **нельзя** — Cloudflare прямо пишет:
+> *«Files larger than 300 MB can be uploaded using the S3
+> Compatibility API or Workers»*. Используем `rclone` — он же
+> заодно быстро зальёт сотни мелких файлов шрифтов.
+
 Финальная структура bucket должна быть такой:
 
 ```
@@ -148,55 +155,119 @@ metrics-basemap/
       ...
 ```
 
-### Вариант A — через веб-интерфейс (проще)
+### Вариант A — rclone (основной, нужен для pmtiles)
 
-1. Bucket → вкладка **Objects** → кнопка **Upload** (правый верх).
-2. У кнопки Upload есть выпадающее меню — выберите:
-   - **Upload files** → выберите `georgia.pmtiles` → загрузится в корень.
-   - **Upload folder** → выберите распакованную папку `fonts/` целиком.
-     Cloudflare сохранит структуру.
-   - Ещё раз **Upload folder** → выберите папку `sprites/`.
+#### A.1. Установить rclone
 
-> ⚠️ `georgia.pmtiles` — 373 МБ. Через браузер заливается одним куском
-> (R2 поддерживает multipart upload, но веб-UI делает это автоматически).
-> На медленном интернете может занять 10–30 минут. **Не закрывайте вкладку.**
+```bash
+# macOS
+brew install rclone
 
-### Вариант B — через rclone (быстрее для сотен мелких файлов шрифтов)
+# Linux (Debian/Ubuntu)
+sudo apt-get install rclone
 
-1. Установить rclone (mac: `brew install rclone`; linux: `apt-get install rclone`).
-2. Получить ключи API:
-   - R2 dashboard → правый сайдбар → **Manage R2 API Tokens** → **Create
-     API token**.
+# Windows
+choco install rclone
+# либо скачать с https://rclone.org/downloads/
+```
+
+Проверить: `rclone version` (должно быть ≥ 1.60).
+
+#### A.2. Получить ключи R2 API
+
+1. R2 dashboard → **правый верх** → кнопка **{ } API** →
+   **Manage API tokens** → **Create API token**.
+2. Заполнить форму:
    - **Token name**: `rclone-upload`.
    - **Permissions**: **Object Read & Write**.
-   - **Specify bucket(s)**: выберите `metrics-basemap` (ограничьте scope).
-   - **TTL**: можно оставить пустым.
-   - Нажмите **Create API Token** → Cloudflare покажет:
-     - **Access Key ID**
-     - **Secret Access Key**
-     - **Use jurisdiction-specific endpoints for S3 Clients** — там же
-       будет ваш Account ID и endpoint `https://<account>.r2.cloudflarestorage.com`.
-   - **Скопируйте всё сразу — Secret больше не покажут.**
-3. Сконфигурировать rclone:
-   ```bash
-   rclone config
-   # n) New remote
-   # name> r2
-   # Storage> s3
-   # provider> Cloudflare
-   # env_auth> false
-   # access_key_id> <Access Key ID из шага 2>
-   # secret_access_key> <Secret Access Key>
-   # region> auto
-   # endpoint> https://<account>.r2.cloudflarestorage.com
-   # остальное — Enter (по умолчанию)
-   ```
-4. Залить:
-   ```bash
-   rclone copy ./georgia.pmtiles r2:metrics-basemap/ --progress
-   rclone copy ./fonts r2:metrics-basemap/fonts --progress
-   rclone copy ./sprites r2:metrics-basemap/sprites --progress
-   ```
+   - **Specify bucket(s)**: **Apply to specific buckets only** →
+     выбрать `metrics-basemap` (ограничивает scope ключа).
+   - **TTL**: оставить пустым (бессрочный) или поставить дату.
+3. Нажать **Create API Token**. Cloudflare покажет:
+   - **Access Key ID** (~32 hex символа)
+   - **Secret Access Key** (~64 символа)
+   - **Use jurisdiction-specific endpoints for S3 Clients** — там же
+     endpoint вида `https://<account-id>.r2.cloudflarestorage.com`.
+4. **СКОПИРУЙТЕ ВСЁ СРАЗУ В БЛОКНОТ.** Secret Cloudflare больше
+   не покажет — закроете окно, придётся пересоздавать токен.
+
+Где найти **Account ID** отдельно, если потеряли: R2 dashboard →
+любой bucket → вкладка **Settings** → блок **Bucket details** →
+строка **S3 API** содержит URL вида
+`https://<account-id>.r2.cloudflarestorage.com/metrics-basemap`.
+
+#### A.3. Сконфигурировать rclone remote
+
+Запустите `rclone config` и отвечайте по порядку:
+
+```
+n) New remote
+name> r2
+Storage> s3                         (вводите цифру s3 или "s3")
+provider> Cloudflare                (выбрать из списка)
+env_auth> 1                         (Enter access key / secret pair)
+access_key_id> <Access Key ID>
+secret_access_key> <Secret Access Key>
+region> auto
+endpoint> https://<account-id>.r2.cloudflarestorage.com
+location_constraint>                (оставить пустым, Enter)
+acl>                                (Enter — пусто, R2 ACL не использует)
+Edit advanced config? n
+Keep this "r2" remote? y
+q) Quit config
+```
+
+Проверить, что remote работает:
+```bash
+rclone lsd r2:
+# должен показать metrics-basemap
+```
+
+#### A.4. Залить файлы
+
+```bash
+# Перейти в папку, где лежат скачанные артефакты:
+cd /path/to/basemap   # тут лежат georgia.pmtiles, fonts/, sprites/
+
+# Большой файл (373 МБ) — multipart upload chunks по 100 МБ.
+# Если оборвётся — просто запустите снова, rclone докачает.
+rclone copy ./georgia.pmtiles r2:metrics-basemap/ \
+  --progress \
+  --s3-upload-cutoff 100M \
+  --s3-chunk-size 100M \
+  --s3-upload-concurrency 4
+
+# Шрифты — сотни мелких файлов, лучше с параллелизмом:
+rclone copy ./fonts r2:metrics-basemap/fonts \
+  --progress --transfers 16 --checkers 16
+
+# Спрайты — десяток файлов:
+rclone copy ./sprites r2:metrics-basemap/sprites --progress
+```
+
+#### A.5. Проверить, что всё на месте
+
+```bash
+rclone size r2:metrics-basemap
+# Total objects: ~250
+# Total size: ~383 MiB
+```
+
+Если число объектов и размер примерно совпадают — заливка прошла.
+
+### Вариант B — веб-UI (только для fonts/ и sprites/)
+
+Подходит, если уже залили `georgia.pmtiles` через rclone и хочется
+дозалить мелкие папки без терминала. **Для самого `georgia.pmtiles`
+не работает** — лимит 300 МБ.
+
+1. Bucket → вкладка **Objects** → **Upload** (правый верх).
+2. В выпадающем меню рядом с Upload:
+   - **Upload folder** → выберите распакованную папку `fonts/` целиком.
+     Cloudflare сохранит структуру.
+   - Ещё раз **Upload folder** → папка `sprites/`.
+
+---
 
 ---
 
