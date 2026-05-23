@@ -42,6 +42,32 @@ export const BASEMAP_STYLE_FALLBACK: any = {
   layers: [{ id: "carto-positron", type: "raster", source: "carto-positron" }],
 };
 
+/**
+ * Подключает автоматический фолбэк: если основной стиль (OpenFreeMap)
+ * не загрузился из-за сетевой ошибки — переключает карту на CARTO Positron.
+ * Срабатывает один раз за жизнь карты.
+ */
+export function attachBasemapFallback(map: any) {
+  let switched = false;
+  const onError = (e: any) => {
+    if (switched) return;
+    const err = e?.error || e;
+    const url: string | undefined = err?.url || err?.message;
+    if (typeof url === "string" && url.includes("openfreemap.org")) {
+      switched = true;
+      // eslint-disable-next-line no-console
+      console.warn("[basemap] OpenFreeMap unreachable — switching to CARTO fallback");
+      try {
+        map.setStyle(BASEMAP_STYLE_FALLBACK, { diff: false });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("[basemap] fallback switch failed", err);
+      }
+    }
+  };
+  map.on("error", onError);
+}
+
 export const colorExpression: any = [
   "match",
   ["get", "bucket"],
