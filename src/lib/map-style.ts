@@ -19,8 +19,27 @@ export const BUCKET_ORDER = [
 ] as const;
 
 // Free vector style — no API key required.
-export const BASEMAP_STYLE =
-  "https://tiles.openfreemap.org/styles/positron";
+// Raster basemap fallback — CARTO Positron (free, no API key, very reliable CDN).
+// Previously used https://tiles.openfreemap.org/styles/positron, but that host
+// has been intermittently returning "Failed to fetch" for /planet.
+export const BASEMAP_STYLE: any = {
+  version: 8,
+  sources: {
+    "carto-positron": {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+        "https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+      ],
+      tileSize: 256,
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+    },
+  },
+  layers: [{ id: "carto-positron", type: "raster", source: "carto-positron" }],
+};
 
 export const colorExpression: any = [
   "match",
