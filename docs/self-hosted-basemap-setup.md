@@ -242,3 +242,15 @@ CLI скачивает только нужный регион (через HTTP r
 **`VITE_BASEMAP_BASE_URL is not set` в консоли**
 → Переменная не подхватилась. После добавления в `.env` нужен полный
 перезапуск vite-сервера (не hot reload).
+
+**Зона `tiles.datatells.info` в Cloudflare висит Pending больше часа**
+→ NS-записи в Netlify не подхватились. Проверьте:
+```bash
+dig NS tiles.datatells.info +short
+```
+Должны вернуться оба `*.ns.cloudflare.com`. Если возвращается пусто или
+NS родительского домена — перепроверьте имя записи в Netlify (должно быть
+именно `tiles`, не `tiles.datatells.info`) и TTL (≤ 3600).
+
+**R2 → Connect Domain не даёт подключить `tiles.datatells.info`**
+→ Зона ещё не Active. Дождитесь статуса Active в Cloudflare, потом повторите.
