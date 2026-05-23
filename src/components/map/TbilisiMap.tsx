@@ -190,6 +190,7 @@ export function TbilisiMap({
       attributionControl: { compact: true },
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
+    attachBasemapFallback(map);
     map.on("load", () => {
       // Historical 1898 raster (below everything else but the basemap)
       if (TBILISI_1898) {
