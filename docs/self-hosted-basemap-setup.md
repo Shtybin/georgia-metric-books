@@ -87,39 +87,39 @@ R2 по умолчанию приватный. Включаем встроенн
 
 1. Тот же экран bucket → **Settings** → секция **CORS Policy** → кнопка
    **Add CORS policy**.
-2. Откроется JSON-редактор. Вставьте **ровно этот** JSON (Cloudflare R2
-   валидатор строгий: не любит `"*"` в `AllowedHeaders`, любит явный
-   список; origins должны быть в формате `scheme://host[:port]` без
-   завершающего слэша):
+2. Откроется JSON-редактор. **Очистите его полностью** и вставьте текст
+   ниже — начинается с `[` и заканчивается `]`. **Без** строк
+   ```` ```json ```` сверху и ```` ``` ```` снизу — это разметка markdown,
+   Cloudflare её не понимает и выдаёт `This policy is not valid`
+   именно из-за неё.
 
-```json
-[
-  {
-    "AllowedOrigins": [
-      "https://metrics.datatells.info",
-      "https://georgia-metric-books.lovable.app",
-      "http://localhost:8080",
-      "http://localhost:5173"
-    ],
-    "AllowedMethods": ["GET", "HEAD"],
-    "AllowedHeaders": ["Range", "If-Match", "If-None-Match"],
-    "ExposeHeaders": ["ETag", "Content-Length", "Content-Range", "Accept-Ranges"],
-    "MaxAgeSeconds": 86400
-  }
-]
-```
+<!-- COPY START -->
+    [
+      {
+        "AllowedOrigins": [
+          "https://metrics.datatells.info",
+          "https://georgia-metric-books.lovable.app",
+          "http://localhost:8080",
+          "http://localhost:5173"
+        ],
+        "AllowedMethods": ["GET", "HEAD"],
+        "AllowedHeaders": ["Range", "If-Match", "If-None-Match"],
+        "ExposeHeaders": ["ETag", "Content-Length", "Content-Range", "Accept-Ranges"],
+        "MaxAgeSeconds": 86400
+      }
+    ]
+<!-- COPY END -->
 
 3. Нажмите **Save**.
 
-> **Если получили `This policy is not valid`:**
-> - Уберите все origins со звёздочкой (`*` и `*.lovable.app` Cloudflare R2
->   в dashboard не принимает — только точные URL).
-> - Origin не должен заканчиваться `/`.
-> - Не используйте `"*"` в `AllowedHeaders` — Cloudflare хочет явный список
->   имён заголовков.
-> - Превью-URL Lovable меняется при каждом деплое. Если вам нужно
->   подключить превью-домен — добавьте его точное значение отдельной
->   строкой в `AllowedOrigins`.
+> **Если всё равно `This policy is not valid`:**
+> - Убедитесь, что в редакторе **первый символ — `[`**, последний — `]`.
+>   Никаких ```` ``` ```` и слова `json` в начале быть не должно.
+> - Все origins — в формате `scheme://host[:port]`, без завершающего `/`,
+>   без `*` и без `*.lovable.app` (точные URL).
+> - В `AllowedHeaders` — явный список заголовков, не `"*"`.
+> - Превью-URL Lovable меняется при каждом деплое. Если нужен превью-домен,
+>   добавьте его точное значение отдельной строкой в `AllowedOrigins`.
 
 ---
 
