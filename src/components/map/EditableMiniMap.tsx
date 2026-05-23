@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { BASEMAP_STYLE } from "@/lib/map-style";
+import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
 
 interface Props {
   lat: number;
@@ -30,6 +30,7 @@ export function EditableMiniMap({ lat, lon, zoom = 11, className, onChange }: Pr
       attributionControl: false,
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+    attachBasemapFallback(map);
     mapRef.current = map;
 
     const marker = new maplibregl.Marker({ color: "#D55E00", draggable: true })

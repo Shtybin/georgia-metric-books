@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, Popup, type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { BASEMAP_STYLE } from "@/lib/map-style";
+import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
 import {
   fetchTbilisiChurches,
   type TbilisiChurch,
@@ -190,6 +190,7 @@ export function TbilisiMap({
       attributionControl: { compact: true },
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
+    attachBasemapFallback(map);
     map.on("load", () => {
       // Historical 1898 raster (below everything else but the basemap)
       if (TBILISI_1898) {

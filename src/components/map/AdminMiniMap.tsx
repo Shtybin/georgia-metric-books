@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { BASEMAP_STYLE } from "@/lib/map-style";
+import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
 
 interface Props {
   lat: number;
@@ -25,6 +25,7 @@ export function AdminMiniMap({ lat, lon, zoom, className }: Props) {
       interactive: false,
       attributionControl: false,
     });
+    attachBasemapFallback(map);
     mapRef.current = map;
     new maplibregl.Marker({ color: "#D55E00" }).setLngLat([lon, lat]).addTo(map);
     return () => {

@@ -16,6 +16,7 @@ import { MissingYearsSuggestionDialog } from "./MissingYearsSuggestionDialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
   BASEMAP_STYLE,
+  attachBasemapFallback,
   BUCKET_COLORS,
   BUCKET_ORDER,
   colorExpression,
@@ -711,6 +712,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       attributionControl: { compact: true },
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+    attachBasemapFallback(map);
     map.on("error", (e) => {
       // surface MapLibre errors instead of leaving a white canvas
       // eslint-disable-next-line no-console
