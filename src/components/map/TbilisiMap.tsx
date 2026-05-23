@@ -21,6 +21,7 @@ import {
   type District1898Properties,
 } from "@/lib/tbilisi-historical";
 import type { Lang } from "@/lib/i18n";
+import { localizeAddress, localizeDistrict } from "@/lib/tbilisi-locations";
 import { Button } from "@/components/ui/button";
 import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -708,13 +709,13 @@ export function TbilisiMap({
             {selected.address && (
               <>
                 <dt className="text-muted-foreground">{T.fields.address}</dt>
-                <dd>{selected.address}</dd>
+                <dd>{localizeAddress(selected.address, lang)}</dd>
               </>
             )}
             {selected.district && (
               <>
                 <dt className="text-muted-foreground">{T.fields.district}</dt>
-                <dd>{selected.district}</dd>
+                <dd>{localizeDistrict(selected.district, lang)}</dd>
               </>
             )}
             <dt className="text-muted-foreground">{T.fields.recordYears}</dt>
