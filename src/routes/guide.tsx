@@ -7,6 +7,7 @@ import { ArrowLeft, Download, Pencil, Save, X, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { authorName, copyrightLine } from "@/components/AuthorCredit";
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
