@@ -1949,6 +1949,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
         </div>
       )}
+      <MapAuthorBadge lang={lang} />
     </div>
   );
 }
