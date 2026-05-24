@@ -1439,35 +1439,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               );
             })()}
           </button>
-          {overrides.length > 0 && (
-            <button
-              onClick={() => setCompareMode((m) => (m === "after" ? "base" : "after"))}
-              title={
-                lang === "en"
-                  ? "Toggle base data vs published edits"
-                  : lang === "ka"
-                    ? "ბაზური მონაცემები / გამოქვეყნებული რედაქტირებები"
-                    : "Сравнить базовые данные и опубликованные правки"
-              }
-              aria-pressed={compareMode === "after"}
-              className={cn(
-                "hidden sm:flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium shadow-lg backdrop-blur transition-colors",
-                compareMode === "after"
-                  ? "border-border bg-card/95 text-foreground hover:bg-accent"
-                  : "border-amber-500/60 bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 dark:text-amber-300",
-              )}
-            >
-              <GitCompare className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">
-                {compareMode === "after"
-                  ? (lang === "en" ? "After" : lang === "ka" ? "შემდეგ" : "После")
-                  : (lang === "en" ? "Before" : lang === "ka" ? "მანამდე" : "До")}
-              </span>
-              <span className="rounded-full bg-background/60 px-1.5 py-0.5 text-[10px] tabular-nums">
-                {overrides.length}
-              </span>
-            </button>
-          )}
+          {/* Before/After compare button removed per UX cleanup —
+              compareMode stays at "after" by default. */}
           <div className="flex overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
             {(["ru", "en", "ka"] as const).map(l => (
               <button
