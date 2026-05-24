@@ -2,6 +2,9 @@
 
 **Georgia Metric Books Atlas** — интерактивная карта селений, церквей и приходов Грузии XIX века, построенная на основе метрических книг Российской империи. Открытый исследовательский инструмент для историков, генеалогов и краеведов.
 
+👤 **Автор / Author:** Виталий Штыбин (Vitaly Shtybin) — независимый исследователь · [datatells.info](https://datatells.info)
+© 2025 Виталий Штыбин. Карты, сборки данных и сопроводительные тексты — авторский проект, защищены авторским правом. Подробности — см. [`COPYRIGHT.md`](./COPYRIGHT.md).
+
 🌐 **Live:** [metrics.datatells.info](https://metrics.datatells.info) · 🗺️ Mirror: [georgia-metric-books.lovable.app](https://georgia-metric-books.lovable.app)
 
 [![TanStack Start](https://img.shields.io/badge/TanStack-Start-EF4444)](https://tanstack.com/start) [![React 19](https://img.shields.io/badge/React-19-61DAFB)](https://react.dev) [![Vite 7](https://img.shields.io/badge/Vite-7-646CFF)](https://vitejs.dev) [![Tailwind v4](https://img.shields.io/badge/Tailwind-v4-38BDF8)](https://tailwindcss.com) [![MapLibre GL](https://img.shields.io/badge/MapLibre-GL-396CB2)](https://maplibre.org) [![Lovable Cloud](https://img.shields.io/badge/Lovable-Cloud-FF5C5C)](https://lovable.dev)
@@ -313,10 +316,15 @@ jobs:
 
 ## Лицензия и благодарности
 
-- **Лицензия:** MIT (см. `LICENSE`).
+- **Код** проекта распространяется по лицензии **MIT** (см. [`LICENSE`](./LICENSE)).
+- **Карты, сборки данных (GeoJSON), тексты гайда, дизайн и оформление** — © 2025 **Виталий Штыбин**, все права защищены. Использование, цитирование и перепечатка допускаются только с указанием автора и активной ссылкой на <https://metrics.datatells.info>. Подробности — в [`COPYRIGHT.md`](./COPYRIGHT.md).
 - **Данные:** метрические книги XIX в. (Национальный архив Грузии и др.).
 - **Карта:** © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors, рендер — [MapLibre GL](https://maplibre.org).
 - **Платформа:** сделано на [Lovable](https://lovable.dev) с Lovable Cloud.
+
+## Об авторе
+
+**Виталий Штыбин** — независимый исследователь, автор сайта [datatells.info](https://datatells.info). На основном сайте — другие проекты и статьи автора по истории и краеведению Кавказа.
 
 ---
 

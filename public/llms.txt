@@ -2,6 +2,9 @@
 
 > Interactive historical atlas of 19th–early 20th century Georgian parish metric books (1819–1930). Search settlements, churches, and uezds; explore neighbouring parishes within 10 km.
 
+Author: Vitaly Shtybin (Виталий Штыбин) — independent researcher, author of datatells.info. Other projects and articles: https://datatells.info
+Copyright: © 2025 Vitaly Shtybin. All rights reserved. Maps, data compilations and accompanying texts are an original copyrighted work; please credit the author and link to https://metrics.datatells.info when citing.
+
 The project digitises and geolocates parish registers from the National Historical Archive of Georgia (Fond 489, Inventory 6). The interface is available in Russian, English, and Georgian.
 
 ## Pages

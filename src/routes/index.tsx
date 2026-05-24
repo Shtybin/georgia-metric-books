@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { t, type Lang, STRINGS } from "@/lib/i18n";
+import { AuthorHero, CopyrightFooter, authorName } from "@/components/AuthorCredit";
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
@@ -14,13 +15,30 @@ export const Route = createFileRoute("/")({
   head: ({ match }) => {
     const lang = ((match.search as any)?.lang ?? "ru") as Lang;
     const L = STRINGS[lang].landing;
+    const author = authorName(lang);
     return {
       meta: [
         { title: L.metaTitle },
         { name: "description", content: L.metaDesc },
+        { name: "author", content: author },
         { property: "og:title", content: L.metaTitle },
         { property: "og:description", content: L.metaDesc },
         { property: "og:type", content: "website" },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: L.metaTitle,
+            description: L.metaDesc,
+            author: { "@type": "Person", name: author, url: "https://datatells.info" },
+            copyrightHolder: { "@type": "Person", name: author, url: "https://datatells.info" },
+            copyrightYear: 2025,
+            url: "https://metrics.datatells.info",
+          }),
+        },
       ],
     };
   },
@@ -110,6 +128,8 @@ function Index() {
             {L.ctaKa} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
+
+        <AuthorHero lang={lang as Lang} />
 
         {/* Prominent guide CTA */}
         <section className="mt-10">
@@ -224,6 +244,8 @@ function Index() {
             ))}
           </div>
         </section>
+
+        <CopyrightFooter lang={lang as Lang} />
       </div>
     </main>
   );

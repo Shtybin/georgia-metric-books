@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
 import { isInsideTbilisi, tT } from "@/lib/i18n-tbilisi";
+import { MapAuthorBadge } from "@/components/AuthorCredit";
 import { Link } from "@tanstack/react-router";
 import { Landmark } from "lucide-react";
 
@@ -1948,6 +1949,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
         </div>
       )}
+      <MapAuthorBadge lang={lang} />
     </div>
   );
 }

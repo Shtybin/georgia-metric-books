@@ -7,6 +7,7 @@ import { ArrowLeft, Download, Pencil, Save, X, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { authorName, copyrightLine } from "@/components/AuthorCredit";
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
@@ -244,9 +245,28 @@ function GuidePage() {
           />
         ) : (
           <article className="max-w-none text-[15px] leading-relaxed text-foreground">
+            <div className="mb-6 rounded-xl border border-border bg-card px-4 py-3 text-sm">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                {lang === "en" ? "Author" : lang === "ka" ? "ავტორი" : "Автор"}
+              </p>
+              <p className="mt-0.5 font-semibold">
+                {authorName(lang)} ·{" "}
+                <a
+                  href="https://datatells.info"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline-offset-2 hover:underline"
+                >
+                  datatells.info
+                </a>
+              </p>
+            </div>
             <ReactMarkdown components={markdownComponents}>
               {editing ? draft : content}
             </ReactMarkdown>
+            <footer className="mt-10 border-t border-border pt-4 text-xs text-muted-foreground">
+              {copyrightLine(lang)}
+            </footer>
           </article>
         )}
       </div>
