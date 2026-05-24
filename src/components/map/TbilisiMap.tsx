@@ -598,9 +598,10 @@ export function TbilisiMap({
       </div>
 
 
-      {/* Historical 1898 controls — shown only when there's something to show */}
+      {/* Historical 1898 controls — desktop/tablet only. On mobile the toggle
+          collapses into a single pill in the bottom action row. */}
       {(TBILISI_1898 || districts) && (
-        <div className="pointer-events-auto absolute right-3 z-20 w-[11rem] rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur sm:right-4 sm:w-[16rem] sm:p-2.5 bottom-[7.5rem] sm:bottom-24 lg:bottom-4">
+        <div className="pointer-events-auto absolute right-3 z-20 hidden w-[16rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur sm:block sm:right-4 bottom-24 lg:bottom-4">
           <div className="mb-1.5 flex items-center gap-1.5">
             <Layers className="h-3.5 w-3.5 text-muted-foreground" />
             <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
@@ -653,31 +654,39 @@ export function TbilisiMap({
       )}
 
       {/* Bottom action bar.
-          Mobile (<sm): single horizontal row at bottom-left — docs + author badge + report.
-          Tablet/desktop (sm+): docs button centered, with extra bottom padding so the
-          centered author badge (bottom-8) and OSM attribution don't collide. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-start gap-2 p-3 sm:items-center sm:p-4 sm:pb-12">
-        {/* Mobile: compact row, left-aligned. */}
-        <div className="flex max-w-full flex-wrap items-center gap-1.5 sm:hidden">
-          <button
-            onClick={() => setDocsOpen(true)}
-            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur hover:bg-accent"
-          >
-            <BookOpen className="h-3.5 w-3.5" />
-            {T.archiveButtonShort}
-          </button>
-          <MapAuthorBadge lang={lang} inline />
-          <ReportProblemButton
-            lang={lang}
-            getMapState={() => {
-              const m = mapRef.current;
-              if (!m) return null;
-              const c = m.getCenter();
-              return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
-            }}
-            inline
-            className="!px-2.5 !py-1 !text-[11px]"
-          />
+          Mobile (<sm): single row at bottom — docs + author (©year) + 1898 toggle.
+          Tablet/desktop (sm+): docs button centered, author badge below (extra pb so they don't collide). */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-start gap-2 p-3 sm:items-center sm:p-4 sm:pb-16">
+        {/* Mobile: compact row, justify-between so docs+author left, 1898 toggle right. */}
+        <div className="flex w-full items-center justify-between gap-1.5 sm:hidden">
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setDocsOpen(true)}
+              className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur hover:bg-accent"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              {T.archiveButtonShort}
+            </button>
+            <MapAuthorBadge lang={lang} inline />
+          </div>
+          {TBILISI_1898 && (
+            <button
+              onClick={() =>
+                onHistoricalChange?.(!historicalOn, historicalOpacity, districtsOn)
+              }
+              aria-pressed={historicalOn}
+              className={
+                "pointer-events-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur transition-colors " +
+                (historicalOn
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card/95 text-foreground hover:bg-accent")
+              }
+              title={T.historical.toggle}
+            >
+              <Layers className="h-3.5 w-3.5" />
+              {T.historical.toggle}
+            </button>
+          )}
         </div>
         {/* Tablet/desktop: centered docs button (full label). */}
         <button
