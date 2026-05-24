@@ -1793,6 +1793,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 {T.docsButtonShort}
               </button>
               <MapAuthorBadge lang={lang} inline />
+              <ReportProblemButton
+                lang={lang}
+                getMapState={() => {
+                  const m = mapRef.current;
+                  if (!m) return null;
+                  const c = m.getCenter();
+                  return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+                }}
+                inline
+                className="!px-2.5 !py-1 !text-[11px]"
+              />
             </div>
           </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
