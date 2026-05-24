@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { t, type Lang, STRINGS } from "@/lib/i18n";
+import { AuthorHero, CopyrightFooter, authorName } from "@/components/AuthorCredit";
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
