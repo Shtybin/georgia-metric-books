@@ -114,6 +114,7 @@ export const TBILISI_STRINGS = {
       low: "Низкая точность координат — точка может быть смещена.",
     } as Partial<Record<Confidence, string>>,
     archiveButton: "Где искать оригиналы метрических книг?",
+    archiveButtonShort: "Документы",
     reportButton: "Сообщить о проблеме",
     legendTitle: "Легенда: конфессии",
     cityZoomCta: "Открыть карту церквей Тбилиси",
