@@ -385,6 +385,7 @@ export function TbilisiMap({
       {/* Top bar */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-2 p-3 sm:flex-row sm:items-start sm:justify-between sm:p-4">
         <div className="pointer-events-auto flex w-full items-center gap-2 sm:max-w-md">
+          <MapHomeButton lang={lang} />
           <Link
             to="/map"
             search={{ lang }}
