@@ -270,6 +270,7 @@ export const TBILISI_STRINGS = {
       low: "კოორდინატების სიზუსტე დაბალია — წერტილი შესაძლოა ოდნავ გადახრილი იყოს.",
     } as Partial<Record<Confidence, string>>,
     archiveButton: "სად ვიპოვო მეტრიკული წიგნების ორიგინალები?",
+    archiveButtonShort: "დოკუმენტები",
     reportButton: "პრობლემის შეტყობინება",
     legendTitle: "ლეგენდა: კონფესიები",
     cityZoomCta: "თბილისის ეკლესიების რუკის გახსნა",
