@@ -191,11 +191,11 @@
 }
 
 /* Position MapLibre zoom controls below the top overlay. On mobile they sit
- * just under the top bar (filters + search + actions). On desktop/tablet
- * they sit BELOW the "Report a problem" button so the stacking order from
- * top to bottom is: language switcher → report button → zoom controls. */
+ * just under the right-side actions cluster (home/unlocated/lang), aligned
+ * with the language switcher so all top-right controls form a single column.
+ * On desktop/tablet they sit BELOW the "Report a problem" button. */
 .maplibregl-map .maplibregl-ctrl-top-right {
-  top: calc(var(--map-overlay-gap-top) + 2.5rem);
+  top: calc(var(--map-safe-top) + 6.25rem);
   right: var(--map-overlay-gap-right);
 }
 

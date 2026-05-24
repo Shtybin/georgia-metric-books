@@ -5,19 +5,12 @@ import type { Lang } from "@/lib/i18n";
 const AUTHOR_RU = "Виталий Штыбин";
 const AUTHOR_EN = "Vitaly Shtybin";
 const AUTHOR_KA = "ვიტალი შტიბინი";
-const AUTHOR_RU_SHORT = "В. Штыбин";
-const AUTHOR_EN_SHORT = "V. Shtybin";
-const AUTHOR_KA_SHORT = "ვ. შტიბინი";
 const SITE = "datatells.info";
 const SITE_URL = "https://datatells.info";
 const YEAR = "2025";
 
 export function authorName(lang: Lang) {
   return lang === "en" ? AUTHOR_EN : lang === "ka" ? AUTHOR_KA : AUTHOR_RU;
-}
-
-function authorNameShort(lang: Lang) {
-  return lang === "en" ? AUTHOR_EN_SHORT : lang === "ka" ? AUTHOR_KA_SHORT : AUTHOR_RU_SHORT;
 }
 
 export function copyrightLine(lang: Lang) {
@@ -44,7 +37,7 @@ export function MapAuthorBadge({
 }) {
   const title = `${authorName(lang)} · ${SITE_URL}`;
   if (inline) {
-    // Mobile: very compact, sits beside the docs button.
+    // Mobile: ultra-compact, just © + year. Sits beside other action pills.
     return (
       <a
         href={SITE_URL}
@@ -52,9 +45,9 @@ export function MapAuthorBadge({
         rel="noopener noreferrer"
         className="pointer-events-auto inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-border bg-card/95 px-2 py-1 text-[10px] font-medium text-foreground shadow-md backdrop-blur transition-colors hover:bg-accent"
         title={title}
+        aria-label={`© ${YEAR} ${authorName(lang)}`}
       >
-        © {YEAR} {authorNameShort(lang)}
-        <ExternalLink className="h-2.5 w-2.5 opacity-70" />
+        © {YEAR}
       </a>
     );
   }
