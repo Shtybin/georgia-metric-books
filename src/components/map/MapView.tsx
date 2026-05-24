@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, GitCompare, CalendarClock } from "lucide-react";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
@@ -1439,35 +1439,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               );
             })()}
           </button>
-          {overrides.length > 0 && (
-            <button
-              onClick={() => setCompareMode((m) => (m === "after" ? "base" : "after"))}
-              title={
-                lang === "en"
-                  ? "Toggle base data vs published edits"
-                  : lang === "ka"
-                    ? "ბაზური მონაცემები / გამოქვეყნებული რედაქტირებები"
-                    : "Сравнить базовые данные и опубликованные правки"
-              }
-              aria-pressed={compareMode === "after"}
-              className={cn(
-                "hidden sm:flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium shadow-lg backdrop-blur transition-colors",
-                compareMode === "after"
-                  ? "border-border bg-card/95 text-foreground hover:bg-accent"
-                  : "border-amber-500/60 bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 dark:text-amber-300",
-              )}
-            >
-              <GitCompare className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">
-                {compareMode === "after"
-                  ? (lang === "en" ? "After" : lang === "ka" ? "შემდეგ" : "После")
-                  : (lang === "en" ? "Before" : lang === "ka" ? "მანამდე" : "До")}
-              </span>
-              <span className="rounded-full bg-background/60 px-1.5 py-0.5 text-[10px] tabular-nums">
-                {overrides.length}
-              </span>
-            </button>
-          )}
+          {/* Before/After compare button removed per UX cleanup —
+              compareMode stays at "after" by default. */}
           <div className="flex overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
             {(["ru", "en", "ka"] as const).map(l => (
               <button
@@ -1797,21 +1770,29 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         />
       )}
 
-      {/* Mobile: docs button (bottom-left, level with report button on right),
+      {/* Mobile: docs button + author badge on the same row (bottom-left),
           and the 2-row legend pinned to the very bottom. Hidden when a card is open. */}
       {!selected && (
         <>
-          <button
-            onClick={() => setDocsOpen(true)}
+          <div
             style={{
               bottom: "var(--map-overlay-gap-bottom)",
               left: "var(--map-overlay-gap-left)",
+              right: "var(--map-overlay-gap-right)",
             }}
-            className="pointer-events-auto absolute z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent sm:hidden"
+            className="pointer-events-none absolute z-10 flex items-center justify-between gap-2 sm:hidden"
           >
-            <HelpCircle className="h-3.5 w-3.5" />
-            {T.docsButton}
-          </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setDocsOpen(true)}
+                className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
+              >
+                <HelpCircle className="h-3.5 w-3.5" />
+                {T.docsButton}
+              </button>
+              <MapAuthorBadge lang={lang} inline />
+            </div>
+          </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
             <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
               {BUCKET_ORDER.map((b) => {
@@ -1840,7 +1821,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       )}
 
       {/* Desktop: docs button stacked above the legend (right side). */}
-      <div className="pointer-events-none absolute bottom-3 right-3 z-10 hidden w-[min(92vw,260px)] flex-col items-stretch gap-2 sm:flex">
+      <div className="pointer-events-none absolute bottom-12 right-3 z-10 hidden w-[min(92vw,260px)] flex-col items-stretch gap-2 sm:flex">
         <button
           onClick={() => setDocsOpen(true)}
           className="pointer-events-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
@@ -1926,7 +1907,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       {/* Size legend (bottom-left). Hidden when a point card is open
           (the card occupies the same corner) and on mobile (cramped). */}
       {!sel && (
-        <div className="pointer-events-none absolute bottom-3 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur sm:block">
+        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur sm:block">
           <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             {T.sizeLegend}
           </div>

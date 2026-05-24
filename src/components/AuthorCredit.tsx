@@ -31,24 +31,52 @@ export function copyrightLine(lang: Lang) {
 }
 
 /** Compact attribution overlay shown on top of every map.
- *  Bottom-center, well above MapLibre/OSM attribution. */
-export function MapAuthorBadge({ lang }: { lang: Lang }) {
+ *  Default placement: bottom-center, only on sm+ (tablet and desktop).
+ *  On mobile, render with `inline` and place it inside the bottom action row.
+ *  Text length adapts: full on desktop (lg+), shortened on tablet (sm/md),
+ *  and even shorter when `inline` (mobile next to the docs button). */
+export function MapAuthorBadge({
+  lang,
+  inline = false,
+}: {
+  lang: Lang;
+  inline?: boolean;
+}) {
+  const title = `${authorName(lang)} · ${SITE_URL}`;
+  if (inline) {
+    // Mobile: very compact, sits beside the docs button.
+    return (
+      <a
+        href={SITE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pointer-events-auto inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-border bg-card/95 px-2 py-1 text-[10px] font-medium text-foreground shadow-md backdrop-blur transition-colors hover:bg-accent"
+        title={title}
+      >
+        © {YEAR} {authorNameShort(lang)}
+        <ExternalLink className="h-2.5 w-2.5 opacity-70" />
+      </a>
+    );
+  }
+  // Tablet/desktop: bottom-center, hidden on mobile (mobile uses inline variant).
   return (
     <a
       href={SITE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="pointer-events-auto absolute bottom-8 left-1/2 z-[10] inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-medium text-foreground shadow-lg transition-colors hover:bg-accent sm:text-xs"
-      title={`${authorName(lang)} · ${SITE_URL}`}
+      className="pointer-events-auto absolute bottom-8 left-1/2 z-[10] hidden -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-lg transition-colors hover:bg-accent sm:inline-flex"
+      title={title}
     >
-      <span className="sm:hidden">© {YEAR} {authorNameShort(lang)} · {SITE}</span>
-      <span className="hidden sm:inline">© {YEAR} {authorName(lang)} · {SITE}</span>
+      {/* Tablet (sm to lg): year + full name only */}
+      <span className="lg:hidden">© {YEAR} {authorName(lang)}</span>
+      {/* Desktop (lg+): full attribution with site */}
+      <span className="hidden lg:inline">© {YEAR} {authorName(lang)} · {SITE}</span>
       <ExternalLink className="h-3 w-3 opacity-70" />
     </a>
   );
 }
 
-/** Small "back to landing" button — inline, drop into existing map top bars. */
+/** Small icon-only "back to landing" button — inline, drop into existing map top bars. */
 export function MapHomeButton({ lang }: { lang: Lang }) {
   const label =
     lang === "en" ? "Home" : lang === "ka" ? "მთავარზე" : "На главную";
@@ -56,12 +84,11 @@ export function MapHomeButton({ lang }: { lang: Lang }) {
     <Link
       to="/"
       search={{ lang }}
-      className="pointer-events-auto inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-2 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+      className="pointer-events-auto inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card/95 text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
       title={label}
       aria-label={label}
     >
       <Home className="h-4 w-4" />
-      <span className="hidden sm:inline">{label}</span>
     </Link>
   );
 }
