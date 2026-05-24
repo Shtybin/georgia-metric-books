@@ -31,15 +31,14 @@ export function copyrightLine(lang: Lang) {
 }
 
 /** Compact attribution overlay shown on top of every map.
- *  Top-center on desktop, bottom-left on mobile — away from
- *  MapLibre / OSM attribution and the size legend. */
+ *  Bottom-center, well above MapLibre/OSM attribution. */
 export function MapAuthorBadge({ lang }: { lang: Lang }) {
   return (
     <a
       href={SITE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="pointer-events-auto absolute bottom-3 left-3 z-[10] inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-medium text-foreground shadow-lg transition-colors hover:bg-accent sm:bottom-auto sm:left-1/2 sm:top-3 sm:-translate-x-1/2 sm:text-xs"
+      className="pointer-events-auto absolute bottom-8 left-1/2 z-[10] inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-medium text-foreground shadow-lg transition-colors hover:bg-accent sm:text-xs"
       title={`${authorName(lang)} · ${SITE_URL}`}
     >
       <span className="sm:hidden">© {YEAR} {authorNameShort(lang)} · {SITE}</span>
@@ -49,7 +48,7 @@ export function MapAuthorBadge({ lang }: { lang: Lang }) {
   );
 }
 
-/** Small "back to landing" button shown in the top-left of maps. */
+/** Small "back to landing" button — inline, drop into existing map top bars. */
 export function MapHomeButton({ lang }: { lang: Lang }) {
   const label =
     lang === "en" ? "Home" : lang === "ka" ? "მთავარზე" : "На главную";
@@ -57,11 +56,12 @@ export function MapHomeButton({ lang }: { lang: Lang }) {
     <Link
       to="/"
       search={{ lang }}
-      className="pointer-events-auto absolute left-3 top-3 z-[10] inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-lg transition-colors hover:bg-accent"
+      className="pointer-events-auto inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-2 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
       title={label}
+      aria-label={label}
     >
-      <Home className="h-3.5 w-3.5" />
-      <span>{label}</span>
+      <Home className="h-4 w-4" />
+      <span className="hidden sm:inline">{label}</span>
     </Link>
   );
 }
