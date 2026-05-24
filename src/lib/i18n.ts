@@ -45,6 +45,7 @@ export const STRINGS = {
     notFoundTitle: "Ничего не найдено",
     churches: "Церкви",
     unlocatedButton: "Добавить координаты сел",
+    unlocatedButtonShort: "Координаты",
     unlocatedTitle: "Селения без координат",
     unlocatedHint: "Записи, для которых не удалось установить координаты. Нажмите на иконку, чтобы вручную привязать селение к карте.",
     unlocatedSearch: "Поиск по селению, церкви, уезду…",
