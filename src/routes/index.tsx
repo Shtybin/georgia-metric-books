@@ -129,6 +129,8 @@ function Index() {
           </Link>
         </div>
 
+        <AuthorHero lang={lang as Lang} />
+
         {/* Prominent guide CTA */}
         <section className="mt-10">
           <div className="relative overflow-hidden rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/10 via-card to-card p-6 shadow-md sm:p-7">
