@@ -1,14 +1,23 @@
+import { Link } from "@tanstack/react-router";
+import { ExternalLink, Home } from "lucide-react";
 import type { Lang } from "@/lib/i18n";
 
 const AUTHOR_RU = "Виталий Штыбин";
 const AUTHOR_EN = "Vitaly Shtybin";
 const AUTHOR_KA = "ვიტალი შტიბინი";
+const AUTHOR_RU_SHORT = "В. Штыбин";
+const AUTHOR_EN_SHORT = "V. Shtybin";
+const AUTHOR_KA_SHORT = "ვ. შტიბინი";
 const SITE = "datatells.info";
 const SITE_URL = "https://datatells.info";
 const YEAR = "2025";
 
 export function authorName(lang: Lang) {
   return lang === "en" ? AUTHOR_EN : lang === "ka" ? AUTHOR_KA : AUTHOR_RU;
+}
+
+function authorNameShort(lang: Lang) {
+  return lang === "en" ? AUTHOR_EN_SHORT : lang === "ka" ? AUTHOR_KA_SHORT : AUTHOR_RU_SHORT;
 }
 
 export function copyrightLine(lang: Lang) {
@@ -21,18 +30,39 @@ export function copyrightLine(lang: Lang) {
   return `© ${YEAR} ${authorName(lang)} · ${rights} · ${SITE}`;
 }
 
-/** Compact attribution overlay shown on top of every map. */
+/** Compact attribution overlay shown on top of every map.
+ *  Top-center on desktop, bottom-left on mobile — away from
+ *  MapLibre / OSM attribution and the size legend. */
 export function MapAuthorBadge({ lang }: { lang: Lang }) {
   return (
     <a
       href={SITE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="pointer-events-auto absolute bottom-1.5 right-14 z-[6] rounded-full border border-border bg-card/95 px-2.5 py-0.5 text-[10.5px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
-      title={SITE_URL}
+      className="pointer-events-auto absolute bottom-3 left-3 z-[10] inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-medium text-foreground shadow-lg transition-colors hover:bg-accent sm:bottom-auto sm:left-1/2 sm:top-3 sm:-translate-x-1/2 sm:text-xs"
+      title={`${authorName(lang)} · ${SITE_URL}`}
     >
-      © {YEAR} {authorName(lang)} · {SITE}
+      <span className="sm:hidden">© {YEAR} {authorNameShort(lang)} · {SITE}</span>
+      <span className="hidden sm:inline">© {YEAR} {authorName(lang)} · {SITE}</span>
+      <ExternalLink className="h-3 w-3 opacity-70" />
     </a>
+  );
+}
+
+/** Small "back to landing" button shown in the top-left of maps. */
+export function MapHomeButton({ lang }: { lang: Lang }) {
+  const label =
+    lang === "en" ? "Home" : lang === "ka" ? "მთავარზე" : "На главную";
+  return (
+    <Link
+      to="/"
+      search={{ lang }}
+      className="pointer-events-auto absolute left-3 top-3 z-[10] inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-lg transition-colors hover:bg-accent"
+      title={label}
+    >
+      <Home className="h-3.5 w-3.5" />
+      <span>{label}</span>
+    </Link>
   );
 }
 
