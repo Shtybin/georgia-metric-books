@@ -28,7 +28,7 @@ export function MapAuthorBadge({ lang }: { lang: Lang }) {
       href={SITE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="pointer-events-auto absolute bottom-3 left-1/2 z-[6] -translate-x-1/2 rounded-full border border-border bg-card/95 px-3 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent sm:bottom-2 sm:left-3 sm:translate-x-0"
+      className="pointer-events-auto absolute bottom-1.5 right-14 z-[6] rounded-full border border-border bg-card/95 px-2.5 py-0.5 text-[10.5px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
       title={SITE_URL}
     >
       © {YEAR} {authorName(lang)} · {SITE}
