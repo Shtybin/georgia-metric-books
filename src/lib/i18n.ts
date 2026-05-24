@@ -297,6 +297,7 @@ export const STRINGS = {
     notFoundTitle: "ვერაფერი მოიძებნა",
     churches: "ეკლესიები",
     unlocatedButton: "სოფლების კოორდინატების დამატება",
+    unlocatedButtonShort: "კოორდინატები",
     unlocatedTitle: "სოფლები კოორდინატების გარეშე",
     unlocatedHint: "ჩანაწერები, რომელთა კოორდინატები ვერ დადგინდა. დააწკაპუნეთ ხატულას სოფლის ხელით რუკაზე მისაბმელად.",
     unlocatedSearch: "ძიება სოფლის, ეკლესიის, მაზრის მიხედვით…",
