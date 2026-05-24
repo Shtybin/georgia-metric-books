@@ -1907,7 +1907,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       {/* Size legend (bottom-left). Hidden when a point card is open
           (the card occupies the same corner) and on mobile (cramped). */}
       {!sel && (
-        <div className="pointer-events-none absolute bottom-3 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur sm:block">
+        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur sm:block">
           <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             {T.sizeLegend}
           </div>
