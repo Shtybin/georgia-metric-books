@@ -1479,15 +1479,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       />
 
       {!embed && (
-        <ReportProblemButton
-          lang={lang}
-          getMapState={() => {
-            const m = mapRef.current;
-            if (!m) return null;
-            const c = m.getCenter();
-            return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
-          }}
-        />
+        <div className="hidden sm:contents">
+          <ReportProblemButton
+            lang={lang}
+            getMapState={() => {
+              const m = mapRef.current;
+              if (!m) return null;
+              const c = m.getCenter();
+              return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+            }}
+          />
+        </div>
       )}
 
       {userCoords.lastAction && (
