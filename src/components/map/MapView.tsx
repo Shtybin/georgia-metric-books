@@ -1821,7 +1821,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       )}
 
       {/* Desktop: docs button stacked above the legend (right side). */}
-      <div className="pointer-events-none absolute bottom-3 right-3 z-10 hidden w-[min(92vw,260px)] flex-col items-stretch gap-2 sm:flex">
+      <div className="pointer-events-none absolute bottom-12 right-3 z-10 hidden w-[min(92vw,260px)] flex-col items-stretch gap-2 sm:flex">
         <button
           onClick={() => setDocsOpen(true)}
           className="pointer-events-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
