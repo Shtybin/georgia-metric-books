@@ -778,6 +778,8 @@ export function TbilisiMap({
           </DialogHeader>
         </DialogContent>
       </Dialog>
+
+      <MapAuthorBadge lang={lang} />
     </div>
   );
 }
