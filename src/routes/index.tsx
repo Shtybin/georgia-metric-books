@@ -15,13 +15,30 @@ export const Route = createFileRoute("/")({
   head: ({ match }) => {
     const lang = ((match.search as any)?.lang ?? "ru") as Lang;
     const L = STRINGS[lang].landing;
+    const author = authorName(lang);
     return {
       meta: [
         { title: L.metaTitle },
         { name: "description", content: L.metaDesc },
+        { name: "author", content: author },
         { property: "og:title", content: L.metaTitle },
         { property: "og:description", content: L.metaDesc },
         { property: "og:type", content: "website" },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: L.metaTitle,
+            description: L.metaDesc,
+            author: { "@type": "Person", name: author, url: "https://datatells.info" },
+            copyrightHolder: { "@type": "Person", name: author, url: "https://datatells.info" },
+            copyrightYear: 2025,
+            url: "https://metrics.datatells.info",
+          }),
+        },
       ],
     };
   },
