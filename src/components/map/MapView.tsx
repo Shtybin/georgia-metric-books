@@ -1770,21 +1770,29 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         />
       )}
 
-      {/* Mobile: docs button (bottom-left, level with report button on right),
+      {/* Mobile: docs button + author badge on the same row (bottom-left),
           and the 2-row legend pinned to the very bottom. Hidden when a card is open. */}
       {!selected && (
         <>
-          <button
-            onClick={() => setDocsOpen(true)}
+          <div
             style={{
               bottom: "var(--map-overlay-gap-bottom)",
               left: "var(--map-overlay-gap-left)",
+              right: "var(--map-overlay-gap-right)",
             }}
-            className="pointer-events-auto absolute z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent sm:hidden"
+            className="pointer-events-none absolute z-10 flex items-center justify-between gap-2 sm:hidden"
           >
-            <HelpCircle className="h-3.5 w-3.5" />
-            {T.docsButton}
-          </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setDocsOpen(true)}
+                className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
+              >
+                <HelpCircle className="h-3.5 w-3.5" />
+                {T.docsButton}
+              </button>
+              <MapAuthorBadge lang={lang} inline />
+            </div>
+          </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
             <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
               {BUCKET_ORDER.map((b) => {
