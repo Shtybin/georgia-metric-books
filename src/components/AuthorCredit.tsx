@@ -5,19 +5,15 @@ import type { Lang } from "@/lib/i18n";
 const AUTHOR_RU = "Виталий Штыбин";
 const AUTHOR_EN = "Vitaly Shtybin";
 const AUTHOR_KA = "ვიტალი შტიბინი";
-const AUTHOR_RU_SHORT = "В. Штыбин";
-const AUTHOR_EN_SHORT = "V. Shtybin";
-const AUTHOR_KA_SHORT = "ვ. შტიბინი";
+const AUTHOR_RU = "Виталий Штыбин";
+const AUTHOR_EN = "Vitaly Shtybin";
+const AUTHOR_KA = "ვიტალი შტიბინი";
 const SITE = "datatells.info";
 const SITE_URL = "https://datatells.info";
 const YEAR = "2025";
 
 export function authorName(lang: Lang) {
   return lang === "en" ? AUTHOR_EN : lang === "ka" ? AUTHOR_KA : AUTHOR_RU;
-}
-
-function authorNameShort(lang: Lang) {
-  return lang === "en" ? AUTHOR_EN_SHORT : lang === "ka" ? AUTHOR_KA_SHORT : AUTHOR_RU_SHORT;
 }
 
 export function copyrightLine(lang: Lang) {
