@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
 import { isInsideTbilisi, tT } from "@/lib/i18n-tbilisi";
-import { MapAuthorBadge } from "@/components/AuthorCredit";
+import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
 import { Link } from "@tanstack/react-router";
 import { Landmark } from "lucide-react";
 
@@ -1412,6 +1412,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
+          {!embed && <MapHomeButton lang={lang} />}
           <button
             onClick={resetView}
             title={T.resetView}
