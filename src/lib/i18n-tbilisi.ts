@@ -192,6 +192,7 @@ export const TBILISI_STRINGS = {
       low: "Low coordinate accuracy — the point may be slightly off.",
     } as Partial<Record<Confidence, string>>,
     archiveButton: "Where to find the original parish registers?",
+    archiveButtonShort: "Documents",
     reportButton: "Report a problem",
     legendTitle: "Legend: confessions",
     cityZoomCta: "Open the Tbilisi churches map",
