@@ -84,11 +84,11 @@ export function MapHomeButton({ lang }: { lang: Lang }) {
     <Link
       to="/"
       search={{ lang }}
-      className="pointer-events-auto inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card/95 text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+      className="pointer-events-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-card/95 text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
       title={label}
       aria-label={label}
     >
-      <Home className="h-4 w-4" />
+      <Home className="h-3.5 w-3.5" />
     </Link>
   );
 }

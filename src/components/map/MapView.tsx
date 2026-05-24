@@ -1411,23 +1411,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       </div>
         </div>
 
-        <div className="pointer-events-auto flex items-center gap-2">
+        <div className="pointer-events-auto flex items-center gap-1.5">
           {!embed && <MapHomeButton lang={lang} />}
           <button
             onClick={resetView}
             title={T.resetView}
             aria-label={T.resetView}
-            className="hidden items-center justify-center rounded-lg border border-border bg-card/95 p-2 text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent sm:flex"
+            className="hidden h-8 w-8 items-center justify-center rounded-lg border border-border bg-card/95 text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent lg:flex"
           >
             <RotateCcw className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => setUnlocatedOpen(true)}
-            title={T.unlocatedTitle}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+            title={T.unlocatedButton}
+            className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
           >
-            <ListX className="h-3.5 w-3.5" />
-            <span>{T.unlocatedButton}</span>
+            <ListX className="h-3.5 w-3.5 shrink-0" />
+            <span className="hidden lg:inline">{T.unlocatedButton}</span>
+            <span className="lg:hidden">{T.unlocatedButtonShort}</span>
             {(() => {
               const base = stats?.unlocatedGroups ?? stats?.withoutCoords;
               if (!base) return null;
@@ -1439,23 +1440,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               );
             })()}
           </button>
-          {/* Before/After compare button removed per UX cleanup —
-              compareMode stays at "after" by default. */}
-          <div className="flex overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
+          {/* Compact language switcher: single globe icon + 3 letter buttons */}
+          <div className="flex h-8 items-center overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
+            <span className="hidden items-center pl-1.5 pr-0.5 text-muted-foreground sm:flex">
+              <Globe2 className="h-3 w-3" />
+            </span>
             {(["ru", "en", "ka"] as const).map(l => (
               <button
                 key={l}
                 onClick={() => onLangChange(l)}
                 className={cn(
-                  "px-3 py-1.5 text-xs font-medium uppercase tracking-wide transition-colors",
+                  "h-full px-2 text-xs font-medium uppercase tracking-wide transition-colors",
                   lang === l
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-accent",
                 )}
                 aria-pressed={lang === l}
               >
-                <Globe2 className="mr-1 inline h-3 w-3" />
-                {l === "ka" ? "ქარ" : l}
+                {l === "ka" ? "ქა" : l}
               </button>
             ))}
           </div>
@@ -1788,7 +1790,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
               >
                 <HelpCircle className="h-3.5 w-3.5" />
-                {T.docsButton}
+                {T.docsButtonShort}
               </button>
               <MapAuthorBadge lang={lang} inline />
             </div>

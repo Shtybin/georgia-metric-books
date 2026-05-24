@@ -201,9 +201,11 @@ export function ReportProblemButton({ lang, getMapState, inline = false, classNa
           style={anchorStyle(anchor)}
           className="pointer-events-auto absolute z-20 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground shadow-md backdrop-blur transition-[top,bottom,left,right] duration-200 hover:bg-accent hover:text-foreground"
           aria-label={T.reportButton}
+          title={T.reportButton}
         >
-          <AlertCircle className="h-3.5 w-3.5" />
-          {T.reportButton}
+          <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+          <span className="hidden lg:inline">{T.reportButton}</span>
+          <span className="lg:hidden">{T.reportButtonShort}</span>
         </button>
       )}
 

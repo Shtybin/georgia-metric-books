@@ -600,7 +600,7 @@ export function TbilisiMap({
 
       {/* Historical 1898 controls — shown only when there's something to show */}
       {(TBILISI_1898 || districts) && (
-        <div className="pointer-events-auto absolute right-3 z-20 w-[14rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur sm:right-4 sm:w-[16rem] bottom-[5.5rem] sm:bottom-24 lg:bottom-4">
+        <div className="pointer-events-auto absolute right-3 z-20 w-[11rem] rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur sm:right-4 sm:w-[16rem] sm:p-2.5 bottom-[7.5rem] sm:bottom-24 lg:bottom-4">
           <div className="mb-1.5 flex items-center gap-1.5">
             <Layers className="h-3.5 w-3.5 text-muted-foreground" />
             <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
@@ -652,11 +652,21 @@ export function TbilisiMap({
         </div>
       )}
 
-      {/* Bottom action bar: Report (mobile only) above + archive button.
-          On tablet/desktop we add extra bottom padding so the centered
-          author badge (bottom-8) and OSM attribution don't collide with this row. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-2 p-3 sm:p-4 sm:pb-12">
-        <div className="sm:hidden">
+      {/* Bottom action bar.
+          Mobile (<sm): single horizontal row at bottom-left — docs + author badge + report.
+          Tablet/desktop (sm+): docs button centered, with extra bottom padding so the
+          centered author badge (bottom-8) and OSM attribution don't collide. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-start gap-2 p-3 sm:items-center sm:p-4 sm:pb-12">
+        {/* Mobile: compact row, left-aligned. */}
+        <div className="flex max-w-full flex-wrap items-center gap-1.5 sm:hidden">
+          <button
+            onClick={() => setDocsOpen(true)}
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur hover:bg-accent"
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            {T.archiveButtonShort}
+          </button>
+          <MapAuthorBadge lang={lang} inline />
           <ReportProblemButton
             lang={lang}
             getMapState={() => {
@@ -666,21 +676,17 @@ export function TbilisiMap({
               return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
             }}
             inline
+            className="!px-2.5 !py-1 !text-[11px]"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setDocsOpen(true)}
-            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur hover:bg-accent"
-          >
-            <BookOpen className="h-3.5 w-3.5" />
-            {T.archiveButton}
-          </button>
-          {/* Mobile: author badge inline next to docs button */}
-          <div className="sm:hidden">
-            <MapAuthorBadge lang={lang} inline />
-          </div>
-        </div>
+        {/* Tablet/desktop: centered docs button (full label). */}
+        <button
+          onClick={() => setDocsOpen(true)}
+          className="pointer-events-auto hidden items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur hover:bg-accent sm:inline-flex"
+        >
+          <BookOpen className="h-3.5 w-3.5" />
+          {T.archiveButton}
+        </button>
       </div>
 
       {/* Selected church card */}
