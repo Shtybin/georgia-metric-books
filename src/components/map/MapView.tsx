@@ -1412,6 +1412,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
+          {!embed && <MapHomeButton lang={lang} />}
           <button
             onClick={resetView}
             title={T.resetView}
