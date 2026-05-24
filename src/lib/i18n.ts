@@ -324,6 +324,7 @@ export const STRINGS = {
       'საქართველოს მეტრიკული წიგნები ინახება საქართველოს ეროვნულ ისტორიულ არქივში (ფონდი 489, აღწერა 6). მეტრიკული წიგნების სია — <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">არქივის</a> საიტზე. როგორ დავიწყოთ მუშაობა არქივში — იხილეთ <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">საიტზე</a>.<br/><br/>სოფლებისთვის, რომელთა კოორდინატები ვერ მოიძებნა, კოორდინატების დამატება შესაძლებელია ზედა ღილაკით „სოფლების კოორდინატების დამატება“. დამატების შემდეგ კოორდინატებს დაამოწმებს ადმინისტრატორი და წერტილი რუკაზე გამოჩნდება სოფლის, ეკლესიისა და თარიღების ყველა მონაცემთან ერთად.',
     close: "დახურვა",
     reportButton: "პრობლემის შეტყობინება",
+    reportButtonShort: "პრობლემა",
     reportTitle: "პრობლემის შეტყობინება",
     reportHint: "აღწერეთ პრობლემა: შეცდომა რუკაზე, არასწორი კოორდინატები, ბეჭდური შეცდომა სახელში, გაუმჯობესების იდეა. კონტაქტი — სურვილისამებრ.",
     reportPlaceholder: "რა არის არასწორად? რას გვთავაზობთ?",
