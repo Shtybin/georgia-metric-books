@@ -244,6 +244,8 @@ function Index() {
             ))}
           </div>
         </section>
+
+        <CopyrightFooter lang={lang as Lang} />
       </div>
     </main>
   );
