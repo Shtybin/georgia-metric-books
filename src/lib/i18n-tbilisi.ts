@@ -119,8 +119,8 @@ export const TBILISI_STRINGS = {
     legendTitle: "Легенда: конфессии",
     cityZoomCta: "Открыть карту церквей Тбилиси",
     historical: {
-      title: "Карта Тифлиса 1898 г.",
-      toggle: "Показать карту 1898 г.",
+      title: "Старые карты",
+      toggle: "Карта 1898 г.",
       opacity: "Прозрачность",
       districts: "Границы участков",
       districtField: "Участок (1898)",
@@ -197,8 +197,8 @@ export const TBILISI_STRINGS = {
     legendTitle: "Legend: confessions",
     cityZoomCta: "Open the Tbilisi churches map",
     historical: {
-      title: "Tiflis 1898 map",
-      toggle: "Show 1898 map",
+      title: "Old maps",
+      toggle: "1898 map",
       opacity: "Opacity",
       districts: "District borders",
       districtField: "District (1898)",
@@ -275,8 +275,8 @@ export const TBILISI_STRINGS = {
     legendTitle: "ლეგენდა: კონფესიები",
     cityZoomCta: "თბილისის ეკლესიების რუკის გახსნა",
     historical: {
-      title: "ტფილისის რუკა, 1898",
-      toggle: "1898 წლის რუკის ჩვენება",
+      title: "ძველი რუკები",
+      toggle: "1898 წლის რუკა",
       opacity: "გამჭვირვალობა",
       districts: "უბნების საზღვრები",
       districtField: "უბანი (1898)",
