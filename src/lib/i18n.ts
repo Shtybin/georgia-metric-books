@@ -318,6 +318,7 @@ export const STRINGS = {
     suggestionError: "წერტილი დაემატა რუკაზე, მაგრამ ბაზაში შენახვა ვერ მოხერხდა.",
     undo: "გაუქმება",
     docsButton: "სად ვეძებოთ დოკუმენტები?",
+    docsButtonShort: "დოკუმენტები",
     docsTitle: "სად ვეძებოთ დოკუმენტები?",
     docsBodyHtml:
       'საქართველოს მეტრიკული წიგნები ინახება საქართველოს ეროვნულ ისტორიულ არქივში (ფონდი 489, აღწერა 6). მეტრიკული წიგნების სია — <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">არქივის</a> საიტზე. როგორ დავიწყოთ მუშაობა არქივში — იხილეთ <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">საიტზე</a>.<br/><br/>სოფლებისთვის, რომელთა კოორდინატები ვერ მოიძებნა, კოორდინატების დამატება შესაძლებელია ზედა ღილაკით „სოფლების კოორდინატების დამატება“. დამატების შემდეგ კოორდინატებს დაამოწმებს ადმინისტრატორი და წერტილი რუკაზე გამოჩნდება სოფლის, ეკლესიისა და თარიღების ყველა მონაცემთან ერთად.',
