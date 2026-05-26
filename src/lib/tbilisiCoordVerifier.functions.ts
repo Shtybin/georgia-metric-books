@@ -219,22 +219,30 @@ ${
   };
 
   try {
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-5",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        tools: [tool],
-        tool_choice: { type: "function", function: { name: "verify_coords" } },
-      }),
-    });
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 110_000);
+    let res: Response;
+    try {
+      res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-5",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          tools: [tool],
+          tool_choice: { type: "function", function: { name: "verify_coords" } },
+        }),
+        signal: ctrl.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
     if (!res.ok) {
       const text = await res.text();
       throw new Error(`AI ${res.status}: ${text.slice(0, 1000)}`);
@@ -289,7 +297,7 @@ async function isAdmin(userId: string): Promise<boolean> {
 // ---- Server functions ------------------------------------------------------
 
 const verifyInput = z.object({
-  limit: z.number().int().min(1).max(10).default(2),
+  limit: z.number().int().min(1).max(1).default(1),
   offset: z.number().int().min(0).default(0),
   recheck: z.boolean().default(false),
 });
@@ -327,9 +335,8 @@ export const verifyTbilisiCoords = createServerFn({ method: "POST" })
       const displayName =
         church.name.ru || church.name.en || church.name.ka || `#${church.id}`;
       try {
-        // Nominatim is rate-limited: ~1 req/sec.
+        // Nominatim: один запрос на серверный вызов, rate-limit не страшен.
         const osm = await geocodeNominatim(church.address || displayName);
-        await new Promise((r) => setTimeout(r, 1100));
 
         const verdict = await aiVerify(church, osm);
         if (!verdict) {
