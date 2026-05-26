@@ -380,7 +380,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
+          {(["coords", "ai", "tbilisi", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -394,6 +394,10 @@ function AdminPage() {
               {k === "coords" ? "Координаты" : k === "ai" ? (
                 <span className="inline-flex items-center gap-1">
                   <Sparkles className="h-3.5 w-3.5" /> AI-геокодер
+                </span>
+              ) : k === "tbilisi" ? (
+                <span className="inline-flex items-center gap-1">
+                  <MapPin className="h-3.5 w-3.5" /> Координаты Тбилиси
                 </span>
               ) : k === "reports" ? (
                 <span className="inline-flex items-center gap-1">
