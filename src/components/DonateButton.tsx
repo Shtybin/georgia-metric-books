@@ -9,7 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { DONATE } from "@/lib/donate";
+import { DONATE, validateDonate } from "@/lib/donate";
 import type { Lang } from "@/lib/i18n";
 
 const L = {
@@ -29,6 +29,10 @@ const L = {
     copy: "Скопировать адрес",
     copied: "Адрес скопирован",
     thanks: "Спасибо за вашу поддержку — это помогает развивать проект.",
+    warnTitle: "Способ оплаты временно недоступен",
+    warnTron: "TRON-адрес настроен неверно. Не отправляйте средства!",
+    warnUrl: "Ссылка ещё не настроена.",
+    invalidCopy: "Некорректный адрес — копирование отключено",
   },
   en: {
     btn: "Support",
@@ -46,6 +50,10 @@ const L = {
     copy: "Copy address",
     copied: "Address copied",
     thanks: "Thank you — your support helps grow the project.",
+    warnTitle: "Payment method temporarily unavailable",
+    warnTron: "TRON address is invalid. Do not send funds!",
+    warnUrl: "Link is not configured yet.",
+    invalidCopy: "Invalid address — copy disabled",
   },
   ka: {
     btn: "მხარდაჭერა",
@@ -63,6 +71,10 @@ const L = {
     copy: "მისამართის კოპირება",
     copied: "მისამართი დაკოპირდა",
     thanks: "გმადლობთ მხარდაჭერისთვის — ეს ეხმარება პროექტს განვითარებაში.",
+    warnTitle: "გადახდის მეთოდი დროებით მიუწვდომელია",
+    warnTron: "TRON მისამართი არასწორია. ნუ გააგზავნით სახსრებს!",
+    warnUrl: "ბმული ჯერ არ არის კონფიგურირებული.",
+    invalidCopy: "არასწორი მისამართი — კოპირება გათიშულია",
   },
 } as const;
 
