@@ -206,64 +206,77 @@ function DonateDialog({
         </DialogHeader>
 
         <div className="mt-2 space-y-3">
-          {/* Worldwide — Buy Me a Coffee / Ko-fi */}
-          <a
-            href={DONATE.bmcUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block rounded-xl border border-border bg-card p-4 transition-colors hover:bg-accent"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="font-medium">{t.world}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{t.worldHint}</p>
+          {v.issues.length > 0 && (
+            <div
+              role="alert"
+              className="flex items-start gap-2 rounded-xl border border-amber-400/60 bg-amber-50 p-3 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-900/20 dark:text-amber-100"
+            >
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <div className="space-y-0.5">
+                <p className="font-medium">{t.warnTitle}</p>
+                <ul className="list-disc space-y-0.5 pl-4">
+                  {v.issues.map((msg) => (
+                    <li key={msg}>{msg}</li>
+                  ))}
+                </ul>
               </div>
-              <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
             </div>
-            <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
-              {t.worldCta}
-            </div>
-          </a>
+          )}
+
+          {/* Worldwide — Buy Me a Coffee / Ko-fi */}
+          <DonateLinkCard
+            href={DONATE.bmcUrl}
+            enabled={v.bmcOk}
+            title={t.world}
+            hint={t.worldHint}
+            cta={t.worldCta}
+            warn={t.warnUrl}
+          />
 
           {/* Russia — CloudTips */}
-          <a
+          <DonateLinkCard
             href={DONATE.cloudtipsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block rounded-xl border border-border bg-card p-4 transition-colors hover:bg-accent"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="font-medium">{t.ru}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{t.ruHint}</p>
-              </div>
-              <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
-            </div>
-            <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
-              {t.ruCta}
-            </div>
-          </a>
+            enabled={v.cloudtipsOk}
+            title={t.ru}
+            hint={t.ruHint}
+            cta={t.ruCta}
+            warn={t.warnUrl}
+          />
 
           {/* Crypto — USDT TRC-20 */}
           <div className="rounded-xl border border-border bg-card p-4">
             <p className="font-medium">{t.crypto}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{t.cryptoHint}</p>
+            {!v.tronOk && (
+              <p className="mt-2 flex items-start gap-1.5 rounded-md border border-amber-400/60 bg-amber-50 px-2 py-1.5 text-[11px] text-amber-900 dark:border-amber-500/40 dark:bg-amber-900/20 dark:text-amber-100">
+                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
+                {t.warnTron}
+              </p>
+            )}
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <img
-                src={qrUrl}
-                alt="USDT TRC-20 QR"
-                width={120}
-                height={120}
-                className="self-center rounded-md border border-border bg-white p-1 sm:self-auto"
-                loading="lazy"
-              />
+              {qrUrl && (
+                <img
+                  src={qrUrl}
+                  alt="USDT TRC-20 QR"
+                  width={120}
+                  height={120}
+                  className="self-center rounded-md border border-border bg-white p-1 sm:self-auto"
+                  loading="lazy"
+                />
+              )}
               <div className="min-w-0 flex-1">
-                <code className="block break-all rounded-md bg-muted px-2 py-1.5 font-mono text-[11px] leading-snug">
+                <code
+                  className={cn(
+                    "block break-all rounded-md bg-muted px-2 py-1.5 font-mono text-[11px] leading-snug",
+                    !v.tronOk && "text-muted-foreground line-through opacity-70",
+                  )}
+                >
                   {DONATE.tronAddress}
                 </code>
                 <button
                   onClick={handleCopy}
-                  className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium hover:bg-accent"
+                  disabled={!v.tronOk}
+                  className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {copied ? (
                     <Check className="h-3.5 w-3.5 text-green-600" />
@@ -280,5 +293,69 @@ function DonateDialog({
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function DonateLinkCard({
+  href,
+  enabled,
+  title,
+  hint,
+  cta,
+  warn,
+}: {
+  href: string;
+  enabled: boolean;
+  title: string;
+  hint: string;
+  cta: string;
+  warn: string;
+}) {
+  const inner = (
+    <>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-medium">{title}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{enabled ? hint : warn}</p>
+        </div>
+        {enabled ? (
+          <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
+        ) : (
+          <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-amber-600" />
+        )}
+      </div>
+      <div
+        className={cn(
+          "mt-3 inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium",
+          enabled
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted text-muted-foreground",
+        )}
+      >
+        {cta}
+      </div>
+    </>
+  );
+
+  if (!enabled) {
+    return (
+      <div
+        aria-disabled
+        className="block cursor-not-allowed rounded-xl border border-dashed border-border bg-card p-4 opacity-70"
+      >
+        {inner}
+      </div>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block rounded-xl border border-border bg-card p-4 transition-colors hover:bg-accent"
+    >
+      {inner}
+    </a>
   );
 }
