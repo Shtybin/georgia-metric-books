@@ -348,6 +348,47 @@ function DonateDialog({
           <p className="pt-1 text-center text-xs text-muted-foreground">{t.thanks}</p>
         </div>
       </DialogContent>
+
+      {qrUrlLarge && (
+        <Dialog open={qrOpen} onOpenChange={setQrOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="font-serif text-lg">USDT · TRON (TRC-20)</DialogTitle>
+              <DialogDescription className="text-xs">{t.cryptoHint}</DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col items-center gap-3">
+              <img
+                src={qrUrlLarge}
+                alt="USDT TRC-20 QR (large)"
+                width={360}
+                height={360}
+                className="rounded-md border border-border bg-white p-2"
+              />
+              <code className="block max-w-full break-all rounded-md bg-muted px-2 py-1.5 text-center font-mono text-[11px] leading-snug">
+                {DONATE.tronAddress}
+              </code>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                >
+                  {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? t.copied : t.copy}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownload}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  {t.downloadQr}
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </Dialog>
   );
 }
