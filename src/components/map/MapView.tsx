@@ -29,6 +29,7 @@ import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/li
 import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
 import { isInsideTbilisi, tT } from "@/lib/i18n-tbilisi";
 import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
+import { DonateButton } from "@/components/DonateButton";
 import { Link } from "@tanstack/react-router";
 import { Landmark } from "lucide-react";
 
@@ -1461,6 +1462,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </button>
             ))}
           </div>
+          {/* Donate — hidden on mobile (shown in bottom row instead) */}
+          <div className="hidden sm:block">
+            <DonateButton lang={lang} variant="compact" />
+          </div>
         </div>
       </div>
 
@@ -1795,6 +1800,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 {T.docsButtonShort}
               </button>
               <MapAuthorBadge lang={lang} inline />
+              <DonateButton lang={lang} variant="inline" />
               <ReportProblemButton
                 lang={lang}
                 getMapState={() => {
