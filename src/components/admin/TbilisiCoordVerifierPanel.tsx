@@ -105,7 +105,7 @@ export function TbilisiCoordVerifierPanel() {
     setError(null);
     setResult(null);
     setProgress({ done: 0, target: limit });
-    const CHUNK = 2;
+    const CHUNK = 1;
     const acc: BatchResult = {
       processed: 0,
       updated: 0,
