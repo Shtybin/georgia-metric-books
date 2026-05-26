@@ -327,9 +327,8 @@ export const verifyTbilisiCoords = createServerFn({ method: "POST" })
       const displayName =
         church.name.ru || church.name.en || church.name.ka || `#${church.id}`;
       try {
-        // Nominatim is rate-limited: ~1 req/sec.
+        // Nominatim: один запрос на серверный вызов, rate-limit не страшен.
         const osm = await geocodeNominatim(church.address || displayName);
-        await new Promise((r) => setTimeout(r, 1100));
 
         const verdict = await aiVerify(church, osm);
         if (!verdict) {
