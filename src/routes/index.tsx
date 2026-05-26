@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { t, type Lang, STRINGS } from "@/lib/i18n";
 import { AuthorHero, CopyrightFooter, authorName } from "@/components/AuthorCredit";
+import { DonateButton } from "@/components/DonateButton";
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
@@ -127,6 +128,7 @@ function Index() {
           >
             {L.ctaKa} <ArrowRight className="h-4 w-4" />
           </Link>
+          <DonateButton lang={lang as Lang} variant="hero" />
         </div>
 
         <AuthorHero lang={lang as Lang} />
