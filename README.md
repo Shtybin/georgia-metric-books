@@ -123,6 +123,7 @@ bun run dev
 | `bun run format`     | Prettier                                  |
 | `bun run test`       | Vitest (один прогон)                      |
 | `bun run test:watch` | Vitest в watch-режиме                     |
+| `bun run test:e2e`   | Playwright e2e: проверка overflow оверлеев `/map` и `/tbilisi` на 375/390/1280 px. Перед первым запуском: `npx playwright install chromium`. По умолчанию поднимает `vite dev` сам; для уже запущенного: `PLAYWRIGHT_BASE_URL=http://localhost:8080 bun run test:e2e`. |
 
 ---
 
