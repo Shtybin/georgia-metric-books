@@ -289,7 +289,7 @@ async function isAdmin(userId: string): Promise<boolean> {
 // ---- Server functions ------------------------------------------------------
 
 const verifyInput = z.object({
-  limit: z.number().int().min(1).max(10).default(2),
+  limit: z.number().int().min(1).max(1).default(1),
   offset: z.number().int().min(0).default(0),
   recheck: z.boolean().default(false),
 });
