@@ -488,6 +488,8 @@ function AdminPage() {
         <FeatureOverrideHistory currentUserId={currentUserId} />
       ) : tab === "ai" ? (
         <AiGeocoderPanel />
+      ) : tab === "tbilisi" ? (
+        <TbilisiCoordVerifierPanel />
       ) : tab === "coords" ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           {loading ? (
