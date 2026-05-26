@@ -8,10 +8,10 @@ import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
 import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYearsSuggestionsModeration";
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
 import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
-import { TbilisiCoordVerifierPanel } from "@/components/admin/TbilisiCoordVerifierPanel";
 import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin } from "lucide-react";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen } from "lucide-react";
+
 
 interface OsmActionProps {
   lat: number;
@@ -115,7 +115,7 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "ai" | "tbilisi" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources">("coords");
+  const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources">("coords");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
@@ -380,7 +380,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "tbilisi", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
+          {(["coords", "ai", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -395,14 +395,11 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <Sparkles className="h-3.5 w-3.5" /> AI-геокодер
                 </span>
-              ) : k === "tbilisi" ? (
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5" /> Координаты Тбилиси
-                </span>
               ) : k === "reports" ? (
                 <span className="inline-flex items-center gap-1">
                   <MessageSquare className="h-3.5 w-3.5" /> Сообщения
                 </span>
+
               ) : k === "cards" ? (
                 <span className="inline-flex items-center gap-1">
                   <FileEdit className="h-3.5 w-3.5" /> Карточки
@@ -427,7 +424,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "tbilisi" && tab !== "quality" && tab !== "sources" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "quality" && tab !== "sources" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -488,9 +485,8 @@ function AdminPage() {
         <FeatureOverrideHistory currentUserId={currentUserId} />
       ) : tab === "ai" ? (
         <AiGeocoderPanel />
-      ) : tab === "tbilisi" ? (
-        <TbilisiCoordVerifierPanel />
       ) : tab === "coords" ? (
+
         <section className="mx-auto max-w-6xl px-4 py-4">
           {loading ? (
             <p className="text-sm text-muted-foreground">Загрузка…</p>
