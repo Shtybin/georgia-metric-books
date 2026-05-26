@@ -171,8 +171,13 @@ function DonateDialog({
 }) {
   const t = L[lang];
   const [copied, setCopied] = useState(false);
+  const v = validateDonate();
 
   const handleCopy = async () => {
+    if (!v.tronOk) {
+      toast.error(t.invalidCopy);
+      return;
+    }
     try {
       await navigator.clipboard.writeText(DONATE.tronAddress);
       setCopied(true);
@@ -183,9 +188,11 @@ function DonateDialog({
     }
   };
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=4&data=${encodeURIComponent(
-    DONATE.tronAddress,
-  )}`;
+  const qrUrl = v.tronOk
+    ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=4&data=${encodeURIComponent(
+        DONATE.tronAddress,
+      )}`
+    : null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
