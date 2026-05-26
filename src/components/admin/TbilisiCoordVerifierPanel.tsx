@@ -87,7 +87,7 @@ export function TbilisiCoordVerifierPanel() {
   const reload = useCallback(async () => {
     setLoadingList(true);
     try {
-      const rows = (await listFn({ data: { status: filter } })) as VerificationRow[];
+      const rows = (await listFn({ data: { status: filter } })) as unknown as VerificationRow[];
       setPending(rows);
     } catch (e) {
       console.error("[list verifications]", e);
