@@ -395,14 +395,11 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <Sparkles className="h-3.5 w-3.5" /> AI-геокодер
                 </span>
-              ) : k === "tbilisi" ? (
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5" /> Координаты Тбилиси
-                </span>
               ) : k === "reports" ? (
                 <span className="inline-flex items-center gap-1">
                   <MessageSquare className="h-3.5 w-3.5" /> Сообщения
                 </span>
+
               ) : k === "cards" ? (
                 <span className="inline-flex items-center gap-1">
                   <FileEdit className="h-3.5 w-3.5" /> Карточки
