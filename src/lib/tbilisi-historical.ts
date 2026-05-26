@@ -56,16 +56,12 @@ export type HistoricalConfig = HistoricalTilesConfig | HistoricalImageConfig | n
  * и заменить kind на "tiles".
  */
 export const TBILISI_1898: HistoricalConfig = {
-  kind: "image",
-  url: "/historical/tbilisi-1898.jpg",
-  coordinates: [
-    [44.77083, 41.75833], // top-left
-    [44.86389, 41.73750], // top-right
-    [44.86389, 41.67083], // bottom-right
-    [44.77083, 41.68750], // bottom-left
-  ],
+  kind: "tiles",
+  tiles: "/tiles/tbilisi-1898/{z}/{x}/{y}.png",
+  minzoom: 12,
+  maxzoom: 17,
   attribution:
-    'План города Тифлиса с окрестностями, 1898 г., изд. Н. Ф. Клементьева · Национальный архив Грузии',
+    'План города Тифлиса, 1898 г., изд. Н. Ф. Клементьева · Национальный архив Грузии',
 };
 
 /** Путь к geojson границ участков. 404 = слой не отображается. */
