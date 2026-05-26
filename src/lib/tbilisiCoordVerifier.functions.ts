@@ -233,12 +233,11 @@ ${
         ],
         tools: [tool],
         tool_choice: { type: "function", function: { name: "verify_coords" } },
-        reasoning: { effort: "high" },
       }),
     });
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`AI ${res.status}: ${text.slice(0, 300)}`);
+      throw new Error(`AI ${res.status}: ${text.slice(0, 1000)}`);
     }
     const data = (await res.json()) as {
       choices?: {
