@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, Copy, Check, ExternalLink } from "lucide-react";
+import { Heart, Copy, Check, ExternalLink, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
