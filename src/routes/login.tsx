@@ -26,8 +26,10 @@ function LoginPage() {
   const [info, setInfo] = useState<string | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin" });
+    // Use getUser() which re-validates the JWT against Supabase's auth server,
+    // rather than getSession() which only reads from localStorage.
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) navigate({ to: "/admin" });
     });
   }, [navigate]);
 
