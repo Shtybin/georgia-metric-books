@@ -376,6 +376,66 @@ export type Database = {
         }
         Relationships: []
       }
+      tbilisi_coord_verifications: {
+        Row: {
+          church_id: number
+          created_at: string
+          created_by: string | null
+          distance_m: number
+          id: string
+          model_confidence: number
+          new_lat: number
+          new_lon: number
+          old_lat: number
+          old_lon: number
+          osm_candidates: Json
+          reasoning: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          sources: Json
+          status: Database["public"]["Enums"]["tbilisi_coord_verif_status"]
+          updated_at: string
+        }
+        Insert: {
+          church_id: number
+          created_at?: string
+          created_by?: string | null
+          distance_m?: number
+          id?: string
+          model_confidence?: number
+          new_lat: number
+          new_lon: number
+          old_lat: number
+          old_lon: number
+          osm_candidates?: Json
+          reasoning?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sources?: Json
+          status?: Database["public"]["Enums"]["tbilisi_coord_verif_status"]
+          updated_at?: string
+        }
+        Update: {
+          church_id?: number
+          created_at?: string
+          created_by?: string | null
+          distance_m?: number
+          id?: string
+          model_confidence?: number
+          new_lat?: number
+          new_lon?: number
+          old_lat?: number
+          old_lon?: number
+          osm_candidates?: Json
+          reasoning?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          sources?: Json
+          status?: Database["public"]["Enums"]["tbilisi_coord_verif_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       uezd_corrections: {
         Row: {
           created_at: string
@@ -467,6 +527,7 @@ export type Database = {
       missing_years_suggestion_status: "pending" | "approved" | "rejected"
       report_status: "new" | "in_progress" | "resolved"
       suggestion_status: "pending" | "approved" | "rejected"
+      tbilisi_coord_verif_status: "pending" | "approved" | "rejected"
       uezd_correction_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -599,6 +660,7 @@ export const Constants = {
       missing_years_suggestion_status: ["pending", "approved", "rejected"],
       report_status: ["new", "in_progress", "resolved"],
       suggestion_status: ["pending", "approved", "rejected"],
+      tbilisi_coord_verif_status: ["pending", "approved", "rejected"],
       uezd_correction_status: ["pending", "approved", "rejected"],
     },
   },
