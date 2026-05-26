@@ -291,14 +291,34 @@ function DonateDialog({
             )}
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
               {qrUrl && (
-                <img
-                  src={qrUrl}
-                  alt="USDT TRC-20 QR"
-                  width={120}
-                  height={120}
-                  className="self-center rounded-md border border-border bg-white p-1 sm:self-auto"
-                  loading="lazy"
-                />
+                <div className="flex flex-col items-center gap-1.5 self-center sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => setQrOpen(true)}
+                    title={t.zoomQr}
+                    aria-label={t.zoomQr}
+                    className="group relative rounded-md border border-border bg-white p-1 transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <img
+                      src={qrUrl}
+                      alt="USDT TRC-20 QR"
+                      width={120}
+                      height={120}
+                      loading="lazy"
+                    />
+                    <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-md bg-black/0 transition-colors group-hover:bg-black/30">
+                      <Maximize2 className="h-5 w-5 text-white opacity-0 transition-opacity group-hover:opacity-100" />
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDownload}
+                    className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-[11px] font-medium hover:bg-accent"
+                  >
+                    <Download className="h-3 w-3" />
+                    {t.downloadQr}
+                  </button>
+                </div>
               )}
               <div className="min-w-0 flex-1">
                 <code
