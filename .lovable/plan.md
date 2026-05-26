@@ -1,66 +1,31 @@
-# Проверка координат тбилисских церквей через ИИ
+## Проблема
 
-## Что делаем
+В логах сервера на каждый вызов `aiVerify` приходит ошибка:
 
-Новая вкладка в /admin → «Координаты Тбилиси»: запускает батч AI-проверки координат церквей из `public/data/tbilisi-churches.json` с уверенностью != `high`. Для каждой церкви комбинируем geocoding (Nominatim) и deep-research через Lovable AI (GPT-5, reasoning=high) — модель получает имя/адрес/район/исторические заметки + кандидатов OSM и возвращает уточнённые координаты с обоснованием и ссылками. Результаты складываются в новую таблицу для модерации; ничего не публикуется автоматически.
+```
+AI 400: { "error": { "message": "Unknown parameter: 'reasoning'." } }
+```
 
-## Технические детали
+Поэтому панель «Координаты Тбилиси» по всем 5 церквям пишет «AI вернул пустой ответ» — запрос к Lovable AI Gateway падает на валидации тела.
 
-### 1. Миграция БД
+Причина: при подключении OpenAI через Lovable AI Gateway параметр `reasoning: { effort: "high" }` не поддерживается (это поле OpenAI Responses API, а шлюз принимает классический Chat Completions). `openai/gpt-5` сам по себе reasoning-модель, дополнительный параметр не нужен.
 
-Новая таблица `public.tbilisi_coord_verifications`:
-- `id uuid pk`
-- `church_id int` (id из tbilisi-churches.json), уникален
-- `old_lat/old_lon double`, `new_lat/new_lon double`
-- `distance_m double` (расстояние между старой и новой)
-- `confidence numeric(3,2)` (0–1, от модели)
-- `reasoning text` (объяснение модели)
-- `sources jsonb` (массив `{url, title}`)
-- `osm_candidates jsonb` (что вернул Nominatim)
-- `status text` ∈ {pending, approved, rejected}, default pending
-- `reviewed_by uuid`, `reviewed_at timestamptz`, `created_at`, `updated_at`
+## Что изменить
 
-GRANT для authenticated/service_role + RLS: select/insert/update только для `has_role(auth.uid(), 'admin')`. Триггер `update_updated_at_column`.
+Один файл — `src/lib/tbilisiCoordVerifier.functions.ts`, функция `aiVerify`, тело POST-запроса к `https://ai.gateway.lovable.dev/v1/chat/completions`:
 
-### 2. Server function `src/lib/tbilisiCoordVerifier.functions.ts`
+1. Убрать поле `reasoning: { effort: "high" }` из JSON.
+2. Логирование ошибки расширить: писать первые ~1000 символов тела ответа (а не 300), чтобы такие 400-ошибки сразу были читаемы в логах без дополнительного `grep`.
 
-`verifyTbilisiCoords({ limit, offset, minConfidence?, recheck? })`, middleware `requireSupabaseAuth` + ручная проверка роли admin через `has_role`:
+Больше ничего трогать не нужно: модель остаётся `openai/gpt-5`, tool calling и системный промпт работают как есть, БД/UI/миграции — без изменений.
 
-1. Читает `public/data/tbilisi-churches.json` через `fs.readFileSync`.
-2. Фильтрует записи `confidence !== 'high'`. Если `recheck=false`, исключает уже верифицированные (есть строка в `tbilisi_coord_verifications`).
-3. Чанками по 2 (≈30 сек лимит):
-   - Nominatim `q=address, Tbilisi, Georgia` (User-Agent + 1.1s задержка).
-   - Lovable AI: `openai/gpt-5`, `reasoning: { effort: "high" }`, tool calling для строгого JSON.
-   - Системный промпт: историк-картограф Тифлиса; задача — проверить координаты церкви на основе адреса, района, исторических заметок, кандидатов OSM. Возвращай `{lat, lon, confidence, reasoning, sources: [{url,title}]}`. Если уверен в текущих — верни их же с пояснением.
-   - Считает distance_m (haversine), upsert в таблицу по `church_id`.
-4. Возвращает `{processed, updated, skipped, errors, log: [...]}` для UI.
+## Проверка
 
-`listTbilisiVerifications({ status })` — возвращает строки + соответствующие church данные (joined в коде).
+После правки:
+1. Открыть админку → вкладка «Координаты Тбилиси» → запустить на 2 церкви.
+2. Ожидать, что для каждой записи статус будет `updated`/`kept`, а в `tbilisi_coord_verifications` появятся pending-записи с `reasoning` и `sources`.
+3. Если снова ошибка — посмотреть `stack_modern--server-function-logs` (теперь будет видно полное тело).
 
-`reviewTbilisiVerification({ id, action: 'approve'|'reject' })` — обновляет статус.
+## Замечание про «reasoning effort»
 
-### 3. UI `src/components/admin/TbilisiCoordVerifierPanel.tsx`
-
-По образцу `AiGeocoderPanel`:
-- Слайдер «сколько проверить» (1–50), чекбокс «перепроверять уже проверенные».
-- Кнопка «Запустить» — клиентский цикл по 2 записи (как уже сделано в AiGeocoderPanel) с прогрессом.
-- Лог: имя церкви, старые/новые координаты, distance_m, confidence, reasoning, ссылки на источники.
-- Под логом — список pending-предложений с кнопками Approve/Reject и мини-картой (AdminMiniMap) показывающей старую и новую точки.
-
-### 4. Применение одобренных правок
-
-`src/lib/tbilisiChurches.ts` грузит JSON и затем тянет approved-верификации из Supabase, мёржит по id — `church.lat/lon` заменяются, `confidence` повышается до `high`, добавляется флаг `verifiedByAi: true` чтобы показывать значок в карточке.
-
-### 5. Вкладка в admin.tsx
-
-Добавляем `"tbilisi"` в union типа `tab`, кнопку «Координаты Тбилиси», секцию `{tab === "tbilisi" && <TbilisiCoordVerifierPanel />}`.
-
-## Стоимость / ограничения
-
-GPT-5 с reasoning=high — самый дорогой и медленный из доступных. 2 церкви/запрос ≈ 30–60 сек. Полный обход ~200 точек = ~50 запусков, расходует ощутимый кусок Lovable AI кредитов. UI явно об этом предупреждает.
-
-## Что НЕ делаем в этом проходе
-
-- Не публикуем правки автоматически — только через ручное approve.
-- Не трогаем общий метрики-набор (только тбилисские церкви).
-- Не меняем сам JSON-файл; правки живут в Supabase и применяются поверх.
+Если позже захотим явно поднять усилие рассуждений, через Lovable AI Gateway это делается параметром верхнего уровня `reasoning_effort: "high"` (а не вложенным объектом `reasoning`). Сейчас оставляем дефолт, чтобы не упереться в ещё одну несовместимость; добавим отдельной задачей при необходимости.
