@@ -183,6 +183,7 @@ function DonateDialog({
 }) {
   const t = L[lang];
   const [copied, setCopied] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const v = validateDonate();
 
   const handleCopy = async () => {
@@ -200,11 +201,34 @@ function DonateDialog({
     }
   };
 
-  const qrUrl = v.tronOk
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=4&data=${encodeURIComponent(
-        DONATE.tronAddress,
-      )}`
-    : null;
+  const qrSrc = (size: number) =>
+    `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=4&data=${encodeURIComponent(
+      DONATE.tronAddress,
+    )}`;
+
+  const qrUrl = v.tronOk ? qrSrc(180) : null;
+  const qrUrlLarge = v.tronOk ? qrSrc(600) : null;
+
+  const handleDownload = async () => {
+    if (!qrUrlLarge) return;
+    try {
+      const res = await fetch(qrUrlLarge);
+      if (!res.ok) throw new Error("network");
+      const blob = await res.blob();
+      const objUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objUrl;
+      a.download = `usdt-trc20-${DONATE.tronAddress}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+      toast.success(t.qrDownloaded);
+    } catch {
+      toast.error(t.qrDownloadError);
+    }
+  };
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
