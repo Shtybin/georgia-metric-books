@@ -1,3 +1,5 @@
+import { supabase } from "@/integrations/supabase/client";
+
 export interface TbilisiChurch {
   id: number;
   name: { ka: string; ru: string; en: string };
@@ -16,6 +18,8 @@ export interface TbilisiChurch {
   note: string | { ru: string; en: string; ka: string };
   confidence: import("./i18n-tbilisi").Confidence;
   historicalNote: string | { ru: string; en: string; ka: string };
+  /** true if coords were updated by an approved AI verification */
+  verifiedByAi?: boolean;
 }
 
 let cache: TbilisiChurch[] | null = null;
@@ -24,13 +28,30 @@ let inflight: Promise<TbilisiChurch[]> | null = null;
 export function fetchTbilisiChurches(): Promise<TbilisiChurch[]> {
   if (cache) return Promise.resolve(cache);
   if (inflight) return inflight;
-  inflight = fetch("/data/tbilisi-churches.json")
-    .then((r) => r.json())
-    .then((rows: TbilisiChurch[]) => {
-      cache = rows;
-      inflight = null;
-      return rows;
+  inflight = Promise.all([
+    fetch("/data/tbilisi-churches.json").then((r) => r.json()),
+    supabase
+      .from("tbilisi_coord_verifications")
+      .select("church_id, new_lat, new_lon")
+      .eq("status", "approved")
+      .then(({ data, error }) => {
+        if (error) {
+          console.warn("[tbilisi verifications]", error);
+          return [] as { church_id: number; new_lat: number; new_lon: number }[];
+        }
+        return (data || []) as { church_id: number; new_lat: number; new_lon: number }[];
+      }),
+  ]).then(([rows, overrides]) => {
+    const byId = new Map(overrides.map((o) => [o.church_id, o]));
+    const merged = (rows as TbilisiChurch[]).map((c) => {
+      const o = byId.get(c.id);
+      if (!o) return c;
+      return { ...c, lat: o.new_lat, lon: o.new_lon, confidence: "high" as const, verifiedByAi: true };
     });
+    cache = merged;
+    inflight = null;
+    return merged;
+  });
   return inflight;
 }
 

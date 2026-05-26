@@ -1,72 +1,66 @@
+# Проверка координат тбилисских церквей через ИИ
+
 ## Что делаем
 
-Добавляем единый компонент **«Поддержать проект»** во все три экрана: лендинг (акцентная CTA), `/map` и `/tbilisi` (компактная пилюля). По клику открывается модалка с тремя способами доната — без бэкенда, без сбора платёжных данных у нас, всё уходит на внешние сервисы.
+Новая вкладка в /admin → «Координаты Тбилиси»: запускает батч AI-проверки координат церквей из `public/data/tbilisi-churches.json` с уверенностью != `high`. Для каждой церкви комбинируем geocoding (Nominatim) и deep-research через Lovable AI (GPT-5, reasoning=high) — модель получает имя/адрес/район/исторические заметки + кандидатов OSM и возвращает уточнённые координаты с обоснованием и ссылками. Результаты складываются в новую таблицу для модерации; ничего не публикуется автоматически.
 
-## Сервисы (по вашему выбору)
+## Технические детали
 
-| Способ | Сервис | Аудитория | Анонимность |
-|---|---|---|---|
-| 🌍 Карта (мир) | Buy Me a Coffee / Ko-fi | Visa/MC, Apple/Google Pay | Имя/email опц. |
-| 🇷🇺 Карта (РФ) | CloudTips | МИР/Visa/MC РФ, СБП | Полностью аноним |
-| ₮ Крипта | USDT TRC-20 | Любая страна | Полностью аноним |
+### 1. Миграция БД
 
-Никаких ключей, секретов или серверного кода — только три внешние ссылки/адрес. Безопасно и не требует Lovable Cloud для этой фичи.
+Новая таблица `public.tbilisi_coord_verifications`:
+- `id uuid pk`
+- `church_id int` (id из tbilisi-churches.json), уникален
+- `old_lat/old_lon double`, `new_lat/new_lon double`
+- `distance_m double` (расстояние между старой и новой)
+- `confidence numeric(3,2)` (0–1, от модели)
+- `reasoning text` (объяснение модели)
+- `sources jsonb` (массив `{url, title}`)
+- `osm_candidates jsonb` (что вернул Nominatim)
+- `status text` ∈ {pending, approved, rejected}, default pending
+- `reviewed_by uuid`, `reviewed_at timestamptz`, `created_at`, `updated_at`
 
-## Новые файлы
+GRANT для authenticated/service_role + RLS: select/insert/update только для `has_role(auth.uid(), 'admin')`. Триггер `update_updated_at_column`.
 
-1. **`src/components/DonateButton.tsx`** — переиспользуемая кнопка-триггер. Пропсы: `variant` (`"hero"` для лендинга — крупная градиентная пилюля; `"compact"` для карт — пилюля h-9 с иконкой Heart и текстом «Поддержать»/«Support»/«მხარდაჭერა»), `lang`.
-2. **`src/components/DonateDialog.tsx`** — модалка (на основе `components/ui/dialog`). Три блока-карточки:
-   - **CloudTips** — кнопка-ссылка «Поддержать рублями (РФ)» → внешний переход
-   - **Buy Me a Coffee** — кнопка-ссылка «Support in USD/EUR» → внешний переход
-   - **USDT TRC-20** — моноширинный адрес + кнопка «Скопировать» (toast при успехе) + опциональный inline QR (генерируем через `qrcode` npm-пакет, ~3KB, или через SVG-utility — уточню при сборке, чтобы не тянуть лишнее). Внизу подсказка «Сеть: TRON (TRC-20). Не отправляйте через другие сети».
-   - Короткий disclaimer: «Спасибо за поддержку! Все способы анонимны, мы не получаем ваших платёжных данных».
+### 2. Server function `src/lib/tbilisiCoordVerifier.functions.ts`
 
-## Точки встраивания
+`verifyTbilisiCoords({ limit, offset, minConfidence?, recheck? })`, middleware `requireSupabaseAuth` + ручная проверка роли admin через `has_role`:
 
-### Лендинг `src/routes/index.tsx`
-- Третья кнопка в hero-блоке рядом с «Открыть карту RU/EN/KA» — `<DonateButton variant="hero">`. Стиль: акцентный в палитре сайта (амбер/охра градиент на базе текущего `--primary`), чтобы выбивалась, но не выглядела чужеродно.
-- Дубль в `CopyrightFooter` — маленькая ссылка-сердечко.
+1. Читает `public/data/tbilisi-churches.json` через `fs.readFileSync`.
+2. Фильтрует записи `confidence !== 'high'`. Если `recheck=false`, исключает уже верифицированные (есть строка в `tbilisi_coord_verifications`).
+3. Чанками по 2 (≈30 сек лимит):
+   - Nominatim `q=address, Tbilisi, Georgia` (User-Agent + 1.1s задержка).
+   - Lovable AI: `openai/gpt-5`, `reasoning: { effort: "high" }`, tool calling для строгого JSON.
+   - Системный промпт: историк-картограф Тифлиса; задача — проверить координаты церкви на основе адреса, района, исторических заметок, кандидатов OSM. Возвращай `{lat, lon, confidence, reasoning, sources: [{url,title}]}`. Если уверен в текущих — верни их же с пояснением.
+   - Считает distance_m (haversine), upsert в таблицу по `church_id`.
+4. Возвращает `{processed, updated, skipped, errors, log: [...]}` для UI.
 
-### `/map` (`src/components/map/MapView.tsx`)
-- Компактная пилюля в верхнем правом кластере рядом с переключателем языка/масштаба (десктоп/таблет).
-- На мобильном — в нижнем ряду рядом с `[Docs] [© 2025] [Problem]`. Так как мы недавно отполировали этот ряд до 3 кнопок, добавление 4-й потребует:
-  - либо ужать «Problem» до иконки без текста на mobile,
-  - либо вынести Donate отдельно над рядом справа (как сейчас сделано с кнопкой «1898 map» на Тифлисе).
-  - Решу по месту, протестирую визуально на 375px.
+`listTbilisiVerifications({ status })` — возвращает строки + соответствующие church данные (joined в коде).
 
-### `/tbilisi` (`src/components/map/TbilisiMap.tsx`)
-- Симметрично `/map`: верхний правый кластер на десктопе/таблете, на мобильном — рядом с «1898 map» (одиночная кнопка над нижним рядом).
+`reviewTbilisiVerification({ id, action: 'approve'|'reject' })` — обновляет статус.
 
-## Локализация
+### 3. UI `src/components/admin/TbilisiCoordVerifierPanel.tsx`
 
-В `src/lib/i18n.ts` и `src/lib/i18n-tbilisi.ts` добавлю ключи:
-- `donate.button` — «Поддержать» / «Support» / «მხარდაჭერა»
-- `donate.title` — «Поддержать проект» / «Support the project» / «პროექტის მხარდაჭერა»
-- `donate.lead`, `donate.cloudtips`, `donate.bmc`, `donate.crypto`, `donate.copy`, `donate.copied`, `donate.networkWarning`, `donate.anonNote`
+По образцу `AiGeocoderPanel`:
+- Слайдер «сколько проверить» (1–50), чекбокс «перепроверять уже проверенные».
+- Кнопка «Запустить» — клиентский цикл по 2 записи (как уже сделано в AiGeocoderPanel) с прогрессом.
+- Лог: имя церкви, старые/новые координаты, distance_m, confidence, reasoning, ссылки на источники.
+- Под логом — список pending-предложений с кнопками Approve/Reject и мини-картой (AdminMiniMap) показывающей старую и новую точки.
 
-## Что нужно от вас перед сборкой
+### 4. Применение одобренных правок
 
-Одним сообщением:
-1. **CloudTips URL** (например `https://pay.cloudtips.ru/p/xxxxxxxx`)
-2. **Buy Me a Coffee / Ko-fi URL** (например `https://buymeacoffee.com/shtybin`)
-3. **USDT TRC-20 адрес** (начинается на `T...`, 34 символа)
+`src/lib/tbilisiChurches.ts` грузит JSON и затем тянет approved-верификации из Supabase, мёржит по id — `church.lat/lon` заменяются, `confidence` повышается до `high`, добавляется флаг `verifiedByAi: true` чтобы показывать значок в карточке.
 
-Если что-то ещё не готово — подставлю плейсхолдер и помечу `TODO`, потом легко заменим.
+### 5. Вкладка в admin.tsx
 
-## Что НЕ трогаем
+Добавляем `"tbilisi"` в union типа `tab`, кнопку «Координаты Тбилиси», секцию `{tab === "tbilisi" && <TbilisiCoordVerifierPanel />}`.
 
-- Логику карт, данные, RLS, маршрутизацию, гайд.
-- Никакого backend / Edge Functions / БД — донаты внешние.
-- `/embed` — донат-кнопку туда не добавляем (встраивается на сторонние сайты).
+## Стоимость / ограничения
 
-## Тех. детали
+GPT-5 с reasoning=high — самый дорогой и медленный из доступных. 2 церкви/запрос ≈ 30–60 сек. Полный обход ~200 точек = ~50 запусков, расходует ощутимый кусок Lovable AI кредитов. UI явно об этом предупреждает.
 
-- Кнопка `DonateButton` — использует `<Button>` из `components/ui/button` с кастомным классом для `hero` варианта (градиент на базе `--primary` через `bg-gradient-to-r`).
-- Модалка — `Dialog` из `components/ui/dialog`, RU/EN/KA через переданный `lang`.
-- Внешние ссылки: `target="_blank" rel="noopener noreferrer"`.
-- Копирование адреса: `navigator.clipboard.writeText` + `toast` из `sonner` (уже подключён).
-- QR-код: добавлю пакет `qrcode` (`bun add qrcode @types/qrcode`) и сгенерирую data-URL на маунте модалки. Альтернатива — внешний `https://api.qrserver.com/...`, но локально надёжнее.
+## Что НЕ делаем в этом проходе
 
-## Проверка после сборки
-
-Скриншоты на 1366×768 (desktop), 820×1180 (tablet), 375×812 (mobile) для всех трёх страниц: убеждаемся, что кнопка читается, не ломает существующую плотность нижнего ряда на картах, модалка корректно открывается и адрес копируется.
+- Не публикуем правки автоматически — только через ручное approve.
+- Не трогаем общий метрики-набор (только тбилисские церкви).
+- Не меняем сам JSON-файл; правки живут в Supabase и применяются поверх.
