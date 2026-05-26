@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, Copy, Check, ExternalLink, AlertTriangle } from "lucide-react";
+import { Heart, Copy, Check, ExternalLink, AlertTriangle, Maximize2, Download } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -33,6 +33,10 @@ const L = {
     warnTron: "TRON-адрес настроен неверно. Не отправляйте средства!",
     warnUrl: "Ссылка ещё не настроена.",
     invalidCopy: "Некорректный адрес — копирование отключено",
+    zoomQr: "Увеличить QR",
+    downloadQr: "Скачать QR",
+    qrDownloaded: "QR-код сохранён",
+    qrDownloadError: "Не удалось скачать QR",
   },
   en: {
     btn: "Support",
@@ -54,6 +58,10 @@ const L = {
     warnTron: "TRON address is invalid. Do not send funds!",
     warnUrl: "Link is not configured yet.",
     invalidCopy: "Invalid address — copy disabled",
+    zoomQr: "Enlarge QR",
+    downloadQr: "Download QR",
+    qrDownloaded: "QR code saved",
+    qrDownloadError: "Failed to download QR",
   },
   ka: {
     btn: "მხარდაჭერა",
@@ -70,6 +78,10 @@ const L = {
     cryptoHint: "USDT TRON ქსელში (TRC-20). არ გააგზავნოთ სხვა ქსელით!",
     copy: "მისამართის კოპირება",
     copied: "მისამართი დაკოპირდა",
+    zoomQr: "QR-ის გადიდება",
+    downloadQr: "QR-ის ჩამოტვირთვა",
+    qrDownloaded: "QR კოდი შენახულია",
+    qrDownloadError: "QR-ის ჩამოტვირთვა ვერ მოხერხდა",
     thanks: "გმადლობთ მხარდაჭერისთვის — ეს ეხმარება პროექტს განვითარებაში.",
     warnTitle: "გადახდის მეთოდი დროებით მიუწვდომელია",
     warnTron: "TRON მისამართი არასწორია. ნუ გააგზავნით სახსრებს!",
@@ -171,6 +183,7 @@ function DonateDialog({
 }) {
   const t = L[lang];
   const [copied, setCopied] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const v = validateDonate();
 
   const handleCopy = async () => {
@@ -188,11 +201,34 @@ function DonateDialog({
     }
   };
 
-  const qrUrl = v.tronOk
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=4&data=${encodeURIComponent(
-        DONATE.tronAddress,
-      )}`
-    : null;
+  const qrSrc = (size: number) =>
+    `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=4&data=${encodeURIComponent(
+      DONATE.tronAddress,
+    )}`;
+
+  const qrUrl = v.tronOk ? qrSrc(180) : null;
+  const qrUrlLarge = v.tronOk ? qrSrc(600) : null;
+
+  const handleDownload = async () => {
+    if (!qrUrlLarge) return;
+    try {
+      const res = await fetch(qrUrlLarge);
+      if (!res.ok) throw new Error("network");
+      const blob = await res.blob();
+      const objUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objUrl;
+      a.download = `usdt-trc20-${DONATE.tronAddress}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+      toast.success(t.qrDownloaded);
+    } catch {
+      toast.error(t.qrDownloadError);
+    }
+  };
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -255,14 +291,34 @@ function DonateDialog({
             )}
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
               {qrUrl && (
-                <img
-                  src={qrUrl}
-                  alt="USDT TRC-20 QR"
-                  width={120}
-                  height={120}
-                  className="self-center rounded-md border border-border bg-white p-1 sm:self-auto"
-                  loading="lazy"
-                />
+                <div className="flex flex-col items-center gap-1.5 self-center sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => setQrOpen(true)}
+                    title={t.zoomQr}
+                    aria-label={t.zoomQr}
+                    className="group relative rounded-md border border-border bg-white p-1 transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <img
+                      src={qrUrl}
+                      alt="USDT TRC-20 QR"
+                      width={120}
+                      height={120}
+                      loading="lazy"
+                    />
+                    <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-md bg-black/0 transition-colors group-hover:bg-black/30">
+                      <Maximize2 className="h-5 w-5 text-white opacity-0 transition-opacity group-hover:opacity-100" />
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDownload}
+                    className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-[11px] font-medium hover:bg-accent"
+                  >
+                    <Download className="h-3 w-3" />
+                    {t.downloadQr}
+                  </button>
+                </div>
               )}
               <div className="min-w-0 flex-1">
                 <code
@@ -292,6 +348,47 @@ function DonateDialog({
           <p className="pt-1 text-center text-xs text-muted-foreground">{t.thanks}</p>
         </div>
       </DialogContent>
+
+      {qrUrlLarge && (
+        <Dialog open={qrOpen} onOpenChange={setQrOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="font-serif text-lg">USDT · TRON (TRC-20)</DialogTitle>
+              <DialogDescription className="text-xs">{t.cryptoHint}</DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col items-center gap-3">
+              <img
+                src={qrUrlLarge}
+                alt="USDT TRC-20 QR (large)"
+                width={360}
+                height={360}
+                className="rounded-md border border-border bg-white p-2"
+              />
+              <code className="block max-w-full break-all rounded-md bg-muted px-2 py-1.5 text-center font-mono text-[11px] leading-snug">
+                {DONATE.tronAddress}
+              </code>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                >
+                  {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? t.copied : t.copy}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownload}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  {t.downloadQr}
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </Dialog>
   );
 }
