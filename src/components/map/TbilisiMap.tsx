@@ -3,6 +3,7 @@ import maplibregl, { Map as MLMap, Popup, type GeoJSONSource } from "maplibre-gl
 import "maplibre-gl/dist/maplibre-gl.css";
 import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
 import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
+import { DonateButton } from "@/components/DonateButton";
 import {
   fetchTbilisiChurches,
   type TbilisiChurch,
@@ -453,6 +454,9 @@ export function TbilisiMap({
               inline
             />
           </div>
+          <div className="hidden sm:block">
+            <DonateButton lang={lang} variant="compact" />
+          </div>
         </div>
       </div>
 
@@ -668,6 +672,7 @@ export function TbilisiMap({
               {T.archiveButtonShort}
             </button>
             <MapAuthorBadge lang={lang} inline />
+            <DonateButton lang={lang} variant="inline" />
           </div>
           {TBILISI_1898 && (
             <button
