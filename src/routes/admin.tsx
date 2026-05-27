@@ -366,7 +366,7 @@ function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
           <div>
             <h1 className="font-serif text-lg font-semibold">
-              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : tab === "sources" ? "Внешние источники (FamilySearch и др.)" : tab === "tbilisi_edit" ? "Точки церквей Тбилиси (карта 1898 г.)" : "Карточки и точки на карте"}
+              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : tab === "sources" ? "Внешние источники (FamilySearch и др.)" : tab === "tbilisi_edit" ? "Точки церквей Тбилиси (старые карты)" : "Карточки и точки на карте"}
             </h1>
             <p className="text-xs text-muted-foreground">{email}</p>
           </div>
@@ -398,7 +398,7 @@ function AdminPage() {
                 </span>
               ) : k === "tbilisi_edit" ? (
                 <span className="inline-flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5" /> Тбилиси 1898
+                  <MapPin className="h-3.5 w-3.5" /> Тбилиси
                 </span>
               ) : k === "reports" ? (
                 <span className="inline-flex items-center gap-1">
