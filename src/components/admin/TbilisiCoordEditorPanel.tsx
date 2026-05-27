@@ -7,12 +7,14 @@ import { CONFESSION_COLORS, TBILISI_BBOX } from "@/lib/i18n-tbilisi";
 import { TBILISI_1898, DISTRICTS_1898_URL } from "@/lib/tbilisi-historical";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2, Search, Check } from "lucide-react";
+import { Download, Loader2, Search, Check, X, Undo2, AlertTriangle } from "lucide-react";
 
-interface Override {
-  church_id: number;
-  new_lat: number;
-  new_lon: number;
+interface PendingMove {
+  churchId: number;
+  oldLat: number;
+  oldLon: number;
+  newLat: number;
+  newLon: number;
 }
 
 /** Admin panel: drag church markers on top of Tbilisi 1898 raster, save to DB. */
@@ -20,8 +22,11 @@ export function TbilisiCoordEditorPanel() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MLMap | null>(null);
   const markersRef = useRef<Map<number, maplibregl.Marker>>(new Map());
+  // Keep latest rows accessible to map event closures without re-creating markers.
+  const rowsRef = useRef<TbilisiChurch[] | null>(null);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
   const [histOn, setHistOn] = useState(true);
   const [histOpacity, setHistOpacity] = useState(75);
   const [districtsOn, setDistrictsOn] = useState(true);
@@ -32,24 +37,42 @@ export function TbilisiCoordEditorPanel() {
   const [query, setQuery] = useState("");
   const [editedIds, setEditedIds] = useState<Set<number>>(new Set());
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [pending, setPending] = useState<PendingMove | null>(null);
 
   // Load churches once
   useEffect(() => {
     fetchTbilisiChurches().then(setRows);
   }, []);
 
+  useEffect(() => {
+    rowsRef.current = rows;
+  }, [rows]);
+
   // Init map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: BASEMAP_STYLE,
-      center: [(TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2, (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2],
-      zoom: 13,
-      attributionControl: { compact: true },
-    });
+    let map: MLMap;
+    try {
+      map = new maplibregl.Map({
+        container: containerRef.current,
+        style: BASEMAP_STYLE,
+        center: [(TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2, (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2],
+        zoom: 13,
+        attributionControl: { compact: true },
+      });
+    } catch (e) {
+      setMapError(
+        (e as Error)?.message ||
+          "MapLibre не смог инициализировать WebGL — попробуйте обновить страницу или включить аппаратное ускорение в браузере.",
+      );
+      return;
+    }
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     attachBasemapFallback(map);
+    map.on("error", (e) => {
+      // Tile/style errors are non-fatal; surface only the first one for diagnostics.
+      console.warn("[TbilisiCoordEditor] map error", e?.error);
+    });
     map.on("load", () => {
       if (TBILISI_1898) {
         if (TBILISI_1898.kind === "tiles") {
@@ -91,6 +114,8 @@ export function TbilisiCoordEditorPanel() {
         paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
       });
       setMapReady(true);
+      // After tab switch the container might have laid out late; force resize.
+      requestAnimationFrame(() => map.resize());
     });
     mapRef.current = map;
     const ro = new ResizeObserver(() => map.resize());
@@ -169,16 +194,26 @@ export function TbilisiCoordEditorPanel() {
         const el = document.createElement("div");
         el.style.cssText = `width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.4);cursor:grab;background:${CONFESSION_COLORS[r.confession] ?? "#888"};`;
         el.title = r.name.ru;
+        const churchId = r.id;
         m = new maplibregl.Marker({ element: el, draggable: true }).setLngLat([r.lon, r.lat]).addTo(map);
         m.on("dragstart", () => {
           el.style.cursor = "grabbing";
         });
-        m.on("dragend", async () => {
+        m.on("dragend", () => {
           el.style.cursor = "grab";
           const { lat, lng } = m!.getLngLat();
-          await saveOverride(r, lat, lng);
+          // Read CURRENT row coords from rowsRef, not the stale `r` closure.
+          const current = rowsRef.current?.find((x) => x.id === churchId);
+          if (!current) return;
+          setPending({
+            churchId,
+            oldLat: current.lat,
+            oldLon: current.lon,
+            newLat: lat,
+            newLon: lng,
+          });
         });
-        el.addEventListener("click", () => setSelectedId(r.id));
+        el.addEventListener("click", () => setSelectedId(churchId));
         markersRef.current.set(r.id, m);
       } else {
         const cur = m.getLngLat();
@@ -190,18 +225,23 @@ export function TbilisiCoordEditorPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleRows, mapReady, rows]);
 
-  async function saveOverride(church: TbilisiChurch, newLat: number, newLon: number) {
+  async function confirmPending() {
+    if (!pending) return;
+    const church = rowsRef.current?.find((r) => r.id === pending.churchId);
+    if (!church) {
+      setPending(null);
+      return;
+    }
     setSavingId(church.id);
     setError(null);
-    // Need user id for created_by/reviewed_by
     const { data: { user } } = await supabase.auth.getUser();
     const payload = {
       church_id: church.id,
-      old_lat: church.lat,
-      old_lon: church.lon,
-      new_lat: newLat,
-      new_lon: newLon,
-      distance_m: haversine(church.lat, church.lon, newLat, newLon),
+      old_lat: pending.oldLat,
+      old_lon: pending.oldLon,
+      new_lat: pending.newLat,
+      new_lon: pending.newLon,
+      distance_m: haversine(pending.oldLat, pending.oldLon, pending.newLat, pending.newLon),
       model_confidence: 1.0,
       reasoning: "Manual admin placement on 1898 map overlay",
       sources: [{ kind: "admin_manual", note: "Drag-and-drop in admin panel" }],
@@ -211,35 +251,76 @@ export function TbilisiCoordEditorPanel() {
       reviewed_by: user?.id ?? null,
       reviewed_at: new Date().toISOString(),
     };
-    const { error } = await supabase
+    const { error: dbErr } = await supabase
       .from("tbilisi_coord_verifications")
       .upsert(payload, { onConflict: "church_id" });
     setSavingId(null);
-    if (error) {
-      setError(`${church.name.ru}: ${error.message}`);
+    if (dbErr) {
+      setError(`${church.name.ru}: ${dbErr.message}`);
       // Revert marker
       const m = markersRef.current.get(church.id);
-      if (m) m.setLngLat([church.lon, church.lat]);
+      if (m) m.setLngLat([pending.oldLon, pending.oldLat]);
+      setPending(null);
       return;
     }
-    // Update local rows so future filter/redraw uses new coords
     setRows((prev) =>
       prev
         ? prev.map((r) =>
             r.id === church.id
-              ? { ...r, lat: newLat, lon: newLon, confidence: "high" as const, verifiedByAi: true }
+              ? { ...r, lat: pending.newLat, lon: pending.newLon, confidence: "high" as const, verifiedByAi: true }
               : r,
           )
         : prev,
     );
     setEditedIds((s) => new Set(s).add(church.id));
     setSavedId(church.id);
+    setPending(null);
     setTimeout(() => setSavedId((v) => (v === church.id ? null : v)), 1500);
+  }
+
+  function cancelPending() {
+    if (!pending) return;
+    const m = markersRef.current.get(pending.churchId);
+    if (m) m.setLngLat([pending.oldLon, pending.oldLat]);
+    setPending(null);
+  }
+
+  async function revertChurch(church: TbilisiChurch) {
+    if (!confirm(`Удалить сохранённую правку для «${church.name.ru}» и вернуть координаты из JSON?`)) return;
+    setSavingId(church.id);
+    const { error: dbErr } = await supabase
+      .from("tbilisi_coord_verifications")
+      .delete()
+      .eq("church_id", church.id);
+    setSavingId(null);
+    if (dbErr) {
+      setError(`${church.name.ru}: ${dbErr.message}`);
+      return;
+    }
+    // Re-fetch base JSON coords for this church so marker snaps back.
+    const base = await fetch("/data/tbilisi-churches.json").then((r) => r.json());
+    const orig = (base as TbilisiChurch[]).find((c) => c.id === church.id);
+    if (!orig) return;
+    setRows((prev) =>
+      prev
+        ? prev.map((r) =>
+            r.id === church.id
+              ? { ...r, lat: orig.lat, lon: orig.lon, confidence: orig.confidence, verifiedByAi: false }
+              : r,
+          )
+        : prev,
+    );
+    const m = markersRef.current.get(church.id);
+    if (m) m.setLngLat([orig.lon, orig.lat]);
+    setEditedIds((s) => {
+      const n = new Set(s);
+      n.delete(church.id);
+      return n;
+    });
   }
 
   async function exportJson() {
     if (!rows) return;
-    // Re-fetch fresh JSON from source and apply all approved overrides
     const [base, { data: overrides }] = await Promise.all([
       fetch("/data/tbilisi-churches.json").then((r) => r.json()),
       supabase
@@ -268,6 +349,11 @@ export function TbilisiCoordEditorPanel() {
     setSelectedId(r.id);
     m.flyTo({ center: [r.lon, r.lat], zoom: Math.max(m.getZoom(), 16) });
   }
+
+  const pendingChurch = pending ? rowsRef.current?.find((r) => r.id === pending.churchId) : null;
+  const pendingDistance = pending
+    ? haversine(pending.oldLat, pending.oldLon, pending.newLat, pending.newLon)
+    : 0;
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-4">
@@ -321,17 +407,49 @@ export function TbilisiCoordEditorPanel() {
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_320px]">
         <div className="relative h-[70vh] min-h-[480px] overflow-hidden rounded-xl border border-border bg-muted">
           <div ref={containerRef} className="absolute inset-0" />
-          {(savingId != null || savedId != null) && (
+
+          {mapError && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-card/95 p-6 text-center text-xs">
+              <div className="max-w-md space-y-2">
+                <AlertTriangle className="mx-auto h-6 w-6 text-destructive" />
+                <p className="font-medium">Карта не загрузилась</p>
+                <p className="text-muted-foreground">{mapError}</p>
+              </div>
+            </div>
+          )}
+
+          {pending && pendingChurch && (
+            <div className="absolute left-1/2 top-3 z-10 w-[min(420px,calc(100%-1.5rem))] -translate-x-1/2 rounded-lg border border-border bg-card p-3 shadow-lg">
+              <div className="text-xs font-medium">Сохранить новые координаты?</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                <span className="font-medium text-foreground">{pendingChurch.name.ru}</span>
+              </div>
+              <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[10px] tabular-nums text-muted-foreground">
+                <span>было: {pending.oldLat.toFixed(5)}, {pending.oldLon.toFixed(5)}</span>
+                <span>стало: {pending.newLat.toFixed(5)}, {pending.newLon.toFixed(5)}</span>
+                <span className="col-span-2">смещение: {pendingDistance < 1000 ? `${pendingDistance.toFixed(0)} м` : `${(pendingDistance / 1000).toFixed(2)} км`}</span>
+              </div>
+              <div className="mt-2 flex justify-end gap-2">
+                <Button size="sm" variant="outline" onClick={cancelPending} disabled={savingId != null}>
+                  <X className="mr-1 h-3.5 w-3.5" /> Отменить
+                </Button>
+                <Button size="sm" onClick={confirmPending} disabled={savingId != null}>
+                  {savingId != null ? (
+                    <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Check className="mr-1 h-3.5 w-3.5" />
+                  )}
+                  Сохранить
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {savedId != null && !pending && (
             <div className="pointer-events-none absolute right-3 top-3 z-10 rounded-md bg-card/95 px-3 py-1.5 text-xs shadow-lg">
-              {savingId != null ? (
-                <span className="inline-flex items-center gap-1">
-                  <Loader2 className="h-3 w-3 animate-spin" /> Сохранение…
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                  <Check className="h-3 w-3" /> Сохранено
-                </span>
-              )}
+              <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                <Check className="h-3 w-3" /> Сохранено
+              </span>
             </div>
           )}
         </div>
@@ -355,13 +473,13 @@ export function TbilisiCoordEditorPanel() {
           <ul className="-mx-1 flex-1 space-y-0.5 overflow-y-auto">
             {visibleRows.map((r) => {
               const isSel = selectedId === r.id;
-              const isEdited = editedIds.has(r.id);
+              const isEdited = editedIds.has(r.id) || r.verifiedByAi;
               return (
-                <li key={r.id}>
+                <li key={r.id} className="group flex items-center gap-1">
                   <button
                     onClick={() => flyTo(r)}
                     className={
-                      "w-full rounded-md px-2 py-1 text-left transition-colors " +
+                      "flex-1 rounded-md px-2 py-1 text-left transition-colors " +
                       (isSel ? "bg-accent" : "hover:bg-muted")
                     }
                   >
@@ -377,15 +495,24 @@ export function TbilisiCoordEditorPanel() {
                       {r.confidence} · {r.lat.toFixed(5)}, {r.lon.toFixed(5)}
                     </div>
                   </button>
+                  {isEdited && (
+                    <button
+                      onClick={() => revertChurch(r)}
+                      title="Удалить сохранённую правку и вернуть координаты из JSON"
+                      className="rounded-md p-1 text-muted-foreground opacity-0 transition-colors hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                    >
+                      <Undo2 className="h-3 w-3" />
+                    </button>
+                  )}
                 </li>
               );
             })}
           </ul>
           <p className="border-t border-border pt-2 text-[10px] leading-snug text-muted-foreground">
-            Перетащите маркер на карте 1898 г. — координаты сразу сохраняются в БД (статус
-            «approved»). Они автоматически перекрывают точки в JSON на странице{" "}
-            <code className="font-mono">/tbilisi</code>. Кнопка «Экспорт JSON» отдаёт готовый файл с
-            применёнными правками для коммита в репозиторий.
+            Перетащите маркер — появится подтверждение «Сохранить / Отменить». При сохранении точка
+            уходит в БД (статус «approved») и перекрывает координаты на странице{" "}
+            <code className="font-mono">/tbilisi</code>. Кнопка <Undo2 className="inline h-3 w-3" />{" "}
+            у церкви удаляет сохранённую правку и возвращает оригинальные координаты из JSON.
           </p>
         </aside>
       </div>
