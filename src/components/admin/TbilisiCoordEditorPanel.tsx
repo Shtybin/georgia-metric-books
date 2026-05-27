@@ -40,6 +40,9 @@ export function TbilisiCoordEditorPanel() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "not_high" | "low_only">("not_high");
   const [query, setQuery] = useState("");
+  const [searchLang, setSearchLang] = useState<"ru" | "en">("ru");
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const [suggestIdx, setSuggestIdx] = useState(0);
   const [editedIds, setEditedIds] = useState<Set<number>>(new Set());
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [pending, setPending] = useState<PendingMove | null>(null);
@@ -200,6 +203,32 @@ export function TbilisiCoordEditorPanel() {
       return true;
     });
   }, [rows, filter, query]);
+
+  // Autocomplete suggestions — across ALL rows (ignore confidence filter so
+  // hidden churches are still findable), ranked by match quality in the
+  // currently selected language.
+  const suggestions = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!rows || q.length < 1) return [];
+    type Scored = { row: TbilisiChurch; score: number };
+    const scored: Scored[] = [];
+    for (const r of rows) {
+      const primary = (searchLang === "ru" ? r.name.ru : r.name.en).toLowerCase();
+      const other = (searchLang === "ru" ? r.name.en : r.name.ru).toLowerCase();
+      const ka = r.name.ka.toLowerCase();
+      const addr = (r.address ?? "").toLowerCase();
+      let score = 0;
+      if (primary.startsWith(q)) score = 100;
+      else if (primary.includes(q)) score = 80;
+      else if (other.startsWith(q)) score = 60;
+      else if (other.includes(q)) score = 50;
+      else if (ka.includes(q)) score = 40;
+      else if (addr.includes(q)) score = 20;
+      if (score > 0) scored.push({ row: r, score });
+    }
+    scored.sort((a, b) => b.score - a.score || a.row.name.ru.localeCompare(b.row.name.ru));
+    return scored.slice(0, 8).map((s) => s.row);
+  }, [rows, query, searchLang]);
 
   // Sync markers with visibleRows
   useEffect(() => {
@@ -515,10 +544,97 @@ export function TbilisiCoordEditorPanel() {
             <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Поиск церкви…"
-              className="w-full rounded-md border border-border bg-background py-1.5 pl-7 pr-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setSuggestOpen(true);
+                setSuggestIdx(0);
+              }}
+              onFocus={() => setSuggestOpen(true)}
+              onBlur={() => setTimeout(() => setSuggestOpen(false), 120)}
+              onKeyDown={(e) => {
+                if (!suggestOpen || suggestions.length === 0) {
+                  if (e.key === "ArrowDown" && suggestions.length > 0) setSuggestOpen(true);
+                  return;
+                }
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  setSuggestIdx((i) => Math.min(i + 1, suggestions.length - 1));
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  setSuggestIdx((i) => Math.max(i - 1, 0));
+                } else if (e.key === "Enter") {
+                  e.preventDefault();
+                  const pick = suggestions[suggestIdx];
+                  if (pick) {
+                    flyTo(pick);
+                    setQuery(searchLang === "ru" ? pick.name.ru : pick.name.en);
+                    setSuggestOpen(false);
+                  }
+                } else if (e.key === "Escape") {
+                  setSuggestOpen(false);
+                }
+              }}
+              placeholder={searchLang === "ru" ? "Поиск церкви…" : "Search church…"}
+              className="w-full rounded-md border border-border bg-background py-1.5 pl-7 pr-16 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
             />
+            <div className="absolute right-1 top-1/2 flex -translate-y-1/2 overflow-hidden rounded border border-border">
+              {(["ru", "en"] as const).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => setSearchLang(l)}
+                  className={
+                    "px-1.5 py-0.5 text-[10px] font-medium uppercase transition-colors " +
+                    (searchLang === l
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-accent")
+                  }
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+            {suggestOpen && suggestions.length > 0 && (
+              <ul className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-md border border-border bg-popover py-1 shadow-lg">
+                {suggestions.map((s, idx) => {
+                  const primary = searchLang === "ru" ? s.name.ru : s.name.en;
+                  const secondary = searchLang === "ru" ? s.name.en : s.name.ru;
+                  return (
+                    <li key={s.id}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseEnter={() => setSuggestIdx(idx)}
+                        onClick={() => {
+                          flyTo(s);
+                          setQuery(primary);
+                          setSuggestOpen(false);
+                        }}
+                        className={
+                          "flex w-full items-center gap-2 px-2 py-1.5 text-left text-xs " +
+                          (idx === suggestIdx ? "bg-accent" : "hover:bg-muted")
+                        }
+                      >
+                        <span
+                          className="inline-block h-2 w-2 shrink-0 rounded-full"
+                          style={{ background: CONFESSION_COLORS[s.confession] ?? "#888" }}
+                        />
+                        <span className="flex-1 truncate">
+                          <span className="font-medium">{primary}</span>
+                          {secondary && secondary !== primary && (
+                            <span className="ml-1 text-muted-foreground">· {secondary}</span>
+                          )}
+                        </span>
+                        <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
+                          {s.confidence}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
           <div className="text-[11px] text-muted-foreground">
             {visibleRows.length} церквей · отредактировано в этой сессии: {editedIds.size}
@@ -544,7 +660,7 @@ export function TbilisiCoordEditorPanel() {
                         className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
                         style={{ background: CONFESSION_COLORS[r.confession] ?? "#888" }}
                       />
-                      <span className="truncate">{r.name.ru}</span>
+                      <span className="truncate">{searchLang === "ru" ? r.name.ru : r.name.en}</span>
                       {isEdited && <Check className="ml-auto h-3 w-3 shrink-0 text-emerald-500" />}
                     </div>
                     <div className="ml-4 text-[10px] tabular-nums text-muted-foreground">
