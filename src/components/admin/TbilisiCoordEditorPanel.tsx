@@ -309,19 +309,26 @@ export function TbilisiCoordEditorPanel() {
     for (const r of visibleRows) {
       let m = markersRef.current.get(r.id);
       if (!m) {
+        // Wrapper element is positioned by MapLibre via transform: translate(...).
+        // We MUST NOT set `transform` on it, otherwise the marker jumps to (0,0).
+        // Visual styling + hover scale go on an inner child element.
         const el = document.createElement("div");
-        el.style.cssText = `width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.4);cursor:move;background:${CONFESSION_COLORS[r.confession] ?? "#888"};transition:transform 120ms ease, box-shadow 120ms ease;`;
+        el.style.cssText = "width:18px;height:18px;cursor:move;";
+        const dot = document.createElement("div");
+        dot.style.cssText = `width:100%;height:100%;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.4);background:${CONFESSION_COLORS[r.confession] ?? "#888"};transition:transform 120ms ease, box-shadow 120ms ease;transform-origin:center;`;
+        el.appendChild(dot);
         el.addEventListener("mouseenter", () => {
-          el.style.transform = "scale(1.35)";
-          el.style.boxShadow = "0 0 0 2px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35)";
+          dot.style.transform = "scale(1.35)";
+          dot.style.boxShadow = "0 0 0 2px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35)";
         });
         el.addEventListener("mouseleave", () => {
-          el.style.transform = "scale(1)";
-          el.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.4)";
+          dot.style.transform = "scale(1)";
+          dot.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.4)";
         });
         el.title = r.name.ru;
         const churchId = r.id;
         m = new maplibregl.Marker({ element: el, draggable: true }).setLngLat([r.lon, r.lat]).addTo(map);
+
         m.on("dragstart", () => {
           el.style.cursor = "grabbing";
         });
