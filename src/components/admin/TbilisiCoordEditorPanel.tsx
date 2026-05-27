@@ -40,6 +40,9 @@ export function TbilisiCoordEditorPanel() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "not_high" | "low_only">("not_high");
   const [query, setQuery] = useState("");
+  const [searchLang, setSearchLang] = useState<"ru" | "en">("ru");
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const [suggestIdx, setSuggestIdx] = useState(0);
   const [editedIds, setEditedIds] = useState<Set<number>>(new Set());
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [pending, setPending] = useState<PendingMove | null>(null);
