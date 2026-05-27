@@ -35,10 +35,10 @@
 
 ## English
 
-**Author:** Vitaly Shtybin — independent researcher, author of
+**Author:** Vitalii Shtybin — independent researcher, author of
 [datatells.info](https://datatells.info).
 
-© 2025 Vitaly Shtybin. **All rights reserved.**
+© 2025 Vitalii Shtybin. **All rights reserved.**
 
 The following are protected by copyright:
 
@@ -57,7 +57,7 @@ migrations) is released under the **MIT License** — see `LICENSE`.
 - personal, educational and research use is permitted;
 - any citation, republication, mention in media, blogs, social
   networks, academic or educational materials **must** credit the
-  author (Vitaly Shtybin) and include an active link to
+  author (Vitalii Shtybin) and include an active link to
   <https://metrics.datatells.info>;
 - commercial use, resale or embedding into paid products requires
   prior written permission from the author.

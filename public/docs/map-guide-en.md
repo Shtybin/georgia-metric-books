@@ -211,11 +211,11 @@ Thank you for helping to refine the historical geography of Georgia.
 
 ## Author and copyright
 
-**Author:** Vitaly Shtybin — independent researcher, author of
+**Author:** Vitalii Shtybin — independent researcher, author of
 [datatells.info](https://datatells.info). Other projects and articles by
 the author are available on the main site.
 
-© 2025 Vitaly Shtybin. All rights reserved. The maps, data compilations,
+© 2025 Vitalii Shtybin. All rights reserved. The maps, data compilations,
 accompanying texts and design are an original work protected by copyright.
 When citing or republishing, please credit the author and link to
 <https://metrics.datatells.info>.

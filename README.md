@@ -2,7 +2,7 @@
 
 **Georgia Metric Books Atlas** — интерактивная карта селений, церквей и приходов Грузии XIX века, построенная на основе метрических книг Российской империи. Открытый исследовательский инструмент для историков, генеалогов и краеведов.
 
-👤 **Автор / Author:** Виталий Штыбин (Vitaly Shtybin) — независимый исследователь · [datatells.info](https://datatells.info)
+👤 **Автор / Author:** Виталий Штыбин (Vitalii Shtybin) — независимый исследователь · [datatells.info](https://datatells.info)
 © 2025 Виталий Штыбин. Карты, сборки данных и сопроводительные тексты — авторский проект, защищены авторским правом. Подробности — см. [`COPYRIGHT.md`](./COPYRIGHT.md).
 
 🌐 **Live:** [metrics.datatells.info](https://metrics.datatells.info) · 🗺️ Mirror: [georgia-metric-books.lovable.app](https://georgia-metric-books.lovable.app)
