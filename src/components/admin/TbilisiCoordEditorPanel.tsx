@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
 import { fetchTbilisiChurches, type TbilisiChurch } from "@/lib/tbilisiChurches";
 import { CONFESSION_COLORS, TBILISI_BBOX } from "@/lib/i18n-tbilisi";
 import { HISTORICAL_MAPS, type HistoricalMapEntry } from "@/lib/tbilisi-historical";
@@ -16,6 +15,23 @@ interface PendingMove {
   newLat: number;
   newLon: number;
 }
+
+const ADMIN_BASEMAP_STYLE: maplibregl.StyleSpecification = {
+  version: 8,
+  sources: {
+    osm: {
+      type: "raster",
+      tiles: [
+        "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      ],
+      tileSize: 256,
+      attribution: "© OpenStreetMap contributors",
+    },
+  },
+  layers: [{ id: "osm", type: "raster", source: "osm" }],
+};
 
 /** Admin panel: drag church markers on top of Tbilisi 1898 raster, save to DB. */
 export function TbilisiCoordEditorPanel() {
@@ -66,23 +82,6 @@ export function TbilisiCoordEditorPanel() {
     let attempts = 0;
     let ro: ResizeObserver | undefined;
 
-    const fallbackStyle: maplibregl.StyleSpecification = {
-      version: 8,
-      sources: {
-        osm: {
-          type: "raster",
-          tiles: [
-            "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          ],
-          tileSize: 256,
-          attribution: "© OpenStreetMap contributors",
-        },
-      },
-      layers: [{ id: "osm", type: "raster", source: "osm" }],
-    };
-
     const tryInit = () => {
       if (cancelled || mapRef.current) return;
       const el = containerRef.current;
@@ -99,7 +98,7 @@ export function TbilisiCoordEditorPanel() {
       try {
         map = new maplibregl.Map({
           container: el,
-          style: BASEMAP_STYLE,
+          style: ADMIN_BASEMAP_STYLE,
           center: [(TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2, (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2],
           zoom: 13,
           attributionControl: { compact: true },
@@ -115,7 +114,6 @@ export function TbilisiCoordEditorPanel() {
 
       let styleFailed = false;
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
-      attachBasemapFallback(map);
 
       map.on("error", (e) => {
         const err = e?.error as (Error & { status?: number }) | undefined;
@@ -126,7 +124,7 @@ export function TbilisiCoordEditorPanel() {
         if (!styleFailed && (msg.includes("style") || msg.includes("Failed to fetch") || (err as any)?.status === 401)) {
           styleFailed = true;
           try {
-            map.setStyle(fallbackStyle);
+            map.setStyle(ADMIN_BASEMAP_STYLE);
             console.warn("[TbilisiCoordEditor] switched to OSM fallback style");
           } catch (e2) {
             console.error("[TbilisiCoordEditor] fallback style failed", e2);
@@ -554,7 +552,7 @@ export function TbilisiCoordEditorPanel() {
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_320px]">
         <div className="relative h-[70vh] min-h-[480px] overflow-hidden rounded-xl border border-border bg-muted">
-          <div ref={containerRef} className="absolute inset-0" />
+          <div ref={containerRef} className="tbilisi-admin-map absolute inset-0" />
 
           {mapError && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-card/95 p-6 text-center text-xs">

@@ -246,3 +246,37 @@ body[data-scroll-locked] {
     margin-right: 0;
   }
 }
+
+/* Fallback MapLibre layout rules for code-split admin maps. If the vendor CSS
+ * arrives late, the canvas/controls otherwise stay in normal document flow and
+ * the editor looks like a flat grey box even though tiles were fetched. */
+.tbilisi-admin-map.maplibregl-map,
+.tbilisi-admin-map .maplibregl-canvas-container,
+.tbilisi-admin-map .maplibregl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.tbilisi-admin-map.maplibregl-map {
+  overflow: hidden;
+}
+
+.tbilisi-admin-map .maplibregl-marker,
+.tbilisi-admin-map .maplibregl-ctrl-top-left,
+.tbilisi-admin-map .maplibregl-ctrl-bottom-right {
+  position: absolute;
+}
+
+.tbilisi-admin-map .maplibregl-ctrl-top-left {
+  left: 10px;
+  top: 10px;
+  z-index: 2;
+}
+
+.tbilisi-admin-map .maplibregl-ctrl-bottom-right {
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+}
