@@ -3,7 +3,7 @@ import { ExternalLink, Home } from "lucide-react";
 import type { Lang } from "@/lib/i18n";
 
 const AUTHOR_RU = "Виталий Штыбин";
-const AUTHOR_EN = "Vitaly Shtybin";
+const AUTHOR_EN = "Vitalii Shtybin";
 const AUTHOR_KA = "ვიტალი შტიბინი";
 const SITE = "datatells.info";
 const SITE_URL = "https://datatells.info";
