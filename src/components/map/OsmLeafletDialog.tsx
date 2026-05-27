@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef, useState } from "react";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
   Dialog,
@@ -22,8 +21,8 @@ interface Props {
 export function OsmLeafletDialog({ lat, lon, zoom, trigger, title }: Props) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<L.Map | null>(null);
-  const markerRef = useRef<L.Marker | null>(null);
+  const mapRef = useRef<import("leaflet").Map | null>(null);
+  const markerRef = useRef<import("leaflet").Marker | null>(null);
   const descId = useId();
   const [currentZoom, setCurrentZoom] = useState<number>(() =>
     Math.min(Math.max(zoom ?? 12, 3), 18),
@@ -50,8 +49,11 @@ export function OsmLeafletDialog({ lat, lon, zoom, trigger, title }: Props) {
 
   useEffect(() => {
     if (!open) return;
-    const id = window.setTimeout(() => {
+    let cancelled = false;
+    const id = window.setTimeout(async () => {
       if (!containerRef.current || mapRef.current) return;
+      const { default: L } = await import("leaflet");
+      if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current, {
         center: [lat, lon],
         zoom: z,
@@ -100,6 +102,7 @@ export function OsmLeafletDialog({ lat, lon, zoom, trigger, title }: Props) {
       markerRef.current = marker;
     }, 50);
     return () => {
+      cancelled = true;
       window.clearTimeout(id);
       if (mapRef.current) {
         mapRef.current.remove();
