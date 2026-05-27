@@ -660,7 +660,7 @@ export function TbilisiCoordEditorPanel() {
                         className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
                         style={{ background: CONFESSION_COLORS[r.confession] ?? "#888" }}
                       />
-                      <span className="truncate">{r.name.ru}</span>
+                      <span className="truncate">{searchLang === "ru" ? r.name.ru : r.name.en}</span>
                       {isEdited && <Check className="ml-auto h-3 w-3 shrink-0 text-emerald-500" />}
                     </div>
                     <div className="ml-4 text-[10px] tabular-nums text-muted-foreground">
