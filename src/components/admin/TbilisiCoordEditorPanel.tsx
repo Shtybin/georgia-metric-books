@@ -552,7 +552,7 @@ export function TbilisiCoordEditorPanel() {
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_320px]">
         <div className="relative h-[70vh] min-h-[480px] overflow-hidden rounded-xl border border-border bg-muted">
-          <div ref={containerRef} className="absolute inset-0" />
+          <div ref={containerRef} className="tbilisi-admin-map absolute inset-0" />
 
           {mapError && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-card/95 p-6 text-center text-xs">
