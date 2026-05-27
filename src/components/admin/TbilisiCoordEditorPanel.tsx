@@ -30,6 +30,11 @@ export function TbilisiCoordEditorPanel() {
   const [histOn, setHistOn] = useState(true);
   const [histOpacity, setHistOpacity] = useState(75);
   const [districtsOn, setDistrictsOn] = useState(true);
+  const [mapId, setMapId] = useState<string>("1898");
+  const selectedMap: HistoricalMapEntry | undefined = useMemo(
+    () => HISTORICAL_MAPS.find((m) => m.id === mapId),
+    [mapId],
+  );
   const [savingId, setSavingId] = useState<number | null>(null);
   const [savedId, setSavedId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
