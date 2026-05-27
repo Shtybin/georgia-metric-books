@@ -398,7 +398,7 @@ function AdminPage() {
                 </span>
               ) : k === "tbilisi_edit" ? (
                 <span className="inline-flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5" /> Тбилиси 1898
+                  <MapPin className="h-3.5 w-3.5" /> Тбилиси
                 </span>
               ) : k === "reports" ? (
                 <span className="inline-flex items-center gap-1">
