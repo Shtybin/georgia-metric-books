@@ -73,3 +73,65 @@ export interface District1898Properties {
   name_en?: string;
   name_ka?: string;
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Реестр исторических подложек (расширяемый)                                */
+/* -------------------------------------------------------------------------- */
+/**
+ * Каждая запись в `HISTORICAL_MAPS` — отдельный слой, который можно выбрать
+ * в выпадающем списке в админке («Тбилиси 1898» → редактор координат).
+ *
+ * Поля:
+ *  - id            — стабильный идентификатор (используется в state и source id)
+ *  - title         — отображается в дропдауне
+ *  - year          — для сортировки (необязательно)
+ *  - config        — конфиг растра (тайлы XYZ или 1 картинка + 4 угла). null = заготовка
+ *  - districtsUrl  — путь к GeoJSON границ участков для этой эпохи (опц.)
+ *  - notes         — короткая подсказка для админа
+ *
+ * Чтобы активировать заготовку — положите тайлы в `public/tiles/<id>/` или
+ * JPG в `public/historical/<id>.jpg` и заполните `config`.
+ */
+export interface HistoricalMapEntry {
+  id: string;
+  title: string;
+  year?: number;
+  config: HistoricalConfig;
+  districtsUrl?: string;
+  notes?: string;
+}
+
+export const HISTORICAL_MAPS: HistoricalMapEntry[] = [
+  {
+    id: "1898",
+    title: "Тифлис, 1898 (Клементьев)",
+    year: 1898,
+    config: TBILISI_1898,
+    districtsUrl: DISTRICTS_1898_URL,
+    notes: "Базовая привязанная карта. Используется и на странице /tbilisi.",
+  },
+  {
+    id: "1735-vakhushti",
+    title: "1735 — Вахушти Багратиони (заготовка)",
+    year: 1735,
+    config: null,
+    notes:
+      'Положите растр в public/historical/1735-vakhushti.jpg и впишите 4 угла в HISTORICAL_MAPS[].config: { kind: "image", url, coordinates }.',
+  },
+  {
+    id: "1850-russian",
+    title: "1850 — Русский план Тифлиса (заготовка)",
+    year: 1850,
+    config: null,
+    notes:
+      'Тайлы XYZ предпочтительнее. Положите в public/tiles/1850-russian/ и впишите config: { kind: "tiles", tiles: "/tiles/1850-russian/{z}/{x}/{y}.png" }.',
+  },
+  {
+    id: "1920-soviet",
+    title: "1920 — План Тифлиса (заготовка)",
+    year: 1920,
+    config: null,
+    notes:
+      "Для границы досоветской и советской застройки. Источник: Национальный архив Грузии / Wikimedia Commons.",
+  },
+];
