@@ -386,10 +386,32 @@ export function TbilisiCoordEditorPanel() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-4">
       <div className="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3 text-xs">
-        <label className="flex items-center gap-2">
-          <input type="checkbox" checked={histOn} onChange={(e) => setHistOn(e.target.checked)} />
-          Карта 1898 г.
+        <label className="flex items-center gap-2" title={selectedMap?.notes ?? ""}>
+          <input
+            type="checkbox"
+            checked={histOn}
+            onChange={(e) => setHistOn(e.target.checked)}
+            disabled={!selectedMap?.config}
+          />
+          Старая карта:
+          <select
+            value={mapId}
+            onChange={(e) => setMapId(e.target.value)}
+            className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {HISTORICAL_MAPS.map((m) => (
+              <option key={m.id} value={m.id} disabled={!m.config}>
+                {m.title}
+                {!m.config ? " — нет данных" : ""}
+              </option>
+            ))}
+          </select>
         </label>
+        {!selectedMap?.config && (
+          <span className="text-[11px] text-amber-600 dark:text-amber-400">
+            Заготовка без растра — заполните HISTORICAL_MAPS в src/lib/tbilisi-historical.ts.
+          </span>
+        )}
         <label className="flex items-center gap-2">
           Прозрачность
           <input
@@ -399,11 +421,17 @@ export function TbilisiCoordEditorPanel() {
             value={histOpacity}
             onChange={(e) => setHistOpacity(Number(e.target.value))}
             className="w-32"
+            disabled={!selectedMap?.config || !histOn}
           />
           <span className="tabular-nums text-muted-foreground">{histOpacity}%</span>
         </label>
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={districtsOn} onChange={(e) => setDistrictsOn(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={districtsOn}
+            onChange={(e) => setDistrictsOn(e.target.checked)}
+            disabled={!selectedMap?.districtsUrl}
+          />
           Полицейские участки
         </label>
         <div className="ml-auto flex items-center gap-2">
