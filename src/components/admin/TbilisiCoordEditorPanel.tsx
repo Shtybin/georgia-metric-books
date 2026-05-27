@@ -326,7 +326,7 @@ export function TbilisiCoordEditorPanel() {
           el.style.cursor = "grabbing";
         });
         m.on("dragend", () => {
-          el.style.cursor = "grab";
+          el.style.cursor = "move";
           const { lat, lng } = m!.getLngLat();
           // Read CURRENT row coords from rowsRef, not the stale `r` closure.
           const current = rowsRef.current?.find((x) => x.id === churchId);
