@@ -310,7 +310,15 @@ export function TbilisiCoordEditorPanel() {
       let m = markersRef.current.get(r.id);
       if (!m) {
         const el = document.createElement("div");
-        el.style.cssText = `width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.4);cursor:grab;background:${CONFESSION_COLORS[r.confession] ?? "#888"};`;
+        el.style.cssText = `width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.4);cursor:move;background:${CONFESSION_COLORS[r.confession] ?? "#888"};transition:transform 120ms ease, box-shadow 120ms ease;`;
+        el.addEventListener("mouseenter", () => {
+          el.style.transform = "scale(1.35)";
+          el.style.boxShadow = "0 0 0 2px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35)";
+        });
+        el.addEventListener("mouseleave", () => {
+          el.style.transform = "scale(1)";
+          el.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.4)";
+        });
         el.title = r.name.ru;
         const churchId = r.id;
         m = new maplibregl.Marker({ element: el, draggable: true }).setLngLat([r.lon, r.lat]).addTo(map);
@@ -318,7 +326,7 @@ export function TbilisiCoordEditorPanel() {
           el.style.cursor = "grabbing";
         });
         m.on("dragend", () => {
-          el.style.cursor = "grab";
+          el.style.cursor = "move";
           const { lat, lng } = m!.getLngLat();
           // Read CURRENT row coords from rowsRef, not the stale `r` closure.
           const current = rowsRef.current?.find((x) => x.id === churchId);
