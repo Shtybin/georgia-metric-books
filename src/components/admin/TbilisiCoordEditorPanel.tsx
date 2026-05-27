@@ -204,6 +204,32 @@ export function TbilisiCoordEditorPanel() {
     });
   }, [rows, filter, query]);
 
+  // Autocomplete suggestions — across ALL rows (ignore confidence filter so
+  // hidden churches are still findable), ranked by match quality in the
+  // currently selected language.
+  const suggestions = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!rows || q.length < 1) return [];
+    type Scored = { row: TbilisiChurch; score: number };
+    const scored: Scored[] = [];
+    for (const r of rows) {
+      const primary = (searchLang === "ru" ? r.name.ru : r.name.en).toLowerCase();
+      const other = (searchLang === "ru" ? r.name.en : r.name.ru).toLowerCase();
+      const ka = r.name.ka.toLowerCase();
+      const addr = (r.address ?? "").toLowerCase();
+      let score = 0;
+      if (primary.startsWith(q)) score = 100;
+      else if (primary.includes(q)) score = 80;
+      else if (other.startsWith(q)) score = 60;
+      else if (other.includes(q)) score = 50;
+      else if (ka.includes(q)) score = 40;
+      else if (addr.includes(q)) score = 20;
+      if (score > 0) scored.push({ row: r, score });
+    }
+    scored.sort((a, b) => b.score - a.score || a.row.name.ru.localeCompare(b.row.name.ru));
+    return scored.slice(0, 8).map((s) => s.row);
+  }, [rows, query, searchLang]);
+
   // Sync markers with visibleRows
   useEffect(() => {
     const map = mapRef.current;
