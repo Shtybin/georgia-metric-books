@@ -79,43 +79,21 @@ export function TbilisiCoordEditorPanel() {
       console.warn("[TbilisiCoordEditor] map error", e?.error);
     });
     map.on("load", () => {
-      if (TBILISI_1898) {
-        if (TBILISI_1898.kind === "tiles") {
-          map.addSource("hist-1898", {
-            type: "raster",
-            tiles: [TBILISI_1898.tiles],
-            tileSize: 256,
-            minzoom: TBILISI_1898.minzoom ?? 10,
-            maxzoom: TBILISI_1898.maxzoom ?? 18,
-          });
-        } else {
-          map.addSource("hist-1898", {
-            type: "image",
-            url: TBILISI_1898.url,
-            coordinates: TBILISI_1898.coordinates,
-          } as maplibregl.ImageSourceSpecification);
-        }
-        map.addLayer({
-          id: "hist-1898",
-          type: "raster",
-          source: "hist-1898",
-          paint: { "raster-opacity": histOpacity / 100 },
-        });
-      }
-      map.addSource("districts-1898", {
+      // Empty districts source; data populated by the selected-map effect below.
+      map.addSource("districts-overlay", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
       });
       map.addLayer({
-        id: "districts-1898-fill",
+        id: "districts-overlay-fill",
         type: "fill",
-        source: "districts-1898",
+        source: "districts-overlay",
         paint: { "fill-color": "#b45309", "fill-opacity": 0.06 },
       });
       map.addLayer({
-        id: "districts-1898-line",
+        id: "districts-overlay-line",
         type: "line",
-        source: "districts-1898",
+        source: "districts-overlay",
         paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
       });
       setMapReady(true);
@@ -126,20 +104,6 @@ export function TbilisiCoordEditorPanel() {
     const ro = new ResizeObserver(() => map.resize());
     ro.observe(containerRef.current);
 
-    // Load district polygons
-    fetch(DISTRICTS_1898_URL)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (!d || !d.features?.length) return;
-        const onReady = () => {
-          const src = map.getSource("districts-1898") as GeoJSONSource | undefined;
-          if (src) src.setData(d);
-        };
-        if (map.isStyleLoaded()) onReady();
-        else map.once("load", onReady);
-      })
-      .catch(() => {});
-
     return () => {
       ro.disconnect();
       map.remove();
@@ -148,15 +112,74 @@ export function TbilisiCoordEditorPanel() {
     };
   }, []);
 
+  // (Re)build the historical raster + districts when the selected map changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    // Tear down previous raster, if any.
+    if (map.getLayer("hist-overlay")) map.removeLayer("hist-overlay");
+    if (map.getSource("hist-overlay")) map.removeSource("hist-overlay");
+
+    const cfg = selectedMap?.config ?? null;
+    if (cfg) {
+      if (cfg.kind === "tiles") {
+        map.addSource("hist-overlay", {
+          type: "raster",
+          tiles: [cfg.tiles],
+          tileSize: 256,
+          minzoom: cfg.minzoom ?? 10,
+          maxzoom: cfg.maxzoom ?? 18,
+        });
+      } else {
+        map.addSource("hist-overlay", {
+          type: "image",
+          url: cfg.url,
+          coordinates: cfg.coordinates,
+        } as maplibregl.ImageSourceSpecification);
+      }
+      // Insert below district fills so polygons stay visible.
+      const beforeId = map.getLayer("districts-overlay-fill") ? "districts-overlay-fill" : undefined;
+      map.addLayer(
+        {
+          id: "hist-overlay",
+          type: "raster",
+          source: "hist-overlay",
+          paint: { "raster-opacity": histOpacity / 100 },
+          layout: { visibility: histOn ? "visible" : "none" },
+        },
+        beforeId,
+      );
+    }
+
+    // Refresh districts: fetch new URL or clear if none.
+    const src = map.getSource("districts-overlay") as GeoJSONSource | undefined;
+    const url = selectedMap?.districtsUrl;
+    if (!url) {
+      if (src) src.setData({ type: "FeatureCollection", features: [] });
+    } else {
+      fetch(url)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          const s = map.getSource("districts-overlay") as GeoJSONSource | undefined;
+          if (s) s.setData(d && d.features?.length ? d : { type: "FeatureCollection", features: [] });
+        })
+        .catch(() => {
+          const s = map.getSource("districts-overlay") as GeoJSONSource | undefined;
+          if (s) s.setData({ type: "FeatureCollection", features: [] });
+        });
+    }
+  }, [selectedMap, mapReady]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // React to histOn/opacity/districts toggles
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
-    if (map.getLayer("hist-1898")) {
-      map.setLayoutProperty("hist-1898", "visibility", histOn ? "visible" : "none");
-      map.setPaintProperty("hist-1898", "raster-opacity", histOpacity / 100);
+    if (map.getLayer("hist-overlay")) {
+      map.setLayoutProperty("hist-overlay", "visibility", histOn ? "visible" : "none");
+      map.setPaintProperty("hist-overlay", "raster-opacity", histOpacity / 100);
     }
-    for (const id of ["districts-1898-fill", "districts-1898-line"]) {
+    for (const id of ["districts-overlay-fill", "districts-overlay-line"]) {
       if (map.getLayer(id)) {
         map.setLayoutProperty(id, "visibility", districtsOn ? "visible" : "none");
       }
