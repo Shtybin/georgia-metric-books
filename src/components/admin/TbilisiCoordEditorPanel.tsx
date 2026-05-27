@@ -56,60 +56,123 @@ export function TbilisiCoordEditorPanel() {
     rowsRef.current = rows;
   }, [rows]);
 
-  // Init map once
+  // Init map once. Some browsers / iframes give the container 0×0 size on the
+  // first paint after a tab switch; we poll briefly until it actually has
+  // dimensions, otherwise MapLibre creates a canvas that never repaints.
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-    let map: MLMap;
-    try {
-      map = new maplibregl.Map({
-        container: containerRef.current,
-        style: BASEMAP_STYLE,
-        center: [(TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2, (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2],
-        zoom: 13,
-        attributionControl: { compact: true },
+
+    let cancelled = false;
+    let attempts = 0;
+    let ro: ResizeObserver | undefined;
+
+    const fallbackStyle: maplibregl.StyleSpecification = {
+      version: 8,
+      sources: {
+        osm: {
+          type: "raster",
+          tiles: [
+            "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          ],
+          tileSize: 256,
+          attribution: "© OpenStreetMap contributors",
+        },
+      },
+      layers: [{ id: "osm", type: "raster", source: "osm" }],
+    };
+
+    const tryInit = () => {
+      if (cancelled || mapRef.current) return;
+      const el = containerRef.current;
+      if (!el) return;
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      if ((w < 50 || h < 50) && attempts < 40) {
+        attempts++;
+        setTimeout(tryInit, 50);
+        return;
+      }
+
+      let map: MLMap;
+      try {
+        map = new maplibregl.Map({
+          container: el,
+          style: BASEMAP_STYLE,
+          center: [(TBILISI_BBOX[0] + TBILISI_BBOX[2]) / 2, (TBILISI_BBOX[1] + TBILISI_BBOX[3]) / 2],
+          zoom: 13,
+          attributionControl: { compact: true },
+        });
+      } catch (e) {
+        console.error("[TbilisiCoordEditor] map ctor failed", e);
+        setMapError(
+          (e as Error)?.message ||
+            "MapLibre не смог инициализировать WebGL — попробуйте обновить страницу или включить аппаратное ускорение в браузере.",
+        );
+        return;
+      }
+
+      let styleFailed = false;
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
+      attachBasemapFallback(map);
+
+      map.on("error", (e) => {
+        const err = e?.error as (Error & { status?: number }) | undefined;
+        console.warn("[TbilisiCoordEditor] map error", err);
+        // If the style itself failed to load (e.g. Stadia 401 on lovableproject.com
+        // sandbox domain), swap to a plain OSM raster style so the editor still works.
+        const msg = err?.message ?? "";
+        if (!styleFailed && (msg.includes("style") || msg.includes("Failed to fetch") || (err as any)?.status === 401)) {
+          styleFailed = true;
+          try {
+            map.setStyle(fallbackStyle);
+            console.warn("[TbilisiCoordEditor] switched to OSM fallback style");
+          } catch (e2) {
+            console.error("[TbilisiCoordEditor] fallback style failed", e2);
+          }
+        }
       });
-    } catch (e) {
-      setMapError(
-        (e as Error)?.message ||
-          "MapLibre не смог инициализировать WebGL — попробуйте обновить страницу или включить аппаратное ускорение в браузере.",
-      );
-      return;
-    }
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
-    attachBasemapFallback(map);
-    map.on("error", (e) => {
-      // Tile/style errors are non-fatal; surface only the first one for diagnostics.
-      console.warn("[TbilisiCoordEditor] map error", e?.error);
-    });
-    map.on("load", () => {
-      // Empty districts source; data populated by the selected-map effect below.
-      map.addSource("districts-overlay", {
-        type: "geojson",
-        data: { type: "FeatureCollection", features: [] },
+
+      const onStyleReady = () => {
+        if (map.getSource("districts-overlay")) return;
+        map.addSource("districts-overlay", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+        map.addLayer({
+          id: "districts-overlay-fill",
+          type: "fill",
+          source: "districts-overlay",
+          paint: { "fill-color": "#b45309", "fill-opacity": 0.06 },
+        });
+        map.addLayer({
+          id: "districts-overlay-line",
+          type: "line",
+          source: "districts-overlay",
+          paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
+        });
+        setMapReady(true);
+        requestAnimationFrame(() => map.resize());
+      };
+
+      map.on("load", onStyleReady);
+      // setStyle (fallback) fires `styledata` again — re-add overlays on top.
+      map.on("styledata", () => {
+        if (mapRef.current && map.isStyleLoaded()) onStyleReady();
       });
-      map.addLayer({
-        id: "districts-overlay-fill",
-        type: "fill",
-        source: "districts-overlay",
-        paint: { "fill-color": "#b45309", "fill-opacity": 0.06 },
-      });
-      map.addLayer({
-        id: "districts-overlay-line",
-        type: "line",
-        source: "districts-overlay",
-        paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
-      });
-      setMapReady(true);
-      // After tab switch the container might have laid out late; force resize.
-      requestAnimationFrame(() => map.resize());
-    });
-    mapRef.current = map;
-    const ro = new ResizeObserver(() => map.resize());
-    ro.observe(containerRef.current);
+
+      mapRef.current = map;
+      ro = new ResizeObserver(() => map.resize());
+      ro.observe(el);
+    };
+
+    tryInit();
 
     return () => {
-      ro.disconnect();
-      map.remove();
+      cancelled = true;
+      ro?.disconnect();
+      mapRef.current?.remove();
       mapRef.current = null;
       markersRef.current.clear();
     };
