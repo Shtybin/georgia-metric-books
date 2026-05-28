@@ -440,6 +440,10 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <BookOpen className="h-3.5 w-3.5" /> Источники
                 </span>
+              ) : k === "users" ? (
+                <span className="inline-flex items-center gap-1">
+                  <Users className="h-3.5 w-3.5" /> Пользователи
+                </span>
               ) : (
                 <span className="inline-flex items-center gap-1">
                   <ScrollText className="h-3.5 w-3.5" /> Журнал
@@ -448,7 +452,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && tab !== "users" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
