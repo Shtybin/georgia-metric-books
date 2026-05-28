@@ -515,6 +515,10 @@ function AdminPage() {
         <AiGeocoderPanel />
       ) : tab === "tbilisi_edit" ? (
         <TbilisiCoordEditorPanel />
+      ) : tab === "users" && isAdmin && currentUserId ? (
+        <section className="mx-auto max-w-6xl px-4 py-4">
+          <UsersAdminPanel currentUserId={currentUserId} />
+        </section>
       ) : tab === "coords" ? (
 
         <section className="mx-auto max-w-6xl px-4 py-4">
