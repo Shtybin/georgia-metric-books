@@ -400,7 +400,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
+          {((["coords", "ai", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "sources", ...(isAdmin ? ["users" as const] : [])]) as const).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
