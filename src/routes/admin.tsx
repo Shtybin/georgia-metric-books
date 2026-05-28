@@ -264,10 +264,10 @@ function AdminPage() {
   }, [reportSearch]);
 
   useEffect(() => {
-    if (isAdmin && tab === "coords") load();
-    if (isAdmin && tab === "reports") loadReports();
+    if (myRole && tab === "coords") load();
+    if (myRole && tab === "reports") loadReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
+  }, [myRole, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
     const { data: { user } } = await supabase.auth.getUser();
