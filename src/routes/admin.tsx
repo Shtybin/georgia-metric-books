@@ -112,6 +112,8 @@ interface Diagnostics {
 }
 
 function AdminPage() {
+  const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [myRole, setMyRole] = useState<"admin" | "editor" | "contributor" | null>(null);
   const [email, setEmail] = useState<string | null>(null);
@@ -120,8 +122,6 @@ function AdminPage() {
   const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit" | "users">("coords");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit">("coords");
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
