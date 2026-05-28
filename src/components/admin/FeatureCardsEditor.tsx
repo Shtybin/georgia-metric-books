@@ -365,7 +365,7 @@ function RowCard({
           )}
           <div className="mt-1 flex flex-wrap gap-x-3 text-xs tabular-nums text-muted-foreground">
             <span>id {row.feature_id ?? "новый"}</span>
-            <span>lat {d.lat.toFixed(4)}, lon {d.lon.toFixed(4)}</span>
+            <span>lat {typeof d.lat === "number" ? d.lat.toFixed(4) : "—"}, lon {typeof d.lon === "number" ? d.lon.toFixed(4) : "—"}</span>
             {d.yearsRaw.ru && <span>{d.yearsRaw.ru}</span>}
           </div>
         </div>
