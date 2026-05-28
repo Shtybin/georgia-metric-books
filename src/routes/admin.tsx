@@ -264,10 +264,10 @@ function AdminPage() {
   }, [reportSearch]);
 
   useEffect(() => {
-    if (isAdmin && tab === "coords") load();
-    if (isAdmin && tab === "reports") loadReports();
+    if (myRole && tab === "coords") load();
+    if (myRole && tab === "reports") loadReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin, tab, filter, reportFilter, reportSearchDebounced]);
+  }, [myRole, tab, filter, reportFilter, reportSearchDebounced]);
 
   async function setReportStatus(id: string, status: ProblemReport["status"]) {
     const { data: { user } } = await supabase.auth.getUser();
@@ -359,12 +359,12 @@ function AdminPage() {
     />
   );
 
-  if (!isAdmin) {
+  if (!myRole) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
         <h1 className="font-serif text-2xl">Доступ запрещён</h1>
         <p className="text-sm text-muted-foreground">
-          Учётной записи <span className="font-mono">{email}</span> не назначена роль admin.
+          Учётной записи <span className="font-mono">{email}</span> не назначена роль.
         </p>
         <div className="flex gap-2">
           <Button onClick={logout} variant="outline" size="sm">
@@ -385,9 +385,9 @@ function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
           <div>
             <h1 className="font-serif text-lg font-semibold">
-              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : tab === "sources" ? "Внешние источники (FamilySearch и др.)" : tab === "tbilisi_edit" ? "Точки церквей Тбилиси (старые карты)" : "Карточки и точки на карте"}
+              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : tab === "sources" ? "Внешние источники (FamilySearch и др.)" : tab === "tbilisi_edit" ? "Точки церквей Тбилиси (старые карты)" : tab === "users" ? "Пользователи и доступ" : "Карточки и точки на карте"}
             </h1>
-            <p className="text-xs text-muted-foreground">{email}</p>
+            <p className="text-xs text-muted-foreground">{email} · <span className="font-medium">{myRole}</span></p>
           </div>
           <div className="flex gap-2">
             <Link to="/map" search={{ lang: "ru" }}>
@@ -400,7 +400,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "sources"] as const).map((k) => (
+          {(["coords", "ai", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "sources", "users"] as const).filter((k) => k !== "users" || isAdmin).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -440,6 +440,10 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <BookOpen className="h-3.5 w-3.5" /> Источники
                 </span>
+              ) : k === "users" ? (
+                <span className="inline-flex items-center gap-1">
+                  <Users className="h-3.5 w-3.5" /> Пользователи
+                </span>
               ) : (
                 <span className="inline-flex items-center gap-1">
                   <ScrollText className="h-3.5 w-3.5" /> Журнал
@@ -448,7 +452,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && tab !== "users" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -511,6 +515,10 @@ function AdminPage() {
         <AiGeocoderPanel />
       ) : tab === "tbilisi_edit" ? (
         <TbilisiCoordEditorPanel />
+      ) : tab === "users" && isAdmin && currentUserId ? (
+        <section className="mx-auto max-w-6xl px-4 py-4">
+          <UsersAdminPanel currentUserId={currentUserId} />
+        </section>
       ) : tab === "coords" ? (
 
         <section className="mx-auto max-w-6xl px-4 py-4">
