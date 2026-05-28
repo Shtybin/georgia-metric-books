@@ -11,7 +11,9 @@ import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
 import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
 import { TbilisiCoordEditorPanel } from "@/components/admin/TbilisiCoordEditorPanel";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin } from "lucide-react";
+import { UsersAdminPanel } from "@/components/admin/UsersAdminPanel";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users } from "lucide-react";
+
 
 
 interface OsmActionProps {
