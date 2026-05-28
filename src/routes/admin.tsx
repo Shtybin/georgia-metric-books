@@ -359,12 +359,12 @@ function AdminPage() {
     />
   );
 
-  if (!isAdmin) {
+  if (!myRole) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
         <h1 className="font-serif text-2xl">Доступ запрещён</h1>
         <p className="text-sm text-muted-foreground">
-          Учётной записи <span className="font-mono">{email}</span> не назначена роль admin.
+          Учётной записи <span className="font-mono">{email}</span> не назначена роль.
         </p>
         <div className="flex gap-2">
           <Button onClick={logout} variant="outline" size="sm">
