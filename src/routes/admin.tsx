@@ -11,7 +11,9 @@ import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
 import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
 import { TbilisiCoordEditorPanel } from "@/components/admin/TbilisiCoordEditorPanel";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin } from "lucide-react";
+import { UsersAdminPanel } from "@/components/admin/UsersAdminPanel";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users } from "lucide-react";
+
 
 
 interface OsmActionProps {
@@ -113,11 +115,13 @@ function AdminPage() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [myRole, setMyRole] = useState<"admin" | "editor" | "contributor" | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit">("coords");
+  const [tab, setTab] = useState<"coords" | "ai" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit" | "users">("coords");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
   const [items, setItems] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
@@ -181,11 +185,26 @@ function AdminPage() {
         return;
       }
       const { admin, email: e } = await runDiagnostics();
+      // Determine highest role (admin/editor/contributor) directly
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+      const roles = (roleRows ?? []).map((r: any) => r.role as string);
+      const best = roles.includes("admin")
+        ? "admin"
+        : roles.includes("editor")
+          ? "editor"
+          : roles.includes("contributor")
+            ? "contributor"
+            : null;
       if (!mounted) return;
       setEmail(e);
       setCurrentUserId(user.id);
       setIsAdmin(admin);
+      setMyRole(best as any);
       setChecking(false);
+
     })();
     return () => {
       mounted = false;
