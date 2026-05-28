@@ -185,11 +185,26 @@ function AdminPage() {
         return;
       }
       const { admin, email: e } = await runDiagnostics();
+      // Determine highest role (admin/editor/contributor) directly
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+      const roles = (roleRows ?? []).map((r: any) => r.role as string);
+      const best = roles.includes("admin")
+        ? "admin"
+        : roles.includes("editor")
+          ? "editor"
+          : roles.includes("contributor")
+            ? "contributor"
+            : null;
       if (!mounted) return;
       setEmail(e);
       setCurrentUserId(user.id);
       setIsAdmin(admin);
+      setMyRole(best as any);
       setChecking(false);
+
     })();
     return () => {
       mounted = false;
