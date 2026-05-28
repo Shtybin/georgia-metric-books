@@ -136,6 +136,8 @@ export function AuthorHero({ lang }: { lang: Lang }) {
 
 /** Page footer with copyright. */
 export function CopyrightFooter({ lang }: { lang: Lang }) {
+  const adminLabel =
+    lang === "en" ? "Admin" : lang === "ka" ? "ადმინი" : "Админ";
   return (
     <footer className="mt-16 border-t border-border pt-6 text-xs text-muted-foreground">
       <p>
@@ -148,7 +150,15 @@ export function CopyrightFooter({ lang }: { lang: Lang }) {
         >
           {SITE}
         </a>
+        {" · "}
+        <Link
+          to="/login"
+          className="text-muted-foreground/70 underline-offset-2 hover:text-foreground hover:underline"
+        >
+          {adminLabel}
+        </Link>
       </p>
     </footer>
   );
 }
+
