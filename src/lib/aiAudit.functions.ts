@@ -11,15 +11,19 @@ const parishes = JSON.parse(parishesRaw) as GeoJSON.FeatureCollection<
   Record<string, any>
 >;
 
-interface CatalogSection {
-  file: string;
-  year: number;
-  uezdRaw: string;
-  uezdKey: string;
-  raw: string;
+interface CatalogEntry {
+  s: string; // settlement_name_en
+  c: string; // church_name_en
+  y: string; // years_range
+  m: string; // missing years
+  ref: string;
 }
-const catalog = (JSON.parse(catalogRaw) as { sections: CatalogSection[] })
-  .sections;
+interface CatalogShape {
+  source: string;
+  byDistrict: Record<string, CatalogEntry[]>;
+}
+const catalog = JSON.parse(catalogRaw) as CatalogShape;
+const catalogIndex = catalog.byDistrict ?? {};
 
 // ---- Pricing (USD per 1M tokens) ---------------------------------------
 const PRICING: Record<string, { in: number; out: number }> = {
@@ -36,78 +40,75 @@ function priceUsd(model: string, tIn: number, tOut: number) {
 // Generic / non-uezd regions — never propose merges for these
 const GENERIC_REGIONS = new Set(
   [
-    "имеретия",
-    "гурия",
-    "абхазия",
-    "мегрелия",
-    "сванетия",
-    "кахетия",
-    "картли",
-    "имерети",
-    "imereti",
-    "guria",
-    "abkhazia",
-    "samegrelo",
-    "svaneti",
-    "kakheti",
-    "kartli",
+    "имеретия", "гурия", "абхазия", "мегрелия", "сванетия", "кахетия",
+    "картли", "имерети", "imereti", "guria", "abkhazia", "samegrelo",
+    "svaneti", "kakheti", "kartli", "megreliya", "imeretiya", "guriya",
+    "abkhaziya", "osetiya",
   ].map((s) => s.toLowerCase()),
 );
 
-const UEZD_KEY_ALIASES: Record<string, string> = {
-  тбилиси: "tbilisi",
-  телави: "telavi",
-  гори: "gori",
-  сигнах: "signagi",
-  сигнаги: "signagi",
-  душет: "dusheti",
-  душети: "dusheti",
-  кутаис: "kutaisi",
-  кутаиси: "kutaisi",
-  ахалцих: "akhaltsikhe",
-  ахалцихе: "akhaltsikhe",
-  озургет: "ozurgeti",
-  зугдиди: "zugdidi",
-  батум: "batumi",
-  шорапан: "shorapani",
-  рача: "racha",
-};
-function uezdKey(uezd: string | undefined): string | null {
-  if (!uezd) return null;
-  const k = uezd.trim().toLowerCase().replace(/\s+/g, "");
-  for (const [alias, key] of Object.entries(UEZD_KEY_ALIASES)) {
-    if (k.startsWith(alias.toLowerCase())) return key;
-  }
-  // strip trailing -ский / -ский уезд markers
-  const stripped = k.replace(/(ский|ского|ское|skiy|sky)$/u, "");
-  return stripped || null;
+// Normalize an uezd/region label to the same key used in catalog.byDistrict
+function normDistrict(uezd: string | undefined | null): string {
+  if (!uezd) return "";
+  return uezd.trim().toLowerCase();
+}
+
+// Russian → English transliteration of uezd labels seen in feature props,
+// because catalog is keyed by English forms ("kutaisskiy uezd", "imeretiya")
+const RU_TO_EN: Array<[RegExp, string]> = [
+  [/кутаис\w*\s*уезд/, "kutaisskiy uezd"],
+  [/гори\w*\s*уезд/, "goriyskiy uezd"],
+  [/телав\w*\s*уезд/, "telavskiy uezd"],
+  [/тифлис\w*\s*уезд|тбилис\w*\s*уезд/, "tbilisskiy uezd"],
+  [/душет\w*\s*уезд/, "dushetskiy uezd"],
+  [/ахалцих\w*\s*уезд/, "akhaltsikhskiy uezd"],
+  [/шорапан\w*\s*уезд/, "shorapanskiy uezd"],
+  [/рачин\w*\s*уезд/, "rachinskiy uezd"],
+  [/озургет\w*\s*уезд/, "ozurgetskiy uezd"],
+  [/сенакс\w*\s*уезд/, "senakskiy uezd"],
+  [/зугдид\w*\s*уезд/, "zugdidskiy uezd"],
+  [/имерет/, "imeretiya"],
+  [/гури/, "guriya"],
+  [/мегрел/, "megreliya"],
+  [/абхаз/, "abkhaziya"],
+  [/осети/, "osetiya"],
+  [/кахети/, "kakhetiya"],
+];
+function ruToEnDistrict(u: string): string {
+  const k = u.toLowerCase();
+  for (const [re, en] of RU_TO_EN) if (re.test(k)) return en;
+  return k;
 }
 
 function pickCatalogContext(
   uezd: string | undefined,
   startYear: number | null,
   endYear: number | null,
-): { sections: CatalogSection[]; text: string } {
-  const key = uezdKey(uezd);
+): { entries: CatalogEntry[]; text: string } {
+  const enKey = ruToEnDistrict(uezd ?? "");
+  const list = catalogIndex[enKey] ?? [];
   const start = startYear ?? 1800;
   const end = endYear ?? 1900;
-  const sel = catalog.filter(
-    (s) =>
-      (!key || s.uezdKey === key) &&
-      s.year >= start - 2 &&
-      s.year <= end + 2,
-  );
-  // Cap total characters to ~12 KB per call
-  let acc = "";
-  const out: CatalogSection[] = [];
-  for (const s of sel) {
-    const block = `### ${s.uezdRaw} мазра ${s.year} (file ${s.file})\n${s.raw}\n`;
+  const filtered = list.filter((e) => {
+    if (!e.y) return true;
+    const m = e.y.match(/(\d{4})/g);
+    if (!m) return true;
+    const ys = m.map(Number);
+    const lo = Math.min(...ys);
+    const hi = Math.max(...ys);
+    return hi >= start - 2 && lo <= end + 2;
+  });
+  let acc = `Уезд (нормализован): ${enKey || "—"}\n`;
+  const out: CatalogEntry[] = [];
+  for (const e of filtered) {
+    const block = `- ${e.s || "—"} | ${e.c || "—"} | годы ${e.y || "?"}${e.m ? " | пропуски " + e.m : ""}\n`;
     if (acc.length + block.length > 12000) break;
     acc += block;
-    out.push(s);
+    out.push(e);
   }
-  return { sections: out, text: acc };
+  return { entries: out, text: acc };
 }
+
 
 // ---- Schemas -----------------------------------------------------------
 const startSchema = z.object({
@@ -424,7 +425,7 @@ export const processNextBatch = createServerFn({ method: "POST" })
         card.startYear,
         card.endYear,
       );
-      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.sections.length} секций):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
+      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
       let ai: any = {}; let tIn = 0; let tOut = 0;
       try {
         const r = await callGateway(run.model as string, SYSTEM_PROMPT, userMsg);
@@ -662,3 +663,167 @@ export const reviewFinding = createServerFn({ method: "POST" })
     if (updErr) throw new Error(updErr.message);
     return { ok: true, status: newStatus };
   });
+
+// ============================================================
+// Phase 2 — Merge "Селения без координат" with map points
+// ============================================================
+import unlocatedRaw from "../../public/data/unlocated.json?raw";
+
+interface UnlocatedEntry {
+  settlement: { en: string; ru: string; ka: string };
+  church: { en: string; ru: string; ka: string };
+  region: { en: string; ru: string; ka: string };
+  uezd: { en: string; ru: string; ka: string };
+  years: string;
+  startYear: number;
+  endYear: number;
+  count: number;
+}
+const unlocated = JSON.parse(unlocatedRaw) as UnlocatedEntry[];
+
+function norm(s: string): string {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-zа-яёა-ჰ0-9\s]/giu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function tokenSim(a: string, b: string): number {
+  const A = new Set(norm(a).split(" ").filter(Boolean));
+  const B = new Set(norm(b).split(" ").filter(Boolean));
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const t of A) if (B.has(t)) inter += 1;
+  return inter / Math.max(A.size, B.size);
+}
+function bestNameMatch(u: UnlocatedEntry, props: any): number {
+  // pick best across en/ru/ka
+  const langs = ["en", "ru", "ka"] as const;
+  let best = 0;
+  for (const l of langs) {
+    const s = tokenSim(u.settlement?.[l] ?? "", props.settlement?.[l] ?? "");
+    if (s > best) best = s;
+  }
+  return best;
+}
+
+export const findUnlocatedMatches = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        minScore: z.number().min(0).max(1).default(0.7),
+        limit: z.number().min(1).max(2000).default(500),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const userId = (context as any).userId as string;
+    await assertEditor(userId);
+
+    type Match = {
+      unlocatedIndex: number;
+      featureId: number;
+      score: number;
+      settlement: string;
+      region: string;
+      church: string;
+      years: string;
+      featureSettlement: string;
+      featureRegion: string;
+      featureUezd: string;
+      isGenericRegion: boolean;
+    };
+    const matches: Match[] = [];
+
+    for (let i = 0; i < unlocated.length; i += 1) {
+      const u = unlocated[i];
+      const uRegion = norm(u.region?.ru || u.region?.en || "");
+      const uUezd = norm(u.uezd?.ru || u.uezd?.en || "");
+      const isGeneric =
+        GENERIC_REGIONS.has(uRegion) || GENERIC_REGIONS.has(uUezd);
+
+      let best: Match | null = null;
+      for (const f of parishes.features) {
+        const p = f.properties as any;
+        const score = bestNameMatch(u, p);
+        if (score < data.minScore) continue;
+
+        // region/uezd guard: only merge when region or uezd aligns
+        const fRegion = norm(p.region?.ru || p.region?.en || "");
+        const fUezd = norm(p.uezd?.ru || p.uezd?.en || "");
+        const regionAligned =
+          (uRegion && (uRegion === fRegion || uRegion === fUezd)) ||
+          (uUezd && (uUezd === fRegion || uUezd === fUezd));
+        if (!regionAligned && !isGeneric) continue;
+
+        // church similarity bumps confidence (not required)
+        const churchSim =
+          (["en", "ru", "ka"] as const).reduce(
+            (m, l) =>
+              Math.max(
+                m,
+                tokenSim(u.church?.[l] ?? "", p.church?.[l] ?? ""),
+              ),
+            0,
+          );
+        const combined = score * 0.7 + churchSim * 0.3;
+
+        if (!best || combined > best.score) {
+          best = {
+            unlocatedIndex: i,
+            featureId: Number(f.id),
+            score: Number(combined.toFixed(3)),
+            settlement: u.settlement?.ru || u.settlement?.en || "",
+            region: u.region?.ru || u.region?.en || "",
+            church: u.church?.ru || u.church?.en || "",
+            years: u.years,
+            featureSettlement:
+              p.settlement?.ru || p.settlement?.en || "",
+            featureRegion: p.region?.ru || p.region?.en || "",
+            featureUezd: p.uezd?.ru || p.uezd?.en || "",
+            isGenericRegion: isGeneric,
+          };
+        }
+      }
+      if (best) matches.push(best);
+      if (matches.length >= data.limit) break;
+    }
+
+    matches.sort((a, b) => b.score - a.score);
+    return {
+      total: matches.length,
+      genericRegionSkipped: matches.filter((m) => m.isGenericRegion).length,
+      matches,
+    };
+  });
+
+export const applyUnlocatedMerge = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        featureId: z.number().int(),
+        unlocatedIndex: z.number().int(),
+        note: z.string().max(500).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const userId = (context as any).userId as string;
+    await assertEditor(userId);
+    const u = unlocated[data.unlocatedIndex];
+    if (!u) throw new Error("unlocated entry not found");
+    const { error } = await supabaseAdmin.from("feature_overrides").insert({
+      feature_id: data.featureId,
+      action: "merge_unlocated",
+      data: { unlocated: u, unlocatedIndex: data.unlocatedIndex } as any,
+      published: false,
+      notes: (data.note ?? `AI-аудит Этап 2: слияние "${u.settlement?.ru || u.settlement?.en}" из списка без координат`).slice(0, 1000),
+      created_by: userId,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+

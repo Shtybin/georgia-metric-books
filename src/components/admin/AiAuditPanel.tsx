@@ -243,6 +243,121 @@ export function AiAuditPanel() {
           </ul>
         )}
       </div>
+
+      <UnlocatedMergeSection />
     </section>
   );
 }
+
+// ============================================================
+// Phase 2 — Merge unlocated settlements with map points
+// ============================================================
+import { findUnlocatedMatches, applyUnlocatedMerge } from "@/lib/aiAudit.functions";
+
+function UnlocatedMergeSection() {
+  const find = useServerFn(findUnlocatedMatches);
+  const apply = useServerFn(applyUnlocatedMerge);
+  const [minScore, setMinScore] = useState(0.75);
+  const [loading, setLoading] = useState(false);
+  const [matches, setMatches] = useState<any[]>([]);
+  const [genericSkipped, setGenericSkipped] = useState(0);
+  const [applied, setApplied] = useState<Record<string, boolean>>({});
+  const [err, setErr] = useState<string | null>(null);
+
+  async function run() {
+    setLoading(true); setErr(null);
+    try {
+      const r = await find({ data: { minScore, limit: 500 } });
+      setMatches(r.matches);
+      setGenericSkipped(r.genericRegionSkipped);
+    } catch (e: any) {
+      setErr(e?.message ?? String(e));
+    } finally { setLoading(false); }
+  }
+
+  async function applyOne(m: any) {
+    const key = `${m.featureId}:${m.unlocatedIndex}`;
+    try {
+      await apply({ data: { featureId: m.featureId, unlocatedIndex: m.unlocatedIndex } });
+      setApplied((s) => ({ ...s, [key]: true }));
+    } catch (e: any) { setErr(e?.message ?? String(e)); }
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-4">
+      <header className="mb-3 flex items-center gap-2">
+        <Sparkles className="h-4 w-4" />
+        <h3 className="text-base font-semibold">Этап 2 — Слияние «Селений без координат» с точками карты</h3>
+      </header>
+      <p className="mb-3 text-xs text-muted-foreground">
+        Сопоставление по нормализованному имени селения + совпадению региона/уезда. Селения с обобщённым регионом
+        (Имеретия, Гурия, Абхазия, Мегрелия, Сванетия, Кахетия, Картли, Осетия) помечаются, но не сливаются автоматически.
+        Каждое одобрение создаёт запись в feature_overrides (action=merge_unlocated, не опубликовано) — публикация требует ручной модерации.
+      </p>
+      <div className="mb-3 flex flex-wrap items-end gap-3 text-xs">
+        <label className="flex flex-col gap-1">
+          <span className="text-muted-foreground">Мин. сходство ({minScore.toFixed(2)})</span>
+          <input
+            type="range" min={0.5} max={1} step={0.05}
+            value={minScore} onChange={(e) => setMinScore(Number(e.target.value))}
+          />
+        </label>
+        <Button size="sm" onClick={run} disabled={loading}>
+          {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
+          Найти совпадения
+        </Button>
+        {matches.length > 0 && (
+          <span className="text-muted-foreground">
+            Найдено {matches.length} (обобщ. регион помечено: {genericSkipped})
+          </span>
+        )}
+      </div>
+      {err && <div className="mb-2 rounded-md bg-destructive/10 px-2 py-1 text-xs text-destructive">{err}</div>}
+      {matches.length > 0 && (
+        <div className="max-h-[480px] overflow-auto rounded-md border border-border">
+          <table className="w-full text-xs">
+            <thead className="sticky top-0 bg-muted text-left">
+              <tr>
+                <th className="px-2 py-1">Score</th>
+                <th className="px-2 py-1">Без коорд.</th>
+                <th className="px-2 py-1">→ Точка на карте</th>
+                <th className="px-2 py-1">Годы</th>
+                <th className="px-2 py-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {matches.map((m) => {
+                const key = `${m.featureId}:${m.unlocatedIndex}`;
+                return (
+                  <tr key={key} className="border-t border-border align-top">
+                    <td className="px-2 py-1 tabular-nums">{m.score.toFixed(2)}</td>
+                    <td className="px-2 py-1">
+                      <div className="font-medium">{m.settlement}</div>
+                      <div className="text-muted-foreground">{m.region}{m.church ? ` · ${m.church}` : ""}</div>
+                      {m.isGenericRegion && <div className="text-amber-600">обобщ. регион</div>}
+                    </td>
+                    <td className="px-2 py-1">
+                      <div className="font-medium">#{m.featureId} {m.featureSettlement}</div>
+                      <div className="text-muted-foreground">{[m.featureUezd, m.featureRegion].filter(Boolean).join(" · ")}</div>
+                    </td>
+                    <td className="px-2 py-1 tabular-nums">{m.years}</td>
+                    <td className="px-2 py-1">
+                      {applied[key] ? (
+                        <span className="inline-flex items-center gap-1 text-emerald-600"><Check className="h-3 w-3" /> добавлено</span>
+                      ) : m.isGenericRegion ? (
+                        <Button size="sm" variant="outline" onClick={() => applyOne(m)}>Принять вручную</Button>
+                      ) : (
+                        <Button size="sm" onClick={() => applyOne(m)}>Слить</Button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
