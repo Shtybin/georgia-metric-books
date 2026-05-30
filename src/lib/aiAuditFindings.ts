@@ -90,11 +90,6 @@ export function deriveFindings(card: any, ai: any): FindingRow[] {
     const sameRange = curStart === pStart && curEnd === pEnd;
 
     if (triLang && haveProposedRange && !wouldShorten && !sameRange) {
-      curStart != null && curEnd != null && pStart != null && pEnd != null &&
-      (pStart > curStart || pEnd < curEnd);
-    const sameRange = curStart === pStart && curEnd === pEnd;
-
-    if (triLang && !wouldShorten && !sameRange) {
       const proposed: Record<string, any> = { yearsRaw: yc.yearsRaw };
       if (pStart != null) proposed.startYear = Math.min(curStart ?? pStart, pStart);
       if (pEnd != null) proposed.endYear = Math.max(curEnd ?? pEnd, pEnd);
