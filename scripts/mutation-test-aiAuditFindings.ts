@@ -161,6 +161,8 @@ async function main() {
 
   const survived: Mutation[] = [];
   const killed: Mutation[] = [];
+  const equivalentSurvived: Mutation[] = [];
+  const equivalentKilled: Mutation[] = [];
   const invalid: Mutation[] = [];
 
   for (const m of MUTATIONS) {
@@ -174,18 +176,32 @@ async function main() {
     const res = run();
     restore();
     if (res.ok) {
-      console.log("SURVIVED ✗");
-      survived.push(m);
+      if (m.equivalent) {
+        console.log("survived (equivalent, OK)");
+        equivalentSurvived.push(m);
+      } else {
+        console.log("SURVIVED ✗");
+        survived.push(m);
+      }
     } else {
-      console.log("killed ✓");
-      killed.push(m);
+      if (m.equivalent) {
+        console.log("killed (unexpected for equivalent)");
+        equivalentKilled.push(m);
+      } else {
+        console.log("killed ✓");
+        killed.push(m);
+      }
     }
   }
 
+  const nonEquivalent = MUTATIONS.filter((m) => !m.equivalent).length;
   console.log("\n" + "─".repeat(70));
-  console.log(`Killed:   ${killed.length}/${MUTATIONS.length}`);
-  console.log(`Survived: ${survived.length}`);
-  if (invalid.length) console.log(`Invalid:  ${invalid.length}`);
+  console.log(`Killed (real):        ${killed.length}/${nonEquivalent}`);
+  console.log(`Survived (real):      ${survived.length}`);
+  console.log(`Equivalent (skipped): ${equivalentSurvived.length}`);
+  if (equivalentKilled.length)
+    console.log(`Equivalent unexpectedly killed: ${equivalentKilled.length}`);
+  if (invalid.length) console.log(`Invalid: ${invalid.length}`);
 
   if (survived.length) {
     console.log("\nSurviving mutants (tests did NOT catch these changes):");
