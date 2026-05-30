@@ -496,26 +496,40 @@ export const processNextBatch = createServerFn({ method: "POST" })
 
     const newDone = runRow.points_done + processed;
     const finished = newDone >= runRow.points_total || spent >= budget;
-    const status = spent >= budget ? "budget_exhausted" : finished ? "done" : "running";
+    const nextStatus = spent >= budget ? "budget_exhausted" : finished ? "done" : "running";
 
+    // Respect external cancellation: re-read current status and skip status
+    // overwrite if the run is no longer "running" (e.g. user clicked Stop).
+    const { data: latest } = await supabaseAdmin
+      .from("ai_audit_runs")
+      .select("status")
+      .eq("id", runRow.id)
+      .single();
+    const currentStatus = (latest?.status as string) ?? "running";
+    const wasCancelled = currentStatus !== "running";
+
+    const updatePayload: Record<string, unknown> = {
+      points_done: newDone,
+      spent_usd: spent,
+    };
+    if (!wasCancelled) {
+      updatePayload.status = nextStatus;
+      updatePayload.finished_at = finished ? new Date().toISOString() : null;
+    }
     await supabaseAdmin
       .from("ai_audit_runs")
-      .update({
-        points_done: newDone,
-        spent_usd: spent,
-        status,
-        finished_at: finished ? new Date().toISOString() : null,
-      })
+      .update(updatePayload)
       .eq("id", runRow.id);
 
     return {
-      status,
+      status: wasCancelled ? currentStatus : nextStatus,
       processed,
       spentUsd: spent,
       pointsDone: newDone,
       pointsTotal: runRow.points_total,
     };
   });
+
 
 export const getRunStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
