@@ -14,6 +14,128 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_audit_findings: {
+        Row: {
+          confidence: number
+          cost_usd: number
+          created_at: string
+          current: Json
+          feature_id: number | null
+          id: string
+          kind: Database["public"]["Enums"]["ai_audit_finding_kind"]
+          proposed: Json
+          rationale: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          run_id: string
+          severity: Database["public"]["Enums"]["ai_audit_severity"]
+          sources: Json
+          status: Database["public"]["Enums"]["ai_audit_finding_status"]
+          tokens_in: number
+          tokens_out: number
+          updated_at: string
+        }
+        Insert: {
+          confidence?: number
+          cost_usd?: number
+          created_at?: string
+          current?: Json
+          feature_id?: number | null
+          id?: string
+          kind: Database["public"]["Enums"]["ai_audit_finding_kind"]
+          proposed?: Json
+          rationale?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          run_id: string
+          severity?: Database["public"]["Enums"]["ai_audit_severity"]
+          sources?: Json
+          status?: Database["public"]["Enums"]["ai_audit_finding_status"]
+          tokens_in?: number
+          tokens_out?: number
+          updated_at?: string
+        }
+        Update: {
+          confidence?: number
+          cost_usd?: number
+          created_at?: string
+          current?: Json
+          feature_id?: number | null
+          id?: string
+          kind?: Database["public"]["Enums"]["ai_audit_finding_kind"]
+          proposed?: Json
+          rationale?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          run_id?: string
+          severity?: Database["public"]["Enums"]["ai_audit_severity"]
+          sources?: Json
+          status?: Database["public"]["Enums"]["ai_audit_finding_status"]
+          tokens_in?: number
+          tokens_out?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_audit_findings_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "ai_audit_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_audit_runs: {
+        Row: {
+          budget_usd: number
+          created_by: string | null
+          finished_at: string | null
+          id: string
+          model: string
+          notes: string | null
+          points_done: number
+          points_total: number
+          scope: string
+          spent_usd: number
+          started_at: string
+          status: Database["public"]["Enums"]["ai_audit_run_status"]
+          updated_at: string
+        }
+        Insert: {
+          budget_usd?: number
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          model?: string
+          notes?: string | null
+          points_done?: number
+          points_total?: number
+          scope?: string
+          spent_usd?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["ai_audit_run_status"]
+          updated_at?: string
+        }
+        Update: {
+          budget_usd?: number
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          model?: string
+          notes?: string | null
+          points_done?: number
+          points_total?: number
+          scope?: string
+          spent_usd?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["ai_audit_run_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       coord_suggestions: {
         Row: {
           church_en: string
@@ -567,6 +689,23 @@ export type Database = {
       }
     }
     Enums: {
+      ai_audit_finding_kind:
+        | "settlement"
+        | "uezd"
+        | "church"
+        | "years"
+        | "missing_years"
+        | "duplicate"
+        | "other"
+      ai_audit_finding_status: "pending" | "approved" | "rejected" | "applied"
+      ai_audit_run_status:
+        | "running"
+        | "paused"
+        | "done"
+        | "budget_exhausted"
+        | "failed"
+        | "cancelled"
+      ai_audit_severity: "info" | "warn" | "error"
       app_role: "admin" | "user" | "editor" | "contributor"
       missing_years_suggestion_status: "pending" | "approved" | "rejected"
       report_status: "new" | "in_progress" | "resolved"
@@ -700,6 +839,25 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      ai_audit_finding_kind: [
+        "settlement",
+        "uezd",
+        "church",
+        "years",
+        "missing_years",
+        "duplicate",
+        "other",
+      ],
+      ai_audit_finding_status: ["pending", "approved", "rejected", "applied"],
+      ai_audit_run_status: [
+        "running",
+        "paused",
+        "done",
+        "budget_exhausted",
+        "failed",
+        "cancelled",
+      ],
+      ai_audit_severity: ["info", "warn", "error"],
       app_role: ["admin", "user", "editor", "contributor"],
       missing_years_suggestion_status: ["pending", "approved", "rejected"],
       report_status: ["new", "in_progress", "resolved"],
