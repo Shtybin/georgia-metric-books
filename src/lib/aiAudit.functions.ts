@@ -179,7 +179,25 @@ const TOOL_SCHEMA = {
       items: { type: "string" },
     },
     years_ok: { type: "boolean" },
-    years_correction: { type: "string" },
+    years_correction: {
+      type: "object",
+      description:
+        "ТОЛЬКО для РАСШИРЕНИЯ диапазона. yearsRaw — объект {ru,en,ka} с одинаковой строкой 'YYYY-YYYY' во всех языках. startYear/endYear — целые числа, расширяющие текущий диапазон. НИКОГДА не сокращай.",
+      properties: {
+        yearsRaw: {
+          type: "object",
+          properties: {
+            ru: { type: "string" },
+            en: { type: "string" },
+            ka: { type: "string" },
+          },
+          required: ["ru", "en", "ka"],
+        },
+        startYear: { type: "integer" },
+        endYear: { type: "integer" },
+      },
+      required: ["yearsRaw"],
+    },
     missing_years_ok: { type: "boolean" },
     missing_years_correction: { type: "string" },
     confidence: { type: "number", minimum: 0, maximum: 1 },
@@ -198,6 +216,13 @@ const SYSTEM_PROMPT = `Ты — модератор грузинского арх
 По карточке точки проверь название селения, уезда/района, церквей, диапазона годов и пропущенных лет.
 Сверяй ИСКЛЮЧИТЕЛЬНО с предоставленным каталогом. Если каталог не содержит подтверждения — пиши confidence < 0.3 и оставляй *_ok=true.
 Никогда не выдумывай факты. Если уезд относится к общим регионам (Имеретия, Гурия, Абхазия, Мегрелия, Сванетия, Кахетия, Картли) и подробного уезда нет — не предлагай уточнений по уезду.
+
+ОСОБЫЕ ПРАВИЛА ПО ГОДАМ (КРИТИЧНО):
+1. Каталог НИАГ Ф.489 оп.6 покрывает ТОЛЬКО 1819–1870. Если карточка содержит данные после 1870 года (напр. 1846–1916), ОТСУТСТВИЕ этих лет в каталоге НЕ ошибка — карточные данные агрегированы из других описей. В этом случае years_ok=true и years_correction НЕ указывай.
+2. НИКОГДА не предлагай сокращать диапазон. Если в каталоге диапазон уже карточного — карточные данные считаются полными. years_ok=true.
+3. years_correction разрешён ТОЛЬКО если каталог содержит даты ВНЕ карточного диапазона (требуется расширение startYear↓ или endYear↑). yearsRaw — объект {ru,en,ka} с одинаковой строкой "YYYY-YYYY" во всех языках. Обязательно укажи новые startYear ≤ endYear.
+4. Не ломай формат: yearsRaw всегда трёхъязычный объект, startYear/endYear — целые числа.
+
 Возвращай результат строго через инструмент propose_corrections.`;
 
 async function callGateway(model: string, system: string, user: string) {
@@ -300,14 +325,52 @@ function deriveFindings(card: any, ai: any): FindingRow[] {
       rationale: ai.rationale ?? "",
     });
   }
-  if (ai.years_ok === false && ai.years_correction) {
-    out.push({
-      kind: "years",
-      severity: "warn",
-      current: { yearsRaw: card.yearsRaw, startYear: card.startYear, endYear: card.endYear },
-      proposed: { yearsRaw: ai.years_correction },
-      rationale: ai.rationale ?? "",
-    });
+  if (ai.years_ok === false && ai.years_correction && typeof ai.years_correction === "object") {
+    const yc = ai.years_correction as {
+      yearsRaw?: { ru?: string; en?: string; ka?: string };
+      startYear?: number;
+      endYear?: number;
+    };
+    const curStart = typeof card.startYear === "number" ? card.startYear : null;
+    const curEnd = typeof card.endYear === "number" ? card.endYear : null;
+
+    // Parse proposed range either from explicit startYear/endYear or from yearsRaw "YYYY-YYYY".
+    let pStart = typeof yc.startYear === "number" ? yc.startYear : null;
+    let pEnd = typeof yc.endYear === "number" ? yc.endYear : null;
+    if ((pStart == null || pEnd == null) && yc.yearsRaw) {
+      const sample = yc.yearsRaw.ru || yc.yearsRaw.en || yc.yearsRaw.ka || "";
+      const m = sample.match(/(\d{4})/g);
+      if (m && m.length >= 1) {
+        const nums = m.map(Number);
+        pStart = pStart ?? Math.min(...nums);
+        pEnd = pEnd ?? Math.max(...nums);
+      }
+    }
+
+    // Guards:
+    // 1) Drop the finding if it would SHORTEN the existing range.
+    // 2) Require trilingual yearsRaw object.
+    // 3) Drop if proposed range is identical to current.
+    const triLang =
+      !!yc.yearsRaw?.ru && !!yc.yearsRaw?.en && !!yc.yearsRaw?.ka;
+    const wouldShorten =
+      curStart != null && curEnd != null && pStart != null && pEnd != null &&
+      (pStart > curStart || pEnd < curEnd);
+    const sameRange =
+      curStart === pStart && curEnd === pEnd;
+
+    if (triLang && !wouldShorten && !sameRange) {
+      const proposed: Record<string, any> = { yearsRaw: yc.yearsRaw };
+      if (pStart != null) proposed.startYear = Math.min(curStart ?? pStart, pStart);
+      if (pEnd != null) proposed.endYear = Math.max(curEnd ?? pEnd, pEnd);
+      out.push({
+        kind: "years",
+        severity: "warn",
+        current: { yearsRaw: card.yearsRaw, startYear: card.startYear, endYear: card.endYear },
+        proposed,
+        rationale: ai.rationale ?? "",
+      });
+    }
   }
   if (ai.missing_years_ok === false && ai.missing_years_correction) {
     out.push({
@@ -424,7 +487,13 @@ export const processNextBatch = createServerFn({ method: "POST" })
         card.startYear,
         card.endYear,
       );
-      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
+      const coverageNote =
+        card.startYear != null && card.startYear > 1870
+          ? "\n\nВНИМАНИЕ: карточка целиком вне покрытия каталога НИАГ Ф.489 оп.6 (1819–1870). Сравнение по годам недоступно — оставь years_ok=true."
+          : card.endYear != null && card.endYear > 1870
+            ? "\n\nВНИМАНИЕ: часть диапазона карточки выходит за пределы каталога НИАГ Ф.489 оп.6 (1819–1870). Отсутствие поздних лет в каталоге НЕ ошибка."
+            : "";
+      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}${coverageNote}`;
       try {
         const r = await callGateway(runRow.model as string, SYSTEM_PROMPT, userMsg);
         const ai = r.parsed;
