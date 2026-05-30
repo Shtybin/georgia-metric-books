@@ -396,18 +396,16 @@ export const processNextBatch = createServerFn({ method: "POST" })
       return { status: "done", processed: 0, spentUsd: Number(run.spent_usd), pointsDone: run.points_done, pointsTotal: run.points_total };
     }
 
-    let processed = 0;
     let spent = Number(run.spent_usd);
     const budget = Number(run.budget_usd);
     const findingsToInsert: any[] = [];
+    const DEADLINE_MS = 45_000; // keep under edge ~60s timeout
+    const startedAt = Date.now();
+    let budgetHit = false;
 
-    for (const featureId of slice) {
-      if (spent >= budget) break;
+    async function processOne(featureId: number) {
       const feat = parishes.features.find((f) => f.id === featureId);
-      if (!feat) {
-        processed += 1;
-        continue;
-      }
+      if (!feat) return;
       const p = feat.properties;
       const card = {
         feature_id: featureId,
@@ -426,83 +424,66 @@ export const processNextBatch = createServerFn({ method: "POST" })
         card.endYear,
       );
       const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
-      let ai: any = {}; let tIn = 0; let tOut = 0;
       try {
         const r = await callGateway(run.model as string, SYSTEM_PROMPT, userMsg);
-        ai = r.parsed; tIn = r.tokensIn; tOut = r.tokensOut;
-      } catch (e: any) {
-        if (e.message === "ai_credits_exhausted") {
-          await supabaseAdmin
-            .from("ai_audit_runs")
-            .update({ status: "budget_exhausted", finished_at: new Date().toISOString() })
-            .eq("id", run.id);
-          break;
-        }
-        if (e.message === "rate_limited") {
-          await new Promise((res) => setTimeout(res, 2000));
-        }
-        findingsToInsert.push({
-          run_id: run.id,
-          feature_id: featureId,
-          kind: "other",
-          severity: "error",
-          confidence: 0,
-          current: card,
-          proposed: {},
-          rationale: `Ошибка вызова AI: ${e.message ?? String(e)}`,
-          sources: [],
-          tokens_in: 0,
-          tokens_out: 0,
-          cost_usd: 0,
-          status: "rejected",
-        });
-        processed += 1;
-        continue;
-      }
-      const cost = priceUsd(run.model as string, tIn, tOut);
-      spent += cost;
-
-      const rows = deriveFindings(card, ai);
-      const conf = Number(ai.confidence ?? 0);
-      if (rows.length === 0) {
-        // log an info row so the admin sees the point was checked
-        findingsToInsert.push({
-          run_id: run.id,
-          feature_id: featureId,
-          kind: "other",
-          severity: "info",
-          confidence: conf,
-          current: card,
-          proposed: {},
-          rationale: ai.rationale ?? "ОК — расхождений не найдено",
-          sources: Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [],
-          tokens_in: tIn,
-          tokens_out: tOut,
-          cost_usd: cost,
-          status: "approved", // auto-mark as reviewed since no action needed
-        });
-      } else {
-        for (const r of rows) {
+        const ai = r.parsed;
+        const cost = priceUsd(run.model as string, r.tokensIn, r.tokensOut);
+        spent += cost;
+        const rows = deriveFindings(card, ai);
+        const conf = Number(ai.confidence ?? 0);
+        if (rows.length === 0) {
           findingsToInsert.push({
-            run_id: run.id,
-            feature_id: featureId,
-            kind: r.kind,
-            severity: r.severity,
-            confidence: conf,
-            current: r.current,
-            proposed: r.proposed,
-            rationale: r.rationale || ai.rationale || "",
+            run_id: run.id, feature_id: featureId, kind: "other", severity: "info",
+            confidence: conf, current: card, proposed: {},
+            rationale: ai.rationale ?? "ОК — расхождений не найдено",
             sources: Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [],
-            tokens_in: tIn,
-            tokens_out: tOut,
-            cost_usd: cost,
-            status: "pending",
+            tokens_in: r.tokensIn, tokens_out: r.tokensOut, cost_usd: cost, status: "approved",
           });
+        } else {
+          for (const row of rows) {
+            findingsToInsert.push({
+              run_id: run.id, feature_id: featureId, kind: row.kind, severity: row.severity,
+              confidence: conf, current: row.current, proposed: row.proposed,
+              rationale: row.rationale || ai.rationale || "",
+              sources: Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [],
+              tokens_in: r.tokensIn, tokens_out: r.tokensOut, cost_usd: cost, status: "pending",
+            });
+          }
         }
+      } catch (e: any) {
+        if (e?.message === "ai_credits_exhausted") { budgetHit = true; return; }
+        findingsToInsert.push({
+          run_id: run.id, feature_id: featureId, kind: "other", severity: "error",
+          confidence: 0, current: card, proposed: {},
+          rationale: `Ошибка вызова AI: ${e?.message ?? String(e)}`,
+          sources: [], tokens_in: 0, tokens_out: 0, cost_usd: 0, status: "rejected",
+        });
       }
-      processed += 1;
-      // tiny throttle
-      await new Promise((res) => setTimeout(res, 250));
+    }
+
+    // Process the batch with limited concurrency; stop early on deadline/budget
+    // so the HTTP response always returns before the edge proxy times out.
+    const CONCURRENCY = 3;
+    let cursor = 0;
+    let processed = 0;
+    async function worker() {
+      while (cursor < slice.length) {
+        if (budgetHit || spent >= budget) break;
+        if (Date.now() - startedAt > DEADLINE_MS) break;
+        const idx = cursor++;
+        await processOne(slice[idx]);
+        processed += 1;
+      }
+    }
+    await Promise.all(
+      Array.from({ length: Math.min(CONCURRENCY, slice.length) }, () => worker()),
+    );
+
+    if (budgetHit) {
+      await supabaseAdmin
+        .from("ai_audit_runs")
+        .update({ status: "budget_exhausted", finished_at: new Date().toISOString() })
+        .eq("id", run.id);
     }
 
     if (findingsToInsert.length) {
