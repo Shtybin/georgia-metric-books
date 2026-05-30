@@ -11,15 +11,19 @@ const parishes = JSON.parse(parishesRaw) as GeoJSON.FeatureCollection<
   Record<string, any>
 >;
 
-interface CatalogSection {
-  file: string;
-  year: number;
-  uezdRaw: string;
-  uezdKey: string;
-  raw: string;
+interface CatalogEntry {
+  s: string; // settlement_name_en
+  c: string; // church_name_en
+  y: string; // years_range
+  m: string; // missing years
+  ref: string;
 }
-const catalog = (JSON.parse(catalogRaw) as { sections: CatalogSection[] })
-  .sections;
+interface CatalogShape {
+  source: string;
+  byDistrict: Record<string, CatalogEntry[]>;
+}
+const catalog = JSON.parse(catalogRaw) as CatalogShape;
+const catalogIndex = catalog.byDistrict ?? {};
 
 // ---- Pricing (USD per 1M tokens) ---------------------------------------
 const PRICING: Record<string, { in: number; out: number }> = {
@@ -36,78 +40,75 @@ function priceUsd(model: string, tIn: number, tOut: number) {
 // Generic / non-uezd regions — never propose merges for these
 const GENERIC_REGIONS = new Set(
   [
-    "имеретия",
-    "гурия",
-    "абхазия",
-    "мегрелия",
-    "сванетия",
-    "кахетия",
-    "картли",
-    "имерети",
-    "imereti",
-    "guria",
-    "abkhazia",
-    "samegrelo",
-    "svaneti",
-    "kakheti",
-    "kartli",
+    "имеретия", "гурия", "абхазия", "мегрелия", "сванетия", "кахетия",
+    "картли", "имерети", "imereti", "guria", "abkhazia", "samegrelo",
+    "svaneti", "kakheti", "kartli", "megreliya", "imeretiya", "guriya",
+    "abkhaziya", "osetiya",
   ].map((s) => s.toLowerCase()),
 );
 
-const UEZD_KEY_ALIASES: Record<string, string> = {
-  тбилиси: "tbilisi",
-  телави: "telavi",
-  гори: "gori",
-  сигнах: "signagi",
-  сигнаги: "signagi",
-  душет: "dusheti",
-  душети: "dusheti",
-  кутаис: "kutaisi",
-  кутаиси: "kutaisi",
-  ахалцих: "akhaltsikhe",
-  ахалцихе: "akhaltsikhe",
-  озургет: "ozurgeti",
-  зугдиди: "zugdidi",
-  батум: "batumi",
-  шорапан: "shorapani",
-  рача: "racha",
-};
-function uezdKey(uezd: string | undefined): string | null {
-  if (!uezd) return null;
-  const k = uezd.trim().toLowerCase().replace(/\s+/g, "");
-  for (const [alias, key] of Object.entries(UEZD_KEY_ALIASES)) {
-    if (k.startsWith(alias.toLowerCase())) return key;
-  }
-  // strip trailing -ский / -ский уезд markers
-  const stripped = k.replace(/(ский|ского|ское|skiy|sky)$/u, "");
-  return stripped || null;
+// Normalize an uezd/region label to the same key used in catalog.byDistrict
+function normDistrict(uezd: string | undefined | null): string {
+  if (!uezd) return "";
+  return uezd.trim().toLowerCase();
+}
+
+// Russian → English transliteration of uezd labels seen in feature props,
+// because catalog is keyed by English forms ("kutaisskiy uezd", "imeretiya")
+const RU_TO_EN: Array<[RegExp, string]> = [
+  [/кутаис\w*\s*уезд/, "kutaisskiy uezd"],
+  [/гори\w*\s*уезд/, "goriyskiy uezd"],
+  [/телав\w*\s*уезд/, "telavskiy uezd"],
+  [/тифлис\w*\s*уезд|тбилис\w*\s*уезд/, "tbilisskiy uezd"],
+  [/душет\w*\s*уезд/, "dushetskiy uezd"],
+  [/ахалцих\w*\s*уезд/, "akhaltsikhskiy uezd"],
+  [/шорапан\w*\s*уезд/, "shorapanskiy uezd"],
+  [/рачин\w*\s*уезд/, "rachinskiy uezd"],
+  [/озургет\w*\s*уезд/, "ozurgetskiy uezd"],
+  [/сенакс\w*\s*уезд/, "senakskiy uezd"],
+  [/зугдид\w*\s*уезд/, "zugdidskiy uezd"],
+  [/имерет/, "imeretiya"],
+  [/гури/, "guriya"],
+  [/мегрел/, "megreliya"],
+  [/абхаз/, "abkhaziya"],
+  [/осети/, "osetiya"],
+  [/кахети/, "kakhetiya"],
+];
+function ruToEnDistrict(u: string): string {
+  const k = u.toLowerCase();
+  for (const [re, en] of RU_TO_EN) if (re.test(k)) return en;
+  return k;
 }
 
 function pickCatalogContext(
   uezd: string | undefined,
   startYear: number | null,
   endYear: number | null,
-): { sections: CatalogSection[]; text: string } {
-  const key = uezdKey(uezd);
+): { entries: CatalogEntry[]; text: string } {
+  const enKey = ruToEnDistrict(uezd ?? "");
+  const list = catalogIndex[enKey] ?? [];
   const start = startYear ?? 1800;
   const end = endYear ?? 1900;
-  const sel = catalog.filter(
-    (s) =>
-      (!key || s.uezdKey === key) &&
-      s.year >= start - 2 &&
-      s.year <= end + 2,
-  );
-  // Cap total characters to ~12 KB per call
-  let acc = "";
-  const out: CatalogSection[] = [];
-  for (const s of sel) {
-    const block = `### ${s.uezdRaw} мазра ${s.year} (file ${s.file})\n${s.raw}\n`;
+  const filtered = list.filter((e) => {
+    if (!e.y) return true;
+    const m = e.y.match(/(\d{4})/g);
+    if (!m) return true;
+    const ys = m.map(Number);
+    const lo = Math.min(...ys);
+    const hi = Math.max(...ys);
+    return hi >= start - 2 && lo <= end + 2;
+  });
+  let acc = `Уезд (нормализован): ${enKey || "—"}\n`;
+  const out: CatalogEntry[] = [];
+  for (const e of filtered) {
+    const block = `- ${e.s || "—"} | ${e.c || "—"} | годы ${e.y || "?"}${e.m ? " | пропуски " + e.m : ""}\n`;
     if (acc.length + block.length > 12000) break;
     acc += block;
-    out.push(s);
+    out.push(e);
   }
-  return { sections: out, text: acc };
+  return { entries: out, text: acc };
 }
+
 
 // ---- Schemas -----------------------------------------------------------
 const startSchema = z.object({
