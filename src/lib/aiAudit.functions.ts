@@ -325,14 +325,52 @@ function deriveFindings(card: any, ai: any): FindingRow[] {
       rationale: ai.rationale ?? "",
     });
   }
-  if (ai.years_ok === false && ai.years_correction) {
-    out.push({
-      kind: "years",
-      severity: "warn",
-      current: { yearsRaw: card.yearsRaw, startYear: card.startYear, endYear: card.endYear },
-      proposed: { yearsRaw: ai.years_correction },
-      rationale: ai.rationale ?? "",
-    });
+  if (ai.years_ok === false && ai.years_correction && typeof ai.years_correction === "object") {
+    const yc = ai.years_correction as {
+      yearsRaw?: { ru?: string; en?: string; ka?: string };
+      startYear?: number;
+      endYear?: number;
+    };
+    const curStart = typeof card.startYear === "number" ? card.startYear : null;
+    const curEnd = typeof card.endYear === "number" ? card.endYear : null;
+
+    // Parse proposed range either from explicit startYear/endYear or from yearsRaw "YYYY-YYYY".
+    let pStart = typeof yc.startYear === "number" ? yc.startYear : null;
+    let pEnd = typeof yc.endYear === "number" ? yc.endYear : null;
+    if ((pStart == null || pEnd == null) && yc.yearsRaw) {
+      const sample = yc.yearsRaw.ru || yc.yearsRaw.en || yc.yearsRaw.ka || "";
+      const m = sample.match(/(\d{4})/g);
+      if (m && m.length >= 1) {
+        const nums = m.map(Number);
+        pStart = pStart ?? Math.min(...nums);
+        pEnd = pEnd ?? Math.max(...nums);
+      }
+    }
+
+    // Guards:
+    // 1) Drop the finding if it would SHORTEN the existing range.
+    // 2) Require trilingual yearsRaw object.
+    // 3) Drop if proposed range is identical to current.
+    const triLang =
+      !!yc.yearsRaw?.ru && !!yc.yearsRaw?.en && !!yc.yearsRaw?.ka;
+    const wouldShorten =
+      curStart != null && curEnd != null && pStart != null && pEnd != null &&
+      (pStart > curStart || pEnd < curEnd);
+    const sameRange =
+      curStart === pStart && curEnd === pEnd;
+
+    if (triLang && !wouldShorten && !sameRange) {
+      const proposed: Record<string, any> = { yearsRaw: yc.yearsRaw };
+      if (pStart != null) proposed.startYear = Math.min(curStart ?? pStart, pStart);
+      if (pEnd != null) proposed.endYear = Math.max(curEnd ?? pEnd, pEnd);
+      out.push({
+        kind: "years",
+        severity: "warn",
+        current: { yearsRaw: card.yearsRaw, startYear: card.startYear, endYear: card.endYear },
+        proposed,
+        rationale: ai.rationale ?? "",
+      });
+    }
   }
   if (ai.missing_years_ok === false && ai.missing_years_correction) {
     out.push({
