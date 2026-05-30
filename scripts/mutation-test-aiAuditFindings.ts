@@ -28,6 +28,9 @@ type Mutation = {
   description: string;
   find: string;
   replace: string;
+  /** Mark mutations that are provably behavior-equivalent given the active
+   *  guards. Survival is expected and not a failure. */
+  equivalent?: boolean;
 };
 
 // Each mutation targets a single logical decision in deriveFindings.
