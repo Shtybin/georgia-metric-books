@@ -86,15 +86,17 @@ const MUTATIONS: Mutation[] = [
   },
   {
     id: "M9-proposed-startYear-no-min",
-    description: "proposed.startYear uses raw pStart (could shorten when widened)",
+    description: "proposed.startYear uses raw pStart (equivalent: wouldShorten already forces pStart <= curStart)",
     find: "if (pStart != null) proposed.startYear = Math.min(curStart ?? pStart, pStart);",
     replace: "if (pStart != null) proposed.startYear = pStart;",
+    equivalent: true,
   },
   {
     id: "M10-proposed-endYear-no-max",
-    description: "proposed.endYear uses raw pEnd (could shorten when widened)",
+    description: "proposed.endYear uses raw pEnd (equivalent: wouldShorten already forces pEnd >= curEnd)",
     find: "if (pEnd != null) proposed.endYear = Math.max(curEnd ?? pEnd, pEnd);",
     replace: "if (pEnd != null) proposed.endYear = pEnd;",
+    equivalent: true,
   },
   {
     id: "M11-missing_years-ignores-ok-flag",
