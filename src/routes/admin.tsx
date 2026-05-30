@@ -416,6 +416,10 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <Sparkles className="h-3.5 w-3.5" /> AI-геокодер
                 </span>
+              ) : k === "ai_audit" ? (
+                <span className="inline-flex items-center gap-1">
+                  <Activity className="h-3.5 w-3.5" /> AI-аудит
+                </span>
               ) : k === "tbilisi_edit" ? (
                 <span className="inline-flex items-center gap-1">
                   <MapPin className="h-3.5 w-3.5" /> Тбилиси
