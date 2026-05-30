@@ -484,7 +484,7 @@ export const processNextBatch = createServerFn({ method: "POST" })
       await supabaseAdmin
         .from("ai_audit_runs")
         .update({ status: "budget_exhausted", finished_at: new Date().toISOString() })
-        .eq("id", run.id);
+        .eq("id", runRow.id);
     }
 
     if (findingsToInsert.length) {
@@ -494,8 +494,8 @@ export const processNextBatch = createServerFn({ method: "POST" })
       if (insErr) console.error("findings insert", insErr);
     }
 
-    const newDone = run.points_done + processed;
-    const finished = newDone >= run.points_total || spent >= budget;
+    const newDone = runRow.points_done + processed;
+    const finished = newDone >= runRow.points_total || spent >= budget;
     const status = spent >= budget ? "budget_exhausted" : finished ? "done" : "running";
 
     await supabaseAdmin
@@ -506,14 +506,14 @@ export const processNextBatch = createServerFn({ method: "POST" })
         status,
         finished_at: finished ? new Date().toISOString() : null,
       })
-      .eq("id", run.id);
+      .eq("id", runRow.id);
 
     return {
       status,
       processed,
       spentUsd: spent,
       pointsDone: newDone,
-      pointsTotal: run.points_total,
+      pointsTotal: runRow.points_total,
     };
   });
 
