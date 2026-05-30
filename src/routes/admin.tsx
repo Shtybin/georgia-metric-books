@@ -8,6 +8,7 @@ import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
 import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYearsSuggestionsModeration";
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
 import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
+import { AiAuditPanel } from "@/components/admin/AiAuditPanel";
 import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
 import { TbilisiCoordEditorPanel } from "@/components/admin/TbilisiCoordEditorPanel";
