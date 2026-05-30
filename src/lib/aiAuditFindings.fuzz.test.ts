@@ -209,3 +209,123 @@ describe("deriveFindings — fuzz over missing_years", () => {
     );
   });
 });
+
+describe("deriveFindings — extra invariants for haveProposedRange & legacy schema", () => {
+  // I6. When a "years" finding is emitted, the effective proposed range MUST
+  //     satisfy startYear <= endYear (haveProposedRange contract).
+  // I7. When a "years" finding is emitted, proposed.yearsRaw MUST be an
+  //     object with all three ru/en/ka non-empty strings (never null,
+  //     never a bare string, never missing a language).
+  // I8. When a "years" finding is emitted, the proposed range MUST differ
+  //     from the card's current range (sameRange=false).
+  // I9. Effective proposed range MUST contain at least one parseable 4-digit
+  //     year if derived from yearsRaw, OR match yc.startYear/endYear when
+  //     they were provided as numbers.
+
+  it("I6+I7+I8: emitted years findings always have valid range, trilingual yearsRaw, and differ from current", () => {
+    fc.assert(
+      fc.property(cardArb, aiArb, (card, ai) => {
+        const f = deriveFindings(card, ai).find((x) => x.kind === "years");
+        if (!f) return;
+
+        // I6: startYear <= endYear
+        expect(typeof f.proposed.startYear).toBe("number");
+        expect(typeof f.proposed.endYear).toBe("number");
+        expect(f.proposed.startYear).toBeLessThanOrEqual(f.proposed.endYear);
+
+        // I7: yearsRaw is a trilingual object
+        const yr = f.proposed.yearsRaw;
+        expect(yr).not.toBeNull();
+        expect(typeof yr).toBe("object");
+        expect(typeof yr.ru).toBe("string");
+        expect(typeof yr.en).toBe("string");
+        expect(typeof yr.ka).toBe("string");
+        expect(yr.ru.length).toBeGreaterThan(0);
+        expect(yr.en.length).toBeGreaterThan(0);
+        expect(yr.ka.length).toBeGreaterThan(0);
+
+        // I8: must differ from current range (no-op rejection)
+        const sameRange =
+          card.startYear === f.proposed.startYear &&
+          card.endYear === f.proposed.endYear;
+        expect(sameRange).toBe(false);
+      }),
+      { numRuns: 500 },
+    );
+  });
+
+  it("legacy string yearsRaw inside years_correction is treated as missing trilingual object → no emission", () => {
+    fc.assert(
+      fc.property(
+        cardArb,
+        fc.string({ minLength: 1, maxLength: 32 }),
+        fc.option(fc.integer({ min: 1700, max: 2000 }), { nil: undefined }),
+        fc.option(fc.integer({ min: 1700, max: 2000 }), { nil: undefined }),
+        (card, yrString, sY, eY) => {
+          const ai = {
+            years_ok: false,
+            years_correction: {
+              // legacy/buggy shape: yearsRaw as a bare string instead of {ru,en,ka}
+              yearsRaw: yrString as any,
+              startYear: sY,
+              endYear: eY,
+            },
+            confidence: 0.5,
+            rationale: "",
+          };
+          const f = deriveFindings(card, ai).find((x) => x.kind === "years");
+          // String yearsRaw fails the triLang gate (no .ru/.en/.ka props)
+          expect(f).toBeUndefined();
+        },
+      ),
+      { numRuns: 300 },
+    );
+  });
+
+  it("object yearsRaw with any missing/empty language ALWAYS rejected", () => {
+    const partialYearsRawArb = fc.oneof(
+      fc.constant({ ru: "1850-1900", en: "1850-1900" }),                  // ka missing
+      fc.constant({ ru: "1850-1900", ka: "1850-1900" }),                  // en missing
+      fc.constant({ en: "1850-1900", ka: "1850-1900" }),                  // ru missing
+      fc.constant({ ru: "", en: "1850-1900", ka: "1850-1900" }),          // ru empty
+      fc.constant({ ru: "1850-1900", en: "", ka: "1850-1900" }),          // en empty
+      fc.constant({ ru: "1850-1900", en: "1850-1900", ka: "" }),          // ka empty
+      fc.constant({}),
+    );
+    fc.assert(
+      fc.property(cardArb, partialYearsRawArb, (card, yr) => {
+        const ai = {
+          years_ok: false,
+          years_correction: {
+            yearsRaw: yr,
+            startYear: 1850,
+            endYear: 1900,
+          },
+          confidence: 0.9,
+          rationale: "",
+        };
+        expect(deriveFindings(card, ai).find((f) => f.kind === "years")).toBeUndefined();
+      }),
+      { numRuns: 200 },
+    );
+  });
+
+  it("when yc.startYear/endYear are numbers, emitted range respects max(curEnd, pEnd) / min(curStart, pStart)", () => {
+    fc.assert(
+      fc.property(cardArb, aiArb, (card, ai) => {
+        const f = deriveFindings(card, ai).find((x) => x.kind === "years");
+        if (!f) return;
+        const yc = ai.years_correction as any;
+        if (typeof yc.startYear === "number") {
+          expect(f.proposed.startYear).toBeLessThanOrEqual(yc.startYear);
+          expect(f.proposed.startYear).toBeLessThanOrEqual(card.startYear);
+        }
+        if (typeof yc.endYear === "number") {
+          expect(f.proposed.endYear).toBeGreaterThanOrEqual(yc.endYear);
+          expect(f.proposed.endYear).toBeGreaterThanOrEqual(card.endYear);
+        }
+      }),
+      { numRuns: 500 },
+    );
+  });
+});
