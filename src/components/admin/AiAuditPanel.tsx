@@ -78,7 +78,7 @@ export function AiAuditPanel() {
     let consecutiveErrors = 0;
     while (true) {
       try {
-        const r = await batch({ data: { runId, size: 5 } });
+        const r = await batch({ data: { runId, size: model.includes("pro") ? 3 : 5 } });
         await refreshStatus(runId);
         await reloadFindings(runId);
         if (r.status !== "running") break;
