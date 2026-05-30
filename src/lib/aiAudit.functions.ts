@@ -511,7 +511,7 @@ export const processNextBatch = createServerFn({ method: "POST" })
     const updatePayload: {
       points_done: number;
       spent_usd: number;
-      status?: string;
+      status?: "budget_exhausted" | "cancelled" | "done" | "failed" | "paused" | "running";
       finished_at?: string | null;
     } = { points_done: newDone, spent_usd: spent };
     if (!wasCancelled) {
