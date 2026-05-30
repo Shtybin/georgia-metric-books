@@ -818,7 +818,7 @@ export const applyUnlocatedMerge = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.from("feature_overrides").insert({
       feature_id: data.featureId,
       action: "merge_unlocated",
-      data: { unlocated: u, unlocatedIndex: data.unlocatedIndex },
+      data: { unlocated: u, unlocatedIndex: data.unlocatedIndex } as any,
       published: false,
       notes: (data.note ?? `AI-аудит Этап 2: слияние "${u.settlement?.ru || u.settlement?.en}" из списка без координат`).slice(0, 1000),
       created_by: userId,
