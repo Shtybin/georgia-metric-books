@@ -425,7 +425,7 @@ export const processNextBatch = createServerFn({ method: "POST" })
         card.startYear,
         card.endYear,
       );
-      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.sections.length} секций):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
+      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
       let ai: any = {}; let tIn = 0; let tOut = 0;
       try {
         const r = await callGateway(run.model as string, SYSTEM_PROMPT, userMsg);
