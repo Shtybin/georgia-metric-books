@@ -487,7 +487,13 @@ export const processNextBatch = createServerFn({ method: "POST" })
         card.startYear,
         card.endYear,
       );
-      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
+      const coverageNote =
+        card.startYear != null && card.startYear > 1870
+          ? "\n\nВНИМАНИЕ: карточка целиком вне покрытия каталога НИАГ Ф.489 оп.6 (1819–1870). Сравнение по годам недоступно — оставь years_ok=true."
+          : card.endYear != null && card.endYear > 1870
+            ? "\n\nВНИМАНИЕ: часть диапазона карточки выходит за пределы каталога НИАГ Ф.489 оп.6 (1819–1870). Отсутствие поздних лет в каталоге НЕ ошибка."
+            : "";
+      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}${coverageNote}`;
       try {
         const r = await callGateway(runRow.model as string, SYSTEM_PROMPT, userMsg);
         const ai = r.parsed;
