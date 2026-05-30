@@ -1,74 +1,100 @@
-## Что делаем
+## Цель
 
-На production-домене `metrics.datatells.info` уже есть весь код админки и страница `/login` — но (1) у вас там нет учётной записи и (2) есть только роль `admin`. Реализуем полный цикл: ваш вход, ролевую модель из 3 уровней, страницу управления пользователями с приглашениями по email.
+Бот проходит по каждой точке карты (Feature), сверяет «Селение / уезд / церкви / годы метрических книг / пропущенные годы» с эталонными PDF-каталогами НИАГ (Ф.489 оп.6, 1819–1870) и сайтом archival-services.gov.ge, формирует **предложения на модерацию**. После одобрения они применяются. Второй этап — слияние селений из «Селения без координат» с подтверждёнными точками.
 
 ---
 
-### 1. Создать ваш admin-аккаунт на production
+## Источники истины
 
-Через server-side admin API создам пользователя `v.shtybin86@gmail.com` с присланным паролем (email сразу подтверждён) и назначу роль `admin`. После первого входа я добавлю в админке кнопку «Сменить пароль» и **настоятельно рекомендую сразу сменить пароль** — присланный засветился в логах чата.
+- **5 PDF Ф.489 оп.6** (1819–1830, 1831–1840, 1841–1850, 1851–1860, 1861–1870) — единый каталог: `№ уезд YYYY weli` → таблица «селение/церковь | район».
+- Существующие данные NIAG в проекте (`scripts/niag_match.py`, `Fond 489 Inv.6`).
+- Сайт `archival-services.gov.ge` — для точек после 1870 и сверки годов.
 
-### 2. Расширить ролевую модель
+PDF разбираем однократно офлайн-скриптом → `public/data/niag-catalog.json`:
+```json
+{ "uezd_ka":"თბილისი","year":1819,"entries":[
+  {"n":1,"settlement":"სიონი","church":"ღვთისმშობლის მიძინების","district":"თბილისი"}, ...
+]}
+```
+Этот каталог грузится один раз и фильтруется по уезду/диапазону лет — это **резко уменьшает контекст промпта** (по точке ~5–30 строк вместо всего PDF).
 
-Сейчас в БД есть только enum `app_role = 'admin'`. Добавляю два значения:
+---
 
-- `admin` — полный доступ (всё, что уже есть + управление пользователями).
-- `editor` — редактирование карты: правка координат, перенос точек, модерация заявок, override-история. Без доступа к управлению пользователями и без удаления чужих данных.
-- `contributor` — только добавление новых данных: создание coord_suggestions/missing_years_suggestions со статусом, минующим публичную форму (то есть сразу как доверенный источник), плюс добавление external_sources. Без правки/удаления чужого.
+## Бюджет $100 — как укладываемся
 
-Обновлю RLS-политики на всех админских таблицах (`feature_overrides`, `coord_suggestions`, `tbilisi_coord_verifications`, `external_sources`, `uezd_corrections`, `missing_years_suggestions`, `problem_reports`, `guide_content`) так, чтобы каждая команда (SELECT/INSERT/UPDATE/DELETE) проверяла нужный уровень роли через helper-функции `has_role(uid,'editor')` / `has_role(uid,'contributor')`. Это backstop — основная проверка остаётся на сервере.
+- Модель: `google/gemini-2.5-flash-lite` (≈ $0.10/1M вход, $0.40/1M выход).
+- На точку: ~1.5K input + 0.4K output ≈ $0.00031 → **~3000 точек × $0.0003 ≈ $1**. Запас огромен; даже с `gemini-2.5-flash` ($0.30/$2.50) бюджета хватает на полный прогон + повторы.
+- Жёсткий стоп: серверная функция читает сумму `cost_usd` по текущему `run_id`, при ≥ $100 (настраиваемый лимит) — `status='budget_exhausted'`, дальнейшие батчи отклоняются.
+- Возврат `usage.prompt_tokens / completion_tokens` из ответа AI Gateway → считаем стоимость по таблице цен модели.
 
-### 3. Маленькая ссылка «Админ» в футере
+---
 
-Добавляю текстовую ссылку «Админ» в существующий футер (компонент `AuthorCredit`) на главной, карте и Тбилиси. Ведёт на `/login`. Без иконок, в общем стиле подписи автора — практически незаметна.
+## Схема БД (новая, миграция отдельным сообщением после одобрения плана)
 
-### 4. Страница «Пользователи» в админке (только для роли `admin`)
+- `ai_audit_runs` — `id, status (running/paused/done/budget_exhausted/failed), model, budget_usd, spent_usd, points_total, points_done, started_at, finished_at, created_by`.
+- `ai_audit_findings` — `id, run_id, feature_id, kind (settlement|uezd|church|years|missing_years|duplicate), severity (info|warn|error), confidence (0–1), current jsonb, proposed jsonb, rationale text, sources jsonb (PDF page / URL), tokens_in, tokens_out, cost_usd, status (pending/approved/rejected/applied), reviewed_by, reviewed_at`.
+- RLS: чтение/правка только `editor`/`admin`; вставка — только `service_role` через серверную функцию.
+- GRANT под политики, RLS, политики — по шаблону проекта.
 
-Новая вкладка в `/admin` с тремя действиями:
+Применение одобренной правки = запись в существующие таблицы (`feature_overrides`, `missing_years_suggestions`, `uezd_corrections`) с пометкой «source: ai_audit_finding/<id>». **Ничего не публикуется автоматически.**
 
-- **Список** всех пользователей: email, роли, дата добавления.
-- **Пригласить** по email: вы вводите email + выбираете роль → создаётся приглашение → человеку уходит письмо со ссылкой `/accept-invite?token=...`, по которой он задаёт свой пароль и автоматически получает назначенную роль.
-- **Изменить роль / удалить**: смена роли на лету, кнопка «удалить» (нельзя удалить самого себя, нельзя оставить систему без `admin`).
+---
 
-Приглашения хранятся в новой таблице `user_invitations` (email, role, token-hash, expires_at, accepted_at, invited_by). Токен — одноразовый, со сроком жизни 7 дней. Письмо отправляется через встроенную Lovable Email инфраструктуру (потребуется один раз настроить sender-домен на `notify.metrics.datatells.info` — это всплывёт мастером настройки в момент первой отправки).
+## Серверная логика (TanStack `createServerFn`)
 
-### 5. Защита маршрутов по ролям
+`src/lib/ai-audit.functions.ts`:
+- `startAuditRun({ budgetUsd=100, model, scope:'all'|'uezd:<>' })` — создаёт `ai_audit_runs`, выбирает feature_id'ы, возвращает `runId`.
+- `processNextBatch({ runId, size=10 })` — берёт N точек, для каждой:
+  1. Достаёт карточку из `parishes.geojson` + активные `feature_overrides`.
+  2. Фильтрует `niag-catalog.json` по уезду и диапазону лет точки.
+  3. Опционально `fetch` к `archival-services.gov.ge` (HTML → текст, кэш по url) для лет >1870.
+  4. Промпт → Lovable AI (structured output через tool calling `propose_corrections`).
+  5. Пишет findings, обновляет `spent_usd`, `points_done`.
+  6. При превышении бюджета — `budget_exhausted` и выход.
+- `getRunStatus(runId)` / `listFindings({runId, status})` / `reviewFinding({id, decision, note})`.
+- `getRunStatus` опрашивается UI каждые 2 сек.
 
-Существующий гейт `/admin` сейчас проверяет только `has_role('admin')`. Расширяю: маршрут пускает любую из трёх ролей, а внутри панели каждая вкладка/кнопка скрывается/блокируется по правам. На сервере все server-functions получают middleware `requireRole(['admin'|'editor'|'contributor'])`.
+Правило «общие регионы не сливаем»: если `region` ∈ {Имеретия, Гурия, Абхазия, Мегрелия, Сванетия, Кахетия, …} и `uezd` пуст — `kind='duplicate'` не предлагается; точка остаётся независимой.
+
+---
+
+## UI: вкладка «AI-аудит карты»
+
+`src/components/admin/AiAuditPanel.tsx`:
+- Кнопка **«Запустить аудит»** (выбор модели, бюджет, scope).
+- Прогресс: `points_done / points_total`, потрачено `$X.XX / $100`, ETA, кнопки Пауза/Стоп.
+- Таблица findings с фильтрами (kind, severity, status), diff-вью «было → стало», цитата из PDF (стр. №) или URL архива.
+- Кнопки **Одобрить** / **Отклонить** (массовое действие на отфильтрованной выборке).
+- После одобрения — автозапись в `feature_overrides` / `missing_years_suggestions` / `uezd_corrections` (никакой публикации).
+
+Регистрация вкладки в `src/routes/_authenticated/admin.tsx` (после «Источники», перед «Пользователи»).
+
+---
+
+## Этап 2 — слияние «Селений без координат»
+
+Отдельная кнопка **«Сопоставить unlocated»** в той же вкладке:
+- Для каждой записи `unlocated.json` ищем по нормализованным `settlement` + `church` совпадение среди **подтверждённых** AI-аудитом точек (Levenshtein + транслитерация ka/ru/en).
+- Если найдено и `region` не из «общего» списка — finding `kind='duplicate'`, после одобрения: запись добавляется в feature как `mergedFrom`, исключается из `unlocated.json` через `feature_overrides` (action='merge_unlocated').
+- Общие регионы остаются как есть.
+
+---
+
+## План работ (порядок)
+
+1. Скрипт-парсер `scripts/parse-niag-pdfs.py` → `public/data/niag-catalog.json`.
+2. Миграция: таблицы `ai_audit_runs`, `ai_audit_findings` + GRANT + RLS.
+3. Серверные функции `ai-audit.functions.ts` (старт, батч, статус, ревью) + учёт стоимости.
+4. UI-вкладка `AiAuditPanel.tsx` + регистрация в админке.
+5. E2E прогон на 20 точках одного уезда → проверка качества и стоимости.
+6. Этап 2 — сопоставление `unlocated`.
 
 ---
 
 ## Технические детали
 
-**Миграции БД (одна транзакция):**
-- `ALTER TYPE app_role ADD VALUE 'editor'; ADD VALUE 'contributor';`
-- Helper `has_min_role(_uid, _role)` — иерархия admin > editor > contributor.
-- Перезапись RLS-политик по матрице (admin: всё; editor: SELECT/UPDATE/INSERT на данные карты, DELETE только своих записей; contributor: INSERT в suggestions/external_sources, SELECT только опубликованного).
-- Таблица `user_invitations` + GRANTs + RLS (только `admin` SELECT/INSERT/DELETE).
-- SECURITY DEFINER функция `accept_invitation(_token text)` — атомарно: проверяет токен, создаёт запись в `user_roles`, помечает приглашение принятым.
-
-**Server functions** (`src/lib/admin-users.functions.ts`, защищены `requireSupabaseAuth` + проверкой `admin`):
-- `listUsers()` — через `supabaseAdmin.auth.admin.listUsers()` + join с `user_roles`.
-- `inviteUser({email, role})` — генерирует токен, пишет в `user_invitations`, шлёт письмо.
-- `updateUserRole({userId, role})`, `deleteUser({userId})`.
-- `createInitialAdmin()` — одноразовая, вызывается мной из миграции/seed для вашего аккаунта.
-
-**Маршруты:**
-- `src/routes/admin/users.tsx` — UI управления.
-- `src/routes/accept-invite.tsx` — публичный, форма «задайте пароль», вызывает `accept_invitation` RPC, затем `supabase.auth.signInWithPassword`.
-
-**Email:** при первом запуске инвайтов мастер попросит подтвердить sender-домен (DNS-записи). Пока DNS не пройдёт верификацию, письма ставятся в очередь и уходят автоматически после.
-
----
-
-## Что НЕ делаем в этом шаге
-
-- Не трогаем OAuth (Google и т.п.) — оставляем email+пароль, как просили.
-- Не добавляем 2FA — могу сделать отдельно, если захотите.
-- Не меняем текущий внешний вид сайта, кроме маленькой ссылки в футере.
-
----
-
-## Открытый вопрос
-
-После того как создам ваш аккаунт и вы войдёте, я **сразу сделаю принудительную смену пароля** (баннер в админке «ваш пароль был передан в чате — смените его»). Если хотите вместо этого получить ссылку на установку нового пароля по email уже сейчас — скажите, поменяю шаг 1.
+- Модель по умолчанию: `google/gemini-2.5-flash-lite`; переключатель в UI на `gemini-2.5-flash` для повторов спорных кейсов.
+- Лимит RPS: батч 10 точек с задержкой 1 сек между ними, обработка 429/402 с экспоненциальным бэкоффом.
+- Промпт фиксирован на бэкенде; tool-calling схема `propose_corrections` с полями `settlement_ok, district_ok, church_corrections[], years_correction, missing_years_correction, duplicate_of:int|null, confidence, sources[]`.
+- Кэш HTTP-запросов к архиву в памяти процесса серверной функции (короткие прогоны) + опционально таблица `ai_audit_cache(url, fetched_at, body)`.
+- Ничего не пишет в `parishes.geojson` напрямую — только через существующий слой `feature_overrides`, который уже мерджится на клиенте.
