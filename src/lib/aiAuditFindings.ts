@@ -83,7 +83,13 @@ export function deriveFindings(card: any, ai: any): FindingRow[] {
 
     const triLang =
       !!yc.yearsRaw?.ru && !!yc.yearsRaw?.en && !!yc.yearsRaw?.ka;
+    const haveProposedRange = pStart != null && pEnd != null && pStart <= pEnd;
     const wouldShorten =
+      curStart != null && curEnd != null && pStart != null && pEnd != null &&
+      (pStart > curStart || pEnd < curEnd);
+    const sameRange = curStart === pStart && curEnd === pEnd;
+
+    if (triLang && haveProposedRange && !wouldShorten && !sameRange) {
       curStart != null && curEnd != null && pStart != null && pEnd != null &&
       (pStart > curStart || pEnd < curEnd);
     const sameRange = curStart === pStart && curEnd === pEnd;
