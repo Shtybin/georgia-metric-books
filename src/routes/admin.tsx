@@ -518,6 +518,8 @@ function AdminPage() {
         <FeatureOverrideHistory currentUserId={currentUserId} />
       ) : tab === "ai" ? (
         <AiGeocoderPanel />
+      ) : tab === "ai_audit" ? (
+        <section className="mx-auto max-w-6xl px-4 py-4"><AiAuditPanel /></section>
       ) : tab === "tbilisi_edit" ? (
         <TbilisiCoordEditorPanel />
       ) : tab === "users" && isAdmin && currentUserId ? (
