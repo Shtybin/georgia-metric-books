@@ -112,9 +112,10 @@ const MUTATIONS: Mutation[] = [
   },
   {
     id: "M13-accepts-string-years_correction",
-    description: "Legacy string years_correction is no longer ignored",
+    description: "Legacy string years_correction accepted (equivalent: string has no .yearsRaw so triLang gate still rejects)",
     find: 'if (ai.years_ok === false && ai.years_correction && typeof ai.years_correction === "object") {',
     replace: "if (ai.years_ok === false && ai.years_correction) {",
+    equivalent: true,
   },
 ];
 
