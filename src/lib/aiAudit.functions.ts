@@ -609,13 +609,15 @@ export const reviewFinding = createServerFn({ method: "POST" })
 
     if (data.decision === "approved" && finding.feature_id != null) {
       // Apply to existing moderation surfaces depending on kind.
+      const proposed = (finding.proposed ?? {}) as Record<string, any>;
+      const current = (finding.current ?? {}) as Record<string, any>;
       try {
-        if (finding.kind === "missing_years" && finding.proposed?.missingRaw != null) {
+        if (finding.kind === "missing_years" && proposed.missingRaw != null) {
           await supabaseAdmin.from("missing_years_suggestions").insert({
             feature_id: finding.feature_id,
-            current_missing: finding.current?.missingRaw ?? "",
-            proposed_missing: String(finding.proposed.missingRaw ?? ""),
-            settlement_snapshot: finding.current ?? {},
+            current_missing: String(current.missingRaw ?? ""),
+            proposed_missing: String(proposed.missingRaw ?? ""),
+            settlement_snapshot: current,
             note: `AI-аудит: ${finding.rationale ?? ""}`.slice(0, 1000),
             created_by: userId,
           });
@@ -623,8 +625,8 @@ export const reviewFinding = createServerFn({ method: "POST" })
         } else if (finding.kind === "uezd") {
           await supabaseAdmin.from("uezd_corrections").insert({
             feature_id: finding.feature_id,
-            current_uezd: finding.current ?? {},
-            proposed_uezd: finding.proposed ?? {},
+            current_uezd: current,
+            proposed_uezd: proposed,
             settlement_snapshot: {},
             region_snapshot: {},
             note: `AI-аудит: ${finding.rationale ?? ""}`.slice(0, 1000),
@@ -635,7 +637,7 @@ export const reviewFinding = createServerFn({ method: "POST" })
           await supabaseAdmin.from("feature_overrides").insert({
             feature_id: finding.feature_id,
             action: "patch",
-            data: { ai_audit: { kind: finding.kind, proposed: finding.proposed } },
+            data: { ai_audit: { kind: finding.kind, proposed } },
             published: false,
             notes: `AI-аудит #${finding.id.slice(0, 8)} ${finding.kind}: ${finding.rationale ?? ""}`.slice(0, 1000),
             created_by: userId,
