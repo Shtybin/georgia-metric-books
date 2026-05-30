@@ -396,7 +396,8 @@ export const processNextBatch = createServerFn({ method: "POST" })
       return { status: "done", processed: 0, spentUsd: Number(run.spent_usd), pointsDone: run.points_done, pointsTotal: run.points_total };
     }
 
-    let spent = Number(run.spent_usd);
+    const runRow = run; // non-null capture for async closures
+    let spent = Number(runRow.spent_usd);
     const budget = Number(run.budget_usd);
     const findingsToInsert: any[] = [];
     const DEADLINE_MS = 45_000; // keep under edge ~60s timeout
