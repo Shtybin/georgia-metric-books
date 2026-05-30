@@ -663,3 +663,167 @@ export const reviewFinding = createServerFn({ method: "POST" })
     if (updErr) throw new Error(updErr.message);
     return { ok: true, status: newStatus };
   });
+
+// ============================================================
+// Phase 2 — Merge "Селения без координат" with map points
+// ============================================================
+import unlocatedRaw from "../../public/data/unlocated.json?raw";
+
+interface UnlocatedEntry {
+  settlement: { en: string; ru: string; ka: string };
+  church: { en: string; ru: string; ka: string };
+  region: { en: string; ru: string; ka: string };
+  uezd: { en: string; ru: string; ka: string };
+  years: string;
+  startYear: number;
+  endYear: number;
+  count: number;
+}
+const unlocated = JSON.parse(unlocatedRaw) as UnlocatedEntry[];
+
+function norm(s: string): string {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-zа-яёა-ჰ0-9\s]/giu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function tokenSim(a: string, b: string): number {
+  const A = new Set(norm(a).split(" ").filter(Boolean));
+  const B = new Set(norm(b).split(" ").filter(Boolean));
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const t of A) if (B.has(t)) inter += 1;
+  return inter / Math.max(A.size, B.size);
+}
+function bestNameMatch(u: UnlocatedEntry, props: any): number {
+  // pick best across en/ru/ka
+  const langs = ["en", "ru", "ka"] as const;
+  let best = 0;
+  for (const l of langs) {
+    const s = tokenSim(u.settlement?.[l] ?? "", props.settlement?.[l] ?? "");
+    if (s > best) best = s;
+  }
+  return best;
+}
+
+export const findUnlocatedMatches = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        minScore: z.number().min(0).max(1).default(0.7),
+        limit: z.number().min(1).max(2000).default(500),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const userId = (context as any).userId as string;
+    await assertEditor(userId);
+
+    type Match = {
+      unlocatedIndex: number;
+      featureId: number;
+      score: number;
+      settlement: string;
+      region: string;
+      church: string;
+      years: string;
+      featureSettlement: string;
+      featureRegion: string;
+      featureUezd: string;
+      isGenericRegion: boolean;
+    };
+    const matches: Match[] = [];
+
+    for (let i = 0; i < unlocated.length; i += 1) {
+      const u = unlocated[i];
+      const uRegion = norm(u.region?.ru || u.region?.en || "");
+      const uUezd = norm(u.uezd?.ru || u.uezd?.en || "");
+      const isGeneric =
+        GENERIC_REGIONS.has(uRegion) || GENERIC_REGIONS.has(uUezd);
+
+      let best: Match | null = null;
+      for (const f of parishes.features) {
+        const p = f.properties as any;
+        const score = bestNameMatch(u, p);
+        if (score < data.minScore) continue;
+
+        // region/uezd guard: only merge when region or uezd aligns
+        const fRegion = norm(p.region?.ru || p.region?.en || "");
+        const fUezd = norm(p.uezd?.ru || p.uezd?.en || "");
+        const regionAligned =
+          (uRegion && (uRegion === fRegion || uRegion === fUezd)) ||
+          (uUezd && (uUezd === fRegion || uUezd === fUezd));
+        if (!regionAligned && !isGeneric) continue;
+
+        // church similarity bumps confidence (not required)
+        const churchSim =
+          (["en", "ru", "ka"] as const).reduce(
+            (m, l) =>
+              Math.max(
+                m,
+                tokenSim(u.church?.[l] ?? "", p.church?.[l] ?? ""),
+              ),
+            0,
+          );
+        const combined = score * 0.7 + churchSim * 0.3;
+
+        if (!best || combined > best.score) {
+          best = {
+            unlocatedIndex: i,
+            featureId: Number(f.id),
+            score: Number(combined.toFixed(3)),
+            settlement: u.settlement?.ru || u.settlement?.en || "",
+            region: u.region?.ru || u.region?.en || "",
+            church: u.church?.ru || u.church?.en || "",
+            years: u.years,
+            featureSettlement:
+              p.settlement?.ru || p.settlement?.en || "",
+            featureRegion: p.region?.ru || p.region?.en || "",
+            featureUezd: p.uezd?.ru || p.uezd?.en || "",
+            isGenericRegion: isGeneric,
+          };
+        }
+      }
+      if (best) matches.push(best);
+      if (matches.length >= data.limit) break;
+    }
+
+    matches.sort((a, b) => b.score - a.score);
+    return {
+      total: matches.length,
+      genericRegionSkipped: matches.filter((m) => m.isGenericRegion).length,
+      matches,
+    };
+  });
+
+export const applyUnlocatedMerge = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        featureId: z.number().int(),
+        unlocatedIndex: z.number().int(),
+        note: z.string().max(500).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const userId = (context as any).userId as string;
+    await assertEditor(userId);
+    const u = unlocated[data.unlocatedIndex];
+    if (!u) throw new Error("unlocated entry not found");
+    const { error } = await supabaseAdmin.from("feature_overrides").insert({
+      feature_id: data.featureId,
+      action: "merge_unlocated",
+      data: { unlocated: u, unlocatedIndex: data.unlocatedIndex },
+      published: false,
+      notes: (data.note ?? `AI-аудит Этап 2: слияние "${u.settlement?.ru || u.settlement?.en}" из списка без координат`).slice(0, 1000),
+      created_by: userId,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
