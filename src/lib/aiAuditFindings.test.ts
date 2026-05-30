@@ -163,6 +163,25 @@ describe("deriveFindings — yearsRaw format variants", () => {
     expect(deriveFindings(baseCard, ai).find((f) => f.kind === "years")).toBeUndefined();
   });
 
+  it("rejects inverted proposal (pStart > pEnd) even when card has NO existing years (haveProposedRange guard)", () => {
+    // Mutation-testing target: without `pStart <= pEnd` in haveProposedRange,
+    // an inverted range on a null-year card would slip through wouldShorten=false
+    // and emit a malformed finding.
+    const cardNoYears = { ...baseCard, startYear: null, endYear: null };
+    const ai = {
+      years_ok: false,
+      years_correction: {
+        yearsRaw: { ru: "1920-1900", en: "1920-1900", ka: "1920-1900" },
+        startYear: 1920,
+        endYear: 1900,
+      },
+      confidence: 0.7,
+      rationale: "",
+    };
+    expect(deriveFindings(cardNoYears, ai).find((f) => f.kind === "years")).toBeUndefined();
+  });
+
+
   it("rejects yearsRaw with non-string / empty values", () => {
     const ai = {
       years_ok: false,
