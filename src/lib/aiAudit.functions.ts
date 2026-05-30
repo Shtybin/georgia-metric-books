@@ -426,15 +426,15 @@ export const processNextBatch = createServerFn({ method: "POST" })
       );
       const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}`;
       try {
-        const r = await callGateway(run.model as string, SYSTEM_PROMPT, userMsg);
+        const r = await callGateway(runRow.model as string, SYSTEM_PROMPT, userMsg);
         const ai = r.parsed;
-        const cost = priceUsd(run.model as string, r.tokensIn, r.tokensOut);
+        const cost = priceUsd(runRow.model as string, r.tokensIn, r.tokensOut);
         spent += cost;
         const rows = deriveFindings(card, ai);
         const conf = Number(ai.confidence ?? 0);
         if (rows.length === 0) {
           findingsToInsert.push({
-            run_id: run.id, feature_id: featureId, kind: "other", severity: "info",
+            run_id: runRow.id, feature_id: featureId, kind: "other", severity: "info",
             confidence: conf, current: card, proposed: {},
             rationale: ai.rationale ?? "ОК — расхождений не найдено",
             sources: Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [],
@@ -443,7 +443,7 @@ export const processNextBatch = createServerFn({ method: "POST" })
         } else {
           for (const row of rows) {
             findingsToInsert.push({
-              run_id: run.id, feature_id: featureId, kind: row.kind, severity: row.severity,
+              run_id: runRow.id, feature_id: featureId, kind: row.kind, severity: row.severity,
               confidence: conf, current: row.current, proposed: row.proposed,
               rationale: row.rationale || ai.rationale || "",
               sources: Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [],
@@ -454,7 +454,7 @@ export const processNextBatch = createServerFn({ method: "POST" })
       } catch (e: any) {
         if (e?.message === "ai_credits_exhausted") { budgetHit = true; return; }
         findingsToInsert.push({
-          run_id: run.id, feature_id: featureId, kind: "other", severity: "error",
+          run_id: runRow.id, feature_id: featureId, kind: "other", severity: "error",
           confidence: 0, current: card, proposed: {},
           rationale: `Ошибка вызова AI: ${e?.message ?? String(e)}`,
           sources: [], tokens_in: 0, tokens_out: 0, cost_usd: 0, status: "rejected",
