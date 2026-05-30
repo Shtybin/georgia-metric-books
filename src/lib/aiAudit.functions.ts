@@ -37,15 +37,8 @@ function priceUsd(model: string, tIn: number, tOut: number) {
   return (tIn * p.in + tOut * p.out) / 1_000_000;
 }
 
-// Generic / non-uezd regions — never propose merges for these
-const GENERIC_REGIONS = new Set(
-  [
-    "имеретия", "гурия", "абхазия", "мегрелия", "сванетия", "кахетия",
-    "картли", "имерети", "imereti", "guria", "abkhazia", "samegrelo",
-    "svaneti", "kakheti", "kartli", "megreliya", "imeretiya", "guriya",
-    "abkhaziya", "osetiya",
-  ].map((s) => s.toLowerCase()),
-);
+import { GENERIC_REGIONS, deriveFindings } from "./aiAuditFindings";
+
 
 // Normalize an uezd/region label to the same key used in catalog.byDistrict
 function normDistrict(uezd: string | undefined | null): string {
