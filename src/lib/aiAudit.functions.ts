@@ -471,9 +471,10 @@ export const processNextBatch = createServerFn({ method: "POST" })
     const updatePayload: {
       points_done: number;
       spent_usd: number;
+      updated_at: string;
       status?: "budget_exhausted" | "cancelled" | "done" | "failed" | "paused" | "running";
       finished_at?: string | null;
-    } = { points_done: newDone, spent_usd: spent };
+    } = { points_done: newDone, spent_usd: spent, updated_at: new Date().toISOString() };
     if (!wasCancelled) {
       updatePayload.status = nextStatus;
       updatePayload.finished_at = finished ? new Date().toISOString() : null;
@@ -509,12 +510,25 @@ export const getRunStatus = createServerFn({ method: "POST" })
     return row;
   });
 
+// Помечает зависшие "running" прогоны как cancelled, если по ним не было
+// активности дольше STALE_MS (вкладка закрыта, проц упал и т.п.).
+const STALE_RUN_MS = 3 * 60 * 1000;
+async function reapStaleRuns() {
+  const cutoff = new Date(Date.now() - STALE_RUN_MS).toISOString();
+  await supabaseAdmin
+    .from("ai_audit_runs")
+    .update({ status: "cancelled", finished_at: new Date().toISOString() })
+    .eq("status", "running")
+    .lt("updated_at", cutoff);
+}
+
 export const listAuditRuns = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(() => ({}))
   .handler(async ({ context }) => {
     const userId = (context as any).userId as string;
     await assertEditor(userId);
+    await reapStaleRuns();
     const { data, error } = await supabaseAdmin
       .from("ai_audit_runs")
       .select("*")
@@ -523,6 +537,7 @@ export const listAuditRuns = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return data ?? [];
   });
+
 
 export const listFindings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

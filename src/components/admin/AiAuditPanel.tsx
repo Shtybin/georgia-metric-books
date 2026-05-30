@@ -133,7 +133,7 @@ export function AiAuditPanel() {
           </label>
           <label className="text-xs">
             <span className="mb-1 block text-muted-foreground">Бюджет, $</span>
-            <input type="number" min={1} max={1000} value={budget} onChange={(e) => setBudget(Number(e.target.value))} className="w-full rounded-md border border-border bg-background px-2 py-1.5 tabular-nums" />
+            <input type="number" min={1} max={1000} value={budget === 0 ? "" : budget} onFocus={(e) => e.target.select()} onChange={(e) => { const v = e.target.value; setBudget(v === "" ? 0 : Number(v)); }} className="w-full rounded-md border border-border bg-background px-2 py-1.5 tabular-nums" />
           </label>
           <label className="text-xs">
             <span className="mb-1 block text-muted-foreground">Область</span>
