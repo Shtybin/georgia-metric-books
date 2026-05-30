@@ -509,12 +509,25 @@ export const getRunStatus = createServerFn({ method: "POST" })
     return row;
   });
 
+// Помечает зависшие "running" прогоны как cancelled, если по ним не было
+// активности дольше STALE_MS (вкладка закрыта, проц упал и т.п.).
+const STALE_RUN_MS = 3 * 60 * 1000;
+async function reapStaleRuns() {
+  const cutoff = new Date(Date.now() - STALE_RUN_MS).toISOString();
+  await supabaseAdmin
+    .from("ai_audit_runs")
+    .update({ status: "cancelled", finished_at: new Date().toISOString() })
+    .eq("status", "running")
+    .lt("updated_at", cutoff);
+}
+
 export const listAuditRuns = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(() => ({}))
   .handler(async ({ context }) => {
     const userId = (context as any).userId as string;
     await assertEditor(userId);
+    await reapStaleRuns();
     const { data, error } = await supabaseAdmin
       .from("ai_audit_runs")
       .select("*")
@@ -523,6 +536,7 @@ export const listAuditRuns = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return data ?? [];
   });
+
 
 export const listFindings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
