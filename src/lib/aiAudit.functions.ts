@@ -179,7 +179,25 @@ const TOOL_SCHEMA = {
       items: { type: "string" },
     },
     years_ok: { type: "boolean" },
-    years_correction: { type: "string" },
+    years_correction: {
+      type: "object",
+      description:
+        "ТОЛЬКО для РАСШИРЕНИЯ диапазона. yearsRaw — объект {ru,en,ka} с одинаковой строкой 'YYYY-YYYY' во всех языках. startYear/endYear — целые числа, расширяющие текущий диапазон. НИКОГДА не сокращай.",
+      properties: {
+        yearsRaw: {
+          type: "object",
+          properties: {
+            ru: { type: "string" },
+            en: { type: "string" },
+            ka: { type: "string" },
+          },
+          required: ["ru", "en", "ka"],
+        },
+        startYear: { type: "integer" },
+        endYear: { type: "integer" },
+      },
+      required: ["yearsRaw"],
+    },
     missing_years_ok: { type: "boolean" },
     missing_years_correction: { type: "string" },
     confidence: { type: "number", minimum: 0, maximum: 1 },
@@ -198,6 +216,13 @@ const SYSTEM_PROMPT = `Ты — модератор грузинского арх
 По карточке точки проверь название селения, уезда/района, церквей, диапазона годов и пропущенных лет.
 Сверяй ИСКЛЮЧИТЕЛЬНО с предоставленным каталогом. Если каталог не содержит подтверждения — пиши confidence < 0.3 и оставляй *_ok=true.
 Никогда не выдумывай факты. Если уезд относится к общим регионам (Имеретия, Гурия, Абхазия, Мегрелия, Сванетия, Кахетия, Картли) и подробного уезда нет — не предлагай уточнений по уезду.
+
+ОСОБЫЕ ПРАВИЛА ПО ГОДАМ (КРИТИЧНО):
+1. Каталог НИАГ Ф.489 оп.6 покрывает ТОЛЬКО 1819–1870. Если карточка содержит данные после 1870 года (напр. 1846–1916), ОТСУТСТВИЕ этих лет в каталоге НЕ ошибка — карточные данные агрегированы из других описей. В этом случае years_ok=true и years_correction НЕ указывай.
+2. НИКОГДА не предлагай сокращать диапазон. Если в каталоге диапазон уже карточного — карточные данные считаются полными. years_ok=true.
+3. years_correction разрешён ТОЛЬКО если каталог содержит даты ВНЕ карточного диапазона (требуется расширение startYear↓ или endYear↑). yearsRaw — объект {ru,en,ka} с одинаковой строкой "YYYY-YYYY" во всех языках. Обязательно укажи новые startYear ≤ endYear.
+4. Не ломай формат: yearsRaw всегда трёхъязычный объект, startYear/endYear — целые числа.
+
 Возвращай результат строго через инструмент propose_corrections.`;
 
 async function callGateway(model: string, system: string, user: string) {
