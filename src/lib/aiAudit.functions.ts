@@ -37,15 +37,8 @@ function priceUsd(model: string, tIn: number, tOut: number) {
   return (tIn * p.in + tOut * p.out) / 1_000_000;
 }
 
-// Generic / non-uezd regions — never propose merges for these
-const GENERIC_REGIONS = new Set(
-  [
-    "имеретия", "гурия", "абхазия", "мегрелия", "сванетия", "кахетия",
-    "картли", "имерети", "imereti", "guria", "abkhazia", "samegrelo",
-    "svaneti", "kakheti", "kartli", "megreliya", "imeretiya", "guriya",
-    "abkhaziya", "osetiya",
-  ].map((s) => s.toLowerCase()),
-);
+import { GENERIC_REGIONS, deriveFindings } from "./aiAuditFindings";
+
 
 // Normalize an uezd/region label to the same key used in catalog.byDistrict
 function normDistrict(uezd: string | undefined | null): string {
@@ -278,111 +271,9 @@ async function callGateway(model: string, system: string, user: string) {
   };
 }
 
-// ---- Findings derivation -----------------------------------------------
-type FindingRow = {
-  kind: string;
-  severity: "info" | "warn" | "error";
-  current: any;
-  proposed: any;
-  rationale: string;
-};
-
-function deriveFindings(card: any, ai: any): FindingRow[] {
-  const out: FindingRow[] = [];
-  const isGenericRegion = GENERIC_REGIONS.has(
-    String(card.region?.ru || card.region?.en || "").toLowerCase().trim(),
-  );
-
-  if (ai.settlement_ok === false && ai.settlement_correction) {
-    out.push({
-      kind: "settlement",
-      severity: "warn",
-      current: card.settlement,
-      proposed: { suggestion: ai.settlement_correction },
-      rationale: ai.rationale ?? "",
-    });
-  }
-  if (
-    !isGenericRegion &&
-    ai.uezd_ok === false &&
-    ai.uezd_correction &&
-    String(ai.uezd_correction).trim()
-  ) {
-    out.push({
-      kind: "uezd",
-      severity: "warn",
-      current: card.uezd,
-      proposed: { suggestion: ai.uezd_correction },
-      rationale: ai.rationale ?? "",
-    });
-  }
-  if (ai.church_ok === false && Array.isArray(ai.church_corrections) && ai.church_corrections.length) {
-    out.push({
-      kind: "church",
-      severity: "warn",
-      current: card.church,
-      proposed: { suggestions: ai.church_corrections },
-      rationale: ai.rationale ?? "",
-    });
-  }
-  if (ai.years_ok === false && ai.years_correction && typeof ai.years_correction === "object") {
-    const yc = ai.years_correction as {
-      yearsRaw?: { ru?: string; en?: string; ka?: string };
-      startYear?: number;
-      endYear?: number;
-    };
-    const curStart = typeof card.startYear === "number" ? card.startYear : null;
-    const curEnd = typeof card.endYear === "number" ? card.endYear : null;
-
-    // Parse proposed range either from explicit startYear/endYear or from yearsRaw "YYYY-YYYY".
-    let pStart = typeof yc.startYear === "number" ? yc.startYear : null;
-    let pEnd = typeof yc.endYear === "number" ? yc.endYear : null;
-    if ((pStart == null || pEnd == null) && yc.yearsRaw) {
-      const sample = yc.yearsRaw.ru || yc.yearsRaw.en || yc.yearsRaw.ka || "";
-      const m = sample.match(/(\d{4})/g);
-      if (m && m.length >= 1) {
-        const nums = m.map(Number);
-        pStart = pStart ?? Math.min(...nums);
-        pEnd = pEnd ?? Math.max(...nums);
-      }
-    }
-
-    // Guards:
-    // 1) Drop the finding if it would SHORTEN the existing range.
-    // 2) Require trilingual yearsRaw object.
-    // 3) Drop if proposed range is identical to current.
-    const triLang =
-      !!yc.yearsRaw?.ru && !!yc.yearsRaw?.en && !!yc.yearsRaw?.ka;
-    const wouldShorten =
-      curStart != null && curEnd != null && pStart != null && pEnd != null &&
-      (pStart > curStart || pEnd < curEnd);
-    const sameRange =
-      curStart === pStart && curEnd === pEnd;
-
-    if (triLang && !wouldShorten && !sameRange) {
-      const proposed: Record<string, any> = { yearsRaw: yc.yearsRaw };
-      if (pStart != null) proposed.startYear = Math.min(curStart ?? pStart, pStart);
-      if (pEnd != null) proposed.endYear = Math.max(curEnd ?? pEnd, pEnd);
-      out.push({
-        kind: "years",
-        severity: "warn",
-        current: { yearsRaw: card.yearsRaw, startYear: card.startYear, endYear: card.endYear },
-        proposed,
-        rationale: ai.rationale ?? "",
-      });
-    }
-  }
-  if (ai.missing_years_ok === false && ai.missing_years_correction) {
-    out.push({
-      kind: "missing_years",
-      severity: "info",
-      current: { missingRaw: card.missingRaw },
-      proposed: { missingRaw: ai.missing_years_correction },
-      rationale: ai.rationale ?? "",
-    });
-  }
-  return out;
-}
+// ---- Findings derivation (pure, see aiAuditFindings.ts for tests) ------
+// Re-exported here so existing call sites (`deriveFindings(card, ai)` below)
+// keep working unchanged.
 
 // ---- Server functions --------------------------------------------------
 export const startAuditRun = createServerFn({ method: "POST" })
