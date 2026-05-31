@@ -307,9 +307,10 @@ export const cancelAuditRun = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const userId = (context as any).userId as string;
     await assertEditor(userId);
+    const now = new Date().toISOString();
     const { error } = await supabaseAdmin
       .from("ai_audit_runs")
-      .update({ status: "cancelled", finished_at: new Date().toISOString() })
+      .update({ status: "cancelled", finished_at: now, updated_at: now })
       .eq("id", data.runId)
       .in("status", ["running", "paused"]);
     if (error) throw new Error(error.message);
@@ -333,9 +334,10 @@ export const processNextBatch = createServerFn({ method: "POST" })
       return { status: run.status, processed: 0, spentUsd: Number(run.spent_usd), pointsDone: run.points_done, pointsTotal: run.points_total };
     }
     if (Number(run.spent_usd) >= Number(run.budget_usd)) {
+      const now = new Date().toISOString();
       await supabaseAdmin
         .from("ai_audit_runs")
-        .update({ status: "budget_exhausted", finished_at: new Date().toISOString() })
+        .update({ status: "budget_exhausted", finished_at: now, updated_at: now })
         .eq("id", run.id);
       return { status: "budget_exhausted", processed: 0, spentUsd: Number(run.spent_usd), pointsDone: run.points_done, pointsTotal: run.points_total };
     }
@@ -441,9 +443,10 @@ export const processNextBatch = createServerFn({ method: "POST" })
     );
 
     if (budgetHit) {
+      const now = new Date().toISOString();
       await supabaseAdmin
         .from("ai_audit_runs")
-        .update({ status: "budget_exhausted", finished_at: new Date().toISOString() })
+        .update({ status: "budget_exhausted", finished_at: now, updated_at: now })
         .eq("id", runRow.id);
     }
 
@@ -515,9 +518,10 @@ export const getRunStatus = createServerFn({ method: "POST" })
 const STALE_RUN_MS = 3 * 60 * 1000;
 async function reapStaleRuns() {
   const cutoff = new Date(Date.now() - STALE_RUN_MS).toISOString();
+  const now = new Date().toISOString();
   await supabaseAdmin
     .from("ai_audit_runs")
-    .update({ status: "cancelled", finished_at: new Date().toISOString() })
+    .update({ status: "cancelled", finished_at: now, updated_at: now })
     .eq("status", "running")
     .lt("updated_at", cutoff);
 }
