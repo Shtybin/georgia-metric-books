@@ -827,6 +827,22 @@ export function TbilisiMap({
               </>
             )}
           </dl>
+          {selected.archiveUrl && (
+            <div className="mt-3 text-xs">
+              <a
+                href={selected.archiveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline"
+              >
+                {T.fields.archiveLink}
+                {selected.archiveRows?.length
+                  ? ` (${selected.archiveRows.map((r) => `№${r.n}`).join(", ")})`
+                  : ""}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          )}
         </div>
       )}
 
