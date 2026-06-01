@@ -259,7 +259,7 @@ export function TbilisiCoordEditorPanel() {
   const visibleRows = useMemo(() => {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
-    const histYear = histOn ? currentMap?.year ?? null : null;
+    const histYear = histOn ? selectedMap?.year ?? null : null;
     return rows.filter((r) => {
       // Always keep just-edited rows visible, regardless of the confidence
       // filter — otherwise a successful save bumps confidence to "high" and
@@ -278,7 +278,7 @@ export function TbilisiCoordEditorPanel() {
       }
       return true;
     });
-  }, [rows, filter, query, editedIds, histOn, currentMap]);
+  }, [rows, filter, query, editedIds, histOn, selectedMap]);
 
   // Autocomplete suggestions — across ALL rows (ignore confidence filter so
   // hidden churches are still findable), ranked by match quality in the
