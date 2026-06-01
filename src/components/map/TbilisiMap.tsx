@@ -766,6 +766,23 @@ export function TbilisiMap({
                 (e.g. "Avlabari"), and showing both confused users. */}
             <dt className="text-muted-foreground">{T.fields.recordYears}</dt>
             <dd>{selected.recordYears || "—"}</dd>
+            {selected.recordsByType && Object.keys(selected.recordsByType).length > 0 && (
+              <>
+                <dt className="text-muted-foreground">{T.fields.recordsByType}</dt>
+                <dd>
+                  <ul className="space-y-0.5">
+                    {(["birth", "marriage", "death"] as const).map((k) =>
+                      selected.recordsByType?.[k] ? (
+                        <li key={k}>
+                          <span className="text-muted-foreground">{T.recordType[k]}:</span>{" "}
+                          {selected.recordsByType[k]}
+                        </li>
+                      ) : null,
+                    )}
+                  </ul>
+                </dd>
+              </>
+            )}
             {selected.missingYears && (
               <>
                 <dt className="text-muted-foreground">{T.fields.missingYears}</dt>
@@ -810,6 +827,22 @@ export function TbilisiMap({
               </>
             )}
           </dl>
+          {selected.archiveUrl && (
+            <div className="mt-3 text-xs">
+              <a
+                href={selected.archiveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline"
+              >
+                {T.fields.archiveLink}
+                {selected.archiveRows?.length
+                  ? ` (${selected.archiveRows.map((r) => `№${r.n}`).join(", ")})`
+                  : ""}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          )}
         </div>
       )}
 
