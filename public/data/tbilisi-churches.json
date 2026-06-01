@@ -29,7 +29,15 @@
    "en": "Lost parish church in Avlabari district.",
    "ka": "დაკარგული სამრევლო ეკლესია ავლაბრის რაიონში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 1,
+    "type": null,
+    "years": "1818-1921"
+   }
+  ]
  },
  {
   "id": 2,
@@ -61,7 +69,15 @@
    "en": "Lost. Not to be confused with the Catholic church.",
    "ka": "დაკარგული. არ უნდა აგვერიოს კათოლიკურ ეკლესიაში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 2,
+    "type": null,
+    "years": "1859-1921"
+   }
+  ]
  },
  {
   "id": 3,
@@ -93,7 +109,15 @@
    "en": "Lost during the Soviet period.",
    "ka": "დაკარგული საბჭოთა პერიოდში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 3,
+    "type": null,
+    "years": "1877-1920"
+   }
+  ]
  },
  {
   "id": 4,
@@ -125,7 +149,15 @@
    "en": "Oldest preserved church in Tbilisi (6th century).",
    "ka": "თბილისის უძველესი შემორჩენილი ეკლესია (VI ს.)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 4,
+    "type": null,
+    "years": "1818-1921"
+   }
+  ]
  },
  {
   "id": 5,
@@ -157,7 +189,15 @@
    "en": "Historical church of the Assyrian (Aisor) community. Destroyed.",
    "ka": "ასურული (აისორების) თემის ისტორიული ეკლესია. განადგურებული."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 5,
+    "type": null,
+    "years": "1885-1921"
+   }
+  ]
  },
  {
   "id": 6,
@@ -189,7 +229,15 @@
    "en": "House of prayer. In the 1920s, the community was persecuted.",
    "ka": "სამლოცველო სახლი. 1920-იან წლებში თემი იდევნებოდა."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 6,
+    "type": null,
+    "years": "1908-1918"
+   }
+  ]
  },
  {
   "id": 7,
@@ -221,7 +269,15 @@
    "en": "Greek parish.",
    "ka": "ბერძნული სამრევლო."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 7,
+    "type": null,
+    "years": "1878-1909"
+   }
+  ]
  },
  {
   "id": 8,
@@ -285,7 +341,20 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 9,
+    "type": null,
+    "years": "1835-1921"
+   },
+   {
+    "n": 55,
+    "type": null,
+    "years": "1861-1919"
+   }
+  ]
  },
  {
   "id": 10,
@@ -317,7 +386,15 @@
    "en": "Now the Pantheon of Public Figures.",
    "ka": "ამჟამად საზოგადო მოღვაწეთა პანთეონი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 10,
+    "type": null,
+    "years": "1888-1921"
+   }
+  ]
  },
  {
   "id": 11,
@@ -349,7 +426,15 @@
    "en": "Operating synagogue of Akhalcikhian Jews.",
    "ka": "ახალციხელი ებრაელების მოქმედი სინაგოგა."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 11,
+    "type": null,
+    "years": "1880-1920"
+   }
+  ]
  },
  {
   "id": 12,
@@ -381,7 +466,15 @@
    "en": "Historical church in Vera district.",
    "ka": "ისტორიული ეკლესია ვერის რაიონში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 12,
+    "type": null,
+    "years": "1873-1921"
+   }
+  ]
  },
  {
   "id": 13,
@@ -413,7 +506,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 13,
+    "type": null,
+    "years": "1876-1921"
+   }
+  ]
  },
  {
   "id": 14,
@@ -445,7 +546,15 @@
    "en": "Jvaris Mama, former dependency of the Jerusalem Patriarchate.",
    "ka": "ჯვარის მამა, იერუსალიმის საპატრიარქოს ყოფილი მეტოქი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 14,
+    "type": null,
+    "years": "1870-1914"
+   }
+  ]
  },
  {
   "id": 15,
@@ -477,7 +586,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 15,
+    "type": null,
+    "years": "1919-1920"
+   }
+  ]
  },
  {
   "id": 16,
@@ -509,7 +626,15 @@
    "en": "Catholic Cathedral. Old building destroyed, restored in 1999.",
    "ka": "კათოლიკური საკათედრო ტაძარი. ძველი შენობა დანგრეულია, აღდგენილია 1999 წელს."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 16,
+    "type": null,
+    "years": "1796-1923"
+   }
+  ]
  },
  {
   "id": 17,
@@ -541,7 +666,15 @@
    "en": "Built with funds from the Polish Catholic community.",
    "ka": "აშენებულია პოლონური კათოლიკური თემის სახსრებით."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 17,
+    "type": null,
+    "years": "1877-1922"
+   }
+  ]
  },
  {
   "id": 18,
@@ -573,7 +706,15 @@
    "en": "Demolished in Soviet times, located in the area of the current Rustaveli Cinema.",
    "ka": "დაინგრა საბჭოთა დროს, მდებარეობდა ამჟამინდელი რუსთაველის კინოთეატრის მიდა მიმდებარე ტერიტორიაზე."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 18,
+    "type": null,
+    "years": "1861-1921"
+   }
+  ]
  },
  {
   "id": 19,
@@ -605,7 +746,15 @@
    "en": "The only fully Russian Orthodox church in Tbilisi (services in Church Slavonic).",
    "ka": "ერთადერთი მთლიანად რუსული მართლმადიდებლური ეკლესია თბილისში (წირვა-ლოცვა საეკლესიო სლავურ ენაზე)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 19,
+    "type": null,
+    "years": "1864-1921"
+   }
+  ]
  },
  {
   "id": 20,
@@ -637,7 +786,15 @@
    "en": "Located in Kukia cemetery.",
    "ka": "მდებარეობს კუკიის სასაფლაოზე."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 20,
+    "type": null,
+    "years": "1819-1921"
+   }
+  ]
  },
  {
   "id": 21,
@@ -669,7 +826,15 @@
    "en": "Kukia cemetery.",
    "ka": "კუკიის სასაფლაო."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 21,
+    "type": null,
+    "years": "1891-1921"
+   }
+  ]
  },
  {
   "id": 22,
@@ -701,7 +866,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 22,
+    "type": null,
+    "years": "1902-1916"
+   }
+  ]
  },
  {
   "id": 23,
@@ -733,7 +906,15 @@
    "en": "Area of historical Molokan settlement (Molokan Bazaar).",
    "ka": "ისტორიული მოლოკანების დასახლების ტერიტორია (მოლოკანის ბაზარი)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 23,
+    "type": null,
+    "years": "1907-1924"
+   }
+  ]
  },
  {
   "id": 24,
@@ -765,7 +946,15 @@
    "en": "Used as a church for prisoners of Metekhi Castle.",
    "ka": "გამოიყენებოდა როგორც ეკლესია მეთეხის ციხის პატიმრებისთვის."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 24,
+    "type": null,
+    "years": "1845-1902"
+   }
+  ]
  },
  {
   "id": 25,
@@ -797,7 +986,15 @@
    "en": "Church of the Society for the Restoration of Orthodoxy in the Caucasus.",
    "ka": "კავკასიაში მართლმადიდებლობის აღდგენის საზოგადოების ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 25,
+    "type": null,
+    "years": "1892-1919"
+   }
+  ]
  },
  {
   "id": 26,
@@ -829,7 +1026,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 26,
+    "type": null,
+    "years": "1900-1920"
+   }
+  ]
  },
  {
   "id": 27,
@@ -861,7 +1066,15 @@
    "en": "House church of the hospital.",
    "ka": "საავადმყოფოს სამლოცველო."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 27,
+    "type": null,
+    "years": "1871-1920"
+   }
+  ]
  },
  {
   "id": 28,
@@ -893,7 +1106,15 @@
    "en": "Built by a Russian architect, restored in post-Soviet times.",
    "ka": "აშენებულია რუსი არქიტექტორის მიერ, აღდგენილია პოსტსაბჭოთა პერიოდში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 28,
+    "type": null,
+    "years": "1913-1920"
+   }
+  ]
  },
  {
   "id": 29,
@@ -925,7 +1146,15 @@
    "en": "Part of the complex on Mount Mtatsminda.",
    "ka": "მთაწმინდის მთაზე არსებული კომპლექსის ნაწილი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 29,
+    "type": null,
+    "years": "1826-1921"
+   }
+  ]
  },
  {
   "id": 30,
@@ -957,7 +1186,15 @@
    "en": "Church of St. David Gareji (Pantheon).",
    "ka": "წმ. დავით გარეჯელის ეკლესია (პანთეონი)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 30,
+    "type": null,
+    "years": "1874-1921"
+   }
+  ]
  },
  {
   "id": 31,
@@ -989,7 +1226,15 @@
    "en": "Historical working-class district (Nakhalovka).",
    "ka": "ისტორიული მუშათა რაიონი (ნახალოვკა)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 31,
+    "type": null,
+    "years": "1900-1921"
+   }
+  ]
  },
  {
   "id": 32,
@@ -1021,7 +1266,15 @@
    "en": "Active church in the area of old Navtlughi.",
    "ka": "მოქმედი ეკლესია ძველი ნავთლუღის ტერიტორიაზე."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 32,
+    "type": null,
+    "years": "1820-1922"
+   }
+  ]
  },
  {
   "id": 33,
@@ -1053,7 +1306,15 @@
    "en": "Demolished/rebuilt.",
    "ka": "დანგრეული/აღდგენილი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 33,
+    "type": null,
+    "years": "1865-1903"
+   }
+  ]
  },
  {
   "id": 34,
@@ -1085,7 +1346,15 @@
    "en": "Church of the Transcaucasian Railway workers.",
    "ka": "ამიერკავკასიის რკინიგზის მუშათა ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 34,
+    "type": null,
+    "years": "1887-1901"
+   }
+  ]
  },
  {
   "id": 35,
@@ -1117,7 +1386,15 @@
    "en": "House church in the classical gymnasium building (now 1st school).",
    "ka": "სახლის ეკლესია კლასიკური გიმნაზიის შენობაში (ამჟამად 1-ლი სკოლა)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 35,
+    "type": null,
+    "years": "1879-1886"
+   }
+  ]
  },
  {
   "id": 36,
@@ -1149,7 +1426,15 @@
    "en": "House church of the military department.",
    "ka": "სამხედრო უწყების კარის ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 36,
+    "type": null,
+    "years": "1878-1886"
+   }
+  ]
  },
  {
   "id": 37,
@@ -1181,7 +1466,15 @@
    "en": "In the building of the old seminary (now the Museum of Arts).",
    "ka": "ძველი სასულიერო სემინარიის შენობაში (ამჟამად ხელოვნების მუზეუმი)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 37,
+    "type": null,
+    "years": "1880-1885"
+   }
+  ]
  },
  {
   "id": 38,
@@ -1245,7 +1538,15 @@
    "en": "House church.",
    "ka": "სახლის ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 39,
+    "type": null,
+    "years": "1903-1911"
+   }
+  ]
  },
  {
   "id": 40,
@@ -1277,7 +1578,15 @@
    "en": "Church at the hospital (not to be confused with the main cathedral).",
    "ka": "ეკლესია ჰოსპიტალთან (არ უნდა აგვერიოს მთავარ საკათედრო ტაძარში)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 40,
+    "type": null,
+    "years": "1856-1917"
+   }
+  ]
  },
  {
   "id": 41,
@@ -1309,7 +1618,15 @@
    "en": "Destroyed along with the reconstruction of the building.",
    "ka": "განადგურდა შენობის რეკონსტრუქციასთან ერთად."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 41,
+    "type": null,
+    "years": "1883-1899"
+   }
+  ]
  },
  {
   "id": 42,
@@ -1341,7 +1658,15 @@
    "en": "Church of Saints Peter and Paul in Manglisi. Demolished in the 1930s.",
    "ka": "პეტრე-პავლეს ეკლესია მანგლისში. დაანგრიეს 1930-იან წლებში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 42,
+    "type": null,
+    "years": "1871-1901"
+   }
+  ]
  },
  {
   "id": 43,
@@ -1469,7 +1794,15 @@
    "en": "Regimental church (Tver/Nizhny Novgorod garrisons).",
    "ka": "პოლკის ეკლესია (ტვერის/ნიჟნი ნოვგოროდის გარნიზონები)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 46,
+    "type": null,
+    "years": "1866-1883"
+   }
+  ]
  },
  {
   "id": 47,
@@ -1501,7 +1834,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 47,
+    "type": null,
+    "years": "1856-1910"
+   }
+  ]
  },
  {
   "id": 48,
@@ -1533,7 +1874,15 @@
    "en": "Based in Tsarskie Kolodtsy.",
    "ka": "ბაზირებული იყო ცარსკიე კოლოდცში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 48,
+    "type": null,
+    "years": "1905"
+   }
+  ]
  },
  {
   "id": 49,
@@ -1565,7 +1914,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 49,
+    "type": null,
+    "years": "1884-1906"
+   }
+  ]
  },
  {
   "id": 50,
@@ -1597,7 +1954,15 @@
    "en": "Church from the First World War.",
    "ka": "პირველი მსოფლიო ომის დროინდელი ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 50,
+    "type": null,
+    "years": "1914-1915"
+   }
+  ]
  },
  {
   "id": 51,
@@ -1629,7 +1994,15 @@
    "en": "Period of the First Democratic Republic (1918).",
    "ka": "პირველი დემოკრატიული რესპუბლიკის პერიოდი (1918)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 51,
+    "type": null,
+    "years": "1918"
+   }
+  ]
  },
  {
   "id": 52,
@@ -1661,7 +2034,15 @@
    "en": "Military cemetery.",
    "ka": "სამხედრო სასაფლაო."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 52,
+    "type": null,
+    "years": "1920"
+   }
+  ]
  },
  {
   "id": 53,
@@ -1693,7 +2074,15 @@
    "en": "Main military cathedral of the Caucasus. Destroyed by Beria in 1930.",
    "ka": "კავკასიის მთავარი სამხედრო ტაძარი. განადგურდა ბერიას მიერ 1930 წელს."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 53,
+    "type": null,
+    "years": "1898-1920"
+   }
+  ]
  },
  {
   "id": 54,
@@ -1725,39 +2114,15 @@
    "en": "Period of independent Georgia (1920).",
    "ka": "დამოუკიდებელი საქართველოს პერიოდი (1920)."
   },
-  "inArchive": true
- },
- {
-  "id": 55,
-  "name": {
-   "ka": "წმ. ნიკოლოზის",
-   "ru": "Св. Николая (Кавказской армии)",
-   "en": "St. Nicholas of the Caucasus Army"
-  },
-  "confession": "orthodox_military",
-  "confessionRaw": "Russian Orthodox (Military)",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.7,
-  "lon": 44.8,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1861-1919",
-  "startYear": 1861,
-  "endYear": 1919,
-  "missingYears": "1898-1899, 1912, 1917",
-  "note": {
-   "ru": "Кавказской армии",
-   "en": "Caucasus Army's",
-   "ka": "კავკასიის არმიის"
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Главный штабной храм.",
-   "en": "Main staff church.",
-   "ka": "მთავარი შტაბის ეკლესია."
-  },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 54,
+    "type": null,
+    "years": "1920-1921"
+   }
+  ]
  },
  {
   "id": 56,
@@ -1774,9 +2139,9 @@
   "lon": 44.829,
   "preserved": "no",
   "active": "no",
-  "recordYears": "1892, 1915",
-  "startYear": 1892,
-  "endYear": 1915,
+  "recordYears": "1878-1921",
+  "startYear": 1878,
+  "endYear": 1921,
   "missingYears": "",
   "note": {
    "ru": "губернской тюрьмы",
@@ -1789,7 +2154,18 @@
    "en": "Prison Church of the Gubernatorial Prison (Ortachala).",
    "ka": "გუბერნიის ციხის ეკლესია (ორთაჭალა)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "marriage": "1878-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 56,
+    "type": null,
+    "years": "1892, 1915"
+   }
+  ]
  },
  {
   "id": 57,
@@ -1821,7 +2197,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 57,
+    "type": null,
+    "years": "1911-1921"
+   }
+  ]
  },
  {
   "id": 58,
@@ -1853,7 +2237,15 @@
    "en": "At the Palace of the Viceroy in the Caucasus (now the Youth Palace).",
    "ka": "კავკასიაში მეფისნაცვლის სასახლესთან (ამჟამად ახალგაზრდობის სასახლე)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 58,
+    "type": null,
+    "years": "1873-1922"
+   }
+  ]
  },
  {
   "id": 59,
@@ -1885,7 +2277,15 @@
    "en": "The main historical cathedral of Georgia.",
    "ka": "საქართველოს მთავარი ისტორიული ტაძარი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 59,
+    "type": null,
+    "years": "1818-1921"
+   }
+  ]
  },
  {
   "id": 60,
@@ -1917,7 +2317,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 60,
+    "type": null,
+    "years": "1871-1921"
+   }
+  ]
  },
  {
   "id": 61,
@@ -1949,7 +2357,15 @@
    "en": "One of the old parishes (not to be confused with the modern cathedral).",
    "ka": "ერთ-ერთი ძველი სამრევლო (არ უნდა აგვერიოს თანამედროვე საკათედრო ტაძარში)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 61,
+    "type": null,
+    "years": "1818-1921"
+   }
+  ]
  },
  {
   "id": 62,
@@ -1981,7 +2397,15 @@
    "en": "Dedicated to a Russian saint.",
    "ka": "ეძღვნება რუს წმინდანს."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 62,
+    "type": null,
+    "years": "1902-1921"
+   }
+  ]
  },
  {
   "id": 63,
@@ -2013,7 +2437,15 @@
    "en": "The modern building was built in 1910 by architect L. Bilfeldt.",
    "ka": "თანამედროვე შენობა ააგო 1910 წელს არქიტექტორმა ლ. ბილფელდტმა."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 63,
+    "type": null,
+    "years": "1818-1921"
+   }
+  ]
  },
  {
   "id": 64,
@@ -2045,14 +2477,22 @@
    "en": "Historical district Kharphukhi.",
    "ka": "ისტორიული უბანი ხარფუხი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 64,
+    "type": null,
+    "years": "1918, 1920"
+   }
+  ]
  },
  {
   "id": 65,
   "name": {
-   "ka": "ბეთხაინის ღვთისმშობლის (დაბადება)",
-   "ru": "Бетлемская Богоматери (рождение)",
-   "en": "Betlemi Virgin Mary (Birth)"
+   "ka": "ბეთხაინის ღვთისმშობლის",
+   "ru": "Бетлемская Богоматери",
+   "en": "Betlemi Virgin Mary"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2062,8 +2502,8 @@
   "lon": 44.8035,
   "preserved": "yes",
   "active": "yes",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
+  "recordYears": "1874-1920",
+  "startYear": 1874,
   "endYear": 1920,
   "missingYears": "1878, 1885, 1889, 1900, 1902",
   "note": {
@@ -2077,14 +2517,37 @@
    "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
    "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხი, როგორც საქართველოს მართლმადიდებლური)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1877-1920",
+   "marriage": "1877-1920",
+   "death": "1874-1920"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 65,
+    "type": "birth",
+    "years": "1877-1920"
+   },
+   {
+    "n": 83,
+    "type": "marriage",
+    "years": "1877-1920"
+   },
+   {
+    "n": 85,
+    "type": "death",
+    "years": "1874-1920"
+   }
+  ]
  },
  {
   "id": 66,
   "name": {
-   "ka": "წმ. გრიგორ ლუსავორიჩის (დაბადება)",
-   "ru": "Сурб Григор Лусаворич (рождение)",
-   "en": "St. Gregory Lusavorich (Birth)"
+   "ka": "წმ. გრიგორ ლუსავორიჩის",
+   "ru": "Сурб Григор Лусаворич",
+   "en": "St. Gregory Lusavorich"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2109,14 +2572,37 @@
    "en": "Destroyed in the 1930s. Located on the current Pushkin Square.",
    "ka": "განადგურდა 1930-იან წლებში. მდებარეობდა ამჟამინდელ პუშკინის მოედანზე."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1868-1920",
+   "marriage": "1877-1920",
+   "death": "1877-1920"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 66,
+    "type": "birth",
+    "years": "1868-1920"
+   },
+   {
+    "n": 87,
+    "type": "marriage",
+    "years": "1877-1920"
+   },
+   {
+    "n": 89,
+    "type": "death",
+    "years": "1877-1920"
+   }
+  ]
  },
  {
   "id": 67,
   "name": {
-   "ka": "ეჩმიაძინის წმ. გიორგის (დაბადება)",
-   "ru": "Эчмиадзинская Сурб Геворг (рождение)",
-   "en": "Echmiadzin St. George (Birth)"
+   "ka": "ეჩმიაძინის წმ. გიორგის",
+   "ru": "Эчмиадзинская Сурб Геворг",
+   "en": "Echmiadzin St. George"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2141,14 +2627,37 @@
    "en": "Active Armenian church in Avlabari.",
    "ka": "მოქმედი სომხური ეკლესია ავლაბარში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1872-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1920"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 67,
+    "type": "birth",
+    "years": "1872-1921"
+   },
+   {
+    "n": 91,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 93,
+    "type": "death",
+    "years": "1877-1920"
+   }
+  ]
  },
  {
   "id": 68,
   "name": {
-   "ka": "ვანქის ღვთისმშობლის (დაბადება)",
-   "ru": "Ванкская Сурб Аствацацин (рождение)",
-   "en": "Vank Virgin Mary (Birth)"
+   "ka": "ვანქის ღვთისმშობლის",
+   "ru": "Ванкская Сурб Аствацацин",
+   "en": "Vank Virgin Mary"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2173,14 +2682,37 @@
    "en": "Main Armenian cathedral of Tiflis. Demolished in 1938 (only the bell tower survived).",
    "ka": "თბილისის მთავარი სომხური ტაძარი. დანგრეულია 1938 წელს (შემორჩენილია მხოლოდ სამრეკლო)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1862-1922",
+   "marriage": "1864-1921",
+   "death": "1866-1922"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 68,
+    "type": "birth",
+    "years": "1862-1922"
+   },
+   {
+    "n": 94,
+    "type": "marriage",
+    "years": "1864-1921"
+   },
+   {
+    "n": 95,
+    "type": "death",
+    "years": "1866-1922"
+   }
+  ]
  },
  {
   "id": 69,
   "name": {
-   "ka": "ვერის წმ. ჯვრის (დაბადება)",
-   "ru": "Верийская Сурб Хач (рождение)",
-   "en": "Vera Holy Cross (Birth)"
+   "ka": "ვერის წმ. ჯვრის",
+   "ru": "Верийская Сурб Хач",
+   "en": "Vera Holy Cross"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2190,8 +2722,8 @@
   "lon": 44.7845,
   "preserved": "yes",
   "active": "yes",
-  "recordYears": "1871-1921",
-  "startYear": 1871,
+  "recordYears": "1870-1921",
+  "startYear": 1870,
   "endYear": 1921,
   "missingYears": "1902, 1919",
   "note": {
@@ -2205,14 +2737,37 @@
    "en": "Now the Orthodox Church of St. Panteleimon at the cemetery.",
    "ka": "ამჟამად წმინდა პანტელეიმონის მართლმადიდებლური ეკლესია სასაფლაოზე."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1871-1921",
+   "marriage": "1870-1920",
+   "death": "1870-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 69,
+    "type": "birth",
+    "years": "1871-1921"
+   },
+   {
+    "n": 96,
+    "type": "marriage",
+    "years": "1870-1920"
+   },
+   {
+    "n": 97,
+    "type": "death",
+    "years": "1870-1921"
+   }
+  ]
  },
  {
   "id": 70,
   "name": {
-   "ka": "ზრკინიანის წმ. კარაპეტის (დაბადება)",
-   "ru": "Зркинянц Сурб Карапет (рождение)",
-   "en": "Zrkiniani St. Karapet (Birth)"
+   "ka": "ზრკინიანის წმ. კარაპეტის",
+   "ru": "Зркинянц Сурб Карапет",
+   "en": "Zrkiniani St. Karapet"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2237,14 +2792,37 @@
    "en": "Destroyed during the Soviet period.",
    "ka": "განადგურდა საბჭოთა პერიოდში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1865-1924",
+   "marriage": "1877-1924",
+   "death": "1877-1924"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 70,
+    "type": "birth",
+    "years": "1865-1924"
+   },
+   {
+    "n": 98,
+    "type": "marriage",
+    "years": "1877-1924"
+   },
+   {
+    "n": 99,
+    "type": "death",
+    "years": "1877-1924"
+   }
+  ]
  },
  {
   "id": 71,
   "name": {
-   "ka": "ზორაბაშენის წმ. გიორგის (დაბადება)",
-   "ru": "Зорабашенская Сурб Геворг (рождение)",
-   "en": "Zorabasheni St. George (Birth)"
+   "ka": "ზორაბაშენის წმ. გიორგის",
+   "ru": "Зорабашенская Сурб Геворг",
+   "en": "Zorabasheni St. George"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2254,8 +2832,8 @@
   "lon": 44.805,
   "preserved": "no",
   "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
+  "recordYears": "1870-1921",
+  "startYear": 1870,
   "endYear": 1921,
   "missingYears": "1878-1879, 1881, 1887, 1889",
   "note": {
@@ -2269,14 +2847,37 @@
    "en": "Destroyed.",
    "ka": "დანგრეულია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1877-1921",
+   "marriage": "1870-1921",
+   "death": "1877-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 71,
+    "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 100,
+    "type": "marriage",
+    "years": "1870-1921"
+   },
+   {
+    "n": 101,
+    "type": "death",
+    "years": "1877-1921"
+   }
+  ]
  },
  {
   "id": 72,
   "name": {
-   "ka": "თანდოიანის წმ. გიორგის (დაბადება)",
-   "ru": "Тандоянц Сурб Аствацацин (рождение)",
-   "en": "Tandoiani St. Virgin (Birth)"
+   "ka": "თანდოიანის წმ. გიორგის",
+   "ru": "Тандоянц Сурб Аствацацин",
+   "en": "Tandoiani St. Virgin"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2286,8 +2887,8 @@
   "lon": 44.7942,
   "preserved": "yes",
   "active": "no",
-  "recordYears": "1874-1921",
-  "startYear": 1874,
+  "recordYears": "1873-1921",
+  "startYear": 1873,
   "endYear": 1921,
   "missingYears": "1900",
   "note": {
@@ -2301,14 +2902,37 @@
    "en": "In ruins, disputed status (restitution dispute).",
    "ka": "ნანგრევებშია, სადავო სტატუსი (სარეტიტუციო დავა)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1874-1921",
+   "marriage": "1874-1921",
+   "death": "1873-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 72,
+    "type": "birth",
+    "years": "1874-1921"
+   },
+   {
+    "n": 102,
+    "type": "marriage",
+    "years": "1874-1921"
+   },
+   {
+    "n": 103,
+    "type": "death",
+    "years": "1873-1921"
+   }
+  ]
  },
  {
   "id": 73,
   "name": {
-   "ka": "მეიდნის წმ. გიორგის/ღვთისმშობლის (დაბადება)",
-   "ru": "Мейданская Сурб Геворг (рождение)",
-   "en": "Meidani St. George (Birth)"
+   "ka": "მეიდნის წმ. გიორგის/ღვთისმშობლის",
+   "ru": "Мейданская Сурб Геворг",
+   "en": "Meidani St. George"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2333,14 +2957,37 @@
    "en": "Surb Gevorg (Armenian Cathedral).",
    "ka": "სურბ გევორგი (სომხური საკათედრო ტაძარი)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1873-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 73,
+    "type": "birth",
+    "years": "1873-1921"
+   },
+   {
+    "n": 118,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 119,
+    "type": "death",
+    "years": "1877-1921"
+   }
+  ]
  },
  {
   "id": 74,
   "name": {
-   "ka": "მუღნის წმ. გიორგის (დაბადება)",
-   "ru": "Мугнинская Сурб Геворг (рождение)",
-   "en": "Mughni St. George (Birth)"
+   "ka": "მუღნის წმ. გიორგის",
+   "ru": "Мугнинская Сурб Геворг",
+   "en": "Mughni St. George"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2365,14 +3012,37 @@
    "en": "Ruins. Collapsed in 2009.",
    "ka": "ნანგრევები. ჩამოინგრა 2009 წელს."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1854-1919",
+   "marriage": "1871-1918",
+   "death": "1878-1918"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 74,
+    "type": "birth",
+    "years": "1854-1919"
+   },
+   {
+    "n": 104,
+    "type": "marriage",
+    "years": "1871-1918"
+   },
+   {
+    "n": 105,
+    "type": "death",
+    "years": "1878-1918"
+   }
+  ]
  },
  {
   "id": 75,
   "name": {
-   "ka": "წმ. მინასის (დაბადება)",
-   "ru": "Сурб Минас (рождение)",
-   "en": "St. Minas (Birth)"
+   "ka": "წმ. მინასის",
+   "ru": "Сурб Минас",
+   "en": "St. Minas"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2397,14 +3067,37 @@
    "en": "In Avlabari district, in disrepair, disputed status.",
    "ka": "ავლაბრის რაიონში, ავარიულ მდგომარეობაში, სადავო სტატუსი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 75,
+    "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 106,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 107,
+    "type": "death",
+    "years": "1877-1921"
+   }
+  ]
  },
  {
   "id": 76,
   "name": {
-   "ka": "ნორაშენის ღვთისმშობლის (დაბადება)",
-   "ru": "Норашенская Сурб Аствацацин (рождение)",
-   "en": "Norashen Virgin Mary (Birth)"
+   "ka": "ნორაშენის ღვთისმშობლის",
+   "ru": "Норашенская Сурб Аствацацин",
+   "en": "Norashen Virgin Mary"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2429,14 +3122,37 @@
    "en": "Closed. Object of disputes between Armenian and Georgian communities.",
    "ka": "დახურულია. სომხურ და ქართულ თემებს შორის დავების ობიექტი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1865-1921",
+   "marriage": "1877-1921",
+   "death": "1870-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 76,
+    "type": "birth",
+    "years": "1865-1921"
+   },
+   {
+    "n": 108,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 109,
+    "type": "death",
+    "years": "1870-1921"
+   }
+  ]
  },
  {
   "id": 77,
   "name": {
-   "ka": "ნავთლუღის წმ. გიორგის (დაბადება)",
-   "ru": "Навтлугская Сурб Геворг (рождение)",
-   "en": "Navtlughi St. George (Birth)"
+   "ka": "ნავთლუღის წმ. გიორგის",
+   "ru": "Навтлугская Сурб Геворг",
+   "en": "Navtlughi St. George"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2446,8 +3162,8 @@
   "lon": 44.857,
   "preserved": "no",
   "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
+  "recordYears": "1870-1921",
+  "startYear": 1870,
   "endYear": 1921,
   "missingYears": "",
   "note": {
@@ -2461,14 +3177,37 @@
    "en": "Destroyed.",
    "ka": "დანგრეულია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1870-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 77,
+    "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 110,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 111,
+    "type": "death",
+    "years": "1870-1921"
+   }
+  ]
  },
  {
   "id": 78,
   "name": {
-   "ka": "წმ. ნიშნის (დაბადება)",
-   "ru": "Сурб Ншан (рождение)",
-   "en": "St. Nishan (Birth)"
+   "ka": "წმ. ნიშნის",
+   "ru": "Сурб Ншан",
+   "en": "St. Nishan"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2493,14 +3232,37 @@
    "en": "Semi-ruined (damaged by fires), disputed status.",
    "ka": "ნახევრად დანგრეული (დაზიანებულია ხანძრის შედეგად), სადავო სტატუსი."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1870-1922",
+   "marriage": "1877-1922",
+   "death": "1870-1922"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 78,
+    "type": "birth",
+    "years": "1870-1922"
+   },
+   {
+    "n": 112,
+    "type": "marriage",
+    "years": "1877-1922"
+   },
+   {
+    "n": 113,
+    "type": "death",
+    "years": "1870-1922"
+   }
+  ]
  },
  {
   "id": 79,
   "name": {
-   "ka": "წმ. კარაპეტის (დაბადება)",
-   "ru": "Сурб Карапет (рождение)",
-   "en": "St. Karapet (Birth)"
+   "ka": "წმ. კარაპეტის",
+   "ru": "Сурб Карапет",
+   "en": "St. Karapet"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2525,14 +3287,37 @@
    "en": "Demolished.",
    "ka": "დამონტაჟებულია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 79,
+    "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 114,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 115,
+    "type": "death",
+    "years": "1877-1921"
+   }
+  ]
  },
  {
   "id": 80,
   "name": {
-   "ka": "კუკიის ღვთისმშობლის (დაბადება)",
-   "ru": "Кукийская Сурб Аствацацин (рождение)",
-   "en": "Kukia Virgin Mary (Birth)"
+   "ka": "კუკიის ღვთისმშობლის",
+   "ru": "Кукийская Сурб Аствацацин",
+   "en": "Kukia Virgin Mary"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2557,14 +3342,37 @@
    "en": "Destroyed.",
    "ka": "დანგრეულია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1864-1920",
+   "marriage": "1877-1920",
+   "death": "1873-1920"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 80,
+    "type": "birth",
+    "years": "1864-1920"
+   },
+   {
+    "n": 116,
+    "type": "marriage",
+    "years": "1877-1920"
+   },
+   {
+    "n": 117,
+    "type": "death",
+    "years": "1873-1920"
+   }
+  ]
  },
  {
   "id": 81,
   "name": {
-   "ka": "წმ. სარქისის (დაბადება)",
-   "ru": "Сурб Саркис (рождение)",
-   "en": "St. Sarkis (Birth)"
+   "ka": "წმ. სარქისის",
+   "ru": "Сурб Саркис",
+   "en": "St. Sarkis"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2589,14 +3397,37 @@
    "en": "Destroyed in the 1930s.",
    "ka": "განადგურდა 1930-იან წლებში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1849-1921",
+   "marriage": "1861-1921",
+   "death": "1861-1921"
+  },
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 81,
+    "type": "birth",
+    "years": "1849-1921"
+   },
+   {
+    "n": 120,
+    "type": "marriage",
+    "years": "1861-1921"
+   },
+   {
+    "n": 121,
+    "type": "death",
+    "years": "1861-1921"
+   }
+  ]
  },
  {
   "id": 82,
   "name": {
-   "ka": "ქამოიანის წმ. გიორგის (დაბადება)",
-   "ru": "Камоянц Сурб Геворг (рождение)",
-   "en": "Kamoiani St. George (Birth)"
+   "ka": "ქამოიანის წმ. გიორგის",
+   "ru": "Камоянц Сурб Геворг",
+   "en": "Kamoiani St. George"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2621,46 +3452,37 @@
    "en": "Destroyed.",
    "ka": "განადგურებულია."
   },
-  "inArchive": true
- },
- {
-  "id": 83,
-  "name": {
-   "ka": "ბეთხაინის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Бетлемская Богоматери (венчание)",
-   "en": "Betlemi Virgin Mary (Marriage)"
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
   },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Betlemi Rise, 15",
-  "district": "Krtsanisi",
-  "lat": 41.6893,
-  "lon": 44.8035,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
-  "endYear": 1920,
-  "missingYears": "1878, 1886, 1890, 1904-1905",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
-   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
-  },
-  "inArchive": true
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 82,
+    "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 122,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 123,
+    "type": "death",
+    "years": "1877-1921"
+   }
+  ]
  },
  {
   "id": 84,
   "name": {
-   "ka": "ქარაფის წმ. გიორგის (დაბადება)",
-   "ru": "Карапская Сурб Геворг (рождение)",
-   "en": "Karapi St. George (Birth)"
+   "ka": "ქარაფის წმ. გიორგის",
+   "ru": "Карапская Сурб Геворг",
+   "en": "Karapi St. George"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2670,8 +3492,8 @@
   "lon": 44.8025,
   "preserved": "yes",
   "active": "yes",
-  "recordYears": "1878-1921",
-  "startYear": 1878,
+  "recordYears": "1861-1921",
+  "startYear": 1861,
   "endYear": 1921,
   "missingYears": "1892, 1900",
   "note": {
@@ -2685,46 +3507,37 @@
    "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
    "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
   },
-  "inArchive": true
- },
- {
-  "id": 85,
-  "name": {
-   "ka": "ბეთხაინის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Бетлемская Богоматери (смерть)",
-   "en": "Betlemi Virgin Mary (Death)"
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1878-1921",
+   "marriage": "1878-1921",
+   "death": "1861-1921"
   },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Betlemi Rise, 15",
-  "district": "Krtsanisi",
-  "lat": 41.6893,
-  "lon": 44.8035,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1874-1920",
-  "startYear": 1874,
-  "endYear": 1920,
-  "missingYears": "1878, 1907, 1909, 1911-1912, 1915-1917, 1919",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Земо Бетлеми (ныне переосвящена в грузинскую православную).",
-   "en": "Zemo Betlemi (now re-consecrated as Georgian Orthodox).",
-   "ka": "ზემო ბეთლემი (ამჟამად ხელახლა ნაკურთხია როგორც ქართული მართლმადიდებლური)."
-  },
-  "inArchive": true
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 84,
+    "type": "birth",
+    "years": "1878-1921"
+   },
+   {
+    "n": 124,
+    "type": "marriage",
+    "years": "1878-1921"
+   },
+   {
+    "n": 125,
+    "type": "death",
+    "years": "1861-1921"
+   }
+  ]
  },
  {
   "id": 86,
   "name": {
-   "ka": "ჩუღურეთის ღვთისმშობლის (დაბადება)",
-   "ru": "Чугуретская Богородицы (рождение)",
-   "en": "Chughureti Virgin Mary (Birth)"
+   "ka": "ჩუღურეთის ღვთისმშობლის",
+   "ru": "Чугуретская Богородицы",
+   "en": "Chughureti Virgin Mary"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2749,78 +3562,37 @@
    "en": "Historical Armenian church in Chughureti.",
    "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
   },
-  "inArchive": true
- },
- {
-  "id": 124,
-  "name": {
-   "ka": "წმ. გიორგის (ჯვრისწერა)",
-   "ru": "Св. Георгия (венчание)",
-   "en": "St. George (Marriage)"
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1861-1921",
+   "marriage": "1861-1921",
+   "death": "1877-1920"
   },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1878-1921",
-  "startYear": 1878,
-  "endYear": 1921,
-  "missingYears": "1879, 1890, 1907, 1919",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Вероятно, одна из Сурб Геворг (Мейдан или Мугни).",
-   "en": "Probably one of Surb Gevorg (Maidan or Mugni).",
-   "ka": "სავარაუდოდ ერთ-ერთი სურბ გევორგი (მეიდანი ან მუღნი)."
-  },
-  "inArchive": true
- },
- {
-  "id": 125,
-  "name": {
-   "ka": "ქარაფის წმ. გიორგის (გარდაცვალება)",
-   "ru": "Карапская Сурб Геворг (смерть)",
-   "en": "Karapi St. George (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Gomi St",
-  "district": "Krtsanisi",
-  "lat": 41.6885,
-  "lon": 44.8025,
-  "preserved": "yes",
-  "active": "yes",
-  "recordYears": "1861-1921",
-  "startYear": 1861,
-  "endYear": 1921,
-  "missingYears": "1862-1870, 1872-1877, 1898, 1913-1917, 1919",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Клдисубани Св. Георгия. Ныне православный грузинский храм.",
-   "en": "Kldisubani St. George. Now a Georgian Orthodox church.",
-   "ka": "კლდისუბნის წმ. გიორგი. ამჟამად ქართული მართლმადიდებლური ეკლესია."
-  },
-  "inArchive": true
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 86,
+    "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 128,
+    "type": "marriage",
+    "years": "1861-1921"
+   },
+   {
+    "n": 129,
+    "type": "death",
+    "years": "1877-1920"
+   }
+  ]
  },
  {
   "id": 126,
   "name": {
-   "ka": "შამქორის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Шамхорская Кармир Аветаран (венчание)",
-   "en": "Shamkor Virgin Mary (Marriage)"
+   "ka": "შამქორის ღვთისმშობლის",
+   "ru": "Шамхорская Кармир Аветаран",
+   "en": "Shamkor Virgin Mary"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2830,8 +3602,8 @@
   "lon": 44.8105,
   "preserved": "yes",
   "active": "no",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
+  "recordYears": "1861-1920",
+  "startYear": 1861,
   "endYear": 1920,
   "missingYears": "1883, 1919",
   "note": {
@@ -2845,110 +3617,37 @@
    "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
    "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
   },
-  "inArchive": true
- },
- {
-  "id": 127,
-  "name": {
-   "ka": "შამქორის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Шамхорская Кармир Аветаран (смерть)",
-   "en": "Shamkor Virgin Mary (Death)"
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1861-1920",
+   "marriage": "1877-1920",
+   "death": "1870-1920"
   },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Ketevan Tsamebuli Ave",
-  "district": "Isani",
-  "lat": 41.6942,
-  "lon": 44.8105,
-  "preserved": "yes",
-  "active": "no",
-  "recordYears": "1870-1920",
-  "startYear": 1870,
-  "endYear": 1920,
-  "missingYears": "1871, 1899-1901, 1911-1917, 1919",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Руины (обрушилась в 1989 г.). Была самой высокой армянской церковью.",
-   "en": "Ruins (collapsed in 1989). Was the tallest Armenian church.",
-   "ka": "ნანგრევები (ჩამოინგრა 1989 წელს). იყო ყველაზე მაღალი სომხური ეკლესია."
-  },
-  "inArchive": true
- },
- {
-  "id": 128,
-  "name": {
-   "ka": "ჩუღურეთის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Чугуретская Богородицы (венчание)",
-   "en": "Chughureti Virgin Mary (Marriage)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Chughureti",
-  "district": "Chughureti",
-  "lat": 41.71,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1861-1921",
-  "startYear": 1861,
-  "endYear": 1921,
-  "missingYears": "1862, 1870, 1890",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Исторический армянский храм в Чугурети.",
-   "en": "Historic Armenian church in Chughureti.",
-   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
-  },
-  "inArchive": true
- },
- {
-  "id": 129,
-  "name": {
-   "ka": "ჩუღურეთის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Чугуретская Богородицы (смерть)",
-   "en": "Chughureti Virgin Mary (Death)"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Chughureti",
-  "district": "Chughureti",
-  "lat": 41.71,
-  "lon": 44.798,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1920",
-  "startYear": 1877,
-  "endYear": 1920,
-  "missingYears": "1908, 1911-1919",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Исторический армянский храм в Чугурети.",
-   "en": "Historic Armenian church in Chughureti.",
-   "ka": "ისტორიული სომხური ეკლესია ჩუღურეთში."
-  },
-  "inArchive": true
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 90,
+    "type": "birth",
+    "years": "1861-1920"
+   },
+   {
+    "n": 126,
+    "type": "marriage",
+    "years": "1877-1920"
+   },
+   {
+    "n": 127,
+    "type": "death",
+    "years": "1870-1920"
+   }
+  ]
  },
  {
   "id": 130,
   "name": {
-   "ka": "ჯიგრაშენის ღვთისმშობლის (ჯვრისწერა)",
-   "ru": "Джиграшенская Сурб Аствацацин (венчание)",
-   "en": "Jigrasheni Virgin Mary (Marriage)"
+   "ka": "ჯიგრაშენის ღვთისმშობლის",
+   "ru": "Джиграшенская Сурб Аствацацин",
+   "en": "Jigrasheni Virgin Mary"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -2958,8 +3657,8 @@
   "lon": 44.805,
   "preserved": "no",
   "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
+  "recordYears": "1871-1921",
+  "startYear": 1871,
   "endYear": 1921,
   "missingYears": "1878, 1881-1890, 1914",
   "note": {
@@ -2973,46 +3672,37 @@
    "en": "Destroyed in 1937.",
    "ka": "განადგურდა 1937 წელს."
   },
-  "inArchive": true
- },
- {
-  "id": 131,
-  "name": {
-   "ka": "ჯიგრაშენის ღვთისმშობლის (გარდაცვალება)",
-   "ru": "Джиграшенская Сурб Аствацацин (смерть)",
-   "en": "Jigrasheni Virgin Mary (Death)"
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1871-1821",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
   },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Leselidze/Kote Abkhazi",
-  "district": "Krtsanisi",
-  "lat": 41.69,
-  "lon": 44.805,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
-  "endYear": 1921,
-  "missingYears": "1878, 1887, 1890, 1911-1917, 1919",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "high",
-  "historicalNote": {
-   "ru": "Разрушена в 1937 г.",
-   "en": "Destroyed in 1937.",
-   "ka": "განადგურდა 1937 წელს."
-  },
-  "inArchive": true
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 88,
+    "type": "birth",
+    "years": "1871-1821"
+   },
+   {
+    "n": 130,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 131,
+    "type": "death",
+    "years": "1877-1921"
+   }
+  ]
  },
  {
   "id": 132,
   "name": {
-   "ka": "ჰრეშტაკაპერტის მთავარანგელოზის (ჯვრისწერა)",
-   "ru": "Сурб Хрештакапет (венчание)",
-   "en": "Hreshtakaper Archangels (Marriage)"
+   "ka": "ჰრეშტაკაპერტის მთავარანგელოზის",
+   "ru": "Сурб Хрештакапет",
+   "en": "Hreshtakaper Archangels"
   },
   "confession": "armenian_apostolic",
   "confessionRaw": "Armenian Apostolic",
@@ -3022,9 +3712,9 @@
   "lon": 44.815,
   "preserved": "no",
   "active": "no",
-  "recordYears": "1868-1919",
-  "startYear": 1868,
-  "endYear": 1919,
+  "recordYears": "1867-1921",
+  "startYear": 1867,
+  "endYear": 1921,
   "missingYears": "1869-1871, 1873-1876, 1889, 1894",
   "note": {
    "ru": "григорианская (Армянская апостольская)",
@@ -3037,39 +3727,30 @@
    "en": "Destroyed.",
    "ka": "განადგურებული."
   },
-  "inArchive": true
- },
- {
-  "id": 133,
-  "name": {
-   "ka": "ჰრეშტაკაპერტის მთავარანგელოზის (გარდაცვალება)",
-   "ru": "Сурб Хрештакапет (смерть)",
-   "en": "Hreshtakaper Archangels (Death)"
+  "inArchive": true,
+  "recordsByType": {
+   "birth": "1867-1921",
+   "marriage": "1868-1919",
+   "death": "1877-1918"
   },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Avlabari",
-  "district": "Isani",
-  "lat": 41.693,
-  "lon": 44.815,
-  "preserved": "no",
-  "active": "no",
-  "recordYears": "1877-1918",
-  "startYear": 1877,
-  "endYear": 1918,
-  "missingYears": "1911-1912, 1915-1917",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "medium",
-  "historicalNote": {
-   "ru": "Уничтожена.",
-   "en": "Destroyed.",
-   "ka": "განადგურებული."
-  },
-  "inArchive": true
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 92,
+    "type": "birth",
+    "years": "1867-1921"
+   },
+   {
+    "n": 132,
+    "type": "marriage",
+    "years": "1868-1919"
+   },
+   {
+    "n": 133,
+    "type": "death",
+    "years": "1877-1918"
+   }
+  ]
  },
  {
   "id": 134,
@@ -3101,7 +3782,15 @@
    "en": "Church near the railway.",
    "ka": "ეკლესია რკინიგზასთან."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 134,
+    "type": null,
+    "years": "1902-1917"
+   }
+  ]
  },
  {
   "id": 135,
@@ -3133,7 +3822,15 @@
    "en": "Church at the almshouse/hospital.",
    "ka": "ეკლესია თავშესაფართან/საავადმყოფოსთან."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 135,
+    "type": null,
+    "years": "1918-1920"
+   }
+  ]
  },
  {
   "id": 136,
@@ -3165,7 +3862,15 @@
    "en": "Suburban historical church.",
    "ka": "გარეუბნის ისტორიული ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 136,
+    "type": null,
+    "years": "1873-1910"
+   }
+  ]
  },
  {
   "id": 137,
@@ -3197,7 +3902,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 137,
+    "type": null,
+    "years": "1871-1906"
+   }
+  ]
  },
  {
   "id": 138,
@@ -3229,7 +3942,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 138,
+    "type": null,
+    "years": "1871"
+   }
+  ]
  },
  {
   "id": 139,
@@ -3261,7 +3982,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 139,
+    "type": null,
+    "years": "1863-1899"
+   }
+  ]
  },
  {
   "id": 140,
@@ -3293,7 +4022,15 @@
    "en": "Ancient village of Digomi (now within city limits).",
    "ka": "ძველი სოფელი დიღომი (ახლანდელი ქალაქის ფარგლებში)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 140,
+    "type": null,
+    "years": "1868-1899"
+   }
+  ]
  },
  {
   "id": 141,
@@ -3325,7 +4062,15 @@
    "en": "Lilo settlement (I. Stalin's birthplace).",
    "ka": "ლილოს დასახლება (ი. სტალინის სამშობლო)."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 141,
+    "type": null,
+    "years": "1871-1914"
+   }
+  ]
  },
  {
   "id": 142,
@@ -3357,7 +4102,15 @@
    "en": "Cross-domed church.",
    "ka": "ჯვარგუმბათოვანი ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 142,
+    "type": null,
+    "years": "1871-1898"
+   }
+  ]
  },
  {
   "id": 143,
@@ -3389,7 +4142,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 143,
+    "type": null,
+    "years": "1871-1921"
+   }
+  ]
  },
  {
   "id": 144,
@@ -3421,7 +4182,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 144,
+    "type": null,
+    "years": "1871-1916"
+   }
+  ]
  },
  {
   "id": 145,
@@ -3453,6 +4222,14 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 145,
+    "type": null,
+    "years": "1871-1909"
+   }
+  ]
  }
 ]
