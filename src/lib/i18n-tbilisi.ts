@@ -51,9 +51,9 @@ export const TBILISI_STRINGS = {
   ru: {
     metaTitle: "Церкви Тбилиси (Тифлиса) · Карта приходов 1818–1924",
     metaDesc:
-      "Интерактивная карта 108 церквей Тбилиси (Тифлиса) разных конфессий — годы метрических книг, состояние храмов, фильтры по эпохе и вере.",
+      "Интерактивная карта 100 церквей Тбилиси (Тифлиса) разных конфессий — годы метрических книг, состояние храмов, фильтры по эпохе и вере.",
     h1: "Церкви Тбилиси",
-    subtitle: "108 приходов разных конфессий · метрические книги 1818–1924",
+    subtitle: "100 приходов разных конфессий · метрические книги 1818–1924",
     backToMap: "К общей карте",
     open: "Открыть карту церквей Тбилиси",
     openShort: "Карта Тбилиси",
@@ -133,9 +133,9 @@ export const TBILISI_STRINGS = {
   en: {
     metaTitle: "Churches of Tbilisi (Tiflis) · Parish map 1818–1924",
     metaDesc:
-      "Interactive map of 108 churches of Tbilisi (Tiflis) across confessions — parish-register years, preservation status, filters by period and faith.",
+      "Interactive map of 100 churches of Tbilisi (Tiflis) across confessions — parish-register years, preservation status, filters by period and faith.",
     h1: "Churches of Tbilisi",
-    subtitle: "108 parishes across confessions · parish registers 1818–1924",
+    subtitle: "100 parishes across confessions · parish registers 1818–1924",
     backToMap: "Back to main map",
     open: "Open the Tbilisi churches map",
     openShort: "Tbilisi map",
@@ -215,9 +215,9 @@ export const TBILISI_STRINGS = {
   ka: {
     metaTitle: "თბილისის ეკლესიები · სამრევლოების რუკა 1818–1924",
     metaDesc:
-      "თბილისის 108 ეკლესიის ინტერაქტიული რუკა სხვადასხვა კონფესიის მიხედვით — მეტრიკული წიგნების წლები, შენარჩუნების სტატუსი, ფილტრები.",
+      "თბილისის 100 ეკლესიის ინტერაქტიული რუკა სხვადასხვა კონფესიის მიხედვით — მეტრიკული წიგნების წლები, შენარჩუნების სტატუსი, ფილტრები.",
     h1: "თბილისის ეკლესიები",
-    subtitle: "108 სამრევლო სხვადასხვა კონფესიის · მეტრიკული წიგნები 1818–1924",
+    subtitle: "100 სამრევლო სხვადასხვა კონფესიის · მეტრიკული წიგნები 1818–1924",
     backToMap: "მთავარ რუკაზე",
     open: "თბილისის ეკლესიების რუკის გახსნა",
     openShort: "თბილისის რუკა",
