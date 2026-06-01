@@ -308,6 +308,7 @@ export function TbilisiCoordEditorPanel() {
     // Add/update
     for (const r of visibleRows) {
       let m = markersRef.current.get(r.id);
+      const isSel = selectedId === r.id;
       if (!m) {
         // Wrapper element is positioned by MapLibre via transform: translate(...).
         // We MUST NOT set `transform` on it, otherwise the marker jumps to (0,0).
@@ -315,22 +316,57 @@ export function TbilisiCoordEditorPanel() {
         const el = document.createElement("div");
         el.style.cssText = "width:18px;height:18px;cursor:move;";
         const dot = document.createElement("div");
+        dot.dataset.role = "tbilisi-marker-dot";
         dot.style.cssText = `width:100%;height:100%;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.4);background:${CONFESSION_COLORS[r.confession] ?? "#888"};transition:transform 120ms ease, box-shadow 120ms ease;transform-origin:center;`;
         el.appendChild(dot);
+
+        // Hover popup: church name + confession + current coords.
+        const popup = new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 14,
+          className: "tbilisi-admin-marker-popup",
+        });
+        const churchId = r.id;
+        const renderPopupHtml = () => {
+          const cur = rowsRef.current?.find((x) => x.id === churchId) ?? r;
+          const nameRu = escapeHtml(cur.name.ru || cur.name.en || cur.name.ka);
+          const nameEn = cur.name.en && cur.name.en !== cur.name.ru ? `<div style="font-size:10px;color:#666;">${escapeHtml(cur.name.en)}</div>` : "";
+          const nameKa = cur.name.ka ? `<div style="font-size:10px;color:#666;direction:ltr;">${escapeHtml(cur.name.ka)}</div>` : "";
+          const addr = cur.address ? `<div style="font-size:10px;color:#888;margin-top:2px;">${escapeHtml(cur.address)}</div>` : "";
+          return `
+            <div style="font:11px/1.35 system-ui,-apple-system,sans-serif;min-width:180px;max-width:260px;">
+              <div style="font-weight:600;">#${cur.id} · ${nameRu}</div>
+              ${nameEn}${nameKa}${addr}
+              <div style="margin-top:4px;font-size:10px;color:#666;font-variant-numeric:tabular-nums;">
+                ${cur.lat.toFixed(5)}, ${cur.lon.toFixed(5)} · ${escapeHtml(cur.confidence)}
+              </div>
+            </div>`;
+        };
+
         el.addEventListener("mouseenter", () => {
           dot.style.transform = "scale(1.35)";
           dot.style.boxShadow = "0 0 0 2px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35)";
+          popup.setLngLat(m!.getLngLat()).setHTML(renderPopupHtml()).addTo(map);
         });
         el.addEventListener("mouseleave", () => {
+          const stillSelected = markersRef.current.get(churchId) && rowsRef.current?.find((x) => x.id === churchId);
           dot.style.transform = "scale(1)";
-          dot.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.4)";
+          dot.style.boxShadow = stillSelected && selectedIdRef.current === churchId
+            ? "0 0 0 3px rgba(59,130,246,0.7)"
+            : "0 0 0 1px rgba(0,0,0,0.4)";
+          popup.remove();
         });
-        el.title = r.name.ru;
-        const churchId = r.id;
+
         m = new maplibregl.Marker({ element: el, draggable: true }).setLngLat([r.lon, r.lat]).addTo(map);
 
         m.on("dragstart", () => {
           el.style.cursor = "grabbing";
+          popup.remove();
+        });
+        m.on("drag", () => {
+          // Keep popup pinned if visible
+          if (popup.isOpen()) popup.setLngLat(m!.getLngLat()).setHTML(renderPopupHtml());
         });
         m.on("dragend", () => {
           el.style.cursor = "move";
@@ -353,6 +389,13 @@ export function TbilisiCoordEditorPanel() {
         if (Math.abs(cur.lat - r.lat) > 1e-7 || Math.abs(cur.lng - r.lon) > 1e-7) {
           m.setLngLat([r.lon, r.lat]);
         }
+      }
+      // Highlight selected marker
+      const dot = (m.getElement().firstElementChild as HTMLDivElement | null);
+      if (dot) {
+        dot.style.boxShadow = isSel
+          ? "0 0 0 3px rgba(59,130,246,0.7)"
+          : "0 0 0 1px rgba(0,0,0,0.4)";
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
