@@ -106,7 +106,11 @@ export const TBILISI_STRINGS = {
       note: "Примечание",
       historicalNote: "История",
       confession: "Конфессия",
+      recordsByType: "По типам записей",
+      archiveLink: "Запись в архивном каталоге",
     },
+    recordType: { birth: "Рождения", marriage: "Венчания", death: "Отпевания" } as Record<"birth"|"marriage"|"death", string>,
+    archiveRowLabel: (n: number) => `№${n} в каталоге`,
     yesNo: { yes: "да", no: "нет", uncertain: "неясно" } as Record<YesNo, string>,
     confidenceWarn: {
       low_district: "Точное местоположение неизвестно — точка поставлена по центру района.",
