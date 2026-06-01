@@ -102,71 +102,91 @@ def main():
             m = re.search(r"\(([^)]+)\)\s*$", c["name"]["ka"])
             return TYPE_KA.get(m.group(1).strip()) if m else None
 
-        # Build recordsByType from JSON entries themselves
+        recs_per_entry = [rec_of(c) for c in entries]
+        cat_rows_here = cat_by_base.get(base, [])
+
+        # Only merge when ALL entries in the group carry a record-type
+        # marker (birth/marriage/death). Otherwise the shared base KA
+        # name is generic (e.g. "Св. Николая", "Св. Георгия") and the
+        # entries are distinct physical churches that must NOT be merged.
+        is_split_group = len(entries) > 1 and all(r is not None for r in recs_per_entry)
+
+        if not is_split_group:
+            # Keep every entry as-is; attach archive refs only when this
+            # individual entry has a record-type marker matching an
+            # archive row of the same base, or when the archive has a
+            # single unambiguous row for this base.
+            for c, rt in zip(entries, recs_per_entry):
+                m_entry = dict(c)
+                if rt is not None:
+                    m_entry["name"] = {
+                        "ka": strip_type(c["name"].get("ka", "")),
+                        "ru": strip_type(c["name"].get("ru", "")),
+                        "en": strip_type(c["name"].get("en", "")),
+                    }
+                    m_entry["recordsByType"] = OrderedDict({rt: c.get("recordYears", "")})
+                arch = [
+                    {"n": n, "type": ar_rt, "years": years}
+                    for (ar_rt, n, years) in cat_rows_here
+                    if (rt is not None and ar_rt == rt) or len(cat_rows_here) == 1
+                ]
+                if arch:
+                    m_entry["archiveUrl"] = ARCHIVE_URL
+                    m_entry["archiveRows"] = sorted(arch, key=lambda x: x["n"])
+                merged_out.append(m_entry)
+            continue
+
+        # ----- proper split-by-record-type group: merge into one point -----
         rbt = {}
-        for c in entries:
-            rt = rec_of(c)
+        for c, rt in zip(entries, recs_per_entry):
             if rt and c.get("recordYears"):
                 rbt.setdefault(rt, c["recordYears"])
-
-        # ALSO pull missing types from archive catalog (so e.g. a JSON entry
-        # that only has "рождение" still gets venchanie/smert' periods listed
-        # when the archive records them).
-        for rec_t, n, years in cat_by_base.get(base, []):
+        # Pull missing types from archive catalog when available
+        for rec_t, n, years in cat_rows_here:
             if rec_t and rec_t not in rbt and years:
                 rbt[rec_t] = years
 
-        # Build archive row references (always include if present)
-        arch_rows = [
-            {"n": n, "type": rt, "years": years}
-            for (rt, n, years) in cat_by_base.get(base, [])
-        ]
-        arch_rows.sort(key=lambda x: x["n"])
+        arch_rows = sorted(
+            [{"n": n, "type": rt, "years": years} for (rt, n, years) in cat_rows_here],
+            key=lambda x: x["n"],
+        )
 
-        # Build the merged entry: copy primary, strip name suffixes, attach
-        # recordsByType and archive refs. Keep its existing recordYears as
-        # the "headline" range; UI will show the per-type breakdown below.
         m_entry = dict(primary)
         m_entry["name"] = {
             "ka": strip_type(primary["name"].get("ka", "")),
             "ru": strip_type(primary["name"].get("ru", "")),
             "en": strip_type(primary["name"].get("en", "")),
         }
-        if rbt:
-            # Stable ordering: birth, marriage, death
-            ordered = OrderedDict()
-            for k in ("birth", "marriage", "death"):
-                if k in rbt:
-                    ordered[k] = rbt[k]
-            m_entry["recordsByType"] = ordered
+        ordered = OrderedDict()
+        for k in ("birth", "marriage", "death"):
+            if k in rbt:
+                ordered[k] = rbt[k]
+        m_entry["recordsByType"] = ordered
 
-            # Recompute startYear/endYear/recordYears from the union of all
-            # per-type ranges so the timeline filter reflects the merged
-            # church accurately.
-            mins, maxs = [], []
-            for ys in rbt.values():
-                a, b = parse_years_str(ys)
-                if a is not None:
-                    mins.append(a)
-                if b is not None:
-                    maxs.append(b)
-            if mins and maxs:
-                sy, ey = min(mins), max(maxs)
-                m_entry["startYear"] = sy
-                m_entry["endYear"] = ey
-                m_entry["recordYears"] = f"{sy}-{ey}"
+        # Recompute startYear/endYear/recordYears from the union of ranges
+        mins, maxs = [], []
+        for ys in rbt.values():
+            a, b = parse_years_str(ys)
+            if a is not None:
+                mins.append(a)
+            if b is not None:
+                maxs.append(b)
+        if mins and maxs:
+            sy, ey = min(mins), max(maxs)
+            m_entry["startYear"] = sy
+            m_entry["endYear"] = ey
+            m_entry["recordYears"] = f"{sy}-{ey}"
 
         if arch_rows:
             m_entry["archiveUrl"] = ARCHIVE_URL
             m_entry["archiveRows"] = arch_rows
 
         merged_out.append(m_entry)
-        if len(entries) > 1:
-            removed_ids.extend(c["id"] for c in entries[1:])
-            print(
-                f"merged base='{base}' kept id={primary['id']} dropped="
-                + ",".join(str(c['id']) for c in entries[1:])
-            )
+        removed_ids.extend(c["id"] for c in entries[1:])
+        print(
+            f"merged base='{base}' kept id={primary['id']} dropped="
+            + ",".join(str(c['id']) for c in entries[1:])
+        )
 
     merged_out.sort(key=lambda c: c["id"])
     JSON_PATH.write_text(
