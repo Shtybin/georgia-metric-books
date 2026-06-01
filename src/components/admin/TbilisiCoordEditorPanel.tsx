@@ -260,15 +260,21 @@ export function TbilisiCoordEditorPanel() {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
     return rows.filter((r) => {
-      if (filter === "not_high" && r.confidence === "high") return false;
-      if (filter === "low_only" && !r.confidence.startsWith("low")) return false;
+      // Always keep just-edited rows visible, regardless of the confidence
+      // filter — otherwise a successful save bumps confidence to "high" and
+      // the marker silently disappears from the "Не high" view.
+      const isEdited = editedIds.has(r.id);
+      if (!isEdited) {
+        if (filter === "not_high" && r.confidence === "high") return false;
+        if (filter === "low_only" && !r.confidence.startsWith("low")) return false;
+      }
       if (q) {
         const hay = (r.name.ru + " " + r.name.en + " " + r.name.ka + " " + r.address).toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
-  }, [rows, filter, query]);
+  }, [rows, filter, query, editedIds]);
 
   // Autocomplete suggestions — across ALL rows (ignore confidence filter so
   // hidden churches are still findable), ranked by match quality in the
