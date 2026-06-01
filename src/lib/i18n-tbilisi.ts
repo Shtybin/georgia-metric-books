@@ -188,7 +188,11 @@ export const TBILISI_STRINGS = {
       note: "Note",
       historicalNote: "History",
       confession: "Confession",
+      recordsByType: "By record type",
+      archiveLink: "Entry in the archival catalogue",
     },
+    recordType: { birth: "Births", marriage: "Marriages", death: "Burials" } as Record<"birth"|"marriage"|"death", string>,
+    archiveRowLabel: (n: number) => `Row №${n}`,
     yesNo: { yes: "yes", no: "no", uncertain: "unclear" } as Record<YesNo, string>,
     confidenceWarn: {
       low_district: "Exact location unknown — point placed at the district centre.",
