@@ -20,6 +20,13 @@ export interface TbilisiChurch {
   historicalNote: string | { ru: string; en: string; ka: string };
   /** true if coords were updated by an approved AI verification */
   verifiedByAi?: boolean;
+  /**
+   * Whether this record exists in the official archival catalog
+   * (archival-services.gov.ge/saeklesio/regions/location/55).
+   * Rows with `inArchive === false` are hidden from /tbilisi and the admin
+   * panel, but remain in the JSON file so they can be restored later.
+   */
+  inArchive?: boolean;
 }
 
 let cache: TbilisiChurch[] | null = null;
