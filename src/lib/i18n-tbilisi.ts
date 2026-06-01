@@ -270,7 +270,11 @@ export const TBILISI_STRINGS = {
       note: "შენიშვნა",
       historicalNote: "ისტორია",
       confession: "კონფესია",
+      recordsByType: "ჩანაწერების ტიპის მიხედვით",
+      archiveLink: "ჩანაწერი საარქივო კატალოგში",
     },
+    recordType: { birth: "დაბადება", marriage: "ჯვრისწერა", death: "გარდაცვალება" } as Record<"birth"|"marriage"|"death", string>,
+    archiveRowLabel: (n: number) => `№${n} კატალოგში`,
     yesNo: { yes: "კი", no: "არა", uncertain: "გაურკვეველი" } as Record<YesNo, string>,
     confidenceWarn: {
       low_district: "ზუსტი მდებარეობა უცნობია — წერტილი დასმულია უბნის ცენტრში.",
