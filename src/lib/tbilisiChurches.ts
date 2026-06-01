@@ -20,6 +20,13 @@ export interface TbilisiChurch {
   historicalNote: string | { ru: string; en: string; ka: string };
   /** true if coords were updated by an approved AI verification */
   verifiedByAi?: boolean;
+  /**
+   * Whether this record exists in the official archival catalog
+   * (archival-services.gov.ge/saeklesio/regions/location/55).
+   * Rows with `inArchive === false` are hidden from /tbilisi and the admin
+   * panel, but remain in the JSON file so they can be restored later.
+   */
+  inArchive?: boolean;
 }
 
 let cache: TbilisiChurch[] | null = null;
@@ -43,11 +50,14 @@ export function fetchTbilisiChurches(): Promise<TbilisiChurch[]> {
       }),
   ]).then(([rows, overrides]) => {
     const byId = new Map(overrides.map((o) => [o.church_id, o]));
-    const merged = (rows as TbilisiChurch[]).map((c) => {
-      const o = byId.get(c.id);
-      if (!o) return c;
-      return { ...c, lat: o.new_lat, lon: o.new_lon, confidence: "high" as const, verifiedByAi: true };
-    });
+    const merged = (rows as TbilisiChurch[])
+      // Hide rows explicitly flagged as not present in the archival catalog.
+      .filter((c) => c.inArchive !== false)
+      .map((c) => {
+        const o = byId.get(c.id);
+        if (!o) return c;
+        return { ...c, lat: o.new_lat, lon: o.new_lon, confidence: "high" as const, verifiedByAi: true };
+      });
     cache = merged;
     inflight = null;
     return merged;
