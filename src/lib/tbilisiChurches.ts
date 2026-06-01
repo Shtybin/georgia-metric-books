@@ -27,6 +27,16 @@ export interface TbilisiChurch {
    * panel, but remain in the JSON file so they can be restored later.
    */
   inArchive?: boolean;
+  /**
+   * Per-record-type year ranges. Some churches keep separate registers for
+   * baptisms (birth), marriages and burials (death). When present, the UI
+   * shows each range in addition to the headline `recordYears`.
+   */
+  recordsByType?: Partial<Record<"birth" | "marriage" | "death", string>>;
+  /** Link to the official archival catalog page. */
+  archiveUrl?: string;
+  /** Matched archive rows: `n` is the catalog row number. */
+  archiveRows?: { n: number; type: "birth" | "marriage" | "death" | null; years: string }[];
 }
 
 let cache: TbilisiChurch[] | null = null;
