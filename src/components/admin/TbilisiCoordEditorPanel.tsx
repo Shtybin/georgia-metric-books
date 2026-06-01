@@ -62,6 +62,10 @@ export function TbilisiCoordEditorPanel() {
   const [editedIds, setEditedIds] = useState<Set<number>>(new Set());
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [pending, setPending] = useState<PendingMove | null>(null);
+  const selectedIdRef = useRef<number | null>(null);
+  useEffect(() => {
+    selectedIdRef.current = selectedId;
+  }, [selectedId]);
 
   // Load churches once
   useEffect(() => {
@@ -71,6 +75,7 @@ export function TbilisiCoordEditorPanel() {
   useEffect(() => {
     rowsRef.current = rows;
   }, [rows]);
+
 
   // Init map once. Some browsers / iframes give the container 0×0 size on the
   // first paint after a tab switch; we poll briefly until it actually has
