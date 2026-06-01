@@ -20,9 +20,19 @@ import {
 import {
   TBILISI_1898,
   DISTRICTS_1898_URL,
+  HISTORICAL_MAPS,
   type District1898Properties,
 } from "@/lib/tbilisi-historical";
 import type { Lang } from "@/lib/i18n";
+
+/**
+ * Год активной исторической подложки. Когда подложка включена,
+ * церкви с startYear > этого года скрываются с карты — их физически
+ * не существовало на момент создания карты. Для других подложек
+ * берём `year` из соответствующей записи HISTORICAL_MAPS.
+ */
+const ACTIVE_HISTORICAL_YEAR: number | null =
+  HISTORICAL_MAPS.find((m) => m.id === "1898")?.year ?? null;
 import { localizeAddress, localizeDistrict } from "@/lib/tbilisi-locations";
 import { Button } from "@/components/ui/button";
 import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
