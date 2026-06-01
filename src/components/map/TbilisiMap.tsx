@@ -175,6 +175,15 @@ export function TbilisiMap({
       const sy = r.startYear ?? TBILISI_YEAR_MIN;
       const ey = r.endYear ?? TBILISI_YEAR_MAX;
       if (ey < yearMin || sy > yearMax) return false;
+      // Скрываем церкви, которых ещё не существовало на момент создания
+      // исторической карты (например, для слоя 1898 г. — все startYear > 1898).
+      if (
+        historicalOn &&
+        ACTIVE_HISTORICAL_YEAR != null &&
+        r.startYear != null &&
+        r.startYear > ACTIVE_HISTORICAL_YEAR
+      )
+        return false;
       if (onlyPreserved && r.preserved !== "yes") return false;
       if (onlyActive && r.active !== "yes") return false;
       if (q) {
@@ -183,7 +192,7 @@ export function TbilisiMap({
       }
       return true;
     });
-  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query]);
+  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query, historicalOn]);
 
   useEffect(() => {
     rowsRef.current = rows;
