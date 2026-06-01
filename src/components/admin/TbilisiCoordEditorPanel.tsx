@@ -259,6 +259,7 @@ export function TbilisiCoordEditorPanel() {
   const visibleRows = useMemo(() => {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
+    const histYear = histOn ? selectedMap?.year ?? null : null;
     return rows.filter((r) => {
       // Always keep just-edited rows visible, regardless of the confidence
       // filter — otherwise a successful save bumps confidence to "high" and
@@ -267,6 +268,9 @@ export function TbilisiCoordEditorPanel() {
       if (!isEdited) {
         if (filter === "not_high" && r.confidence === "high") return false;
         if (filter === "low_only" && !r.confidence.startsWith("low")) return false;
+        // Hide churches that didn't exist yet at the time the active
+        // historical map was drawn (e.g. startYear 1902 on 1898 map).
+        if (histYear != null && r.startYear != null && r.startYear > histYear) return false;
       }
       if (q) {
         const hay = (r.name.ru + " " + r.name.en + " " + r.name.ka + " " + r.address).toLowerCase();
@@ -274,7 +278,7 @@ export function TbilisiCoordEditorPanel() {
       }
       return true;
     });
-  }, [rows, filter, query, editedIds]);
+  }, [rows, filter, query, editedIds, histOn, selectedMap]);
 
   // Autocomplete suggestions — across ALL rows (ignore confidence filter so
   // hidden churches are still findable), ranked by match quality in the
