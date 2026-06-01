@@ -20,9 +20,19 @@ import {
 import {
   TBILISI_1898,
   DISTRICTS_1898_URL,
+  HISTORICAL_MAPS,
   type District1898Properties,
 } from "@/lib/tbilisi-historical";
 import type { Lang } from "@/lib/i18n";
+
+/**
+ * Год активной исторической подложки. Когда подложка включена,
+ * церкви с startYear > этого года скрываются с карты — их физически
+ * не существовало на момент создания карты. Для других подложек
+ * берём `year` из соответствующей записи HISTORICAL_MAPS.
+ */
+const ACTIVE_HISTORICAL_YEAR: number | null =
+  HISTORICAL_MAPS.find((m) => m.id === "1898")?.year ?? null;
 import { localizeAddress, localizeDistrict } from "@/lib/tbilisi-locations";
 import { Button } from "@/components/ui/button";
 import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
@@ -165,6 +175,15 @@ export function TbilisiMap({
       const sy = r.startYear ?? TBILISI_YEAR_MIN;
       const ey = r.endYear ?? TBILISI_YEAR_MAX;
       if (ey < yearMin || sy > yearMax) return false;
+      // Скрываем церкви, которых ещё не существовало на момент создания
+      // исторической карты (например, для слоя 1898 г. — все startYear > 1898).
+      if (
+        historicalOn &&
+        ACTIVE_HISTORICAL_YEAR != null &&
+        r.startYear != null &&
+        r.startYear > ACTIVE_HISTORICAL_YEAR
+      )
+        return false;
       if (onlyPreserved && r.preserved !== "yes") return false;
       if (onlyActive && r.active !== "yes") return false;
       if (q) {
@@ -173,7 +192,7 @@ export function TbilisiMap({
       }
       return true;
     });
-  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query]);
+  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query, historicalOn]);
 
   useEffect(() => {
     rowsRef.current = rows;
