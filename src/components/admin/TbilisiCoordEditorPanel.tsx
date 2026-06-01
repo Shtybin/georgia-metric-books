@@ -404,7 +404,7 @@ export function TbilisiCoordEditorPanel() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleRows, mapReady, rows]);
+  }, [visibleRows, mapReady, rows, selectedId]);
 
   async function confirmPending() {
     if (!pending) return;
