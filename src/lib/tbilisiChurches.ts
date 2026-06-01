@@ -50,11 +50,14 @@ export function fetchTbilisiChurches(): Promise<TbilisiChurch[]> {
       }),
   ]).then(([rows, overrides]) => {
     const byId = new Map(overrides.map((o) => [o.church_id, o]));
-    const merged = (rows as TbilisiChurch[]).map((c) => {
-      const o = byId.get(c.id);
-      if (!o) return c;
-      return { ...c, lat: o.new_lat, lon: o.new_lon, confidence: "high" as const, verifiedByAi: true };
-    });
+    const merged = (rows as TbilisiChurch[])
+      // Hide rows explicitly flagged as not present in the archival catalog.
+      .filter((c) => c.inArchive !== false)
+      .map((c) => {
+        const o = byId.get(c.id);
+        if (!o) return c;
+        return { ...c, lat: o.new_lat, lon: o.new_lon, confidence: "high" as const, verifiedByAi: true };
+      });
     cache = merged;
     inflight = null;
     return merged;
