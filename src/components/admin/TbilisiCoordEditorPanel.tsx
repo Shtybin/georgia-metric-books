@@ -6,6 +6,7 @@ import { CONFESSION_COLORS, TBILISI_BBOX } from "@/lib/i18n-tbilisi";
 import { HISTORICAL_MAPS, type HistoricalMapEntry } from "@/lib/tbilisi-historical";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { Download, Loader2, Search, Check, X, Undo2, AlertTriangle } from "lucide-react";
 
 interface PendingMove {
