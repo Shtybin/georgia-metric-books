@@ -169,11 +169,23 @@ def main():
     for r in catalog:
         cat_by_base[r["base"]].append(r)
 
+    cat_by_n = {r["n"]: r for r in catalog}
+
     # 2) Re-link archiveRows on every entry.
     linked_n = set()
     for c in data:
         b = base_ka(c["name"]["ka"])
         candidates = cat_by_base.get(b, [])
+
+        # If the KA name is truncated (ends with "...") or no base match,
+        # but the entry id equals a catalog row number, trust the id link
+        # and restore the full KA name from the catalog.
+        if not candidates and c["id"] in cat_by_n:
+            full = cat_by_n[c["id"]]
+            c["name"]["ka"] = TYPE_RE.sub("", full["name"]).strip()
+            b = base_ka(c["name"]["ka"])
+            candidates = cat_by_base.get(b, [])
+
         if not candidates:
             continue
 
