@@ -244,7 +244,7 @@ export function TbilisiCoordEditorPanel() {
           if (s) s.setData({ type: "FeatureCollection", features: [] });
         });
     }
-  }, [selectedMap, mapReady]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedMap, mapReady, styleVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // React to histOn/opacity/districts toggles
   useEffect(() => {
