@@ -125,10 +125,16 @@ def main():
                         "en": strip_type(c["name"].get("en", "")),
                     }
                     m_entry["recordsByType"] = OrderedDict({rt: c.get("recordYears", "")})
+                # Only attach an archive row when we can match it unambiguously:
+                #  - the entry has a record-type marker AND the archive row's
+                #    type matches, OR
+                #  - the entry has NO type AND the catalog has exactly one
+                #    row for this base name (and that row also has no type).
                 arch = [
                     {"n": n, "type": ar_rt, "years": years}
                     for (ar_rt, n, years) in cat_rows_here
-                    if (rt is not None and ar_rt == rt) or len(cat_rows_here) == 1
+                    if (rt is not None and ar_rt == rt)
+                    or (rt is None and ar_rt is None and len(cat_rows_here) == 1)
                 ]
                 if arch:
                     m_entry["archiveUrl"] = ARCHIVE_URL

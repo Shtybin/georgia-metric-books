@@ -3400,49 +3400,6 @@
   ]
  },
  {
-  "id": 124,
-  "name": {
-   "ka": "წმ. გიორგის",
-   "ru": "Св. Георгия",
-   "en": "St. George"
-  },
-  "confession": "armenian_apostolic",
-  "confessionRaw": "Armenian Apostolic",
-  "address": "Tbilisi",
-  "district": "Tbilisi",
-  "lat": 41.69,
-  "lon": 44.8,
-  "preserved": "uncertain",
-  "active": "uncertain",
-  "recordYears": "1878-1921",
-  "startYear": 1878,
-  "endYear": 1921,
-  "missingYears": "1879, 1890, 1907, 1919",
-  "note": {
-   "ru": "григорианская (Армянская апостольская)",
-   "en": "Gregorian",
-   "ka": "გრიგორიანული"
-  },
-  "confidence": "low",
-  "historicalNote": {
-   "ru": "Вероятно, одна из Сурб Геворг (Мейдан или Мугни).",
-   "en": "Probably one of Surb Gevorg (Maidan or Mugni).",
-   "ka": "სავარაუდოდ ერთ-ერთი სურბ გევორგი (მეიდანი ან მუღნი)."
-  },
-  "inArchive": true,
-  "recordsByType": {
-   "marriage": "1878-1921"
-  },
-  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
-  "archiveRows": [
-   {
-    "n": 56,
-    "type": null,
-    "years": "1892, 1915"
-   }
-  ]
- },
- {
   "id": 126,
   "name": {
    "ka": "შამქორის ღვთისმშობლის",
