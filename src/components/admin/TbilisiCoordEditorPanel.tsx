@@ -266,15 +266,15 @@ export function TbilisiCoordEditorPanel() {
   const visibleRows = useMemo(() => {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
+    const histYear = histOn ? selectedMap?.year ?? null : null;
     return rows.filter((r) => {
       const isEdited = editedIds.has(r.id);
       if (!isEdited) {
         if (filter === "not_high" && r.confidence === "high") return false;
         if (filter === "low_only" && !r.confidence.startsWith("low")) return false;
-        // NOTE: do NOT hide churches whose startYear is later than the
-        // active historical map. In admin we always want to see all rows
-        // so they can be re-placed manually. (Year filter still applies on
-        // the public /tbilisi map.)
+        // Hide churches whose records start after the active historical map's
+        // year (e.g. startYear 1902 on the 1898 map). Toggle off via "Все годы".
+        if (!showAllYears && histYear != null && r.startYear != null && r.startYear > histYear) return false;
       }
       if (q) {
         const hay = (r.name.ru + " " + r.name.en + " " + r.name.ka + " " + r.address).toLowerCase();
@@ -282,7 +282,7 @@ export function TbilisiCoordEditorPanel() {
       }
       return true;
     });
-  }, [rows, filter, query, editedIds]);
+  }, [rows, filter, query, editedIds, histOn, selectedMap, showAllYears]);
 
   // Autocomplete suggestions — across ALL rows (ignore confidence filter so
   // hidden churches are still findable), ranked by match quality in the
