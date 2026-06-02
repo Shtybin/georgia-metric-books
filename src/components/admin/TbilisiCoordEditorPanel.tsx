@@ -621,6 +621,22 @@ export function TbilisiCoordEditorPanel() {
               {label}
             </button>
           ))}
+          <button
+            onClick={() => setShowAllYears((v) => !v)}
+            title={
+              showAllYears
+                ? "Сейчас показаны все церкви, в т.ч. с записями позже года выбранной карты"
+                : `Скрыты церкви с записями позже ${selectedMap?.year ?? "года карты"} — нажмите, чтобы показать все`
+            }
+            className={
+              "rounded-md px-2 py-1 transition-colors " +
+              (showAllYears
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")
+            }
+          >
+            {showAllYears ? "Все годы" : `По году карты${selectedMap?.year ? ` (≤${selectedMap.year})` : ""}`}
+          </button>
           <Button size="sm" variant="outline" onClick={exportJson}>
             <Download className="mr-1 h-3.5 w-3.5" /> Экспорт JSON
           </Button>
