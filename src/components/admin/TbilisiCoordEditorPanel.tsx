@@ -43,6 +43,7 @@ export function TbilisiCoordEditorPanel() {
   const rowsRef = useRef<TbilisiChurch[] | null>(null);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [styleVersion, setStyleVersion] = useState(0);
   const [mapError, setMapError] = useState<string | null>(null);
   const [histOn, setHistOn] = useState(true);
   const [histOpacity, setHistOpacity] = useState(75);
