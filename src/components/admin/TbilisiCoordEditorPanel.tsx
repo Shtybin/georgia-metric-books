@@ -578,12 +578,12 @@ export function TbilisiCoordEditorPanel() {
         )}
         <label className="flex items-center gap-2">
           Прозрачность
-          <input
-            type="range"
+          <Slider
+            value={[histOpacity]}
             min={0}
             max={100}
-            value={histOpacity}
-            onChange={(e) => setHistOpacity(Number(e.target.value))}
+            step={1}
+            onValueChange={([v]) => setHistOpacity(v)}
             className="w-32"
             disabled={!selectedMap?.config || !histOn}
           />
