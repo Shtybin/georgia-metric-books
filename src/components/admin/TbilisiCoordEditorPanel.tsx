@@ -43,6 +43,7 @@ export function TbilisiCoordEditorPanel() {
   const rowsRef = useRef<TbilisiChurch[] | null>(null);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [styleVersion, setStyleVersion] = useState(0);
   const [mapError, setMapError] = useState<string | null>(null);
   const [histOn, setHistOn] = useState(true);
   const [histOpacity, setHistOpacity] = useState(75);
@@ -139,24 +140,28 @@ export function TbilisiCoordEditorPanel() {
       });
 
       const onStyleReady = () => {
-        if (map.getSource("districts-overlay")) return;
-        map.addSource("districts-overlay", {
-          type: "geojson",
-          data: { type: "FeatureCollection", features: [] },
-        });
-        map.addLayer({
-          id: "districts-overlay-fill",
-          type: "fill",
-          source: "districts-overlay",
-          paint: { "fill-color": "#b45309", "fill-opacity": 0.06 },
-        });
-        map.addLayer({
-          id: "districts-overlay-line",
-          type: "line",
-          source: "districts-overlay",
-          paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
-        });
+        if (!map.getSource("districts-overlay")) {
+          map.addSource("districts-overlay", {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] },
+          });
+          map.addLayer({
+            id: "districts-overlay-fill",
+            type: "fill",
+            source: "districts-overlay",
+            paint: { "fill-color": "#b45309", "fill-opacity": 0.06 },
+          });
+          map.addLayer({
+            id: "districts-overlay-line",
+            type: "line",
+            source: "districts-overlay",
+            paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
+          });
+        }
         setMapReady(true);
+        // Bump version so the hist-overlay effect re-runs and re-adds the
+        // raster if a style swap (fallback) wiped custom sources/layers.
+        setStyleVersion((v) => v + 1);
         requestAnimationFrame(() => map.resize());
       };
 
@@ -239,7 +244,7 @@ export function TbilisiCoordEditorPanel() {
           if (s) s.setData({ type: "FeatureCollection", features: [] });
         });
     }
-  }, [selectedMap, mapReady]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedMap, mapReady, styleVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // React to histOn/opacity/districts toggles
   useEffect(() => {
@@ -260,18 +265,15 @@ export function TbilisiCoordEditorPanel() {
   const visibleRows = useMemo(() => {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
-    const histYear = histOn ? selectedMap?.year ?? null : null;
     return rows.filter((r) => {
-      // Always keep just-edited rows visible, regardless of the confidence
-      // filter — otherwise a successful save bumps confidence to "high" and
-      // the marker silently disappears from the "Не high" view.
       const isEdited = editedIds.has(r.id);
       if (!isEdited) {
         if (filter === "not_high" && r.confidence === "high") return false;
         if (filter === "low_only" && !r.confidence.startsWith("low")) return false;
-        // Hide churches that didn't exist yet at the time the active
-        // historical map was drawn (e.g. startYear 1902 on 1898 map).
-        if (histYear != null && r.startYear != null && r.startYear > histYear) return false;
+        // NOTE: do NOT hide churches whose startYear is later than the
+        // active historical map. In admin we always want to see all rows
+        // so they can be re-placed manually. (Year filter still applies on
+        // the public /tbilisi map.)
       }
       if (q) {
         const hay = (r.name.ru + " " + r.name.en + " " + r.name.ka + " " + r.address).toLowerCase();
@@ -279,7 +281,7 @@ export function TbilisiCoordEditorPanel() {
       }
       return true;
     });
-  }, [rows, filter, query, editedIds, histOn, selectedMap]);
+  }, [rows, filter, query, editedIds]);
 
   // Autocomplete suggestions — across ALL rows (ignore confidence filter so
   // hidden churches are still findable), ranked by match quality in the
