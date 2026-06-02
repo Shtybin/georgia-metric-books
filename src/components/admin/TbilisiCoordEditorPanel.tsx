@@ -57,6 +57,7 @@ export function TbilisiCoordEditorPanel() {
   const [savedId, setSavedId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "not_high" | "low_only">("not_high");
+  const [showAllYears, setShowAllYears] = useState(false);
   const [query, setQuery] = useState("");
   const [searchLang, setSearchLang] = useState<"ru" | "en">("ru");
   const [suggestOpen, setSuggestOpen] = useState(false);
@@ -265,15 +266,15 @@ export function TbilisiCoordEditorPanel() {
   const visibleRows = useMemo(() => {
     if (!rows) return [];
     const q = query.trim().toLowerCase();
+    const histYear = histOn ? selectedMap?.year ?? null : null;
     return rows.filter((r) => {
       const isEdited = editedIds.has(r.id);
       if (!isEdited) {
         if (filter === "not_high" && r.confidence === "high") return false;
         if (filter === "low_only" && !r.confidence.startsWith("low")) return false;
-        // NOTE: do NOT hide churches whose startYear is later than the
-        // active historical map. In admin we always want to see all rows
-        // so they can be re-placed manually. (Year filter still applies on
-        // the public /tbilisi map.)
+        // Hide churches whose records start after the active historical map's
+        // year (e.g. startYear 1902 on the 1898 map). Toggle off via "Все годы".
+        if (!showAllYears && histYear != null && r.startYear != null && r.startYear > histYear) return false;
       }
       if (q) {
         const hay = (r.name.ru + " " + r.name.en + " " + r.name.ka + " " + r.address).toLowerCase();
@@ -281,7 +282,7 @@ export function TbilisiCoordEditorPanel() {
       }
       return true;
     });
-  }, [rows, filter, query, editedIds]);
+  }, [rows, filter, query, editedIds, histOn, selectedMap, showAllYears]);
 
   // Autocomplete suggestions — across ALL rows (ignore confidence filter so
   // hidden churches are still findable), ranked by match quality in the
@@ -620,6 +621,22 @@ export function TbilisiCoordEditorPanel() {
               {label}
             </button>
           ))}
+          <button
+            onClick={() => setShowAllYears((v) => !v)}
+            title={
+              showAllYears
+                ? "Сейчас показаны все церкви, в т.ч. с записями позже года выбранной карты"
+                : `Скрыты церкви с записями позже ${selectedMap?.year ?? "года карты"} — нажмите, чтобы показать все`
+            }
+            className={
+              "rounded-md px-2 py-1 transition-colors " +
+              (showAllYears
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-accent")
+            }
+          >
+            {showAllYears ? "Все годы" : `По году карты${selectedMap?.year ? ` (≤${selectedMap.year})` : ""}`}
+          </button>
           <Button size="sm" variant="outline" onClick={exportJson}>
             <Download className="mr-1 h-3.5 w-3.5" /> Экспорт JSON
           </Button>
