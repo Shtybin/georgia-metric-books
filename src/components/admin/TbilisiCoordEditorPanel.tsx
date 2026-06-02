@@ -6,6 +6,7 @@ import { CONFESSION_COLORS, TBILISI_BBOX } from "@/lib/i18n-tbilisi";
 import { HISTORICAL_MAPS, type HistoricalMapEntry } from "@/lib/tbilisi-historical";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { Download, Loader2, Search, Check, X, Undo2, AlertTriangle } from "lucide-react";
 
 interface PendingMove {
@@ -577,12 +578,12 @@ export function TbilisiCoordEditorPanel() {
         )}
         <label className="flex items-center gap-2">
           Прозрачность
-          <input
-            type="range"
+          <Slider
+            value={[histOpacity]}
             min={0}
             max={100}
-            value={histOpacity}
-            onChange={(e) => setHistOpacity(Number(e.target.value))}
+            step={1}
+            onValueChange={([v]) => setHistOpacity(v)}
             className="w-32"
             disabled={!selectedMap?.config || !histOn}
           />
