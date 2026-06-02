@@ -139,24 +139,28 @@ export function TbilisiCoordEditorPanel() {
       });
 
       const onStyleReady = () => {
-        if (map.getSource("districts-overlay")) return;
-        map.addSource("districts-overlay", {
-          type: "geojson",
-          data: { type: "FeatureCollection", features: [] },
-        });
-        map.addLayer({
-          id: "districts-overlay-fill",
-          type: "fill",
-          source: "districts-overlay",
-          paint: { "fill-color": "#b45309", "fill-opacity": 0.06 },
-        });
-        map.addLayer({
-          id: "districts-overlay-line",
-          type: "line",
-          source: "districts-overlay",
-          paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
-        });
+        if (!map.getSource("districts-overlay")) {
+          map.addSource("districts-overlay", {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] },
+          });
+          map.addLayer({
+            id: "districts-overlay-fill",
+            type: "fill",
+            source: "districts-overlay",
+            paint: { "fill-color": "#b45309", "fill-opacity": 0.06 },
+          });
+          map.addLayer({
+            id: "districts-overlay-line",
+            type: "line",
+            source: "districts-overlay",
+            paint: { "line-color": "#92400e", "line-width": 2, "line-dasharray": [3, 2], "line-opacity": 0.85 },
+          });
+        }
         setMapReady(true);
+        // Bump version so the hist-overlay effect re-runs and re-adds the
+        // raster if a style swap (fallback) wiped custom sources/layers.
+        setStyleVersion((v) => v + 1);
         requestAnimationFrame(() => map.resize());
       };
 
