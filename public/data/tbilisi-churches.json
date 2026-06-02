@@ -1482,7 +1482,7 @@
  {
   "id": 38,
   "name": {
-   "ka": "თავად მიხეილ ნიკოლოზის ძის...",
+   "ka": "თავად მიხეილ ნიკოლოზის ძის სამხედრო სასწავლებლის",
    "ru": "Военного училища Вел. Кн. Михаила Николаевича",
    "en": "Grand Duke Michael Nikolaevich Military School"
   },
@@ -1509,7 +1509,15 @@
    "en": "House church of the school.",
    "ka": "სასწავლებლის სახლის ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 38,
+    "type": null,
+    "years": "1912-1918"
+   }
+  ]
  },
  {
   "id": 39,
@@ -1674,7 +1682,7 @@
  {
   "id": 43,
   "name": {
-   "ka": "კავკასიის არმიის გრენადერთა მე-14...",
+   "ka": "კავკასიის არმიის გრენადერთა მე-14 ქართული პოლკის",
    "ru": "14-го Грузинского гренадерского полка",
    "en": "14th Georgian Grenadier Regiment"
   },
@@ -1701,12 +1709,20 @@
    "en": "Deployment in Bely Klyuch.",
    "ka": "დისლოკაცია ბელი კლიუჩში."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 43,
+    "type": null,
+    "years": "1871-1906"
+   }
+  ]
  },
  {
   "id": 44,
   "name": {
-   "ka": "კავკასიის არმიის გრენადერთა მე-15...",
+   "ka": "კავკასიის არმიის გრენადერთა მე-15 ქართული პოლკის",
    "ru": "15-го Тифлисского гренадерского полка",
    "en": "15th Tiflis Grenadier Regiment"
   },
@@ -1733,12 +1749,20 @@
    "en": "Regimental church of the garrison.",
    "ka": "გარნიზონის პოლკის ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 44,
+    "type": null,
+    "years": "1862-1910"
+   }
+  ]
  },
  {
   "id": 45,
   "name": {
-   "ka": "კავკასიის არმიის გრენადერთა მე-16...",
+   "ka": "კავკასიის არმიის გრენადერთა მე-16 ქართული პოლკის",
    "ru": "16-го Мингрельского гренадерского полка",
    "en": "16th Mingrelian Grenadier Regiment"
   },
@@ -1765,7 +1789,15 @@
    "en": "Barracks house church.",
    "ka": "ყაზარმის სახლის ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 45,
+    "type": null,
+    "years": "1866-1912"
+   }
+  ]
  },
  {
   "id": 46,
