@@ -309,7 +309,15 @@
    "en": "Destroyed in the 1940s by German prisoners of war on the orders of the Soviets.",
    "ka": "განადგურდა 1940-იან წლებში გერმანელი სამხედრო ტყვეების მიერ საბჭოთა ბრძანებით."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 8,
+    "type": null,
+    "years": "1873-1921 (დაბადება)"
+   }
+  ]
  },
  {
   "id": 9,
@@ -341,7 +349,15 @@
    "en": "",
    "ka": ""
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 9,
+    "type": null,
+    "years": "1835-1921"
+   }
+  ]
  },
  {
   "id": 10,
@@ -2141,7 +2157,15 @@
    "en": "Main staff church.",
    "ka": "მთავარი შტაბის ეკლესია."
   },
-  "inArchive": true
+  "inArchive": true,
+  "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
+  "archiveRows": [
+   {
+    "n": 55,
+    "type": null,
+    "years": "1861-1919"
+   }
+  ]
  },
  {
   "id": 56,
@@ -2590,7 +2614,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1868-1920"
+   "birth": "1868-1920",
+   "marriage": "1877-1920",
+   "death": "1877-1920"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2598,6 +2624,16 @@
     "n": 66,
     "type": "birth",
     "years": "1868-1920"
+   },
+   {
+    "n": 87,
+    "type": "marriage",
+    "years": "1877-1920"
+   },
+   {
+    "n": 89,
+    "type": "death",
+    "years": "1877-1920"
    }
   ]
  },
@@ -2633,7 +2669,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1872-1921"
+   "birth": "1872-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1920"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2641,6 +2679,16 @@
     "n": 67,
     "type": "birth",
     "years": "1872-1921"
+   },
+   {
+    "n": 91,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 93,
+    "type": "death",
+    "years": "1877-1920"
    }
   ]
  },
@@ -2676,7 +2724,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1862-1922"
+   "birth": "1862-1922",
+   "marriage": "1864-1921",
+   "death": "1866-1922"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2684,6 +2734,16 @@
     "n": 68,
     "type": "birth",
     "years": "1862-1922"
+   },
+   {
+    "n": 94,
+    "type": "marriage",
+    "years": "1864-1921"
+   },
+   {
+    "n": 95,
+    "type": "death",
+    "years": "1866-1922"
    }
   ]
  },
@@ -2702,8 +2762,8 @@
   "lon": 44.7845,
   "preserved": "yes",
   "active": "yes",
-  "recordYears": "1871-1921",
-  "startYear": 1871,
+  "recordYears": "1870-1921",
+  "startYear": 1870,
   "endYear": 1921,
   "missingYears": "1902, 1919",
   "note": {
@@ -2719,7 +2779,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1871-1921"
+   "birth": "1871-1921",
+   "marriage": "1870-1920",
+   "death": "1870-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2727,6 +2789,16 @@
     "n": 69,
     "type": "birth",
     "years": "1871-1921"
+   },
+   {
+    "n": 96,
+    "type": "marriage",
+    "years": "1870-1920"
+   },
+   {
+    "n": 97,
+    "type": "death",
+    "years": "1870-1921"
    }
   ]
  },
@@ -2762,7 +2834,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1865-1924"
+   "birth": "1865-1924",
+   "marriage": "1877-1924",
+   "death": "1877-1924"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2770,6 +2844,16 @@
     "n": 70,
     "type": "birth",
     "years": "1865-1924"
+   },
+   {
+    "n": 98,
+    "type": "marriage",
+    "years": "1877-1924"
+   },
+   {
+    "n": 99,
+    "type": "death",
+    "years": "1877-1924"
    }
   ]
  },
@@ -2788,8 +2872,8 @@
   "lon": 44.805,
   "preserved": "no",
   "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
+  "recordYears": "1870-1921",
+  "startYear": 1870,
   "endYear": 1921,
   "missingYears": "1878-1879, 1881, 1887, 1889",
   "note": {
@@ -2805,13 +2889,25 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1877-1921"
+   "birth": "1877-1921",
+   "marriage": "1870-1921",
+   "death": "1877-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
    {
     "n": 71,
     "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 100,
+    "type": "marriage",
+    "years": "1870-1921"
+   },
+   {
+    "n": 101,
+    "type": "death",
     "years": "1877-1921"
    }
   ]
@@ -2831,8 +2927,8 @@
   "lon": 44.7942,
   "preserved": "yes",
   "active": "no",
-  "recordYears": "1874-1921",
-  "startYear": 1874,
+  "recordYears": "1873-1921",
+  "startYear": 1873,
   "endYear": 1921,
   "missingYears": "1900",
   "note": {
@@ -2848,7 +2944,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1874-1921"
+   "birth": "1874-1921",
+   "marriage": "1874-1921",
+   "death": "1873-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2856,6 +2954,16 @@
     "n": 72,
     "type": "birth",
     "years": "1874-1921"
+   },
+   {
+    "n": 102,
+    "type": "marriage",
+    "years": "1874-1921"
+   },
+   {
+    "n": 103,
+    "type": "death",
+    "years": "1873-1921"
    }
   ]
  },
@@ -2891,7 +2999,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1873-1921"
+   "birth": "1873-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2899,6 +3009,16 @@
     "n": 73,
     "type": "birth",
     "years": "1873-1921"
+   },
+   {
+    "n": 118,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 119,
+    "type": "death",
+    "years": "1877-1921"
    }
   ]
  },
@@ -2934,7 +3054,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1854-1919"
+   "birth": "1854-1919",
+   "marriage": "1871-1918",
+   "death": "1878-1918"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -2942,6 +3064,16 @@
     "n": 74,
     "type": "birth",
     "years": "1854-1919"
+   },
+   {
+    "n": 104,
+    "type": "marriage",
+    "years": "1871-1918"
+   },
+   {
+    "n": 105,
+    "type": "death",
+    "years": "1878-1918"
    }
   ]
  },
@@ -2977,13 +3109,25 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1877-1921"
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
    {
     "n": 75,
     "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 106,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 107,
+    "type": "death",
     "years": "1877-1921"
    }
   ]
@@ -3020,7 +3164,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1865-1921"
+   "birth": "1865-1921",
+   "marriage": "1877-1921",
+   "death": "1870-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -3028,6 +3174,16 @@
     "n": 76,
     "type": "birth",
     "years": "1865-1921"
+   },
+   {
+    "n": 108,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 109,
+    "type": "death",
+    "years": "1870-1921"
    }
   ]
  },
@@ -3046,8 +3202,8 @@
   "lon": 44.857,
   "preserved": "no",
   "active": "no",
-  "recordYears": "1877-1921",
-  "startYear": 1877,
+  "recordYears": "1870-1921",
+  "startYear": 1870,
   "endYear": 1921,
   "missingYears": "",
   "note": {
@@ -3063,7 +3219,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1877-1921"
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1870-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -3071,6 +3229,16 @@
     "n": 77,
     "type": "birth",
     "years": "1877-1921"
+   },
+   {
+    "n": 110,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 111,
+    "type": "death",
+    "years": "1870-1921"
    }
   ]
  },
@@ -3106,13 +3274,25 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1870-1922"
+   "birth": "1870-1922",
+   "marriage": "1877-1922",
+   "death": "1870-1922"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
    {
     "n": 78,
     "type": "birth",
+    "years": "1870-1922"
+   },
+   {
+    "n": 112,
+    "type": "marriage",
+    "years": "1877-1922"
+   },
+   {
+    "n": 113,
+    "type": "death",
     "years": "1870-1922"
    }
   ]
@@ -3149,13 +3329,25 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1877-1921"
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
    {
     "n": 79,
     "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 114,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 115,
+    "type": "death",
     "years": "1877-1921"
    }
   ]
@@ -3192,7 +3384,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1864-1920"
+   "birth": "1864-1920",
+   "marriage": "1877-1920",
+   "death": "1873-1920"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -3200,6 +3394,16 @@
     "n": 80,
     "type": "birth",
     "years": "1864-1920"
+   },
+   {
+    "n": 116,
+    "type": "marriage",
+    "years": "1877-1920"
+   },
+   {
+    "n": 117,
+    "type": "death",
+    "years": "1873-1920"
    }
   ]
  },
@@ -3235,7 +3439,9 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1849-1921"
+   "birth": "1849-1921",
+   "marriage": "1861-1921",
+   "death": "1861-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
@@ -3243,6 +3449,16 @@
     "n": 81,
     "type": "birth",
     "years": "1849-1921"
+   },
+   {
+    "n": 120,
+    "type": "marriage",
+    "years": "1861-1921"
+   },
+   {
+    "n": 121,
+    "type": "death",
+    "years": "1861-1921"
    }
   ]
  },
@@ -3278,13 +3494,25 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1877-1921"
+   "birth": "1877-1921",
+   "marriage": "1877-1921",
+   "death": "1877-1921"
   },
   "archiveUrl": "https://archival-services.gov.ge/saeklesio/regions/location/55",
   "archiveRows": [
    {
     "n": 82,
     "type": "birth",
+    "years": "1877-1921"
+   },
+   {
+    "n": 122,
+    "type": "marriage",
+    "years": "1877-1921"
+   },
+   {
+    "n": 123,
+    "type": "death",
     "years": "1877-1921"
    }
   ]
@@ -3376,7 +3604,7 @@
   },
   "inArchive": true,
   "recordsByType": {
-   "birth": "1861-1921",
+   "birth": "1877-1921",
    "marriage": "1861-1921",
    "death": "1877-1920"
   },
