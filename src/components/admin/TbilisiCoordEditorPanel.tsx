@@ -57,7 +57,13 @@ export function TbilisiCoordEditorPanel() {
   const [savedId, setSavedId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "not_high" | "low_only">("not_high");
-  const [showAllYears, setShowAllYears] = useState(false);
+  const [showAllYears, setShowAllYears] = useState(() => {
+    try {
+      return localStorage.getItem("tbilisi-admin-showAllYears") === "true";
+    } catch {
+      return false;
+    }
+  });
   const [query, setQuery] = useState("");
   const [searchLang, setSearchLang] = useState<"ru" | "en">("ru");
   const [suggestOpen, setSuggestOpen] = useState(false);
