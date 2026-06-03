@@ -76,6 +76,13 @@ export function TbilisiCoordEditorPanel() {
     selectedIdRef.current = selectedId;
   }, [selectedId]);
 
+  // Persist year filter toggle across reloads / tabs
+  useEffect(() => {
+    try {
+      localStorage.setItem("tbilisi-admin-showAllYears", String(showAllYears));
+    } catch {}
+  }, [showAllYears]);
+
   // Load churches once
   useEffect(() => {
     fetchTbilisiChurches().then(setRows);
