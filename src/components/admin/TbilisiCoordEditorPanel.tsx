@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Download, Loader2, Search, Check, X, Undo2, AlertTriangle } from "lucide-react";
 
+/** В админке показываем только реально привязанные подложки. */
+const AVAILABLE_MAPS = HISTORICAL_MAPS.filter((m) => m.config?.kind === "tiles");
+
 interface PendingMove {
   churchId: number;
   oldLat: number;
