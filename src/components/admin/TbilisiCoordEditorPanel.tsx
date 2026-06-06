@@ -48,23 +48,27 @@ export function TbilisiCoordEditorPanel() {
   const [mapReady, setMapReady] = useState(false);
   const [styleVersion, setStyleVersion] = useState(0);
   const [mapError, setMapError] = useState<string | null>(null);
-  const [histOn, setHistOn] = useState(true);
   const [histOpacity, setHistOpacity] = useState(75);
   const [districtsOn, setDistrictsOn] = useState(true);
-  const [mapId, setMapId] = useState<string>("1898");
+  /** "none" = без подложки; иначе id одной из AVAILABLE_MAPS. */
+  const [mapId, setMapId] = useState<string>(() => AVAILABLE_MAPS[0]?.id ?? "none");
+  const histOn = mapId !== "none";
   const selectedMap: HistoricalMapEntry | undefined = useMemo(
-    () => HISTORICAL_MAPS.find((m) => m.id === mapId),
+    () => AVAILABLE_MAPS.find((m) => m.id === mapId),
     [mapId],
   );
   const [savingId, setSavingId] = useState<number | null>(null);
   const [savedId, setSavedId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"all" | "not_high" | "low_only">("not_high");
+  const [filter, setFilter] = useState<"all" | "not_high" | "low_only">("all");
   const [showAllYears, setShowAllYears] = useState(() => {
     try {
-      return localStorage.getItem("tbilisi-admin-showAllYears") === "true";
+      const v = localStorage.getItem("tbilisi-admin-showAllYears");
+      // По умолчанию показываем ВСЕ годы — иначе при первом открытии многие
+      // церкви с записями после года карты не видны и кажется, что точки пропали.
+      return v === null ? true : v === "true";
     } catch {
-      return false;
+      return true;
     }
   });
   const [query, setQuery] = useState("");
