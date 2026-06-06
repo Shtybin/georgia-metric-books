@@ -572,35 +572,24 @@ export function TbilisiCoordEditorPanel() {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-4">
-      <div className="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3 text-xs">
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-border bg-card p-3 text-xs">
         <label className="flex items-center gap-2" title={selectedMap?.notes ?? ""}>
-          <input
-            type="checkbox"
-            checked={histOn}
-            onChange={(e) => setHistOn(e.target.checked)}
-            disabled={!selectedMap?.config}
-          />
-          Старая карта:
+          <span className="text-muted-foreground">Подложка:</span>
           <select
             value={mapId}
             onChange={(e) => setMapId(e.target.value)}
             className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            {HISTORICAL_MAPS.map((m) => (
-              <option key={m.id} value={m.id} disabled={!m.config}>
+            <option value="none">Без подложки</option>
+            {AVAILABLE_MAPS.map((m) => (
+              <option key={m.id} value={m.id}>
                 {m.title}
-                {!m.config ? " — нет данных" : ""}
               </option>
             ))}
           </select>
         </label>
-        {!selectedMap?.config && (
-          <span className="text-[11px] text-amber-600 dark:text-amber-400">
-            Заготовка без растра — заполните HISTORICAL_MAPS в src/lib/tbilisi-historical.ts.
-          </span>
-        )}
         <label className="flex items-center gap-2">
-          Прозрачность
+          <span className="text-muted-foreground">Прозрачность</span>
           <Slider
             value={[histOpacity]}
             min={0}
@@ -608,7 +597,7 @@ export function TbilisiCoordEditorPanel() {
             step={1}
             onValueChange={([v]) => setHistOpacity(v)}
             className="w-32"
-            disabled={!selectedMap?.config || !histOn}
+            disabled={!histOn}
           />
           <span className="tabular-nums text-muted-foreground">{histOpacity}%</span>
         </label>
@@ -621,47 +610,55 @@ export function TbilisiCoordEditorPanel() {
           />
           Полицейские участки
         </label>
-        <div className="ml-auto flex items-center gap-2">
-          <span className="text-muted-foreground">Показ:</span>
-          {([
-            ["not_high", "Кроме high"],
-            ["low_only", "Только low"],
-            ["all", "Все"],
-          ] as const).map(([k, label]) => (
+
+        <div className="ml-auto flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-1">
+            <span className="text-muted-foreground">Точки:</span>
+            {([
+              ["all", "Все", "Показывать все церкви"],
+              ["not_high", "Кроме high", "Скрыть точки с высокой точностью (high)"],
+              ["low_only", "Только low", "Только точки с низкой точностью"],
+            ] as const).map(([k, label, title]) => (
+              <button
+                key={k}
+                title={title}
+                onClick={() => setFilter(k)}
+                className={
+                  "rounded-md px-2 py-1 transition-colors " +
+                  (filter === k
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-accent")
+                }
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-muted-foreground">Период:</span>
             <button
-              key={k}
-              onClick={() => setFilter(k)}
+              onClick={() => setShowAllYears((v) => !v)}
+              title={
+                showAllYears
+                  ? "Сейчас показаны все церкви, в т.ч. с записями позже года выбранной карты — нажмите, чтобы фильтровать"
+                  : `Скрыты церкви с записями позже ${selectedMap?.year ?? "года карты"} — нажмите, чтобы показать все`
+              }
               className={
                 "rounded-md px-2 py-1 transition-colors " +
-                (filter === k
+                (showAllYears
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground hover:bg-accent")
               }
             >
-              {label}
+              {showAllYears ? "Все годы" : `≤ ${selectedMap?.year ?? "года карты"}`}
             </button>
-          ))}
-          <button
-            onClick={() => setShowAllYears((v) => !v)}
-            title={
-              showAllYears
-                ? "Сейчас показаны все церкви, в т.ч. с записями позже года выбранной карты"
-                : `Скрыты церкви с записями позже ${selectedMap?.year ?? "года карты"} — нажмите, чтобы показать все`
-            }
-            className={
-              "rounded-md px-2 py-1 transition-colors " +
-              (showAllYears
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-accent")
-            }
-          >
-            {showAllYears ? "Все годы" : `По году карты${selectedMap?.year ? ` (≤${selectedMap.year})` : ""}`}
-          </button>
+          </div>
           <Button size="sm" variant="outline" onClick={exportJson}>
             <Download className="mr-1 h-3.5 w-3.5" /> Экспорт JSON
           </Button>
         </div>
       </div>
+
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_320px]">
         <div className="relative h-[70vh] min-h-[480px] overflow-hidden rounded-xl border border-border bg-muted">
