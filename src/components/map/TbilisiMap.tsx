@@ -191,9 +191,9 @@ export function TbilisiMap({
       // исторической карты (например, для слоя 1898 г. — все startYear > 1898).
       if (
         historicalOn &&
-        ACTIVE_HISTORICAL_YEAR != null &&
+        activeHistYear != null &&
         r.startYear != null &&
-        r.startYear > ACTIVE_HISTORICAL_YEAR
+        r.startYear > activeHistYear
       )
         return false;
       if (onlyPreserved && r.preserved !== "yes") return false;
