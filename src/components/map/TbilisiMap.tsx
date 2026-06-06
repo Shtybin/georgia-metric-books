@@ -152,6 +152,8 @@ export function TbilisiMap({
   const [onlyActive, setOnlyActive] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+  /** Раскрыта ли панель «Историческая карта» на мобильном/планшете. */
+  const [histPanelOpen, setHistPanelOpen] = useState(false);
   const [districts, setDistricts] = useState<DistrictsFC | null>(null);
   const T = tT(lang);
   const Tcore = tCore(lang);
