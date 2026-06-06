@@ -723,7 +723,7 @@ export function TbilisiMap({
             <MapAuthorBadge lang={lang} inline />
             <DonateButton lang={lang} variant="inline" />
           </div>
-          {TBILISI_1898 && (
+          {hasAnyHistMap && (
             <button
               onClick={() =>
                 onHistoricalChange?.(!historicalOn, historicalOpacity, districtsOn)
