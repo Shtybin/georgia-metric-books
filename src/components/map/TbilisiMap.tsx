@@ -660,9 +660,13 @@ export function TbilisiMap({
               {TILE_MAPS.length > 1 && (
                 <select
                   value={historicalMapId}
-                  onChange={(e) => onHistoricalMapChange?.(e.target.value)}
-                  disabled={!historicalOn}
-                  className="mt-1.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs disabled:opacity-50"
+                  onChange={(e) => {
+                    onHistoricalMapChange?.(e.target.value);
+                    if (!historicalOn) {
+                      onHistoricalChange?.(true, historicalOpacity, districtsOn);
+                    }
+                  }}
+                  className="mt-1.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
                 >
                   {TILE_MAPS.map((m) => (
                     <option key={m.id} value={m.id}>
