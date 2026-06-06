@@ -206,7 +206,7 @@ export const TBILISI_STRINGS = {
     cityZoomCta: "Open the Tbilisi churches map",
     historical: {
       title: "Old maps",
-      toggle: "1898 map",
+      toggle: "Old maps",
       opacity: "Opacity",
       districts: "District borders",
       districtField: "District (1898)",
