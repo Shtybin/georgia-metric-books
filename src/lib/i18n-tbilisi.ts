@@ -124,7 +124,7 @@ export const TBILISI_STRINGS = {
     cityZoomCta: "Открыть карту церквей Тбилиси",
     historical: {
       title: "Старые карты",
-      toggle: "Карта 1898 г.",
+      toggle: "Старые карты",
       opacity: "Прозрачность",
       districts: "Границы участков",
       districtField: "Участок (1898)",
