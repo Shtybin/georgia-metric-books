@@ -653,7 +653,7 @@ export function TbilisiMap({
           раскрывается панель ровно над кнопкой.
           Выбор «Без старой карты» полностью выключает растровый слой. */}
       {(hasAnyHistMap || districts) && (
-        <div className="pointer-events-none absolute bottom-3 left-3 z-30 sm:bottom-4 sm:left-4">
+        <div className="pointer-events-none absolute bottom-14 left-3 z-30 sm:bottom-4 sm:left-4">
           {/* Кнопка-триггер: видна на <lg; на lg+ скрыта (панель всегда раскрыта). */}
           <button
             type="button"
