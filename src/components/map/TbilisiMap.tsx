@@ -53,8 +53,11 @@ interface Props {
   historicalOn?: boolean;
   historicalOpacity?: number;
   districtsOn?: boolean;
+  historicalMapId?: string;
   onHistoricalChange?: (h: boolean, o: number, d: boolean) => void;
+  onHistoricalMapChange?: (id: string) => void;
 }
+
 
 type ChurchFeatureCollection = GeoJSON.FeatureCollection<
   GeoJSON.Point,
