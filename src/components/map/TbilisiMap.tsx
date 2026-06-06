@@ -23,12 +23,15 @@ import {
   type District1898Properties,
   type HistoricalConfig,
 } from "@/lib/tbilisi-historical";
+import type { Lang } from "@/lib/i18n";
 
 /** Доступные исторические подложки (только с привязанными тайлами). */
 const TILE_MAPS = HISTORICAL_MAPS.filter(
   (m): m is typeof m & { config: Extract<HistoricalConfig, { kind: "tiles" }> } =>
     !!m.config && m.config.kind === "tiles",
 );
+const DEFAULT_HIST_ID = TILE_MAPS[0]?.id ?? "1898";
+
 
 import { localizeAddress, localizeDistrict } from "@/lib/tbilisi-locations";
 import { Button } from "@/components/ui/button";
