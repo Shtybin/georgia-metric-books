@@ -919,7 +919,7 @@ export function TbilisiMap({
             <DialogDescription asChild>
               <div
                 className="prose prose-sm dark:prose-invert"
-                dangerouslySetInnerHTML={{ __html: Tcore.docsBodyHtml }}
+                dangerouslySetInnerHTML={{ __html: T.archiveBodyHtml }}
               />
             </DialogDescription>
           </DialogHeader>
