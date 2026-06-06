@@ -125,8 +125,17 @@ export function TbilisiMap({
   historicalOn = false,
   historicalOpacity = 60,
   districtsOn = true,
+  historicalMapId = DEFAULT_HIST_ID,
   onHistoricalChange,
+  onHistoricalMapChange,
 }: Props) {
+  const activeHistMap = useMemo(
+    () => TILE_MAPS.find((m) => m.id === historicalMapId) ?? TILE_MAPS[0] ?? null,
+    [historicalMapId],
+  );
+  const activeHistYear: number | null = activeHistMap?.year ?? null;
+  const hasAnyHistMap = TILE_MAPS.length > 0;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
