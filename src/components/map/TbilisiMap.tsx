@@ -779,24 +779,8 @@ export function TbilisiMap({
             <MapAuthorBadge lang={lang} inline />
             <DonateButton lang={lang} variant="inline" />
           </div>
-          {hasAnyHistMap && (
-            <button
-              onClick={() =>
-                onHistoricalChange?.(!historicalOn, historicalOpacity, districtsOn)
-              }
-              aria-pressed={historicalOn}
-              className={
-                "pointer-events-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur transition-colors " +
-                (historicalOn
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-card/95 text-foreground hover:bg-accent")
-              }
-              title={T.historical.toggle}
-            >
-              <Layers className="h-3.5 w-3.5" />
-              {T.historical.toggle}
-            </button>
-          )}
+          {/* Кнопка переключения исторической карты теперь живёт в левом
+              нижнем углу как пилюля «Слои» (см. блок выше). */}
         </div>
         {/* Tablet/desktop: centered docs button (full label). */}
         <button
