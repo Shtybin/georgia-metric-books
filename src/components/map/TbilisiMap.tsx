@@ -915,7 +915,7 @@ export function TbilisiMap({
       <Dialog open={docsOpen} onOpenChange={setDocsOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>{Tcore.docsTitle}</DialogTitle>
+            <DialogTitle>{T.archiveButton}</DialogTitle>
             <DialogDescription asChild>
               <div
                 className="prose prose-sm dark:prose-invert"

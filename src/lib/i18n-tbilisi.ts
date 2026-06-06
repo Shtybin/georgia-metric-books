@@ -119,6 +119,8 @@ export const TBILISI_STRINGS = {
     } as Partial<Record<Confidence, string>>,
     archiveButton: "Где искать оригиналы метрических книг?",
     archiveButtonShort: "Документы",
+    archiveBodyHtml:
+      'Метрические книги Грузии находятся в Национальном историческом архиве Грузии (фонд 489, опись 6). Списки метрических книг — на сайте <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">архива</a>. Как начать работу с архивом — читайте на <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">сайте</a>.<br/><br/>На вкладке <b>«Тбилиси»</b> под карточкой каждой церкви есть прямая ссылка на запись о её метрической книге на сайте Национального исторического архива Грузии с № этой записи в каталоге — можно сразу перейти к описанию дела.',
     reportButton: "Сообщить о проблеме",
     legendTitle: "Легенда: конфессии",
     cityZoomCta: "Открыть карту церквей Тбилиси",
@@ -201,6 +203,8 @@ export const TBILISI_STRINGS = {
     } as Partial<Record<Confidence, string>>,
     archiveButton: "Where to find the original parish registers?",
     archiveButtonShort: "Documents",
+    archiveBodyHtml:
+      'The parish registers of Georgia are kept at the National Historical Archive of Georgia (fund 489, inventory 6). A catalogue of the registers is available on the <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">archive</a> website. To learn how to start working with the archive, see the <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">website</a>.<br/><br/>On the <b>Tbilisi</b> tab, every church card includes a direct link to its parish-register record on the National Historical Archive of Georgia website, with the record number in the catalogue — so you can jump straight to the file description.',
     reportButton: "Report a problem",
     legendTitle: "Legend: confessions",
     cityZoomCta: "Open the Tbilisi churches map",
@@ -283,6 +287,8 @@ export const TBILISI_STRINGS = {
     } as Partial<Record<Confidence, string>>,
     archiveButton: "სად ვიპოვო მეტრიკული წიგნების ორიგინალები?",
     archiveButtonShort: "დოკუმენტები",
+    archiveBodyHtml:
+      'საქართველოს მეტრიკული წიგნები ინახება საქართველოს ეროვნულ ისტორიულ არქივში (ფონდი 489, აღწერა 6). მეტრიკული წიგნების სია — <a href="https://archival-services.gov.ge/saeklesio/" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">არქივის</a> საიტზე. როგორ დავიწყოთ მუშაობა არქივში — იხილეთ <a href="https://archive.gov.ge/en/mkvlevarta-darbazi" target="_blank" rel="noopener noreferrer" class="underline text-primary hover:opacity-80">საიტზე</a>.<br/><br/>ჩანართზე <b>„თბილისი"</b> ყოველი ეკლესიის ბარათში არის პირდაპირი ბმული მისი მეტრიკული წიგნის ჩანაწერზე საქართველოს ეროვნული ისტორიული არქივის საიტზე — ჩანაწერის ნომრით კატალოგში, რათა პირდაპირ გადახვიდეთ საქმის აღწერაზე.',
     reportButton: "პრობლემის შეტყობინება",
     legendTitle: "ლეგენდა: კონფესიები",
     cityZoomCta: "თბილისის ეკლესიების რუკის გახსნა",
