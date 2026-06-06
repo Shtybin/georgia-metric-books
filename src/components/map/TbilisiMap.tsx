@@ -204,7 +204,7 @@ export function TbilisiMap({
       }
       return true;
     });
-  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query, historicalOn]);
+  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query, historicalOn, activeHistYear]);
 
   useEffect(() => {
     rowsRef.current = rows;
