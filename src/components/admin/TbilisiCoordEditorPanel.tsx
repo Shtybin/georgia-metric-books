@@ -142,6 +142,10 @@ export function TbilisiCoordEditorPanel() {
 
       let styleFailed = false;
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
+      requestAnimationFrame(() => {
+        el.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show")
+          .forEach((node) => node.classList.remove("maplibregl-compact-show"));
+      });
 
       map.on("error", (e) => {
         const err = e?.error as (Error & { status?: number }) | undefined;
