@@ -358,18 +358,26 @@ export function TbilisiMap({
     if (src) src.setData(districts as unknown as GeoJSON.FeatureCollection);
   }, [districts, mapReady]);
 
-  // Historical raster: visibility + opacity reactive to props
+  // Historical raster: visibility + opacity reactive to props.
+  // Активным может быть только один слой; остальные скрываются.
   useEffect(() => {
     if (!mapReady) return;
     const map = mapRef.current;
-    if (!map || !map.getLayer("hist-1898")) return;
-    map.setLayoutProperty("hist-1898", "visibility", historicalOn ? "visible" : "none");
-    map.setPaintProperty(
-      "hist-1898",
-      "raster-opacity",
-      Math.max(0, Math.min(1, historicalOpacity / 100)),
-    );
-  }, [historicalOn, historicalOpacity, mapReady]);
+    if (!map) return;
+    for (const m of TILE_MAPS) {
+      const id = `hist-${m.id}`;
+      if (!map.getLayer(id)) continue;
+      const isActive = historicalOn && m.id === historicalMapId;
+      map.setLayoutProperty(id, "visibility", isActive ? "visible" : "none");
+      if (isActive) {
+        map.setPaintProperty(
+          id,
+          "raster-opacity",
+          Math.max(0, Math.min(1, historicalOpacity / 100)),
+        );
+      }
+    }
+  }, [historicalOn, historicalOpacity, historicalMapId, mapReady]);
 
   // District polygons: visibility reactive
   useEffect(() => {
