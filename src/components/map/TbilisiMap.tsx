@@ -152,6 +152,8 @@ export function TbilisiMap({
   const [onlyActive, setOnlyActive] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+  /** Раскрыта ли панель «Историческая карта» на мобильном/планшете. */
+  const [histPanelOpen, setHistPanelOpen] = useState(false);
   const [districts, setDistricts] = useState<DistrictsFC | null>(null);
   const T = tT(lang);
   const Tcore = tCore(lang);
@@ -225,6 +227,14 @@ export function TbilisiMap({
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     attachBasemapFallback(map);
+    // По умолчанию MapLibre в compact-режиме раскрывает атрибуцию. Сворачиваем,
+    // чтобы она не висела поверх кнопок управления; пользователь раскроет по «i».
+    requestAnimationFrame(() => {
+      containerRef.current
+        ?.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show")
+        .forEach((el) => el.classList.remove("maplibregl-compact-show"));
+    });
+
     map.on("load", () => {
       // Регистрируем все доступные исторические подложки сразу.
       // Видимостью и opacity управляет реактивный effect ниже.
@@ -637,78 +647,120 @@ export function TbilisiMap({
       </div>
 
 
-      {/* Historical 1898 controls — desktop/tablet only. On mobile the toggle
-          collapses into a single pill in the bottom action row. */}
+      {/* Историческая подложка.
+          Desktop (lg+): панель закреплена в левом нижнем углу.
+          Tablet (sm…lg) и Mobile (<sm): компактная пилюля «Слои», по тапу
+          раскрывается панель ровно над кнопкой.
+          Выбор «Без старой карты» полностью выключает растровый слой. */}
       {(hasAnyHistMap || districts) && (
-        <div className="pointer-events-auto absolute right-3 z-20 hidden w-[16rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur sm:block sm:right-4 bottom-24 lg:bottom-4">
-          <div className="mb-1.5 flex items-center gap-1.5">
-            <Layers className="h-3.5 w-3.5 text-muted-foreground" />
-            <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
-          </div>
-          {hasAnyHistMap && (
-            <>
-              <label className="flex cursor-pointer items-center gap-2 text-xs">
-                <input
-                  type="checkbox"
-                  checked={historicalOn}
-                  onChange={(e) =>
-                    onHistoricalChange?.(e.target.checked, historicalOpacity, districtsOn)
-                  }
-                />
-                {T.historical.toggle}
-              </label>
-              {TILE_MAPS.length > 1 && (
+        <div className="pointer-events-none absolute bottom-3 left-3 z-30 sm:bottom-4 sm:left-4">
+          {/* Кнопка-триггер: видна на <lg; на lg+ скрыта (панель всегда раскрыта). */}
+          <button
+            type="button"
+            onClick={() => setHistPanelOpen((v) => !v)}
+            aria-expanded={histPanelOpen}
+            aria-pressed={historicalOn}
+            className={
+              "pointer-events-auto inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur transition-colors lg:hidden " +
+              (historicalOn
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-card/95 text-foreground hover:bg-accent")
+            }
+            title={T.historical.title}
+          >
+            <Layers className="h-3.5 w-3.5" />
+            <span>
+              {historicalOn && activeHistMap
+                ? `${activeHistMap.year ?? activeHistMap.title}`
+                : T.historical.toggle}
+            </span>
+          </button>
+
+          {/* Сама панель — на lg+ всегда видна, на <lg — только при histPanelOpen. */}
+          <div
+            className={
+              "pointer-events-auto mb-2 w-[16rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur lg:mb-0 lg:block " +
+              (histPanelOpen ? "block" : "hidden")
+            }
+            style={{ position: "absolute", bottom: "100%", left: 0 }}
+          >
+            <div className="mb-1.5 flex items-center justify-between gap-1.5">
+              <div className="flex items-center gap-1.5">
+                <Layers className="h-3.5 w-3.5 text-muted-foreground" />
+                <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setHistPanelOpen(false)}
+                className="rounded p-0.5 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
+                aria-label="Закрыть"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {hasAnyHistMap && (
+              <>
+                <label className="block text-[11px] text-muted-foreground">Подложка</label>
                 <select
-                  value={historicalMapId}
+                  value={historicalOn ? historicalMapId : "none"}
                   onChange={(e) => {
-                    onHistoricalMapChange?.(e.target.value);
-                    if (!historicalOn) {
+                    const v = e.target.value;
+                    if (v === "none") {
+                      onHistoricalChange?.(false, historicalOpacity, districtsOn);
+                    } else {
+                      onHistoricalMapChange?.(v);
                       onHistoricalChange?.(true, historicalOpacity, districtsOn);
                     }
                   }}
-                  className="mt-1.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
                 >
+                  <option value="none">Без старой карты</option>
                   {TILE_MAPS.map((m) => (
                     <option key={m.id} value={m.id}>
                       {m.title}
                     </option>
                   ))}
                 </select>
-              )}
-              {historicalOn && (
-                <div className="mt-1.5">
-                  <label className="flex items-center justify-between text-[11px] text-muted-foreground">
-                    <span>{T.historical.opacity}</span>
-                    <span>{historicalOpacity}%</span>
-                  </label>
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={historicalOpacity}
-                    onChange={(e) =>
-                      onHistoricalChange?.(historicalOn, Number(e.target.value), districtsOn)
-                    }
-                    className="w-full"
-                  />
-                </div>
-              )}
-            </>
-          )}
-          {districts && (
-            <label className="mt-1.5 flex cursor-pointer items-center gap-2 text-xs">
-              <input
-                type="checkbox"
-                checked={districtsOn}
-                onChange={(e) =>
-                  onHistoricalChange?.(historicalOn, historicalOpacity, e.target.checked)
-                }
-              />
-              {T.historical.districts}
-            </label>
-          )}
+
+                {historicalOn && (
+                  <div className="mt-2">
+                    <label className="flex items-center justify-between text-[11px] text-muted-foreground">
+                      <span>{T.historical.opacity}</span>
+                      <span>{historicalOpacity}%</span>
+                    </label>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={historicalOpacity}
+                      onChange={(e) =>
+                        onHistoricalChange?.(historicalOn, Number(e.target.value), districtsOn)
+                      }
+                      className="w-full"
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+            {districts && (
+              <label className="mt-2 flex cursor-pointer items-center gap-2 text-xs">
+                <input
+                  type="checkbox"
+                  checked={districtsOn}
+                  onChange={(e) =>
+                    onHistoricalChange?.(historicalOn, historicalOpacity, e.target.checked)
+                  }
+                />
+                {T.historical.districts}
+              </label>
+            )}
+          </div>
         </div>
       )}
+
+
 
       {/* Bottom action bar.
           Mobile (<sm): single row at bottom — docs + author (©year) + 1898 toggle.
@@ -727,24 +779,8 @@ export function TbilisiMap({
             <MapAuthorBadge lang={lang} inline />
             <DonateButton lang={lang} variant="inline" />
           </div>
-          {hasAnyHistMap && (
-            <button
-              onClick={() =>
-                onHistoricalChange?.(!historicalOn, historicalOpacity, districtsOn)
-              }
-              aria-pressed={historicalOn}
-              className={
-                "pointer-events-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur transition-colors " +
-                (historicalOn
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-card/95 text-foreground hover:bg-accent")
-              }
-              title={T.historical.toggle}
-            >
-              <Layers className="h-3.5 w-3.5" />
-              {T.historical.toggle}
-            </button>
-          )}
+          {/* Кнопка переключения исторической карты теперь живёт в левом
+              нижнем углу как пилюля «Слои» (см. блок выше). */}
         </div>
         {/* Tablet/desktop: centered docs button (full label). */}
         <button
