@@ -639,13 +639,13 @@ export function TbilisiMap({
 
       {/* Historical 1898 controls — desktop/tablet only. On mobile the toggle
           collapses into a single pill in the bottom action row. */}
-      {(TBILISI_1898 || districts) && (
+      {(hasAnyHistMap || districts) && (
         <div className="pointer-events-auto absolute right-3 z-20 hidden w-[16rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur sm:block sm:right-4 bottom-24 lg:bottom-4">
           <div className="mb-1.5 flex items-center gap-1.5">
             <Layers className="h-3.5 w-3.5 text-muted-foreground" />
             <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
           </div>
-          {TBILISI_1898 && (
+          {hasAnyHistMap && (
             <>
               <label className="flex cursor-pointer items-center gap-2 text-xs">
                 <input
@@ -657,6 +657,20 @@ export function TbilisiMap({
                 />
                 {T.historical.toggle}
               </label>
+              {TILE_MAPS.length > 1 && (
+                <select
+                  value={historicalMapId}
+                  onChange={(e) => onHistoricalMapChange?.(e.target.value)}
+                  disabled={!historicalOn}
+                  className="mt-1.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs disabled:opacity-50"
+                >
+                  {TILE_MAPS.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.title}
+                    </option>
+                  ))}
+                </select>
+              )}
               {historicalOn && (
                 <div className="mt-1.5">
                   <label className="flex items-center justify-between text-[11px] text-muted-foreground">
