@@ -13,6 +13,8 @@ const searchSchema = z.object({
   o: fallback(z.coerce.number().int().min(0).max(100), 60).default(60),
   /** districts polygons on/off */
   d: fallback(z.coerce.number().int().min(0).max(1), 1).default(1),
+  /** id выбранной исторической карты (см. HISTORICAL_MAPS) */
+  hm: fallback(z.string().min(1).max(32), "1898").default("1898"),
 });
 
 export const Route = createFileRoute("/tbilisi")({
@@ -50,6 +52,7 @@ function TbilisiPage() {
         historicalOn={search.h === 1}
         historicalOpacity={search.o}
         districtsOn={search.d === 1}
+        historicalMapId={search.hm}
         onHistoricalChange={(h, o, d) =>
           navigate({
             search: (p: any) => ({
@@ -60,6 +63,9 @@ function TbilisiPage() {
             }),
             replace: true,
           })
+        }
+        onHistoricalMapChange={(hm) =>
+          navigate({ search: (p: any) => ({ ...p, hm }), replace: true })
         }
       />
     </main>

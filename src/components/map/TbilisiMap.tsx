@@ -18,21 +18,21 @@ import {
   type Confession,
 } from "@/lib/i18n-tbilisi";
 import {
-  TBILISI_1898,
   DISTRICTS_1898_URL,
   HISTORICAL_MAPS,
   type District1898Properties,
+  type HistoricalConfig,
 } from "@/lib/tbilisi-historical";
 import type { Lang } from "@/lib/i18n";
 
-/**
- * Год активной исторической подложки. Когда подложка включена,
- * церкви с startYear > этого года скрываются с карты — их физически
- * не существовало на момент создания карты. Для других подложек
- * берём `year` из соответствующей записи HISTORICAL_MAPS.
- */
-const ACTIVE_HISTORICAL_YEAR: number | null =
-  HISTORICAL_MAPS.find((m) => m.id === "1898")?.year ?? null;
+/** Доступные исторические подложки (только с привязанными тайлами). */
+const TILE_MAPS = HISTORICAL_MAPS.filter(
+  (m): m is typeof m & { config: Extract<HistoricalConfig, { kind: "tiles" }> } =>
+    !!m.config && m.config.kind === "tiles",
+);
+const DEFAULT_HIST_ID = TILE_MAPS[0]?.id ?? "1898";
+
+
 import { localizeAddress, localizeDistrict } from "@/lib/tbilisi-locations";
 import { Button } from "@/components/ui/button";
 import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
@@ -53,8 +53,11 @@ interface Props {
   historicalOn?: boolean;
   historicalOpacity?: number;
   districtsOn?: boolean;
+  historicalMapId?: string;
   onHistoricalChange?: (h: boolean, o: number, d: boolean) => void;
+  onHistoricalMapChange?: (id: string) => void;
 }
+
 
 type ChurchFeatureCollection = GeoJSON.FeatureCollection<
   GeoJSON.Point,
@@ -122,8 +125,17 @@ export function TbilisiMap({
   historicalOn = false,
   historicalOpacity = 60,
   districtsOn = true,
+  historicalMapId = DEFAULT_HIST_ID,
   onHistoricalChange,
+  onHistoricalMapChange,
 }: Props) {
+  const activeHistMap = useMemo(
+    () => TILE_MAPS.find((m) => m.id === historicalMapId) ?? TILE_MAPS[0] ?? null,
+    [historicalMapId],
+  );
+  const activeHistYear: number | null = activeHistMap?.year ?? null;
+  const hasAnyHistMap = TILE_MAPS.length > 0;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
@@ -179,9 +191,9 @@ export function TbilisiMap({
       // исторической карты (например, для слоя 1898 г. — все startYear > 1898).
       if (
         historicalOn &&
-        ACTIVE_HISTORICAL_YEAR != null &&
+        activeHistYear != null &&
         r.startYear != null &&
-        r.startYear > ACTIVE_HISTORICAL_YEAR
+        r.startYear > activeHistYear
       )
         return false;
       if (onlyPreserved && r.preserved !== "yes") return false;
@@ -192,7 +204,7 @@ export function TbilisiMap({
       }
       return true;
     });
-  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query, historicalOn]);
+  }, [rows, enabled, yearMin, yearMax, onlyPreserved, onlyActive, query, historicalOn, activeHistYear]);
 
   useEffect(() => {
     rowsRef.current = rows;
@@ -214,29 +226,25 @@ export function TbilisiMap({
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     attachBasemapFallback(map);
     map.on("load", () => {
-      // Historical 1898 raster (below everything else but the basemap)
-      if (TBILISI_1898) {
-        if (TBILISI_1898.kind === "tiles") {
-          map.addSource("hist-1898", {
-            type: "raster",
-            tiles: [TBILISI_1898.tiles],
-            tileSize: 256,
-            minzoom: TBILISI_1898.minzoom ?? 10,
-            maxzoom: TBILISI_1898.maxzoom ?? 18,
-            attribution: TBILISI_1898.attribution ?? "Карта Тифлиса, 1898 г.",
-          });
-        } else {
-          map.addSource("hist-1898", {
-            type: "image",
-            url: TBILISI_1898.url,
-            coordinates: TBILISI_1898.coordinates,
-          } as maplibregl.ImageSourceSpecification);
-        }
-        map.addLayer({
-          id: "hist-1898",
+      // Регистрируем все доступные исторические подложки сразу.
+      // Видимостью и opacity управляет реактивный effect ниже.
+      for (const m of TILE_MAPS) {
+        const srcId = `hist-${m.id}`;
+        const cfg = m.config;
+        map.addSource(srcId, {
           type: "raster",
-          source: "hist-1898",
-          layout: { visibility: historicalOn ? "visible" : "none" },
+          tiles: [cfg.tiles],
+          tileSize: 256,
+          minzoom: cfg.minzoom ?? 10,
+          maxzoom: cfg.maxzoom ?? 18,
+          attribution: cfg.attribution ?? `Карта Тифлиса, ${m.year ?? ""} г.`,
+        });
+        const isActive = historicalOn && m.id === historicalMapId;
+        map.addLayer({
+          id: srcId,
+          type: "raster",
+          source: srcId,
+          layout: { visibility: isActive ? "visible" : "none" },
           paint: { "raster-opacity": Math.max(0, Math.min(1, historicalOpacity / 100)) },
         });
       }
@@ -350,18 +358,26 @@ export function TbilisiMap({
     if (src) src.setData(districts as unknown as GeoJSON.FeatureCollection);
   }, [districts, mapReady]);
 
-  // Historical raster: visibility + opacity reactive to props
+  // Historical raster: visibility + opacity reactive to props.
+  // Активным может быть только один слой; остальные скрываются.
   useEffect(() => {
     if (!mapReady) return;
     const map = mapRef.current;
-    if (!map || !map.getLayer("hist-1898")) return;
-    map.setLayoutProperty("hist-1898", "visibility", historicalOn ? "visible" : "none");
-    map.setPaintProperty(
-      "hist-1898",
-      "raster-opacity",
-      Math.max(0, Math.min(1, historicalOpacity / 100)),
-    );
-  }, [historicalOn, historicalOpacity, mapReady]);
+    if (!map) return;
+    for (const m of TILE_MAPS) {
+      const id = `hist-${m.id}`;
+      if (!map.getLayer(id)) continue;
+      const isActive = historicalOn && m.id === historicalMapId;
+      map.setLayoutProperty(id, "visibility", isActive ? "visible" : "none");
+      if (isActive) {
+        map.setPaintProperty(
+          id,
+          "raster-opacity",
+          Math.max(0, Math.min(1, historicalOpacity / 100)),
+        );
+      }
+    }
+  }, [historicalOn, historicalOpacity, historicalMapId, mapReady]);
 
   // District polygons: visibility reactive
   useEffect(() => {
@@ -623,13 +639,13 @@ export function TbilisiMap({
 
       {/* Historical 1898 controls — desktop/tablet only. On mobile the toggle
           collapses into a single pill in the bottom action row. */}
-      {(TBILISI_1898 || districts) && (
+      {(hasAnyHistMap || districts) && (
         <div className="pointer-events-auto absolute right-3 z-20 hidden w-[16rem] rounded-xl border border-border bg-card/95 p-2.5 shadow-xl backdrop-blur sm:block sm:right-4 bottom-24 lg:bottom-4">
           <div className="mb-1.5 flex items-center gap-1.5">
             <Layers className="h-3.5 w-3.5 text-muted-foreground" />
             <h2 className="font-serif text-xs font-semibold">{T.historical.title}</h2>
           </div>
-          {TBILISI_1898 && (
+          {hasAnyHistMap && (
             <>
               <label className="flex cursor-pointer items-center gap-2 text-xs">
                 <input
@@ -641,6 +657,20 @@ export function TbilisiMap({
                 />
                 {T.historical.toggle}
               </label>
+              {TILE_MAPS.length > 1 && (
+                <select
+                  value={historicalMapId}
+                  onChange={(e) => onHistoricalMapChange?.(e.target.value)}
+                  disabled={!historicalOn}
+                  className="mt-1.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs disabled:opacity-50"
+                >
+                  {TILE_MAPS.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.title}
+                    </option>
+                  ))}
+                </select>
+              )}
               {historicalOn && (
                 <div className="mt-1.5">
                   <label className="flex items-center justify-between text-[11px] text-muted-foreground">
@@ -693,7 +723,7 @@ export function TbilisiMap({
             <MapAuthorBadge lang={lang} inline />
             <DonateButton lang={lang} variant="inline" />
           </div>
-          {TBILISI_1898 && (
+          {hasAnyHistMap && (
             <button
               onClick={() =>
                 onHistoricalChange?.(!historicalOn, historicalOpacity, districtsOn)
