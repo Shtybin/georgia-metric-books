@@ -226,29 +226,25 @@ export function TbilisiMap({
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     attachBasemapFallback(map);
     map.on("load", () => {
-      // Historical 1898 raster (below everything else but the basemap)
-      if (TBILISI_1898) {
-        if (TBILISI_1898.kind === "tiles") {
-          map.addSource("hist-1898", {
-            type: "raster",
-            tiles: [TBILISI_1898.tiles],
-            tileSize: 256,
-            minzoom: TBILISI_1898.minzoom ?? 10,
-            maxzoom: TBILISI_1898.maxzoom ?? 18,
-            attribution: TBILISI_1898.attribution ?? "Карта Тифлиса, 1898 г.",
-          });
-        } else {
-          map.addSource("hist-1898", {
-            type: "image",
-            url: TBILISI_1898.url,
-            coordinates: TBILISI_1898.coordinates,
-          } as maplibregl.ImageSourceSpecification);
-        }
-        map.addLayer({
-          id: "hist-1898",
+      // Регистрируем все доступные исторические подложки сразу.
+      // Видимостью и opacity управляет реактивный effect ниже.
+      for (const m of TILE_MAPS) {
+        const srcId = `hist-${m.id}`;
+        const cfg = m.config;
+        map.addSource(srcId, {
           type: "raster",
-          source: "hist-1898",
-          layout: { visibility: historicalOn ? "visible" : "none" },
+          tiles: [cfg.tiles],
+          tileSize: 256,
+          minzoom: cfg.minzoom ?? 10,
+          maxzoom: cfg.maxzoom ?? 18,
+          attribution: cfg.attribution ?? `Карта Тифлиса, ${m.year ?? ""} г.`,
+        });
+        const isActive = historicalOn && m.id === historicalMapId;
+        map.addLayer({
+          id: srcId,
+          type: "raster",
+          source: srcId,
+          layout: { visibility: isActive ? "visible" : "none" },
           paint: { "raster-opacity": Math.max(0, Math.min(1, historicalOpacity / 100)) },
         });
       }
