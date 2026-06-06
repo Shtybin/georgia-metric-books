@@ -653,7 +653,7 @@ export function TbilisiMap({
           раскрывается панель ровно над кнопкой.
           Выбор «Без старой карты» полностью выключает растровый слой. */}
       {(hasAnyHistMap || districts) && (
-        <div className="pointer-events-none absolute bottom-3 left-3 z-30 sm:bottom-4 sm:left-4">
+        <div className="pointer-events-none absolute bottom-14 left-3 z-30 sm:bottom-4 sm:left-4">
           {/* Кнопка-триггер: видна на <lg; на lg+ скрыта (панель всегда раскрыта). */}
           <button
             type="button"
@@ -767,20 +767,16 @@ export function TbilisiMap({
           Tablet/desktop (sm+): docs button centered, author badge below (extra pb so they don't collide). */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-start gap-2 p-3 sm:items-center sm:p-4 sm:pb-16">
         {/* Mobile: compact row, justify-between so docs+author left, 1898 toggle right. */}
-        <div className="flex w-full items-center justify-between gap-1.5 sm:hidden">
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setDocsOpen(true)}
-              className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur hover:bg-accent"
-            >
-              <BookOpen className="h-3.5 w-3.5" />
-              {T.archiveButtonShort}
-            </button>
-            <MapAuthorBadge lang={lang} inline />
-            <DonateButton lang={lang} variant="inline" />
-          </div>
-          {/* Кнопка переключения исторической карты теперь живёт в левом
-              нижнем углу как пилюля «Слои» (см. блок выше). */}
+        <div className="flex w-full flex-wrap items-center gap-1.5 sm:hidden">
+          <button
+            onClick={() => setDocsOpen(true)}
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-2.5 py-1 text-[11px] font-medium shadow-md backdrop-blur hover:bg-accent"
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            {T.archiveButtonShort}
+          </button>
+          <MapAuthorBadge lang={lang} inline />
+          <DonateButton lang={lang} variant="inline" />
         </div>
         {/* Tablet/desktop: centered docs button (full label). */}
         <button

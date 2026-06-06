@@ -124,7 +124,7 @@ export const TBILISI_STRINGS = {
     cityZoomCta: "Открыть карту церквей Тбилиси",
     historical: {
       title: "Старые карты",
-      toggle: "Карта 1898 г.",
+      toggle: "Старые карты",
       opacity: "Прозрачность",
       districts: "Границы участков",
       districtField: "Участок (1898)",
@@ -206,7 +206,7 @@ export const TBILISI_STRINGS = {
     cityZoomCta: "Open the Tbilisi churches map",
     historical: {
       title: "Old maps",
-      toggle: "1898 map",
+      toggle: "Old maps",
       opacity: "Opacity",
       districts: "District borders",
       districtField: "District (1898)",
@@ -288,7 +288,7 @@ export const TBILISI_STRINGS = {
     cityZoomCta: "თბილისის ეკლესიების რუკის გახსნა",
     historical: {
       title: "ძველი რუკები",
-      toggle: "1898 წლის რუკა",
+      toggle: "ძველი რუკები",
       opacity: "გამჭვირვალობა",
       districts: "უბნების საზღვრები",
       districtField: "უბანი (1898)",
