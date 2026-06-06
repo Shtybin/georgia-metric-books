@@ -209,6 +209,33 @@ Thank you for helping to refine the historical geography of Georgia.
 
 ---
 
+## 12. The Tbilisi tab and old city maps
+
+A dedicated **Tbilisi** tab (`/tbilisi`) shows a map of 108 city
+parishes across all confessions — Orthodox, Armenian, Catholic,
+Lutheran, Jewish, Molokan and more. Each card lists the years of the
+parish registers and a direct link to the record in the National
+Historical Archive of Georgia catalogue, with the record number, so
+you can jump straight to the file description.
+
+Church points can also be overlaid on the **old maps of Tiflis from
+1898 and 1904**.
+
+- On **desktop**, the map switcher sits in the bottom-left corner.
+  The "Base map" dropdown lets you pick the 1898 or 1904 map, or
+  "No base" (the modern basemap only). Next to it are an opacity
+  slider and a "Police districts" checkbox (1904 map only).
+- On **tablet and mobile**, the same controls collapse into a single
+  compact **"Old maps"** pill in the bottom-left corner. Tapping it
+  opens the dropdown, opacity slider and districts toggle.
+- To return to the plain view, select "No base" in the dropdown.
+
+The old maps are georeferenced to modern coordinates, so the church
+points line up with both the historical street grid and present-day
+toponymy.
+
+---
+
 ## Author and copyright
 
 **Author:** Vitalii Shtybin — independent researcher, author of
