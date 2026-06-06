@@ -288,7 +288,7 @@ export const TBILISI_STRINGS = {
     cityZoomCta: "თბილისის ეკლესიების რუკის გახსნა",
     historical: {
       title: "ძველი რუკები",
-      toggle: "1898 წლის რუკა",
+      toggle: "ძველი რუკები",
       opacity: "გამჭვირვალობა",
       districts: "უბნების საზღვრები",
       districtField: "უბანი (1898)",
