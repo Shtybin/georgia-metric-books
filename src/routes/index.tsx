@@ -230,7 +230,7 @@ function Index() {
           </div>
         </section>
 
-        {/* Section: map features */}
+        {/* Section: map features (short highlights) */}
         <section className="mt-16">
           <h2 className="font-serif text-lg font-semibold">{L.featuresEyebrow}</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{L.featuresHint}</p>
@@ -246,6 +246,21 @@ function Index() {
             ))}
           </div>
         </section>
+
+        {/* Section: all map features (full reference) */}
+        <section className="mt-12">
+          <h2 className="font-serif text-lg font-semibold">{L.allFeaturesTitle}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{L.allFeaturesHint}</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {L.allFeatures.map((f) => (
+              <div key={f.title} className="rounded-xl border border-border bg-card p-4">
+                <h3 className="font-serif text-sm font-semibold">{f.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
 
         <CopyrightFooter lang={lang as Lang} />
       </div>
