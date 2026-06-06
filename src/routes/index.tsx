@@ -206,10 +206,10 @@ function Index() {
               </h3>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 {lang === "en"
-                  ? "108 parishes of all confessions — Orthodox, Armenian, Catholic, Lutheran, Jewish, Molokan and more — with parish-register years."
+                  ? "108 parishes of all confessions — Orthodox, Armenian, Catholic, Lutheran, Jewish, Molokan and more — with parish-register years, links to records in the National Historical Archive of Georgia and a search guide. Church points can be viewed on the old maps of Tiflis from 1898 and 1904."
                   : lang === "ka"
-                  ? "108 სამრევლო ყველა კონფესიის — მართლმადიდებლური, სომხური, კათოლიკური, ლუთერანული, იუდაური, მოლოკანური და სხვა — მეტრიკული წიგნების წლებით."
-                  : "108 приходов всех конфессий — православных, армянских, католических, лютеранских, иудейских, молоканских и других — с годами метрических книг."}
+                  ? "108 სამრევლო ყველა კონფესიის — მართლმადიდებლური, სომხური, კათოლიკური, ლუთერანული, იუდაური, მოლოკანური და სხვა — მეტრიკული წიგნების წლებით, საქართველოს ეროვნული ისტორიული არქივის ჩანაწერების ბმულებითა და ძიების ინსტრუქციით. ეკლესიების წერტილების ნახვა შესაძლებელია თბილისის 1898 და 1904 წლების ძველ რუკებზე."
+                  : "108 приходов всех конфессий — православных, армянских, католических, лютеранских, иудейских, молоканских и других — с годами метрических книг, ссылками на записи в Национальном историческом архиве Грузии и инструкцией к поиску. Доступен просмотр точек церквей на старых картах Тифлиса 1898 и 1904 годов."}
               </p>
             </div>
             <ArrowRight className="hidden h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-1 sm:block" />
