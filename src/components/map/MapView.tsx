@@ -716,6 +716,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     attachBasemapFallback(map);
+    collapseAttribution(map);
     map.on("error", (e) => {
       // surface MapLibre errors instead of leaving a white canvas
       // eslint-disable-next-line no-console
