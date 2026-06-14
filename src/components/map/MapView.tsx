@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   BASEMAP_STYLE,
   attachBasemapFallback,
+  collapseAttribution,
   BUCKET_COLORS,
   BUCKET_ORDER,
   colorExpression,
