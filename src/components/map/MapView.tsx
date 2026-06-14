@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   BASEMAP_STYLE,
   attachBasemapFallback,
+  collapseAttribution,
   BUCKET_COLORS,
   BUCKET_ORDER,
   colorExpression,
@@ -715,6 +716,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     attachBasemapFallback(map);
+    collapseAttribution(map);
     map.on("error", (e) => {
       // surface MapLibre errors instead of leaving a white canvas
       // eslint-disable-next-line no-console
@@ -970,8 +972,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!map || !styleReady) return;
     if (!map.getLayer("points-top")) return;
     const ids = highlightMode === "area" ? [...neighborIds] : [];
-    map.setFilter("points-top", ["in", ["id"], ["literal", ids]]);
-  }, [neighborIds, highlightMode, styleReady]);
+    map.setFilter("points-top", [
+      "all",
+      ["in", ["id"], ["literal", ids]],
+      ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
+    ]);
+  }, [neighborIds, highlightMode, styleReady, enabledBuckets]);
 
   const pulseRafRef = useRef<number | null>(null);
   function pulseHalo() {

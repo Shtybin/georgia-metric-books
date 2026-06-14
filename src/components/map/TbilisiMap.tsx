@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, Popup, type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
+import { BASEMAP_STYLE, attachBasemapFallback, collapseAttribution } from "@/lib/map-style";
 import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
 import { DonateButton } from "@/components/DonateButton";
 import {
@@ -227,13 +227,7 @@ export function TbilisiMap({
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     attachBasemapFallback(map);
-    // По умолчанию MapLibre в compact-режиме раскрывает атрибуцию. Сворачиваем,
-    // чтобы она не висела поверх кнопок управления; пользователь раскроет по «i».
-    requestAnimationFrame(() => {
-      containerRef.current
-        ?.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show")
-        .forEach((el) => el.classList.remove("maplibregl-compact-show"));
-    });
+    collapseAttribution(map);
 
     map.on("load", () => {
       // Регистрируем все доступные исторические подложки сразу.
