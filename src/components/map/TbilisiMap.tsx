@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, Popup, type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { BASEMAP_STYLE, attachBasemapFallback } from "@/lib/map-style";
+import { BASEMAP_STYLE, attachBasemapFallback, collapseAttribution } from "@/lib/map-style";
 import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
 import { DonateButton } from "@/components/DonateButton";
 import {
