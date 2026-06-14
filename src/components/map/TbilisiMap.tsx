@@ -227,13 +227,7 @@ export function TbilisiMap({
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
     attachBasemapFallback(map);
-    // По умолчанию MapLibre в compact-режиме раскрывает атрибуцию. Сворачиваем,
-    // чтобы она не висела поверх кнопок управления; пользователь раскроет по «i».
-    requestAnimationFrame(() => {
-      containerRef.current
-        ?.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show")
-        .forEach((el) => el.classList.remove("maplibregl-compact-show"));
-    });
+    collapseAttribution(map);
 
     map.on("load", () => {
       // Регистрируем все доступные исторические подложки сразу.
