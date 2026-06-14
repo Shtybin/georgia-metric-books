@@ -56,6 +56,37 @@ export function attachBasemapFallback(_map: unknown) {
   // intentionally empty
 }
 
+/**
+ * Force-collapse MapLibre's compact attribution control.
+ *
+ * MapLibre renders the attribution as a <details> element (and/or applies
+ * `.maplibregl-compact-show`). Recent versions default to expanded on first
+ * paint and re-expand on style/source changes, which covers the bottom of
+ * the map — particularly bad on mobile. This helper closes it whenever the
+ * map re-renders the control.
+ */
+export function collapseAttribution(map: any) {
+  if (!map || typeof map.getContainer !== "function") return;
+  const close = () => {
+    const root: HTMLElement | null = map.getContainer();
+    if (!root) return;
+    root
+      .querySelectorAll<HTMLElement>(".maplibregl-ctrl-attrib")
+      .forEach((el) => {
+        el.classList.remove("maplibregl-compact-show");
+        if (el instanceof HTMLDetailsElement) el.open = false;
+        const inner = el.querySelector("details");
+        if (inner instanceof HTMLDetailsElement) inner.open = false;
+      });
+  };
+  // Run after current frame, then again after style/source events that can
+  // rebuild the control.
+  requestAnimationFrame(close);
+  map.on("load", close);
+  map.on("styledata", close);
+  map.on("sourcedata", close);
+}
+
 export const colorExpression: any = [
   "match",
   ["get", "bucket"],
