@@ -1735,11 +1735,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <Button
                 size="sm"
                 variant="outline"
-                className="w-full"
+                className="h-auto w-full whitespace-normal py-1.5 text-left text-xs leading-tight"
                 onClick={() => setMissingDialogOpen(true)}
               >
-                <CalendarClock className="mr-1.5 h-4 w-4" />
-                {T.suggestMissingAction}
+                <CalendarClock className="mr-1.5 h-4 w-4 shrink-0" />
+                <span className="min-w-0 flex-1">{T.suggestMissingAction}</span>
               </Button>
             </div>
 
@@ -1795,30 +1795,28 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               left: "var(--map-overlay-gap-left)",
               right: "var(--map-overlay-gap-right)",
             }}
-            className="pointer-events-none absolute z-10 flex items-center justify-between gap-2 sm:hidden"
+            className="pointer-events-none absolute z-10 flex flex-wrap items-center gap-1.5 sm:hidden"
           >
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => setDocsOpen(true)}
-                className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
-              >
-                <HelpCircle className="h-3.5 w-3.5" />
-                {T.docsButtonShort}
-              </button>
-              <MapAuthorBadge lang={lang} inline />
-              <DonateButton lang={lang} variant="inline" />
-              <ReportProblemButton
-                lang={lang}
-                getMapState={() => {
-                  const m = mapRef.current;
-                  if (!m) return null;
-                  const c = m.getCenter();
-                  return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
-                }}
-                inline
-                className="!px-2.5 !py-1 !text-[11px]"
-              />
-            </div>
+            <button
+              onClick={() => setDocsOpen(true)}
+              className="pointer-events-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
+            >
+              <HelpCircle className="h-3.5 w-3.5" />
+              {T.docsButtonShort}
+            </button>
+            <MapAuthorBadge lang={lang} inline />
+            <DonateButton lang={lang} variant="inline" />
+            <ReportProblemButton
+              lang={lang}
+              getMapState={() => {
+                const m = mapRef.current;
+                if (!m) return null;
+                const c = m.getCenter();
+                return { lat: c.lat, lon: c.lng, zoom: m.getZoom() };
+              }}
+              inline
+              className="!px-2.5 !py-1 !text-[11px]"
+            />
           </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
             <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">

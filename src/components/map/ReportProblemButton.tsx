@@ -187,12 +187,13 @@ export function ReportProblemButton({ lang, getMapState, inline = false, classNa
           onClick={() => setOpen(true)}
           className={
             (className ?? "") +
-            " pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
+            " pointer-events-auto inline-flex min-w-0 shrink items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
           }
           aria-label={T.reportButton}
+          title={T.reportButton}
         >
-          <AlertCircle className="h-3.5 w-3.5" />
-          {T.reportButton}
+          <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{T.reportButtonShort}</span>
         </button>
       ) : (
         <button
