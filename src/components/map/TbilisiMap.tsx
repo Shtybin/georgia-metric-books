@@ -313,9 +313,9 @@ export function TbilisiMap({
         paint: {
           "circle-color": colorExpr,
           "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 14, 8, 16, 11],
-          "circle-stroke-color": "#fff",
+          "circle-stroke-color": "#ffffff",
           "circle-stroke-width": 1.5,
-          "circle-opacity": 0.92,
+          "circle-opacity": 0.6,
         },
       });
       map.on("click", "churches", (e) => {
