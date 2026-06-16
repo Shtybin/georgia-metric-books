@@ -1864,8 +1864,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         {/* Desktop: full legend + stats panel. */}
         <div className="pointer-events-auto rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
 
-        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {T.legend}
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {T.legend}
+          </div>
+          <button
+            onClick={toggleAllBuckets}
+            className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+          >
+            {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+          </button>
         </div>
         <ul className="space-y-1.5">
           {BUCKET_ORDER.map(b => {
