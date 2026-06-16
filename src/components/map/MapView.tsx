@@ -1825,27 +1825,37 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             />
           </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
-            <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
-              {BUCKET_ORDER.map((b) => {
-                const on = enabledBuckets.has(b);
-                return (
-                  <button
-                    key={b}
-                    onClick={() => toggleBucket(b)}
-                    aria-pressed={on}
-                    className={cn(
-                      "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
-                      on ? "opacity-100" : "opacity-40",
-                    )}
-                  >
-                    <span
-                      className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
-                      style={{ backgroundColor: BUCKET_COLORS[b] }}
-                    />
-                    <span className="truncate">{T.bucket[b]}</span>
-                  </button>
-                );
-              })}
+            <div className="rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
+              <div className="mb-1 flex justify-end">
+                <button
+                  onClick={toggleAllBuckets}
+                  className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                >
+                  {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-1">
+                {BUCKET_ORDER.map((b) => {
+                  const on = enabledBuckets.has(b);
+                  return (
+                    <button
+                      key={b}
+                      onClick={() => toggleBucket(b)}
+                      aria-pressed={on}
+                      className={cn(
+                        "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
+                        on ? "opacity-100" : "opacity-40",
+                      )}
+                    >
+                      <span
+                        className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
+                        style={{ backgroundColor: BUCKET_COLORS[b] }}
+                      />
+                      <span className="truncate">{T.bucket[b]}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </>
