@@ -1129,11 +1129,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }
 
   function toggleBucket(b: string) {
+    // Isolate semantics: clicking a colour leaves only that colour on the map.
+    // Clicking the already-isolated colour restores the full set.
     setEnabledBuckets(prev => {
-      const next = new Set(prev);
-      if (next.has(b)) next.delete(b); else next.add(b);
-      return next.size === 0 ? new Set(BUCKET_ORDER) : next;
+      if (prev.size === 1 && prev.has(b)) return new Set(BUCKET_ORDER);
+      return new Set([b]);
     });
+  }
+  function toggleAllBuckets() {
+    setEnabledBuckets(prev =>
+      prev.size === BUCKET_ORDER.length ? new Set() : new Set(BUCKET_ORDER),
+    );
   }
 
   // When the user clears the search input, also drop any area highlight
@@ -1819,27 +1825,37 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             />
           </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
-            <div className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
-              {BUCKET_ORDER.map((b) => {
-                const on = enabledBuckets.has(b);
-                return (
-                  <button
-                    key={b}
-                    onClick={() => toggleBucket(b)}
-                    aria-pressed={on}
-                    className={cn(
-                      "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
-                      on ? "opacity-100" : "opacity-40",
-                    )}
-                  >
-                    <span
-                      className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
-                      style={{ backgroundColor: BUCKET_COLORS[b] }}
-                    />
-                    <span className="truncate">{T.bucket[b]}</span>
-                  </button>
-                );
-              })}
+            <div className="rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
+              <div className="mb-1 flex justify-end">
+                <button
+                  onClick={toggleAllBuckets}
+                  className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                >
+                  {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-1">
+                {BUCKET_ORDER.map((b) => {
+                  const on = enabledBuckets.has(b);
+                  return (
+                    <button
+                      key={b}
+                      onClick={() => toggleBucket(b)}
+                      aria-pressed={on}
+                      className={cn(
+                        "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
+                        on ? "opacity-100" : "opacity-40",
+                      )}
+                    >
+                      <span
+                        className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
+                        style={{ backgroundColor: BUCKET_COLORS[b] }}
+                      />
+                      <span className="truncate">{T.bucket[b]}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </>
@@ -1858,8 +1874,16 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         {/* Desktop: full legend + stats panel. */}
         <div className="pointer-events-auto rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
 
-        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {T.legend}
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {T.legend}
+          </div>
+          <button
+            onClick={toggleAllBuckets}
+            className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+          >
+            {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+          </button>
         </div>
         <ul className="space-y-1.5">
           {BUCKET_ORDER.map(b => {

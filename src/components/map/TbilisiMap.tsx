@@ -401,11 +401,11 @@ export function TbilisiMap({
   );
 
   const toggleConfession = (c: Confession) => {
+    // Isolate semantics: clicking a confession leaves only its points on the map.
+    // Clicking the already-isolated confession restores the full set.
     setEnabled((prev) => {
-      const next = new Set(prev);
-      if (next.has(c)) next.delete(c);
-      else next.add(c);
-      return next;
+      if (prev.size === 1 && prev.has(c)) return new Set(CONFESSION_ORDER);
+      return new Set([c]);
     });
   };
 

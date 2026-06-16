@@ -7,6 +7,8 @@ export const STRINGS = {
     search: "Поиск селения, церкви, уезда…",
     searchShort: "Поиск",
     legend: "С какого года ведутся книги",
+    showAll: "Показать все",
+    hideAll: "Скрыть все",
     bucket: {
       "pre-1820": "до 1820",
       "1820-1835": "1821–1835",
@@ -149,6 +151,8 @@ export const STRINGS = {
     search: "Search settlement, church, uezd…",
     searchShort: "Search",
     legend: "Records start year",
+    showAll: "Show all",
+    hideAll: "Hide all",
     bucket: {
       "pre-1820": "before 1820",
       "1820-1835": "1821–1835",
@@ -291,6 +295,8 @@ export const STRINGS = {
     search: "სოფლის, ეკლესიის, მაზრის ძიება…",
     searchShort: "ძიება",
     legend: "რომელი წლიდან იწარმოება წიგნები",
+    showAll: "ყველას ჩვენება",
+    hideAll: "ყველას დამალვა",
     bucket: {
       "pre-1820": "1820-მდე",
       "1820-1835": "1821–1835",
