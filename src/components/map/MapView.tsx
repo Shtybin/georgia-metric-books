@@ -1129,11 +1129,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }
 
   function toggleBucket(b: string) {
+    // Isolate semantics: clicking a colour leaves only that colour on the map.
+    // Clicking the already-isolated colour restores the full set.
     setEnabledBuckets(prev => {
-      const next = new Set(prev);
-      if (next.has(b)) next.delete(b); else next.add(b);
-      return next.size === 0 ? new Set(BUCKET_ORDER) : next;
+      if (prev.size === 1 && prev.has(b)) return new Set(BUCKET_ORDER);
+      return new Set([b]);
     });
+  }
+  function toggleAllBuckets() {
+    setEnabledBuckets(prev =>
+      prev.size === BUCKET_ORDER.length ? new Set() : new Set(BUCKET_ORDER),
+    );
   }
 
   // When the user clears the search input, also drop any area highlight
