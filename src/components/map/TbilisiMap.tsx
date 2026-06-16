@@ -318,6 +318,36 @@ export function TbilisiMap({
           "circle-opacity": 0.6,
         },
       });
+
+      // Подсветка выбранной церкви: halo + точка поверх остальных,
+      // оформление синхронизировано с основной картой (MapView).
+      map.addSource("selected", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] } as GeoJSON.FeatureCollection,
+      });
+      map.addLayer({
+        id: "selected-halo",
+        type: "circle",
+        source: "selected",
+        paint: {
+          "circle-color": "transparent",
+          "circle-radius": 22,
+          "circle-stroke-color": "#0f172a",
+          "circle-stroke-width": 3,
+          "circle-stroke-opacity": 0.9,
+        },
+      });
+      map.addLayer({
+        id: "selected-point",
+        type: "circle",
+        source: "selected",
+        paint: {
+          "circle-color": colorExpr,
+          "circle-radius": 9,
+          "circle-stroke-color": "#fff",
+          "circle-stroke-width": 2,
+        },
+      });
       map.on("click", "churches", (e) => {
         const f = e.features?.[0];
         if (!f) return;
