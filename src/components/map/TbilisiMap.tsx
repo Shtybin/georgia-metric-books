@@ -381,7 +381,10 @@ export function TbilisiMap({
     const src = map.getSource("churches") as GeoJSONSource | undefined;
     if (!src) return;
     src.setData(churchFeatureCollection(filtered));
+  }, [filtered, mapReady]);
+
   // Update selected-church highlight source when selection changes.
+
   useEffect(() => {
     if (!mapReady) return;
     const map = mapRef.current;
