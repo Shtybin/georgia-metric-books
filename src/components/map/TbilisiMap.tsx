@@ -381,7 +381,25 @@ export function TbilisiMap({
     const src = map.getSource("churches") as GeoJSONSource | undefined;
     if (!src) return;
     src.setData(churchFeatureCollection(filtered));
-  }, [filtered, mapReady]);
+  // Update selected-church highlight source when selection changes.
+  useEffect(() => {
+    if (!mapReady) return;
+    const map = mapRef.current;
+    if (!map) return;
+    const src = map.getSource("selected") as GeoJSONSource | undefined;
+    if (!src) return;
+    if (!selected) {
+      src.setData({ type: "FeatureCollection", features: [] } as GeoJSON.FeatureCollection);
+      return;
+    }
+    const feature: GeoJSON.Feature<GeoJSON.Point, { id: number; confession: Confession }> = {
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [selected.lon, selected.lat] },
+      properties: { id: selected.id, confession: selected.confession },
+    };
+    src.setData({ type: "FeatureCollection", features: [feature] } as GeoJSON.FeatureCollection);
+  }, [selected, mapReady]);
+
 
   // Push districts data when loaded
   useEffect(() => {
