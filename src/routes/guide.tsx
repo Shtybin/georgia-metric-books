@@ -101,6 +101,8 @@ function GuidePage() {
   const cancelLabel = lang === "en" ? "Cancel" : lang === "ka" ? "გაუქმება" : "Отмена";
   const previewLabel = lang === "en" ? "Preview" : lang === "ka" ? "გადახედვა" : "Просмотр";
   const editorLabel = lang === "en" ? "Editor" : lang === "ka" ? "რედაქტორი" : "Редактор";
+  const loadingLabel = lang === "en" ? "Loading…" : lang === "ka" ? "იტვირთება…" : "Загрузка…";
+  const failedLabel = lang === "en" ? "Failed to load" : lang === "ka" ? "ჩატვირთვა ვერ მოხერხდა" : "Не удалось загрузить";
 
   const startEdit = () => {
     setDraft(content);
@@ -233,9 +235,9 @@ function GuidePage() {
         </div>
 
         {error ? (
-          <p className="text-sm text-destructive">Failed to load: {error}</p>
+          <p className="text-sm text-destructive">{failedLabel}: {error}</p>
         ) : loading ? (
-          <p className="text-sm text-muted-foreground">Loading…</p>
+          <p className="text-sm text-muted-foreground">{loadingLabel}</p>
         ) : editing && !previewing ? (
           <Textarea
             value={draft}
