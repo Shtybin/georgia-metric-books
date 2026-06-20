@@ -223,6 +223,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [selected, setSelected] = useState<Feature | null>(null);
   const [cardCollapsed, setCardCollapsed] = useState(false);
   const [cardOffset, setCardOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [mobileLegendOpen, setMobileLegendOpen] = useState(false);
   const dragStateRef = useRef<{ startX: number; startY: number; baseX: number; baseY: number; pointerId: number } | null>(null);
   // Reset collapse/position when a new feature is selected
   useEffect(() => {
@@ -1905,36 +1906,48 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
             <div className="rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
-              <div className="mb-1 flex justify-end">
+              <div className="flex items-center justify-between gap-2">
                 <button
-                  onClick={toggleAllBuckets}
-                  className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                  onClick={() => setMobileLegendOpen((v) => !v)}
+                  aria-expanded={mobileLegendOpen}
+                  className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground"
                 >
-                  {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+                  {mobileLegendOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                  {T.legend}
                 </button>
+                {mobileLegendOpen && (
+                  <button
+                    onClick={toggleAllBuckets}
+                    className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                  >
+                    {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+                  </button>
+                )}
               </div>
-              <div className="grid grid-cols-3 gap-1">
-                {BUCKET_ORDER.map((b) => {
-                  const on = enabledBuckets.has(b);
-                  return (
-                    <button
-                      key={b}
-                      onClick={() => toggleBucket(b)}
-                      aria-pressed={on}
-                      className={cn(
-                        "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
-                        on ? "opacity-100" : "opacity-40",
-                      )}
-                    >
-                      <span
-                        className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
-                        style={{ backgroundColor: BUCKET_COLORS[b] }}
-                      />
-                      <span className="truncate">{T.bucket[b]}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              {mobileLegendOpen && (
+                <div className="mt-1 grid grid-cols-3 gap-1">
+                  {BUCKET_ORDER.map((b) => {
+                    const on = enabledBuckets.has(b);
+                    return (
+                      <button
+                        key={b}
+                        onClick={() => toggleBucket(b)}
+                        aria-pressed={on}
+                        className={cn(
+                          "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
+                          on ? "opacity-100" : "opacity-40",
+                        )}
+                      >
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
+                          style={{ backgroundColor: BUCKET_COLORS[b] }}
+                        />
+                        <span className="truncate">{T.bucket[b]}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -2035,7 +2048,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       {/* Size legend (bottom-left). Hidden when a point card is open
           (the card occupies the same corner) and on mobile (cramped). */}
       {!sel && (
-        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur sm:block">
+        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur md:block">
           <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             {T.sizeLegend}
           </div>
