@@ -221,7 +221,6 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [baseData, setBaseData] = useState<FC | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [selected, setSelected] = useState<Feature | null>(null);
-  const isMobile = useIsMobile();
   const [cardCollapsed, setCardCollapsed] = useState(false);
   const [cardOffset, setCardOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const dragStateRef = useRef<{ startX: number; startY: number; baseX: number; baseY: number; pointerId: number } | null>(null);
