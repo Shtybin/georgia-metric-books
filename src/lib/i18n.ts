@@ -156,6 +156,9 @@ export const STRINGS = {
     legend: "Records start year",
     showAll: "Show all",
     hideAll: "Hide all",
+    collapseCard: "Collapse",
+    expandCard: "Expand",
+    dragCard: "Drag",
     bucket: {
       "pre-1820": "before 1820",
       "1820-1835": "1821–1835",
