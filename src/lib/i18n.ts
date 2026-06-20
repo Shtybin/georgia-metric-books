@@ -303,6 +303,9 @@ export const STRINGS = {
     legend: "რომელი წლიდან იწარმოება წიგნები",
     showAll: "ყველას ჩვენება",
     hideAll: "ყველას დამალვა",
+    collapseCard: "ჩაკეცვა",
+    expandCard: "გაშლა",
+    dragCard: "გადატანა",
     bucket: {
       "pre-1820": "1820-მდე",
       "1820-1835": "1821–1835",
