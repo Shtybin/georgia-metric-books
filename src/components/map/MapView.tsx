@@ -1852,6 +1852,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </p>
             )}
           </div>
+          </>)}
         </div>
         );
       })()}
