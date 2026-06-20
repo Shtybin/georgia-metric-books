@@ -9,6 +9,9 @@ export const STRINGS = {
     legend: "С какого года ведутся книги",
     showAll: "Показать все",
     hideAll: "Скрыть все",
+    collapseCard: "Свернуть",
+    expandCard: "Развернуть",
+    dragCard: "Перетащить",
     bucket: {
       "pre-1820": "до 1820",
       "1820-1835": "1821–1835",
