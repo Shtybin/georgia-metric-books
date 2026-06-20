@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock } from "lucide-react";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock, ChevronDown, ChevronUp, GripHorizontal } from "lucide-react";
+
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
@@ -220,6 +221,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [baseData, setBaseData] = useState<FC | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [selected, setSelected] = useState<Feature | null>(null);
+  const [cardCollapsed, setCardCollapsed] = useState(false);
+  const [cardOffset, setCardOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const dragStateRef = useRef<{ startX: number; startY: number; baseX: number; baseY: number; pointerId: number } | null>(null);
+  // Reset collapse/position when a new feature is selected
+  useEffect(() => {
+    setCardCollapsed(false);
+    setCardOffset({ x: 0, y: 0 });
+  }, [selected?.id]);
   const [neighborIds, setNeighborIds] = useState<Set<number>>(new Set());
   const [highlightMode, setHighlightMode] = useState<"radius" | "area" | null>(null);
   const [enabledBuckets, setEnabledBuckets] = useState<Set<string>>(
@@ -1575,14 +1584,69 @@ export function MapView({ lang, onLangChange, embed }: Props) {
          const hasAliasBlock = aliasByLang.length > 0;
          const hasHistory = !!(histName || noteText || mismatches.length || extraAliases.length);
         return (
-        <div className="pointer-events-auto absolute bottom-3 left-3 z-10 flex w-[min(92vw,360px)] max-h-[min(70vh,560px)] flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur">
-          {/* Sticky header */}
-          <div className="flex items-start justify-between gap-2 border-b border-border px-4 pb-2 pt-4">
-            <div className="min-w-0">
-              <h3 className="font-serif text-lg font-semibold leading-tight">
+        <div
+          className={cn(
+            "pointer-events-auto absolute bottom-3 left-3 z-10 flex flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur transition-[max-height,width] duration-200",
+            cardCollapsed
+              ? "w-[min(88vw,320px)] max-h-[88px]"
+              : "w-[min(92vw,360px)] max-h-[min(70vh,560px)]",
+          )}
+          style={{
+            transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)`,
+            touchAction: "none",
+          }}
+        >
+          {/* Sticky header — also a drag handle on mobile */}
+          <div
+            className="flex items-start justify-between gap-2 border-b border-border px-4 pb-2 pt-3"
+            onPointerDown={(e) => {
+              if (!isMobile) return;
+              // Don't start drag from interactive controls
+              const tgt = e.target as HTMLElement;
+              if (tgt.closest("button")) return;
+              const el = e.currentTarget as HTMLElement;
+              el.setPointerCapture(e.pointerId);
+              dragStateRef.current = {
+                startX: e.clientX,
+                startY: e.clientY,
+                baseX: cardOffset.x,
+                baseY: cardOffset.y,
+                pointerId: e.pointerId,
+              };
+            }}
+            onPointerMove={(e) => {
+              const s = dragStateRef.current;
+              if (!s || s.pointerId !== e.pointerId) return;
+              const dx = e.clientX - s.startX;
+              const dy = e.clientY - s.startY;
+              // Constrain so the card stays largely on-screen
+              const vw = window.innerWidth;
+              const vh = window.innerHeight;
+              const nextX = Math.max(-12, Math.min(vw - 120, s.baseX + dx));
+              const nextY = Math.max(-(vh - 160), Math.min(12, s.baseY + dy));
+              setCardOffset({ x: nextX, y: nextY });
+            }}
+            onPointerUp={(e) => {
+              const s = dragStateRef.current;
+              if (s && s.pointerId === e.pointerId) {
+                (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+                dragStateRef.current = null;
+              }
+            }}
+            onPointerCancel={() => { dragStateRef.current = null; }}
+            style={{ cursor: isMobile ? "grab" : "default" }}
+          >
+            {isMobile && (
+              <GripHorizontal
+                aria-hidden="true"
+                className="mt-1 h-4 w-4 shrink-0 text-muted-foreground/60"
+              />
+            )}
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate font-serif text-lg font-semibold leading-tight">
                 {sel.settlement[lang] || sel.settlement.en || "—"}
               </h3>
-              {(histName || extraAliases.length > 0 || mismatches.length > 0) && (
+              {!cardCollapsed && (histName || extraAliases.length > 0 || mismatches.length > 0) && (
                  <div className="mt-1 flex flex-wrap items-center gap-1">
                    {histName && (
                      <span className="inline-flex items-center rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
@@ -1605,20 +1669,34 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                    )}
                  </div>
                )}
-              {!manyChurches && churchList.length > 0 && (
+              {!cardCollapsed && !manyChurches && churchList.length > 0 && (
                 <p className="mt-0.5 text-sm italic text-muted-foreground">
                   {churchList.join(" · ")}
                 </p>
               )}
             </div>
-            <button
-              onClick={clearSelection}
-              className="shrink-0 rounded-md p-1 text-muted-foreground hover:bg-accent"
-              aria-label={T.clear}
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex shrink-0 items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setCardCollapsed((v) => !v)}
+                className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+                aria-label={cardCollapsed ? T.expandCard : T.collapseCard}
+                title={cardCollapsed ? T.expandCard : T.collapseCard}
+              >
+                {cardCollapsed ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={clearSelection}
+                className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+                aria-label={T.clear}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
+          {!cardCollapsed && (<>
+
 
           {/* Scrollable body */}
           <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-3">
@@ -1774,6 +1852,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </p>
             )}
           </div>
+          </>)}
         </div>
         );
       })()}

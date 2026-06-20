@@ -9,6 +9,9 @@ export const STRINGS = {
     legend: "С какого года ведутся книги",
     showAll: "Показать все",
     hideAll: "Скрыть все",
+    collapseCard: "Свернуть",
+    expandCard: "Развернуть",
+    dragCard: "Перетащить",
     bucket: {
       "pre-1820": "до 1820",
       "1820-1835": "1821–1835",
@@ -153,6 +156,9 @@ export const STRINGS = {
     legend: "Records start year",
     showAll: "Show all",
     hideAll: "Hide all",
+    collapseCard: "Collapse",
+    expandCard: "Expand",
+    dragCard: "Drag",
     bucket: {
       "pre-1820": "before 1820",
       "1820-1835": "1821–1835",
@@ -297,6 +303,9 @@ export const STRINGS = {
     legend: "რომელი წლიდან იწარმოება წიგნები",
     showAll: "ყველას ჩვენება",
     hideAll: "ყველას დამალვა",
+    collapseCard: "ჩაკეცვა",
+    expandCard: "გაშლა",
+    dragCard: "გადატანა",
     bucket: {
       "pre-1820": "1820-მდე",
       "1820-1835": "1821–1835",
