@@ -296,7 +296,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const data: FC | null = useMemo(() => {
     if (!baseData) return null;
     const effectiveOverrides = compareMode === "base" ? [] : overrides;
-    const overridden = normalizeAliases(applyOverrides(baseData, effectiveOverrides));
+    const overriddenRaw = normalizeAliases(applyOverrides(baseData, effectiveOverrides));
+    // Inject `category` property so MapLibre can filter by confession/community.
+    const overridden: FC = {
+      ...overriddenRaw,
+      features: overriddenRaw.features.map((f) => ({
+        ...f,
+        properties: {
+          ...(f.properties ?? {}),
+          category: categorizeParish(f.properties),
+        },
+      })),
+    };
     const baseLen = overridden.features.length;
     const userFeatures = Object.values(userCoords.records).map((rec, i) =>
       userRecordToFeature(rec, 1_000_000 + i + baseLen),
@@ -304,10 +315,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     const approvedFeatures = approved.map((s, i) =>
       approvedToFeature(s, 2_000_000 + i + baseLen),
     );
+    const withCat = (arr: Feature[]) =>
+      arr.map((f) => ({
+        ...f,
+        properties: { ...(f.properties ?? {}), category: categorizeParish(f.properties) },
+      }));
     if (userFeatures.length === 0 && approvedFeatures.length === 0) return overridden;
     return {
       ...overridden,
-      features: [...overridden.features, ...approvedFeatures, ...userFeatures],
+      features: [...overridden.features, ...withCat(approvedFeatures as Feature[]), ...withCat(userFeatures as Feature[])],
     };
   }, [baseData, userCoords.records, approved, overrides, compareMode]);
 
