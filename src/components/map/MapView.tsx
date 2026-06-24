@@ -2118,33 +2118,105 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </DialogContent>
       </Dialog>
 
-      {/* Size legend (bottom-left). Hidden when a point card is open
-          (the card occupies the same corner) and on mobile (cramped). */}
+      {/* Left-bottom column (desktop+tablet): category legend ABOVE size legend.
+          Bottom-anchored so collapsing the category panel keeps the size
+          scale in place. Hidden on mobile (we render an inline section
+          inside the bottom mobile legend instead). */}
       {!sel && (
-        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur md:block">
-          <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            {T.sizeLegend}
+        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden w-[min(92vw,240px)] flex-col items-stretch gap-2 md:flex">
+          <div className="pointer-events-auto rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <button
+                onClick={() => setCategoryLegendOpen((v) => !v)}
+                aria-expanded={categoryLegendOpen}
+                title={categoryLegendOpen ? T.collapseLegend : T.expandLegend}
+                className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground"
+              >
+                {categoryLegendOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+                {T.categoryLegend}
+              </button>
+              {categoryLegendOpen && (
+                <button
+                  onClick={toggleAllCategories}
+                  className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                >
+                  {enabledCategories.size === CATEGORY_ORDER.length ? T.clearSelection : T.showAll}
+                </button>
+              )}
+            </div>
+            {categoryLegendOpen && (
+              <>
+                <ul className="space-y-1">
+                  {CATEGORY_ORDER.map((c) => {
+                    const on = enabledCategories.has(c);
+                    return (
+                      <li key={c}>
+                        <button
+                          onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          aria-pressed={on}
+                          className={cn(
+                            "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
+                            on ? "opacity-100" : "opacity-40",
+                          )}
+                        >
+                          <span
+                            className="h-3 w-3 shrink-0 rounded-full ring-2 ring-white"
+                            style={{ backgroundColor: CATEGORY_COLORS[c] }}
+                          />
+                          <span className="truncate">{T.categoryName[c]}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className="mt-2 text-[10px] leading-tight text-muted-foreground">
+                  {T.multiSelectHint}
+                </p>
+              </>
+            )}
           </div>
-          <div className="flex items-end gap-3">
-            {[
-              { years: 1,   r: Math.max(4, Math.sqrt(1)   * 1.6) },
-              { years: 10,  r: Math.max(4, Math.sqrt(10)  * 1.6) },
-              { years: 25,  r: Math.max(4, Math.sqrt(25)  * 1.6) },
-              { years: 50,  r: Math.max(4, Math.sqrt(50)  * 1.6) },
-              { years: 100, r: Math.max(4, Math.sqrt(100) * 1.6) },
-              { years: 150, r: Math.max(4, Math.sqrt(150) * 1.6) },
-            ].map(({ years, r }) => (
-              <div key={years} className="flex flex-col items-center gap-1">
-                <span
-                  className="rounded-full bg-foreground ring-1 ring-white"
-                  style={{ width: r * 2, height: r * 2, opacity: 0.6 }}
-                />
-                <span className="text-[10px] tabular-nums text-muted-foreground">{years}</span>
-              </div>
-            ))}
+          <div className="pointer-events-auto rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur">
+            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {T.sizeLegend}
+            </div>
+            <div className="flex items-end gap-3">
+              {[
+                { years: 1,   r: Math.max(4, Math.sqrt(1)   * 1.6) },
+                { years: 10,  r: Math.max(4, Math.sqrt(10)  * 1.6) },
+                { years: 25,  r: Math.max(4, Math.sqrt(25)  * 1.6) },
+                { years: 50,  r: Math.max(4, Math.sqrt(50)  * 1.6) },
+                { years: 100, r: Math.max(4, Math.sqrt(100) * 1.6) },
+                { years: 150, r: Math.max(4, Math.sqrt(150) * 1.6) },
+              ].map(({ years, r }) => (
+                <div key={years} className="flex flex-col items-center gap-1">
+                  <span
+                    className="rounded-full bg-foreground ring-1 ring-white"
+                    style={{ width: r * 2, height: r * 2, opacity: 0.6 }}
+                  />
+                  <span className="text-[10px] tabular-nums text-muted-foreground">{years}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
+
+      <Dialog open={howToOpen} onOpenChange={setHowToOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" />
+              {T.howToTitle}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription asChild>
+            <div
+              className="max-h-[70vh] overflow-y-auto pr-1 text-sm leading-relaxed text-foreground"
+              dangerouslySetInnerHTML={{ __html: T.howToBodyHtml }}
+            />
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
       <MapAuthorBadge lang={lang} />
     </div>
   );
