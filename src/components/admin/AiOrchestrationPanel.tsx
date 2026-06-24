@@ -167,9 +167,12 @@ export function AiOrchestrationPanel() {
   }
   async function doRestart() {
     if (!currentRun) return;
-    // Resume from where it stopped — same run, just restart the loop.
+    // PRIORITY: continue current run from points_done — never reset to zero.
+    // We only flip status back to `running` and re-enter the polling loop;
+    // no findings/progress are dropped.
     await resume({ data: { runId: currentRun.id } } as any).catch(() => {});
     await refreshStatus(currentRun.id);
+    runningRef.current = true;
     runLoop(currentRun.id);
   }
 
