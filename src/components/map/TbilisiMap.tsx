@@ -836,6 +836,21 @@ export function TbilisiMap({
         </div>
       )}
 
+      {/* Кнопка «Как пользоваться» — плавающая пилюля в правом нижнем углу.
+          Mobile: bottom-14 right-3 — над нижней лентой (docs + автор), не
+          пересекается с панелью «Слои» слева и с языковым переключателем.
+          Desktop: bottom-4 right-4 — ниже панели фильтров (lg:bottom-20)
+          и правее карточки выбранной церкви (она центрирована). */}
+      <button
+        type="button"
+        onClick={() => setHowToOpen(true)}
+        className="pointer-events-auto absolute bottom-14 right-3 z-30 inline-flex items-center gap-1.5 rounded-full border border-primary bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-lg backdrop-blur hover:opacity-90 sm:bottom-4 sm:right-4"
+        title={Tcore.howToButton}
+        aria-label={Tcore.howToButton}
+      >
+        <HelpCircle className="h-3.5 w-3.5" />
+        <span className="hidden sm:inline">{Tcore.howToButton}</span>
+      </button>
 
 
       {/* Bottom action bar.
