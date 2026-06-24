@@ -182,16 +182,7 @@ export const STRINGS = {
     expandLegend: "Expand legend",
     multiSelectHint: "Click — isolate a category. Shift+click — multi-select.",
     categoryLegend: "Confession / community",
-    categoryName: {
-      georgian: "Georgians (Orthodox)",
-      armenian: "Armenians",
-      russian: "Russians",
-      military: "Military",
-      jewish: "Jews (synagogues)",
-      catholic: "Catholics",
-      lutheran: "Lutherans",
-      other: "Other",
-    },
+    confessionField: "Confession",
     howToButton: "How to use",
     howToTitle: "How to use the map and the project",
     howToBodyHtml:
