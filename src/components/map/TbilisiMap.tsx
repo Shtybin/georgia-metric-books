@@ -35,7 +35,7 @@ const DEFAULT_HIST_ID = TILE_MAPS[0]?.id ?? "1898";
 
 import { localizeAddress, localizeDistrict } from "@/lib/tbilisi-locations";
 import { Button } from "@/components/ui/button";
-import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
+import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers, ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ReportProblemButton } from "@/components/map/ReportProblemButton";
 import {
@@ -152,6 +152,12 @@ export function TbilisiMap({
   const [onlyActive, setOnlyActive] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+  const [howToOpen, setHowToOpen] = useState(false);
+  /** Раскрыта ли сама палитра конфессий внутри легенды.
+   *  На мобильных свёрнута по умолчанию, чтобы освободить карту. */
+  const [legendOpen, setLegendOpen] = useState(() =>
+    typeof window === "undefined" || !window.matchMedia("(max-width: 639px)").matches,
+  );
   /** Раскрыта ли панель «Историческая карта» на мобильном/планшете. */
   const [histPanelOpen, setHistPanelOpen] = useState(false);
   const [districts, setDistricts] = useState<DistrictsFC | null>(null);
@@ -451,10 +457,16 @@ export function TbilisiMap({
     [selected, districts],
   );
 
-  const toggleConfession = (c: Confession) => {
-    // Isolate semantics: clicking a confession leaves only its points on the map.
-    // Clicking the already-isolated confession restores the full set.
+  const toggleConfession = (c: Confession, additive = false) => {
     setEnabled((prev) => {
+      if (additive) {
+        // Shift+клик — мульти-выбор: добавить/убрать категорию из набора.
+        const next = new Set(prev);
+        if (next.has(c)) next.delete(c); else next.add(c);
+        if (next.size === 0) return new Set(CONFESSION_ORDER);
+        return next;
+      }
+      // Клик — изолировать. Повторный клик по уже изолированной — восстановить всё.
       if (prev.size === 1 && prev.has(c)) return new Set(CONFESSION_ORDER);
       return new Set([c]);
     });
