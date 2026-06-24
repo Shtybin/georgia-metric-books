@@ -421,6 +421,45 @@ export type Database = {
         }
         Relationships: []
       }
+      pdf_text_chunks: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          decade_end: number
+          decade_start: number
+          id: string
+          page_from: number | null
+          page_to: number | null
+          source_name: string
+          storage_path: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          decade_end: number
+          decade_start: number
+          id?: string
+          page_from?: number | null
+          page_to?: number | null
+          source_name: string
+          storage_path?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          decade_end?: number
+          decade_start?: number
+          id?: string
+          page_from?: number | null
+          page_to?: number | null
+          source_name?: string
+          storage_path?: string | null
+        }
+        Relationships: []
+      }
       problem_report_history: {
         Row: {
           changed_at: string
@@ -699,6 +738,8 @@ export type Database = {
         Args: { _history_id: string }
         Returns: string
       }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
       ai_audit_finding_kind:
