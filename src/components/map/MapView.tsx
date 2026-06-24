@@ -2045,6 +2045,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                         <button
                           key={c}
                           onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          title={tT(lang).confessions[c]}
                           aria-pressed={on}
                           className={cn(
                             "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] transition-opacity",
@@ -2219,6 +2220,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                       <li key={c}>
                         <button
                           onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          title={tT(lang).confessions[c]}
                           aria-pressed={on}
                           className={cn(
                             "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
