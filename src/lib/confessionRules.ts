@@ -193,8 +193,9 @@ const AREA_RULES: AreaRule[] = [
   { match: (s) => MOLOKAN_DUHOBOR.has(s), add: ["molokan"], keepDefault: false },
   // Греческие сёла Цалки/Тетрицкаро
   { match: (s) => GREEK_VILLAGES.has(s), add: ["greek_orthodox"], keepDefault: false },
-  // Еврейские общины — в этих городах синагога была наряду с православными храмами
-  { match: (s) => JEWISH_TOWNS.has(s), add: ["jewish"], keepDefault: true },
+  // Еврейские общины: ареальное правило намеренно удалено —
+  // категория `jewish` присваивается только по явному токену в `church`.
+
   // Русские крестьянские поселения
   { match: (s) => RUS_PEASANT.has(s), add: ["orthodox_russian"], keepDefault: false },
   // Военные крепости
