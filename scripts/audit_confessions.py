@@ -60,10 +60,13 @@ def categorize(props):
             else: has_orthodox = True
     s_n = norm((props.get("settlement") or {}).get("ru") or (props.get("settlement") or {}).get("en"))
     u_n = norm((props.get("uezd") or {}).get("ru") or (props.get("uezd") or {}).get("en"))
+    r_n = norm((props.get("region") or {}).get("ru") or (props.get("region") or {}).get("en"))
     area_applied = None
     keep_default = True
-    if re.search(r"ахалкалак", u_n, re.I):
-        cats.add("armenian_apostolic"); area_applied="ахалкалакский уезд"; keep_default=False
+    if re.search(r"ахалкалак", u_n, re.I) or re.search(r"ахалкалак", r_n, re.I):
+        cats.add("armenian_apostolic"); area_applied="ахалкалакский регион"; keep_default=True
+    elif re.search(r"греческ", u_n, re.I) or re.search(r"греческ", r_n, re.I):
+        cats.add("greek_orthodox"); area_applied="греческое (этнотерр.)"; keep_default=False
     elif s_n in ARM_SETTLEMENTS:
         cats.add("armenian_apostolic"); area_applied="armenian village"; keep_default=False
     elif s_n in GERMAN_COLONIES:
