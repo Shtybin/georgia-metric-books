@@ -5,15 +5,15 @@
     "armenian_apostolic": 72,
     "greek_orthodox": 20,
     "molokan": 17,
-    "orthodox_military": 14,
-    "jewish": 8,
+    "orthodox_military": 13,
+    "jewish": 7,
     "lutheran": 5,
     "roman_catholic": 3,
     "baptist": 1
   },
   "multiCategoryDistribution": {
-    "1": 1289,
-    "2": 63,
+    "1": 1291,
+    "2": 61,
     "3": 21,
     "4": 2,
     "8": 1
@@ -22,7 +22,7 @@
     "ахалкалакский регион": 33,
     "ниноцминда (смеш.)": 15,
     "цалкинский регион": 12,
-    "military fort": 11,
+    "military fort": 10,
     "armenian village": 10,
     "jewish town": 5,
     "греческое (этнотерр.)": 4,
@@ -322,25 +322,18 @@
         ]
       },
       {
-        "settlement": "Сачхере",
-        "church": "Св. Николая; Успения Пресвятой Богородицы / Св. Нино | Богородицы; Св. Иоанна Предтечи",
-        "cats": [
-          "jewish",
-          "orthodox_georgian"
-        ]
-      },
-      {
-        "settlement": "Карели",
-        "church": "Успения Пресвятой Богородицы | Животворящего Источника; Рождества Пресвятой Богородицы",
-        "cats": [
-          "jewish",
-          "orthodox_georgian"
-        ]
-      },
-      {
         "settlement": "Они",
         "church": "Богородицы | Св. Георгия | Архангела; Св. Георгия (Допол.); Св. Георгия; Св. Николая",
         "cats": [
+          "jewish",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Сурами",
+        "church": "Лусаворич | Преображения Господня",
+        "cats": [
+          "armenian_apostolic",
           "jewish",
           "orthodox_georgian"
         ]
@@ -631,14 +624,6 @@
       ]
     },
     {
-      "settlement": "Сачхере",
-      "church": "Св. Николая; Успения Пресвятой Богородицы / Св. Нино | Богородицы; Св. Иоанна Предтечи",
-      "cats": [
-        "jewish",
-        "orthodox_georgian"
-      ]
-    },
-    {
       "settlement": "Баралети",
       "church": "Спасителя; Богородицы | Преображения Господня",
       "cats": [
@@ -779,6 +764,14 @@
     {
       "settlement": "Бавра",
       "church": "Святого Креста",
+      "cats": [
+        "armenian_apostolic",
+        "orthodox_georgian"
+      ]
+    },
+    {
+      "settlement": "Бугашени",
+      "church": "Св. Арутин",
       "cats": [
         "armenian_apostolic",
         "orthodox_georgian"
