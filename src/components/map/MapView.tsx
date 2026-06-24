@@ -239,8 +239,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [enabledCategories, setEnabledCategories] = useState<Set<ParishCategory>>(
     new Set(CATEGORY_ORDER),
   );
-  const [legendOpen, setLegendOpen] = useState(true);
-  const [categoryLegendOpen, setCategoryLegendOpen] = useState(true);
+  // On mobile, keep the color legends collapsed by default to free up the map.
+  const [legendOpen, setLegendOpen] = useState(() =>
+    typeof window === "undefined" || !window.matchMedia("(max-width: 639px)").matches,
+  );
+  const [categoryLegendOpen, setCategoryLegendOpen] = useState(() =>
+    typeof window === "undefined" || !window.matchMedia("(max-width: 639px)").matches,
+  );
   const [howToOpen, setHowToOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
