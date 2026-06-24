@@ -13,7 +13,8 @@ import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
 import { TbilisiCoordEditorPanel } from "@/components/admin/TbilisiCoordEditorPanel";
 import { UsersAdminPanel } from "@/components/admin/UsersAdminPanel";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users } from "lucide-react";
+import { ConfessionAuditPanel } from "@/components/admin/ConfessionAuditPanel";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users, Church } from "lucide-react";
 
 
 
@@ -120,7 +121,7 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "ai" | "ai_audit" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit" | "users">("coords");
+  const [tab, setTab] = useState<"coords" | "ai" | "ai_audit" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit" | "users" | "confessions">("coords");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
@@ -386,7 +387,7 @@ function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
           <div>
             <h1 className="font-serif text-lg font-semibold">
-              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "ai_audit" ? "AI-аудит карточек" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : tab === "sources" ? "Внешние источники (FamilySearch и др.)" : tab === "tbilisi_edit" ? "Точки церквей Тбилиси (старые карты)" : tab === "users" ? "Пользователи и доступ" : "Карточки и точки на карте"}
+              {tab === "coords" ? "Модерация координат" : tab === "ai" ? "AI-геокодер" : tab === "ai_audit" ? "AI-аудит карточек" : tab === "reports" ? "Сообщения от пользователей" : tab === "uezd" ? "Корректировки уездов" : tab === "log" ? "Журнал правок" : tab === "quality" ? "Качество данных" : tab === "sources" ? "Внешние источники (FamilySearch и др.)" : tab === "tbilisi_edit" ? "Точки церквей Тбилиси (старые карты)" : tab === "users" ? "Пользователи и доступ" : tab === "confessions" ? "Конфессии: аудит классификации" : "Карточки и точки на карте"}
             </h1>
             <p className="text-xs text-muted-foreground">{email} · <span className="font-medium">{myRole}</span></p>
           </div>
@@ -401,7 +402,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "ai_audit", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "sources", "users"] as const).filter((k) => k !== "users" || isAdmin).map((k) => (
+          {(["coords", "ai", "ai_audit", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "confessions", "sources", "users"] as const).filter((k) => k !== "users" || isAdmin).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -445,6 +446,10 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <BookOpen className="h-3.5 w-3.5" /> Источники
                 </span>
+              ) : k === "confessions" ? (
+                <span className="inline-flex items-center gap-1">
+                  <Church className="h-3.5 w-3.5" /> Конфессии
+                </span>
               ) : k === "users" ? (
                 <span className="inline-flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" /> Пользователи
@@ -457,7 +462,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "ai_audit" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && tab !== "users" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "ai_audit" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && tab !== "users" && tab !== "confessions" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -522,6 +527,8 @@ function AdminPage() {
         <section className="mx-auto max-w-6xl px-4 py-4"><AiAuditPanel /></section>
       ) : tab === "tbilisi_edit" ? (
         <TbilisiCoordEditorPanel />
+      ) : tab === "confessions" ? (
+        <ConfessionAuditPanel />
       ) : tab === "users" && isAdmin && currentUserId ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           <UsersAdminPanel currentUserId={currentUserId} />
