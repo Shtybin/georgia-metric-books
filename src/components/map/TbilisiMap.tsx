@@ -35,7 +35,7 @@ const DEFAULT_HIST_ID = TILE_MAPS[0]?.id ?? "1898";
 
 import { localizeAddress, localizeDistrict } from "@/lib/tbilisi-locations";
 import { Button } from "@/components/ui/button";
-import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers } from "lucide-react";
+import { X, Search, Globe2, ArrowLeft, AlertTriangle, Filter, BookOpen, Layers, ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ReportProblemButton } from "@/components/map/ReportProblemButton";
 import {
@@ -152,6 +152,12 @@ export function TbilisiMap({
   const [onlyActive, setOnlyActive] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+  const [howToOpen, setHowToOpen] = useState(false);
+  /** Раскрыта ли сама палитра конфессий внутри легенды.
+   *  На мобильных свёрнута по умолчанию, чтобы освободить карту. */
+  const [legendOpen, setLegendOpen] = useState(() =>
+    typeof window === "undefined" || !window.matchMedia("(max-width: 639px)").matches,
+  );
   /** Раскрыта ли панель «Историческая карта» на мобильном/планшете. */
   const [histPanelOpen, setHistPanelOpen] = useState(false);
   const [districts, setDistricts] = useState<DistrictsFC | null>(null);
@@ -451,10 +457,16 @@ export function TbilisiMap({
     [selected, districts],
   );
 
-  const toggleConfession = (c: Confession) => {
-    // Isolate semantics: clicking a confession leaves only its points on the map.
-    // Clicking the already-isolated confession restores the full set.
+  const toggleConfession = (c: Confession, additive = false) => {
     setEnabled((prev) => {
+      if (additive) {
+        // Shift+клик — мульти-выбор: добавить/убрать категорию из набора.
+        const next = new Set(prev);
+        if (next.has(c)) next.delete(c); else next.add(c);
+        if (next.size === 0) return new Set(CONFESSION_ORDER);
+        return next;
+      }
+      // Клик — изолировать. Повторный клик по уже изолированной — восстановить всё.
       if (prev.size === 1 && prev.has(c)) return new Set(CONFESSION_ORDER);
       return new Set([c]);
     });
@@ -582,50 +594,69 @@ export function TbilisiMap({
         }
       >
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-serif text-xs font-semibold sm:text-sm">{T.legendTitle}</h2>
+          <button
+            type="button"
+            onClick={() => setLegendOpen((v) => !v)}
+            aria-expanded={legendOpen}
+            className="flex items-center gap-1 text-left"
+            title={legendOpen ? Tcore.collapseLegend : Tcore.expandLegend}
+          >
+            {legendOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+            <h2 className="font-serif text-xs font-semibold sm:text-sm">{T.legendTitle}</h2>
+          </button>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() =>
-                setEnabled((prev) =>
-                  prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER),
-                )
-              }
-              className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-accent"
-            >
-              {enabled.size === CONFESSION_ORDER.length ? T.hideAll : T.showAll}
-            </button>
+            {legendOpen && (
+              <button
+                onClick={() =>
+                  setEnabled((prev) =>
+                    prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER),
+                  )
+                }
+                className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-accent"
+              >
+                {enabled.size === CONFESSION_ORDER.length ? T.hideAll : T.showAll}
+              </button>
+            )}
             <span className="text-xs text-muted-foreground">
               {T.foundCount(filtered.length, totalCount)}
             </span>
           </div>
         </div>
-        <div className="flex flex-wrap gap-1.5">
-          {CONFESSION_ORDER.map((c) => {
-            const on = enabled.has(c);
-            const count = (rows || []).filter((r) => r.confession === c).length;
-            if (count === 0) return null;
-            return (
-              <button
-                key={c}
-                onClick={() => toggleConfession(c)}
-                className={
-                  "flex items-center gap-1.5 rounded-full border px-2 py-1 text-[11px] transition " +
-                  (on ? "border-border bg-background" : "border-border/40 bg-muted/40 opacity-50")
-                }
-                title={T.confessions[c]}
-                aria-label={T.confessions[c]}
-              >
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ background: CONFESSION_COLORS[c] }}
-                />
-                <span className="max-w-[120px] truncate lg:hidden">{T.confessionsShort[c]}</span>
-                <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
-                <span className="text-muted-foreground">{count}</span>
-              </button>
-            );
-          })}
-        </div>
+        {legendOpen && (
+          <>
+            <div className="flex flex-wrap gap-1.5">
+              {CONFESSION_ORDER.map((c) => {
+                const on = enabled.has(c);
+                const count = (rows || []).filter((r) => r.confession === c).length;
+                if (count === 0) return null;
+                return (
+                  <button
+                    key={c}
+                    onClick={(e) => toggleConfession(c, e.shiftKey)}
+                    className={
+                      "flex items-center gap-1.5 rounded-full border px-2 py-1 text-[11px] transition " +
+                      (on ? "border-border bg-background" : "border-border/40 bg-muted/40 opacity-50")
+                    }
+                    title={T.confessions[c]}
+                    aria-label={T.confessions[c]}
+                    aria-pressed={on}
+                  >
+                    <span
+                      className="h-2.5 w-2.5 rounded-full"
+                      style={{ background: CONFESSION_COLORS[c] }}
+                    />
+                    <span className="max-w-[120px] truncate lg:hidden">{T.confessionsShort[c]}</span>
+                    <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
+                    <span className="text-muted-foreground">{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[10px] leading-tight text-muted-foreground">
+              {Tcore.multiSelectHint}
+            </p>
+          </>
+        )}
 
         <div className="hidden lg:block">
           <label className="text-xs font-medium">
@@ -805,6 +836,21 @@ export function TbilisiMap({
         </div>
       )}
 
+      {/* Кнопка «Как пользоваться» — плавающая пилюля в правом нижнем углу.
+          Mobile: bottom-14 right-3 — над нижней лентой (docs + автор), не
+          пересекается с панелью «Слои» слева и с языковым переключателем.
+          Desktop: bottom-4 right-4 — ниже панели фильтров (lg:bottom-20)
+          и правее карточки выбранной церкви (она центрирована). */}
+      <button
+        type="button"
+        onClick={() => setHowToOpen(true)}
+        className="pointer-events-auto absolute bottom-14 right-3 z-30 inline-flex items-center gap-1.5 rounded-full border border-primary bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-lg backdrop-blur hover:opacity-90 sm:bottom-4 sm:right-4"
+        title={Tcore.howToButton}
+        aria-label={Tcore.howToButton}
+      >
+        <HelpCircle className="h-3.5 w-3.5" />
+        <span className="hidden sm:inline">{Tcore.howToButton}</span>
+      </button>
 
 
       {/* Bottom action bar.
@@ -970,6 +1016,25 @@ export function TbilisiMap({
           </DialogHeader>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={howToOpen} onOpenChange={setHowToOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <HelpCircle className="h-5 w-5 text-primary" />
+              {Tcore.howToTitle}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription asChild>
+            <div
+              className="max-h-[70vh] overflow-y-auto pr-1 text-sm leading-relaxed text-foreground"
+              dangerouslySetInnerHTML={{ __html: Tcore.howToBodyHtml }}
+            />
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
+
+
 
       <MapAuthorBadge lang={lang} />
     </div>
