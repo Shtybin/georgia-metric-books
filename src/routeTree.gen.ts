@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TbilisiRouteImport } from './routes/tbilisi'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GuideRouteImport } from './routes/guide'
@@ -22,11 +21,6 @@ import { Route as IndexRouteImport } from './routes/index'
 const TbilisiRoute = TbilisiRouteImport.update({
   id: '/tbilisi',
   path: '/tbilisi',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapRoute = MapRouteImport.update({
@@ -73,7 +67,6 @@ export interface FileRoutesByFullPath {
   '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tbilisi': typeof TbilisiRoute
 }
 export interface FileRoutesByTo {
@@ -84,7 +77,6 @@ export interface FileRoutesByTo {
   '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tbilisi': typeof TbilisiRoute
 }
 export interface FileRoutesById {
@@ -96,7 +88,6 @@ export interface FileRoutesById {
   '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tbilisi': typeof TbilisiRoute
 }
 export interface FileRouteTypes {
@@ -109,7 +100,6 @@ export interface FileRouteTypes {
     | '/guide'
     | '/login'
     | '/map'
-    | '/sitemap.xml'
     | '/tbilisi'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -120,7 +110,6 @@ export interface FileRouteTypes {
     | '/guide'
     | '/login'
     | '/map'
-    | '/sitemap.xml'
     | '/tbilisi'
   id:
     | '__root__'
@@ -131,7 +120,6 @@ export interface FileRouteTypes {
     | '/guide'
     | '/login'
     | '/map'
-    | '/sitemap.xml'
     | '/tbilisi'
   fileRoutesById: FileRoutesById
 }
@@ -143,7 +131,6 @@ export interface RootRouteChildren {
   GuideRoute: typeof GuideRoute
   LoginRoute: typeof LoginRoute
   MapRoute: typeof MapRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TbilisiRoute: typeof TbilisiRoute
 }
 
@@ -154,13 +141,6 @@ declare module '@tanstack/react-router' {
       path: '/tbilisi'
       fullPath: '/tbilisi'
       preLoaderRoute: typeof TbilisiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/map': {
@@ -223,7 +203,6 @@ const rootRouteChildren: RootRouteChildren = {
   GuideRoute: GuideRoute,
   LoginRoute: LoginRoute,
   MapRoute: MapRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TbilisiRoute: TbilisiRoute,
 }
 export const routeTree = rootRouteImport
