@@ -116,6 +116,9 @@ export function AiOrchestrationPanel() {
 
   async function runLoop(runId: string) {
     runningRef.current = true;
+    // Priority: ALWAYS continue the current run rather than abort.
+    // On errors we back off exponentially (max 30s) but never break out
+    // unless the user explicitly pauses/cancels or the run is finished.
     let consecutiveErrors = 0;
     while (runningRef.current) {
       try {
@@ -124,13 +127,19 @@ export function AiOrchestrationPanel() {
         await reloadFindings(runId);
         if (r.status !== "running") break;
         consecutiveErrors = 0;
+        setError(null);
         // Run watchdog check in background; do not block the loop
         watchdog({ data: { runId } } as any).catch(() => {});
       } catch (e: any) {
-        setError(e?.message ?? String(e));
         consecutiveErrors += 1;
-        if (consecutiveErrors > 3) break;
-        await new Promise((r) => setTimeout(r, 3000));
+        setError(`${e?.message ?? String(e)} · продолжаем (попытка ${consecutiveErrors})`);
+        // Exponential backoff: 3s, 6s, 12s, 24s, capped at 30s. Never abort.
+        const delay = Math.min(30_000, 3000 * 2 ** (consecutiveErrors - 1));
+        await new Promise((r) => setTimeout(r, delay));
+        // Re-check run state — if user paused/cancelled, exit; else continue.
+        try {
+          await refreshStatus(runId);
+        } catch { /* keep looping */ }
       }
     }
     runningRef.current = false;
@@ -158,9 +167,12 @@ export function AiOrchestrationPanel() {
   }
   async function doRestart() {
     if (!currentRun) return;
-    // Resume from where it stopped — same run, just restart the loop.
+    // PRIORITY: continue current run from points_done — never reset to zero.
+    // We only flip status back to `running` and re-enter the polling loop;
+    // no findings/progress are dropped.
     await resume({ data: { runId: currentRun.id } } as any).catch(() => {});
     await refreshStatus(currentRun.id);
+    runningRef.current = true;
     runLoop(currentRun.id);
   }
 

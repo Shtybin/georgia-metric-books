@@ -318,9 +318,15 @@ export const processOrchestrationTick = createServerFn({ method: "POST" })
     };
   });
 
-// ---------- watchdog check (auto-restart stalled runs) ----------
-
+// ---------- watchdog check (soft auto-resume of stalled runs) ----------
+//
+// Policy: ALWAYS prefer continuing the current run over aborting / restarting
+// from scratch. On a detected stall we:
+//   1. bump heartbeat_at + stallCount + autoRestartCount  (keeps status=running)
+//   2. only after 3 consecutive unresolved stalls do we flip status to "paused"
+//      so the operator can intervene. We never reset points_done / findings.
 const STALL_MS = 60_000;
+const MAX_SOFT_RESUMES = 3;
 
 export const watchdogCheck = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -337,25 +343,36 @@ export const watchdogCheck = createServerFn({ method: "POST" })
     const lastBeat = new Date(run.heartbeat_at as any).getTime();
     const sinceMs = Date.now() - lastBeat;
     if (sinceMs < STALL_MS) return { stalled: false, sinceMs };
-    // Mark as paused (auto) so UI can decide to restart.
+
     const cur: any = run.watchdog_state ?? {};
     const now = new Date().toISOString();
+    const stallCount = (cur.stallCount ?? 0) + 1;
+    const autoRestartCount = (cur.autoRestartCount ?? 0) + 1;
+    const shouldPause = stallCount >= MAX_SOFT_RESUMES;
+
     await supabaseAdmin
       .from("ai_audit_runs")
       .update({
-        status: "paused",
-        paused_at: now,
+        // Soft-resume by default: keep status=running so the loop continues.
+        status: shouldPause ? "paused" : "running",
+        paused_at: shouldPause ? now : null,
+        // Bump heartbeat so the next tick is not flagged immediately.
+        heartbeat_at: now,
         watchdog_state: {
           ...cur,
-          stallCount: (cur.stallCount ?? 0) + 1,
-          stalledAt: now,
-          stalledSinceMs: sinceMs,
+          stallCount,
+          autoRestartCount,
+          lastStallAt: now,
+          lastStalledSinceMs: sinceMs,
+          policy: "continue-current",
+          escalatedToPause: shouldPause,
         } as any,
         updated_at: now,
       })
       .eq("id", data.runId)
       .eq("status", "running");
-    return { stalled: true, sinceMs };
+
+    return { stalled: true, sinceMs, softResumed: !shouldPause, autoRestartCount };
   });
 
 // ---------- PDF database status (Phase 2) ----------
