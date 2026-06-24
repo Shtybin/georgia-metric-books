@@ -444,9 +444,26 @@ export const processNextBatch = createServerFn({ method: "POST" })
         card.endYear,
       );
       const pdfBlock = pdf.text
-        ? `\n\nФРАГМЕНТЫ ИЗ PDF МЕТРИЧЕСКИХ КНИГ (НИАГ Ф.489 оп.6, латинская транслитерация грузинского):\n${pdf.text}\n\nСверь годы карточки и список церквей с упоминаниями выше. Латинская транслитерация: "Tbilisi", "mcxeTa", "ekl." = церковь, "RvTismSoblis" = Богородицы, "wm." = святой. Если PDF подтверждает данные — увеличь confidence.`
+        ? `\n\nФРАГМЕНТЫ ИЗ PDF МЕТРИЧЕСКИХ КНИГ (вторичный источник, латинская транслитерация грузинского):\n${pdf.text}\n\nПодсказки транслитерации: "Tbilisi", "mcxeTa", "ekl." = церковь, "RvTismSoblis" = Богородицы, "wm." = святой.`
         : "";
-      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}${coverageNote}${pdfBlock}`;
+
+      // Priority-1 source: per-feature archive URLs from external_sources
+      const { data: srcRows } = await supabaseAdmin
+        .from("external_sources")
+        .select("url, title, provider")
+        .eq("feature_id", featureId)
+        .limit(8);
+      const archiveBlock = (srcRows && srcRows.length)
+        ? `\n\nССЫЛКИ НА САЙТ АРХИВА (ПРИОРИТЕТ #1 — проверь именно эти страницы; справа — уезды до 1871, слева — районы с 1871):\n${(srcRows as any[]).map((s) => `- ${s.url}${s.title ? "  // " + s.title : ""}${s.provider ? "  [" + s.provider + "]" : ""}`).join("\n")}`
+        : `\n\nССЫЛКИ НА САЙТ АРХИВА: (в external_sources карточки ссылок нет — отметь это в rationale и опускайся к PDF/каталогу)`;
+
+      const periodHint = (card.endYear ?? 0) >= 1871
+        ? "\nПЕРИОД КАРТОЧКИ затрагивает ≥1871 — на сайте архива ищи СЛЕВА во вкладке РАЙОНА."
+        : (card.startYear ?? 9999) <= 1870
+          ? "\nПЕРИОД КАРТОЧКИ ≤1870 — на сайте архива ищи СПРАВА во вкладке УЕЗДА."
+          : "";
+
+      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}${archiveBlock}${periodHint}${pdfBlock}\n\nКАТАЛОГ НИАГ (третичный fallback, ${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}${coverageNote}`;
       try {
         let r = await callGateway(runRow.model as string, SYSTEM_PROMPT, userMsg);
         let ai = r.parsed;
