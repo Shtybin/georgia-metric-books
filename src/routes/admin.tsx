@@ -457,7 +457,7 @@ function AdminPage() {
             </button>
           ))}
         </div>
-        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai" && tab !== "ai_audit" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && tab !== "users" && tab !== "confessions" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
+        {tab !== "cards" && tab !== "uezd" && tab !== "log" && tab !== "ai_orchestration" && tab !== "quality" && tab !== "sources" && tab !== "tbilisi_edit" && tab !== "users" && tab !== "confessions" && <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
           {tab === "coords"
             ? (["pending", "approved", "rejected", "all"] as const).map((s) => (
                 <button
@@ -516,10 +516,8 @@ function AdminPage() {
         <MissingYearsSuggestionsModeration />
       ) : tab === "log" ? (
         <FeatureOverrideHistory currentUserId={currentUserId} />
-      ) : tab === "ai" ? (
-        <AiGeocoderPanel />
-      ) : tab === "ai_audit" ? (
-        <section className="mx-auto max-w-6xl px-4 py-4"><AiAuditPanel /></section>
+      ) : tab === "ai_orchestration" ? (
+        <AiOrchestrationPanel />
       ) : tab === "tbilisi_edit" ? (
         <TbilisiCoordEditorPanel />
       ) : tab === "confessions" ? (
