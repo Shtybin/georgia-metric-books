@@ -19,7 +19,7 @@ KEYWORD_RULES = [
     (re.compile(r"лютеран|кирх|lutheran|kirche|kirch|ლუთერ", re.I), "lutheran"),
     (re.compile(r"синагог|еврейск|иудей|jewish|hebrew|synagogue|სინაგოგ|იუდე", re.I), "jewish"),
     (re.compile(r"молокан|molokan|მოლოკან", re.I), "molokan"),
-    (re.compile(r"баптист|baptist|ბაპტისტ", re.I), "baptist"),
+    (re.compile(r"баптистск|баптистов|baptist church|baptist community|ბაპტისტურ", re.I), "baptist"),
     (re.compile(r"ассир|айсор|assyrian|aysor|ასირი", re.I), "assyrian"),
     (re.compile(r"греческ|греч\.|greek|ბერძნ", re.I), "greek_orthodox"),
     (re.compile(r"военн|полков|гарнизон|казач|military|regimental|garrison|cossack|სამხედრო", re.I), "orthodox_military"),
