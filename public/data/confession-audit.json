@@ -1,32 +1,34 @@
 {
   "totalFeatures": 1376,
   "distribution": {
-    "orthodox_georgian": 1362,
-    "armenian_apostolic": 37,
-    "jewish": 9,
-    "greek_orthodox": 6,
+    "orthodox_georgian": 1354,
+    "armenian_apostolic": 72,
+    "greek_orthodox": 20,
+    "molokan": 17,
+    "jewish": 8,
     "orthodox_military": 6,
     "lutheran": 5,
     "roman_catholic": 3,
-    "molokan": 2,
     "baptist": 1
   },
   "multiCategoryDistribution": {
-    "1": 1329,
-    "2": 44,
-    "3": 1,
-    "4": 1,
-    "7": 1
+    "1": 1295,
+    "2": 59,
+    "3": 19,
+    "4": 2,
+    "8": 1
   },
   "areaRuleHits": {
     "ахалкалакский регион": 33,
-    "jewish town": 7,
-    "armenian village": 4,
+    "ниноцминда (смеш.)": 15,
+    "цалкинский регион": 12,
+    "armenian village": 10,
+    "jewish town": 5,
     "греческое (этнотерр.)": 4,
+    "greek village": 3,
     "german colony": 2,
     "military fort": 2,
-    "molokan/duhobor": 1,
-    "greek village": 1
+    "molokan/duhobor": 1
   },
   "samplesByCategory": {
     "orthodox_georgian": [
@@ -89,10 +91,42 @@
     ],
     "armenian_apostolic": [
       {
+        "settlement": "Сигнаги",
+        "church": "Св. Стефана; Св. Георгия | Св. Карапета | Св. Стефана / Архангела | Св. Нино | Св. Стефана",
+        "cats": [
+          "armenian_apostolic",
+          "orthodox_georgian"
+        ]
+      },
+      {
         "settlement": "Гюмри",
         "church": "Св. Георгия",
         "cats": [
           "armenian_apostolic"
+        ]
+      },
+      {
+        "settlement": "Ахалцихе",
+        "church": "Успения Пресвятой Богородицы / Св. Георгия | Воздвижения Креста Господня | Богородицы | Св. Григория Просветителя | Св. ",
+        "cats": [
+          "armenian_apostolic",
+          "jewish"
+        ]
+      },
+      {
+        "settlement": "Гурджаани",
+        "church": "Преображения Господня; Архангела | Св. Георгия | Св. Иоанна Предтечи | Св. Саркиса | Рождества Пресвятой Богородицы",
+        "cats": [
+          "armenian_apostolic",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Борджоми",
+        "church": "Св. Иоанна Предтечи; Св. Григория Просветителя | Св. Иоанна Предтечи | Св. Ольга",
+        "cats": [
+          "armenian_apostolic",
+          "orthodox_georgian"
         ]
       },
       {
@@ -104,50 +138,21 @@
         ]
       },
       {
+        "settlement": "Поти",
+        "church": "Греческого общества | Военная Церковь | Св. Александра Невского | Св. Григория Просветителя | Св. Николая (Кладбищенская",
+        "cats": [
+          "armenian_apostolic",
+          "greek_orthodox",
+          "orthodox_georgian",
+          "orthodox_military"
+        ]
+      },
+      {
         "settlement": "Хизабавра",
         "church": "Архангела; Св. Сердца Христа (Католическая)",
         "cats": [
           "armenian_apostolic",
           "roman_catholic"
-        ]
-      },
-      {
-        "settlement": "Хертвиси",
-        "church": "Архангела",
-        "cats": [
-          "armenian_apostolic"
-        ]
-      },
-      {
-        "settlement": "Баралети",
-        "church": "Спасителя; Богородицы | Преображения Господня",
-        "cats": [
-          "armenian_apostolic",
-          "orthodox_georgian"
-        ]
-      },
-      {
-        "settlement": "Абули",
-        "church": "Св. Арутин",
-        "cats": [
-          "armenian_apostolic",
-          "orthodox_georgian"
-        ]
-      },
-      {
-        "settlement": "Агана и Сиргва",
-        "church": "Архангела; Св. Арутин; Св. Минаса; Св. Григория Просветителя",
-        "cats": [
-          "armenian_apostolic",
-          "orthodox_georgian"
-        ]
-      },
-      {
-        "settlement": "Ахалкалаки",
-        "church": "Святого Креста | Преображения Господня",
-        "cats": [
-          "armenian_apostolic",
-          "orthodox_georgian"
         ]
       }
     ],
@@ -177,6 +182,7 @@
         "settlement": "Поти",
         "church": "Греческого общества | Военная Церковь | Св. Александра Невского | Св. Григория Просветителя | Св. Николая (Кладбищенская",
         "cats": [
+          "armenian_apostolic",
           "greek_orthodox",
           "orthodox_georgian",
           "orthodox_military"
@@ -190,10 +196,29 @@
         ]
       },
       {
-        "settlement": "Берта",
-        "church": "Григория Чудотворца",
+        "settlement": "Ашкала",
+        "church": "Св. Минаса",
         "cats": [
-          "greek_orthodox"
+          "armenian_apostolic",
+          "greek_orthodox",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Аязма",
+        "church": "Богородицы",
+        "cats": [
+          "greek_orthodox",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Бармаксизи (Цалка)",
+        "church": "Сретения Богородицы; Св. Георгия; Св. Козьмы и Дамиана; Св. Саркиса; Св. Георгия / Богородицы; Св. Константина; Св. Фомы",
+        "cats": [
+          "armenian_apostolic",
+          "greek_orthodox",
+          "orthodox_georgian"
         ]
       }
     ],
@@ -202,8 +227,8 @@
         "settlement": "Ахалцихе",
         "church": "Успения Пресвятой Богородицы / Св. Георгия | Воздвижения Креста Господня | Богородицы | Св. Григория Просветителя | Св. ",
         "cats": [
-          "jewish",
-          "orthodox_georgian"
+          "armenian_apostolic",
+          "jewish"
         ]
       },
       {
@@ -233,14 +258,6 @@
         ]
       },
       {
-        "settlement": "Ахалцихе",
-        "church": "Св. Фомы",
-        "cats": [
-          "jewish",
-          "orthodox_georgian"
-        ]
-      },
-      {
         "settlement": "Карели",
         "church": "Успения Пресвятой Богородицы | Животворящего Источника; Рождества Пресвятой Богородицы",
         "cats": [
@@ -260,6 +277,7 @@
         "settlement": "Тбилиси",
         "church": "Анчисхати Собор | Архангела | Авлабари Архангела | Авлабари Святых Петра и Павла | Авлабари Св. Марины | Общества Баптис",
         "cats": [
+          "armenian_apostolic",
           "baptist",
           "jewish",
           "lutheran",
@@ -267,6 +285,14 @@
           "orthodox_georgian",
           "orthodox_military",
           "roman_catholic"
+        ]
+      },
+      {
+        "settlement": "Цхинвал",
+        "church": "Пресвятой Богородицы; Успения Пресвятой Богородицы",
+        "cats": [
+          "jewish",
+          "orthodox_georgian"
         ]
       }
     ],
@@ -279,16 +305,66 @@
         ]
       },
       {
-        "settlement": "Тбилиси",
-        "church": "Анчисхати Собор | Архангела | Авлабари Архангела | Авлабари Святых Петра и Павла | Авлабари Св. Марины | Общества Баптис",
+        "settlement": "Диди Аракали",
+        "church": "Святого Креста",
         "cats": [
-          "baptist",
-          "jewish",
-          "lutheran",
+          "armenian_apostolic",
           "molokan",
-          "orthodox_georgian",
-          "orthodox_military",
-          "roman_catholic"
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Диди Гондури",
+        "church": "Св. Арутин",
+        "cats": [
+          "armenian_apostolic",
+          "molokan",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Диди Ханчали",
+        "church": "Богородицы",
+        "cats": [
+          "armenian_apostolic",
+          "molokan",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Дилипи",
+        "church": "Вардананц",
+        "cats": [
+          "armenian_apostolic",
+          "molokan",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "ГиЗани",
+        "church": "Св. Карапета",
+        "cats": [
+          "armenian_apostolic",
+          "molokan",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Хештиа",
+        "church": "Богородицы",
+        "cats": [
+          "armenian_apostolic",
+          "molokan",
+          "orthodox_georgian"
+        ]
+      },
+      {
+        "settlement": "Джиграшени",
+        "church": "Архангела",
+        "cats": [
+          "armenian_apostolic",
+          "molokan",
+          "orthodox_georgian"
         ]
       }
     ],
@@ -326,6 +402,7 @@
         "settlement": "Тбилиси",
         "church": "Анчисхати Собор | Архангела | Авлабари Архангела | Авлабари Святых Петра и Павла | Авлабари Св. Марины | Общества Баптис",
         "cats": [
+          "armenian_apostolic",
           "baptist",
           "jewish",
           "lutheran",
@@ -341,6 +418,7 @@
         "settlement": "Поти",
         "church": "Греческого общества | Военная Церковь | Св. Александра Невского | Св. Григория Просветителя | Св. Николая (Кладбищенская",
         "cats": [
+          "armenian_apostolic",
           "greek_orthodox",
           "orthodox_georgian",
           "orthodox_military"
@@ -375,6 +453,7 @@
         "settlement": "Сурами",
         "church": "Лусаворич | Преображения Господня",
         "cats": [
+          "armenian_apostolic",
           "orthodox_georgian",
           "orthodox_military"
         ]
@@ -383,6 +462,7 @@
         "settlement": "Тбилиси",
         "church": "Анчисхати Собор | Архангела | Авлабари Архангела | Авлабари Святых Петра и Павла | Авлабари Св. Марины | Общества Баптис",
         "cats": [
+          "armenian_apostolic",
           "baptist",
           "jewish",
           "lutheran",
@@ -416,6 +496,7 @@
         "settlement": "Тбилиси",
         "church": "Анчисхати Собор | Архангела | Авлабари Архангела | Авлабари Святых Петра и Павла | Авлабари Св. Марины | Общества Баптис",
         "cats": [
+          "armenian_apostolic",
           "baptist",
           "jewish",
           "lutheran",
@@ -431,6 +512,7 @@
         "settlement": "Тбилиси",
         "church": "Анчисхати Собор | Архангела | Авлабари Архангела | Авлабари Святых Петра и Павла | Авлабари Св. Марины | Общества Баптис",
         "cats": [
+          "armenian_apostolic",
           "baptist",
           "jewish",
           "lutheran",
@@ -444,10 +526,34 @@
   },
   "multiCategorySamples": [
     {
+      "settlement": "Сигнаги",
+      "church": "Св. Стефана; Св. Георгия | Св. Карапета | Св. Стефана / Архангела | Св. Нино | Св. Стефана",
+      "cats": [
+        "armenian_apostolic",
+        "orthodox_georgian"
+      ]
+    },
+    {
       "settlement": "Ахалцихе",
       "church": "Успения Пресвятой Богородицы / Св. Георгия | Воздвижения Креста Господня | Богородицы | Св. Григория Просветителя | Св. ",
       "cats": [
-        "jewish",
+        "armenian_apostolic",
+        "jewish"
+      ]
+    },
+    {
+      "settlement": "Гурджаани",
+      "church": "Преображения Господня; Архангела | Св. Георгия | Св. Иоанна Предтечи | Св. Саркиса | Рождества Пресвятой Богородицы",
+      "cats": [
+        "armenian_apostolic",
+        "orthodox_georgian"
+      ]
+    },
+    {
+      "settlement": "Борджоми",
+      "church": "Св. Иоанна Предтечи; Св. Григория Просветителя | Св. Иоанна Предтечи | Св. Ольга",
+      "cats": [
+        "armenian_apostolic",
         "orthodox_georgian"
       ]
     },
@@ -463,6 +569,7 @@
       "settlement": "Поти",
       "church": "Греческого общества | Военная Церковь | Св. Александра Невского | Св. Григория Просветителя | Св. Николая (Кладбищенская",
       "cats": [
+        "armenian_apostolic",
         "greek_orthodox",
         "orthodox_georgian",
         "orthodox_military"
@@ -527,18 +634,18 @@
       ]
     },
     {
-      "settlement": "Ахалкалаки",
-      "church": "Святого Креста | Преображения Господня",
+      "settlement": "Агдгома",
+      "church": "Воскресения Господня Спасителя; Богородицы; Богородицы | Св. Иоанна Предтечи; Св. Саркиса",
       "cats": [
         "armenian_apostolic",
         "orthodox_georgian"
       ]
     },
     {
-      "settlement": "Ахалцихе",
-      "church": "Св. Фомы",
+      "settlement": "Ахалкалаки",
+      "church": "Святого Креста | Преображения Господня",
       "cats": [
-        "jewish",
+        "armenian_apostolic",
         "orthodox_georgian"
       ]
     },
@@ -575,6 +682,23 @@
       ]
     },
     {
+      "settlement": "Ашкала",
+      "church": "Св. Минаса",
+      "cats": [
+        "armenian_apostolic",
+        "greek_orthodox",
+        "orthodox_georgian"
+      ]
+    },
+    {
+      "settlement": "Аязма",
+      "church": "Богородицы",
+      "cats": [
+        "greek_orthodox",
+        "orthodox_georgian"
+      ]
+    },
+    {
       "settlement": "Азаврети",
       "church": "Св. Месропа",
       "cats": [
@@ -599,6 +723,23 @@
       ]
     },
     {
+      "settlement": "Бармаксизи (Цалка)",
+      "church": "Сретения Богородицы; Св. Георгия; Св. Козьмы и Дамиана; Св. Саркиса; Св. Георгия / Богородицы; Св. Константина; Св. Фомы",
+      "cats": [
+        "armenian_apostolic",
+        "greek_orthodox",
+        "orthodox_georgian"
+      ]
+    },
+    {
+      "settlement": "Башкои (Барети)",
+      "church": "40 Севастийских Мучеников",
+      "cats": [
+        "greek_orthodox",
+        "orthodox_georgian"
+      ]
+    },
+    {
       "settlement": "Бавра",
       "church": "Святого Креста",
       "cats": [
@@ -616,71 +757,15 @@
     },
     {
       "settlement": "Бурнашети",
+      "church": "Богородицы",
+      "cats": [
+        "greek_orthodox",
+        "orthodox_georgian"
+      ]
+    },
+    {
+      "settlement": "Бурнашети",
       "church": "Св. Матвея",
-      "cats": [
-        "armenian_apostolic",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Бузавети",
-      "church": "Св. Григория Просветителя",
-      "cats": [
-        "armenian_apostolic",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Дадеши",
-      "church": "Богородицы",
-      "cats": [
-        "armenian_apostolic",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Диди Самсари",
-      "church": "Св. Арутин",
-      "cats": [
-        "armenian_apostolic",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Дилиска",
-      "church": "Св. Саркиса",
-      "cats": [
-        "armenian_apostolic",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Гоми (Гомани)",
-      "church": "Св. Григория Просветителя; Св. Стефана; Св. Арутин; Св. Карапета; Св. Георгия; Архангела; Св. Нарекаци; Св. Минаса",
-      "cats": [
-        "armenian_apostolic",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Гуликами",
-      "church": "Святой Троицы",
-      "cats": [
-        "armenian_apostolic",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Карели",
-      "church": "Успения Пресвятой Богородицы | Животворящего Источника; Рождества Пресвятой Богородицы",
-      "cats": [
-        "jewish",
-        "orthodox_georgian"
-      ]
-    },
-    {
-      "settlement": "Картиками",
-      "church": "Богородицы",
       "cats": [
         "armenian_apostolic",
         "orthodox_georgian"
