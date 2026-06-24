@@ -302,14 +302,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!baseData) return null;
     const effectiveOverrides = compareMode === "base" ? [] : overrides;
     const overriddenRaw = normalizeAliases(applyOverrides(baseData, effectiveOverrides));
-    // Inject `category` property so MapLibre can filter by confession/community.
+    // Inject `categories` (array) so MapLibre can filter by confession/community.
     const overridden: FC = {
       ...overriddenRaw,
       features: overriddenRaw.features.map((f) => ({
         ...f,
         properties: {
           ...(f.properties ?? {}),
-          category: categorizeParish(f.properties),
+          categories: categorizeParish(f.properties),
         },
       })),
     };
@@ -323,7 +323,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     const withCat = (arr: Feature[]) =>
       arr.map((f) => ({
         ...f,
-        properties: { ...(f.properties ?? {}), category: categorizeParish(f.properties) },
+        properties: { ...(f.properties ?? {}), categories: categorizeParish(f.properties) },
       }));
     if (userFeatures.length === 0 && approvedFeatures.length === 0) return overridden;
     return {
@@ -972,14 +972,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     }
   }, [data]);
 
-  // Bucket + category filter
+  // Bucket + category filter. `categories` is an array on each feature, so we
+  // need OR of `["in", category, ["get","categories"]]` across enabled cats.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady) return;
+    const enabledCats = [...enabledCategories];
+    const catExpr: any = enabledCats.length === CATEGORY_ORDER.length
+      ? true
+      : ["any", ...enabledCats.map((c) => ["in", c, ["get", "categories"]])];
     const filter: any = ["all",
       ["!", ["has", "point_count"]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
-      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
+      catExpr,
     ];
     if (map.getLayer("points")) map.setFilter("points", filter);
   }, [enabledBuckets, enabledCategories, styleReady]);
@@ -1011,11 +1016,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!map || !styleReady) return;
     if (!map.getLayer("points-top")) return;
     const ids = highlightMode === "area" ? [...neighborIds] : [];
+    const enabledCats = [...enabledCategories];
+    const catExpr: any = enabledCats.length === CATEGORY_ORDER.length
+      ? true
+      : ["any", ...enabledCats.map((c) => ["in", c, ["get", "categories"]])];
     map.setFilter("points-top", [
       "all",
       ["in", ["id"], ["literal", ids]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
-      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
+      catExpr,
     ]);
   }, [neighborIds, highlightMode, styleReady, enabledBuckets, enabledCategories]);
 
@@ -1770,6 +1779,32 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   ({sel.coverage} {T.coverage})
                 </span>
               </dd>
+              {(() => {
+                const cats: string[] = Array.isArray(selected?.properties?.categories)
+                  ? selected!.properties!.categories
+                  : [];
+                if (cats.length === 0) return null;
+                return (
+                  <>
+                    <dt className="text-muted-foreground">{T.confessionField}</dt>
+                    <dd className="flex flex-wrap items-center gap-1">
+                      {cats.map((c) => (
+                        <span
+                          key={c}
+                          title={tT(lang).confessions[c as keyof ReturnType<typeof tT>["confessions"]]}
+                          className="inline-flex items-center gap-1 rounded-full border border-border bg-background/60 px-1.5 py-0.5 text-[11px]"
+                        >
+                          <span
+                            className="h-2 w-2 rounded-full ring-1 ring-white"
+                            style={{ backgroundColor: CATEGORY_COLORS[c as keyof typeof CATEGORY_COLORS] }}
+                          />
+                          {tT(lang).confessionsShort[c as keyof ReturnType<typeof tT>["confessionsShort"]]}
+                        </span>
+                      ))}
+                    </dd>
+                  </>
+                );
+              })()}
               <dt className="text-muted-foreground">{T.missing}</dt>
               <dd className="tabular-nums text-xs">
                 {sel.missingRaw[lang] || sel.missingRaw.en
@@ -2036,6 +2071,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                         <button
                           key={c}
                           onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          title={tT(lang).confessions[c]}
                           aria-pressed={on}
                           className={cn(
                             "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] transition-opacity",
@@ -2046,7 +2082,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                             className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
                             style={{ backgroundColor: CATEGORY_COLORS[c] }}
                           />
-                          <span className="truncate">{T.categoryName[c]}</span>
+                          <span className="truncate">{tT(lang).confessionsShort[c]}</span>
                         </button>
                       );
                     })}
@@ -2210,6 +2246,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                       <li key={c}>
                         <button
                           onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          title={tT(lang).confessions[c]}
                           aria-pressed={on}
                           className={cn(
                             "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
@@ -2220,7 +2257,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                             className="h-3 w-3 shrink-0 rounded-full ring-2 ring-white"
                             style={{ backgroundColor: CATEGORY_COLORS[c] }}
                           />
-                          <span className="truncate">{T.categoryName[c]}</span>
+                          <span className="truncate">{tT(lang).confessionsShort[c]}</span>
                         </button>
                       </li>
                     );
