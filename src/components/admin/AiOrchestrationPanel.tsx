@@ -243,10 +243,8 @@ export function AiOrchestrationPanel() {
             />
           </label>
           <div className="text-xs">
-            <span className="mb-1 block text-muted-foreground">PDF метрических книг</span>
-            <Button size="sm" variant="outline" disabled title="Phase 2 — пришлите образец PDF в чат">
-              <Upload className="mr-1 h-3.5 w-3.5" /> Загрузить PDF (Phase 2)
-            </Button>
+            <span className="mb-1 block text-muted-foreground">База PDF метрических книг</span>
+            <PdfDbStatus />
           </div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
