@@ -357,3 +357,29 @@ export const watchdogCheck = createServerFn({ method: "POST" })
       .eq("status", "running");
     return { stalled: true, sinceMs };
   });
+
+// ---------- PDF database status (Phase 2) ----------
+
+export const getPdfDatabaseStatus = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertEditor((context as any).userId as string);
+    const { data, error } = await supabaseAdmin
+      .from("pdf_text_chunks")
+      .select("source_name, decade_start, decade_end");
+    if (error) throw new Error(error.message);
+    const bySrc = new Map<string, { chunks: number; from: number; to: number }>();
+    for (const r of (data ?? []) as any[]) {
+      const cur = bySrc.get(r.source_name) ?? { chunks: 0, from: r.decade_start, to: r.decade_end };
+      cur.chunks += 1;
+      cur.from = Math.min(cur.from, r.decade_start);
+      cur.to = Math.max(cur.to, r.decade_end);
+      bySrc.set(r.source_name, cur);
+    }
+    return {
+      totalChunks: data?.length ?? 0,
+      sources: Array.from(bySrc.entries())
+        .map(([name, s]) => ({ name, chunks: s.chunks, from: s.from, to: s.to }))
+        .sort((a, b) => a.from - b.from),
+    };
+  });

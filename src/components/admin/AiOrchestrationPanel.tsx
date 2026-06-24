@@ -25,6 +25,7 @@ import {
   cancelOrchestrationRun,
   processOrchestrationTick,
   watchdogCheck,
+  getPdfDatabaseStatus,
 } from "@/lib/aiOrchestrator.functions";
 import {
   getRunStatus,
@@ -242,10 +243,8 @@ export function AiOrchestrationPanel() {
             />
           </label>
           <div className="text-xs">
-            <span className="mb-1 block text-muted-foreground">PDF метрических книг</span>
-            <Button size="sm" variant="outline" disabled title="Phase 2 — пришлите образец PDF в чат">
-              <Upload className="mr-1 h-3.5 w-3.5" /> Загрузить PDF (Phase 2)
-            </Button>
+            <span className="mb-1 block text-muted-foreground">База PDF метрических книг</span>
+            <PdfDbStatus />
           </div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -448,5 +447,31 @@ export function AiOrchestrationPanel() {
         )}
       </div>
     </section>
+  );
+}
+
+function PdfDbStatus() {
+  const fetchStatus = useServerFn(getPdfDatabaseStatus);
+  const [s, setS] = useState<{ totalChunks: number; sources: { name: string; chunks: number; from: number; to: number }[] } | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetchStatus()
+      .then((r) => alive && setS(r as any))
+      .catch((e) => alive && setErr(e?.message ?? String(e)));
+    return () => { alive = false; };
+  }, [fetchStatus]);
+  if (err) return <span className="text-destructive">PDF: {err}</span>;
+  if (!s) return <span className="text-muted-foreground">Загрузка…</span>;
+  if (s.totalChunks === 0) return <span className="text-muted-foreground">PDF не загружены</span>;
+  const range = s.sources.length
+    ? `${Math.min(...s.sources.map(x => x.from))}–${Math.max(...s.sources.map(x => x.to))}`
+    : "—";
+  return (
+    <span className="inline-flex items-center gap-2">
+      <Upload className="h-3.5 w-3.5 text-emerald-600" />
+      <span className="tabular-nums">{s.totalChunks} фрагм.</span>
+      <span className="text-muted-foreground">/ {s.sources.length} PDF / {range}</span>
+    </span>
   );
 }

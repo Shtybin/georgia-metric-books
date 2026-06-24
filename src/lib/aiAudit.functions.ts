@@ -31,10 +31,55 @@ const PRICING: Record<string, { in: number; out: number }> = {
   "google/gemini-2.5-flash": { in: 0.3, out: 2.5 },
   "google/gemini-2.5-pro": { in: 1.25, out: 10 },
   "google/gemini-3-flash-preview": { in: 0.3, out: 2.5 },
+  "openai/gpt-5": { in: 2.5, out: 10 },
+  "openai/gpt-5-mini": { in: 0.25, out: 2 },
 };
 function priceUsd(model: string, tIn: number, tOut: number) {
   const p = PRICING[model] ?? PRICING["google/gemini-2.5-flash-lite"];
   return (tIn * p.in + tOut * p.out) / 1_000_000;
+}
+
+// ---- PDF context lookup (Phase 2 grounding) ----------------------------
+// Pulls short excerpts from `pdf_text_chunks` whose decade overlaps the
+// card's year range and whose content mentions the settlement.
+async function pickPdfContext(
+  settlementEn: string | undefined,
+  settlementRu: string | undefined,
+  startYear: number | null,
+  endYear: number | null,
+): Promise<{ text: string; sources: string[] }> {
+  const s = (settlementEn ?? "").trim();
+  const sr = (settlementRu ?? "").trim();
+  if (!s && !sr) return { text: "", sources: [] };
+  if (startYear == null || startYear > 1870) return { text: "", sources: [] };
+  const lo = Math.max(1819, Math.min(startYear, 1870));
+  const hi = Math.min(1870, Math.max(endYear ?? startYear, 1819));
+  const needle = (s || sr).replace(/[%_\\]/g, "");
+  if (needle.length < 3) return { text: "", sources: [] };
+  try {
+    const { data } = await supabaseAdmin
+      .from("pdf_text_chunks")
+      .select("source_name, page_from, page_to, content")
+      .lte("decade_start", hi)
+      .gte("decade_end", lo)
+      .ilike("content", `%${needle}%`)
+      .limit(3);
+    if (!data || data.length === 0) return { text: "", sources: [] };
+    const excerpts: string[] = [];
+    const sources: string[] = [];
+    for (const row of data as any[]) {
+      const idx = (row.content as string).toLowerCase().indexOf(needle.toLowerCase());
+      const start = Math.max(0, idx - 300);
+      const end = Math.min((row.content as string).length, idx + 800);
+      excerpts.push(
+        `[${row.source_name} стр.${row.page_from}-${row.page_to}]\n…${(row.content as string).slice(start, end)}…`,
+      );
+      sources.push(`${row.source_name}#p${row.page_from}`);
+    }
+    return { text: excerpts.join("\n\n"), sources };
+  } catch {
+    return { text: "", sources: [] };
+  }
 }
 
 import { GENERIC_REGIONS, deriveFindings } from "./aiAuditFindings";
@@ -386,30 +431,65 @@ export const processNextBatch = createServerFn({ method: "POST" })
           : card.endYear != null && card.endYear > 1870
             ? "\n\nВНИМАНИЕ: часть диапазона карточки выходит за пределы каталога НИАГ Ф.489 оп.6 (1819–1870). Отсутствие поздних лет в каталоге НЕ ошибка."
             : "";
-      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}${coverageNote}`;
+      // Phase 2: ground against PDF excerpts when card falls within 1819–1870
+      const pdf = await pickPdfContext(
+        card.settlement?.en,
+        card.settlement?.ru,
+        card.startYear,
+        card.endYear,
+      );
+      const pdfBlock = pdf.text
+        ? `\n\nФРАГМЕНТЫ ИЗ PDF МЕТРИЧЕСКИХ КНИГ (НИАГ Ф.489 оп.6, латинская транслитерация грузинского):\n${pdf.text}\n\nСверь годы карточки и список церквей с упоминаниями выше. Латинская транслитерация: "Tbilisi", "mcxeTa", "ekl." = церковь, "RvTismSoblis" = Богородицы, "wm." = святой. Если PDF подтверждает данные — увеличь confidence.`
+        : "";
+      const userMsg = `КАРТОЧКА:\n${JSON.stringify(card, null, 2)}\n\nКАТАЛОГ НИАГ (${ctx.entries.length} записей):\n${ctx.text || "(нет совпадений по уезду/годам)"}${coverageNote}${pdfBlock}`;
       try {
-        const r = await callGateway(runRow.model as string, SYSTEM_PROMPT, userMsg);
-        const ai = r.parsed;
-        const cost = priceUsd(runRow.model as string, r.tokensIn, r.tokensOut);
+        let r = await callGateway(runRow.model as string, SYSTEM_PROMPT, userMsg);
+        let ai = r.parsed;
+        let cost = priceUsd(runRow.model as string, r.tokensIn, r.tokensOut);
         spent += cost;
+        let tokIn = r.tokensIn;
+        let tokOut = r.tokensOut;
+        let escalated = false;
+
+        // Phase 2: Reviewer escalation to GPT-5 when confidence is low or
+        // any *_ok flag is false (potential correction). Skips if budget tight.
+        const conf0 = Number(ai.confidence ?? 0);
+        const hasFlag = ai && (ai.settlement_ok === false || ai.uezd_ok === false || ai.church_ok === false || ai.years_ok === false || ai.missing_years_ok === false);
+        const isPro = (runRow.model as string) === "google/gemini-2.5-pro";
+        if (isPro && (conf0 < 0.5 || hasFlag) && spent < budget * 0.9) {
+          try {
+            const reviewerMsg = `ПЕРВИЧНЫЙ АНАЛИЗ (Gemini 2.5 Pro):\n${JSON.stringify(ai, null, 2)}\n\n---\n\n${userMsg}\n\nПроверь и при необходимости скорректируй. Верни итог через инструмент.`;
+            const rev = await callGateway("openai/gpt-5", SYSTEM_PROMPT, reviewerMsg);
+            ai = rev.parsed;
+            const revCost = priceUsd("openai/gpt-5", rev.tokensIn, rev.tokensOut);
+            cost += revCost;
+            spent += revCost;
+            tokIn += rev.tokensIn;
+            tokOut += rev.tokensOut;
+            escalated = true;
+          } catch (e: any) {
+            if (e?.message === "ai_credits_exhausted") { budgetHit = true; }
+          }
+        }
+
         const rows = deriveFindings(card, ai);
         const conf = Number(ai.confidence ?? 0);
+        const baseSources: string[] = Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [];
+        const sources = [...baseSources, ...pdf.sources, ...(escalated ? ["reviewer:openai/gpt-5"] : [])];
         if (rows.length === 0) {
           findingsToInsert.push({
             run_id: runRow.id, feature_id: featureId, kind: "other", severity: "info",
             confidence: conf, current: card, proposed: {},
-            rationale: ai.rationale ?? "ОК — расхождений не найдено",
-            sources: Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [],
-            tokens_in: r.tokensIn, tokens_out: r.tokensOut, cost_usd: cost, status: "approved",
+            rationale: (ai.rationale ?? "ОК — расхождений не найдено") + (escalated ? " [reviewer:gpt-5]" : ""),
+            sources, tokens_in: tokIn, tokens_out: tokOut, cost_usd: cost, status: "approved",
           });
         } else {
           for (const row of rows) {
             findingsToInsert.push({
               run_id: runRow.id, feature_id: featureId, kind: row.kind, severity: row.severity,
               confidence: conf, current: row.current, proposed: row.proposed,
-              rationale: row.rationale || ai.rationale || "",
-              sources: Array.isArray(ai.sources) ? ai.sources.slice(0, 10) : [],
-              tokens_in: r.tokensIn, tokens_out: r.tokensOut, cost_usd: cost, status: "pending",
+              rationale: (row.rationale || ai.rationale || "") + (escalated ? " [reviewer:gpt-5]" : ""),
+              sources, tokens_in: tokIn, tokens_out: tokOut, cost_usd: cost, status: "pending",
             });
           }
         }
