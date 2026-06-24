@@ -101,9 +101,14 @@ export function FeatureOverrideHistory({ currentUserId }: { currentUserId: strin
     const label = `${settlementName(r.data) || "—"} → ${OP_LABEL[r.op]} от ${new Date(r.changed_at).toLocaleString("ru-RU")}`;
     if (!confirm(`Откатить правку к версии:\n${label}?`)) return;
     setRestoring((s) => ({ ...s, [r.id]: true }));
-    const { error } = await supabase.rpc("rollback_feature_override", { _history_id: r.id });
+    let errMsg: string | null = null;
+    try {
+      await rollbackFeatureOverrideFn({ data: { historyId: r.id } });
+    } catch (e: any) {
+      errMsg = e?.message ?? String(e);
+    }
     setRestoring((s) => ({ ...s, [r.id]: false }));
-    if (error) { alert(error.message); return; }
+    if (errMsg) { alert(errMsg); return; }
     await load();
   }
 
