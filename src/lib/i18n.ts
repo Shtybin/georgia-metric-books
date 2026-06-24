@@ -183,9 +183,36 @@ export const STRINGS = {
     legend: "Records start year",
     showAll: "Show all",
     hideAll: "Hide all",
+    clearSelection: "Clear selection",
     collapseCard: "Collapse",
     expandCard: "Expand",
     dragCard: "Drag",
+    collapseLegend: "Collapse legend",
+    expandLegend: "Expand legend",
+    multiSelectHint: "Click — isolate a category. Shift+click — multi-select.",
+    categoryLegend: "Confession / community",
+    categoryName: {
+      georgian: "Georgians (Orthodox)",
+      armenian: "Armenians",
+      russian: "Russians",
+      military: "Military",
+      jewish: "Jews (synagogues)",
+      catholic: "Catholics",
+      lutheran: "Lutherans",
+      other: "Other",
+    },
+    howToButton: "How to use",
+    howToTitle: "How to use the map and the project",
+    howToBodyHtml:
+      '<p class="mb-2"><b>What it is.</b> An interactive atlas of Georgian parish registers, 1819–1930. Every point is one parish with info on when record-keeping started and which years are missing.</p>' +
+      '<p class="mb-2"><b>1. Search.</b> Type a settlement, church, district or region name (Russian / English / ქართული, partial matches OK). Below the search box — dropdown filters by region and district.</p>' +
+      '<p class="mb-2"><b>2. Colour legend (right).</b> Colour = year when record-keeping started. Click a period to isolate it. <b>Shift+click</b> — multi-select. The "Show all / Clear selection" button is on top. Use the arrow to collapse the legend.</p>' +
+      '<p class="mb-2"><b>3. Confession filter (left, above the size scale).</b> Same rules: click to isolate (Georgians, Armenians, Russians, Military, synagogues, Catholics, Lutherans, Other); Shift+click for multi-select; clear button on top; arrow collapses it.</p>' +
+      '<p class="mb-2"><b>4. Circle size.</b> Bigger = longer continuous record-keeping period.</p>' +
+      '<p class="mb-2"><b>5. Parish card.</b> Click a point to see details, historical names and source links. "Show within 10 km" highlights neighbours. On mobile the card can be collapsed and dragged by the top.</p>' +
+      '<p class="mb-2"><b>6. Tbilisi.</b> Zoom into the city — a button appears that opens a dedicated map georeferenced to the historical 1898 / 1904 plans, with a confession filter.</p>' +
+      '<p class="mb-2"><b>7. Contribute.</b> "Add settlement coords" lists unlocated settlements — you can suggest a point. From a parish card — "Suggest missing-years correction". "Report a problem" — general feedback.</p>' +
+      '<p class="mb-1"><b>8. Where to find documents.</b> The "Where to find documents?" button — links to the catalogue of the National Historical Archive of Georgia.</p>',
     bucket: {
       "pre-1820": "before 1820",
       "1820-1835": "1821–1835",
