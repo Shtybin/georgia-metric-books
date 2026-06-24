@@ -2064,7 +2064,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   )}
                 </div>
                 {categoryLegendOpen && (
-                  <div className="mt-1 grid grid-cols-2 gap-1">
+                  <div className="mt-1 grid grid-cols-1 gap-1">
                     {CATEGORY_ORDER.map((c) => {
                       const on = enabledCategories.has(c);
                       return (
@@ -2082,7 +2082,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                             className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
                             style={{ backgroundColor: CATEGORY_COLORS[c] }}
                           />
-                          <span className="truncate">{tT(lang).confessionsShort[c]}</span>
+                          <span className="truncate">{tT(lang).confessions[c]}</span>
                         </button>
                       );
                     })}
@@ -2257,7 +2257,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                             className="h-3 w-3 shrink-0 rounded-full ring-2 ring-white"
                             style={{ backgroundColor: CATEGORY_COLORS[c] }}
                           />
-                          <span className="truncate">{tT(lang).confessionsShort[c]}</span>
+                          <span className="truncate">{tT(lang).confessions[c]}</span>
                         </button>
                       </li>
                     );
