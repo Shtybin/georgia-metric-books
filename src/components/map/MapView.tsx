@@ -1010,8 +1010,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       "all",
       ["in", ["id"], ["literal", ids]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
+      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
     ]);
-  }, [neighborIds, highlightMode, styleReady, enabledBuckets]);
+  }, [neighborIds, highlightMode, styleReady, enabledBuckets, enabledCategories]);
 
   const pulseRafRef = useRef<number | null>(null);
   function pulseHalo() {
