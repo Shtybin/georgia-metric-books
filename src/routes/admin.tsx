@@ -446,6 +446,10 @@ function AdminPage() {
                 <span className="inline-flex items-center gap-1">
                   <BookOpen className="h-3.5 w-3.5" /> Источники
                 </span>
+              ) : k === "confessions" ? (
+                <span className="inline-flex items-center gap-1">
+                  <Church className="h-3.5 w-3.5" /> Конфессии
+                </span>
               ) : k === "users" ? (
                 <span className="inline-flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" /> Пользователи
