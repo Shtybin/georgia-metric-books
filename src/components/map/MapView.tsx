@@ -967,16 +967,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     }
   }, [data]);
 
-  // Bucket filter
+  // Bucket + category filter
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady) return;
     const filter: any = ["all",
       ["!", ["has", "point_count"]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
+      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
     ];
     if (map.getLayer("points")) map.setFilter("points", filter);
-  }, [enabledBuckets, styleReady]);
+  }, [enabledBuckets, enabledCategories, styleReady]);
 
   // Apply neighbor dimming + (for area) highlighted boost
   useEffect(() => {
