@@ -7,14 +7,13 @@ import { OsmLeafletDialog } from "@/components/map/OsmLeafletDialog";
 import { FeatureCardsEditor } from "@/components/admin/FeatureCardsEditor";
 import { MissingYearsSuggestionsModeration } from "@/components/admin/MissingYearsSuggestionsModeration";
 import { FeatureOverrideHistory } from "@/components/admin/FeatureOverrideHistory";
-import { AiGeocoderPanel } from "@/components/admin/AiGeocoderPanel";
-import { AiAuditPanel } from "@/components/admin/AiAuditPanel";
+import { AiOrchestrationPanel } from "@/components/admin/AiOrchestrationPanel";
 import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
 import { TbilisiCoordEditorPanel } from "@/components/admin/TbilisiCoordEditorPanel";
 import { UsersAdminPanel } from "@/components/admin/UsersAdminPanel";
 import { ConfessionAuditPanel } from "@/components/admin/ConfessionAuditPanel";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users, Church } from "lucide-react";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users, Church, Bot } from "lucide-react";
 
 
 
@@ -121,7 +120,7 @@ function AdminPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
   const [diagOpen, setDiagOpen] = useState(false);
-  const [tab, setTab] = useState<"coords" | "ai" | "ai_audit" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit" | "users" | "confessions">("coords");
+  const [tab, setTab] = useState<"coords" | "ai_orchestration" | "reports" | "cards" | "uezd" | "log" | "quality" | "sources" | "tbilisi_edit" | "users" | "confessions">("coords");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
