@@ -527,6 +527,8 @@ function AdminPage() {
         <section className="mx-auto max-w-6xl px-4 py-4"><AiAuditPanel /></section>
       ) : tab === "tbilisi_edit" ? (
         <TbilisiCoordEditorPanel />
+      ) : tab === "confessions" ? (
+        <ConfessionAuditPanel />
       ) : tab === "users" && isAdmin && currentUserId ? (
         <section className="mx-auto max-w-6xl px-4 py-4">
           <UsersAdminPanel currentUserId={currentUserId} />
