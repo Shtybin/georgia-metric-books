@@ -24,7 +24,9 @@ const KEYWORD_RULES: KeywordRule[] = [
   { re: /лютеран|кирх|lutheran|kirche|kirch|ლუთერ/i, cat: "lutheran" },
   { re: /синагог|еврейск|иудей|jewish|hebrew|synagogue|სინაგოგ|იუდე/i, cat: "jewish" },
   { re: /молокан|molokan|მოლოკან/i, cat: "molokan" },
-  { re: /баптист|baptist|ბაპტისტ/i, cat: "baptist" },
+  // "St. John the Baptist" — это святой Иоанн Креститель, не община баптистов.
+  // Триггерим только если есть явное упоминание общины/конфессии/церкви.
+  { re: /баптистск|баптистов|baptist church|baptist community|baptist congregation|ბაპტისტურ/i, cat: "baptist" },
   { re: /ассир|айсор|assyrian|aysor|ასირი/i, cat: "assyrian" },
   { re: /греческ|греч\.|greek|ბერძნ/i, cat: "greek_orthodox" },
   { re: /военн|полков|гарнизон|казач|military|regimental|garrison|cossack|სამხედრო/i, cat: "orthodox_military" },
