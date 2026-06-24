@@ -13,7 +13,8 @@ import { DataQualitySummary } from "@/components/admin/DataQualitySummary";
 import { ExternalSourcesPanel } from "@/components/admin/ExternalSourcesPanel";
 import { TbilisiCoordEditorPanel } from "@/components/admin/TbilisiCoordEditorPanel";
 import { UsersAdminPanel } from "@/components/admin/UsersAdminPanel";
-import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users } from "lucide-react";
+import { ConfessionAuditPanel } from "@/components/admin/ConfessionAuditPanel";
+import { Check, X, LogOut, ExternalLink, MessageSquare, Trash2, History, Activity, ChevronDown, ChevronRight, RefreshCw, Map as MapIcon, FileEdit, Flag, ScrollText, Sparkles, BarChart3, BookOpen, MapPin, Users, Church } from "lucide-react";
 
 
 
