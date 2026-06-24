@@ -1016,11 +1016,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!map || !styleReady) return;
     if (!map.getLayer("points-top")) return;
     const ids = highlightMode === "area" ? [...neighborIds] : [];
+    const enabledCats = [...enabledCategories];
+    const catExpr: any = enabledCats.length === CATEGORY_ORDER.length
+      ? true
+      : ["any", ...enabledCats.map((c) => ["in", c, ["get", "categories"]])];
     map.setFilter("points-top", [
       "all",
       ["in", ["id"], ["literal", ids]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
-      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
+      catExpr,
     ]);
   }, [neighborIds, highlightMode, styleReady, enabledBuckets, enabledCategories]);
 
