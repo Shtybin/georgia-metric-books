@@ -2001,8 +2001,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </>
       )}
 
-      {/* Desktop: docs button stacked above the legend (right side). */}
+      {/* Desktop: how-to + docs buttons stacked above the legend (right side).
+          The whole column is bottom-anchored, so when the legend collapses
+          the buttons slide down and the distance between them and the legend
+          stays constant. */}
       <div className="pointer-events-none absolute bottom-12 right-3 z-10 hidden w-[min(92vw,260px)] flex-col items-stretch gap-2 sm:flex">
+        <button
+          onClick={() => setHowToOpen(true)}
+          className="pointer-events-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-primary/40 bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-xl ring-1 ring-primary/30 transition-transform hover:-translate-y-0.5"
+        >
+          <BookOpen className="h-4 w-4" />
+          {T.howToButton}
+        </button>
         <button
           onClick={() => setDocsOpen(true)}
           className="pointer-events-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
@@ -2011,70 +2021,85 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           {T.docsButton}
         </button>
 
-        {/* Desktop: full legend + stats panel. */}
+        {/* Desktop: full legend + stats panel — collapsible. */}
         <div className="pointer-events-auto rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
 
         <div className="mb-2 flex items-center justify-between gap-2">
-          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {T.legend}
-          </div>
           <button
-            onClick={toggleAllBuckets}
-            className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+            onClick={() => setLegendOpen((v) => !v)}
+            aria-expanded={legendOpen}
+            title={legendOpen ? T.collapseLegend : T.expandLegend}
+            className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground"
           >
-            {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+            {legendOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+            {T.legend}
           </button>
+          {legendOpen && (
+            <button
+              onClick={toggleAllBuckets}
+              className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+            >
+              {enabledBuckets.size === BUCKET_ORDER.length ? T.clearSelection : T.showAll}
+            </button>
+          )}
         </div>
-        <ul className="space-y-1.5">
-          {BUCKET_ORDER.map(b => {
-            const on = enabledBuckets.has(b);
-            return (
-              <li key={b}>
-                <button
-                  onClick={() => toggleBucket(b)}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
-                    on ? "opacity-100" : "opacity-40",
-                  )}
-                  aria-pressed={on}
-                >
-                  <span
-                    className="h-3 w-3 rounded-full ring-2 ring-white"
-                    style={{ backgroundColor: BUCKET_COLORS[b] }}
-                  />
-                  <span className="tabular-nums">{T.bucket[b]}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        {stats && (
-          <div className="mt-3 border-t border-border pt-2.5">
-            <div className="mb-1.5 flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              <Info className="h-3 w-3" />{T.stats}
-            </div>
-            <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
-              {(() => {
-                const extra = addedKeys.size;
-                const total = stats.total;
-                const withC = Math.max(0, stats.total - stats.withoutCoords + extra);
-                const without = Math.max(0, stats.withoutCoords - extra);
-                const pct = (n: number) => total > 0 ? Math.round((n / total) * 100) : 0;
+        {legendOpen && (
+          <>
+            <ul className="space-y-1.5">
+              {BUCKET_ORDER.map(b => {
+                const on = enabledBuckets.has(b);
                 return (
-                  <>
-                    <dt className="text-muted-foreground">{T.total}</dt>
-                    <dd className="tabular-nums">{total.toLocaleString()}</dd>
-                    <dt className="text-muted-foreground">{T.withCoords}</dt>
-                    <dd className="tabular-nums">{withC.toLocaleString()} ({pct(withC)}%)</dd>
-                    <dt className="text-muted-foreground">{T.withoutCoords}</dt>
-                    <dd className="tabular-nums">{without.toLocaleString()} ({pct(without)}%)</dd>
-                  </>
+                  <li key={b}>
+                    <button
+                      onClick={(e) => toggleBucket(b, e.shiftKey)}
+                      className={cn(
+                        "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
+                        on ? "opacity-100" : "opacity-40",
+                      )}
+                      aria-pressed={on}
+                    >
+                      <span
+                        className="h-3 w-3 rounded-full ring-2 ring-white"
+                        style={{ backgroundColor: BUCKET_COLORS[b] }}
+                      />
+                      <span className="tabular-nums">{T.bucket[b]}</span>
+                    </button>
+                  </li>
                 );
-              })()}
-              <dt className="text-muted-foreground">{T.confidence}</dt>
-              <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
-            </dl>
-          </div>
+              })}
+            </ul>
+            <p className="mt-2 text-[10px] leading-tight text-muted-foreground">
+              {T.multiSelectHint}
+            </p>
+            {stats && (
+              <div className="mt-3 border-t border-border pt-2.5">
+                <div className="mb-1.5 flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <Info className="h-3 w-3" />{T.stats}
+                </div>
+                <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
+                  {(() => {
+                    const extra = addedKeys.size;
+                    const total = stats.total;
+                    const withC = Math.max(0, stats.total - stats.withoutCoords + extra);
+                    const without = Math.max(0, stats.withoutCoords - extra);
+                    const pct = (n: number) => total > 0 ? Math.round((n / total) * 100) : 0;
+                    return (
+                      <>
+                        <dt className="text-muted-foreground">{T.total}</dt>
+                        <dd className="tabular-nums">{total.toLocaleString()}</dd>
+                        <dt className="text-muted-foreground">{T.withCoords}</dt>
+                        <dd className="tabular-nums">{withC.toLocaleString()} ({pct(withC)}%)</dd>
+                        <dt className="text-muted-foreground">{T.withoutCoords}</dt>
+                        <dd className="tabular-nums">{without.toLocaleString()} ({pct(without)}%)</dd>
+                      </>
+                    );
+                  })()}
+                  <dt className="text-muted-foreground">{T.confidence}</dt>
+                  <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
+                </dl>
+              </div>
+            )}
+          </>
         )}
         </div>
       </div>
