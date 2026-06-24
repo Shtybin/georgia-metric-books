@@ -1960,7 +1960,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             />
           </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
-            <div className="rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
+            <div className="space-y-1.5 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
               <div className="flex items-center justify-between gap-2">
                 <button
                   onClick={() => setMobileLegendOpen((v) => !v)}
@@ -1975,18 +1975,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     onClick={toggleAllBuckets}
                     className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
                   >
-                    {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+                    {enabledBuckets.size === BUCKET_ORDER.length ? T.clearSelection : T.showAll}
                   </button>
                 )}
               </div>
               {mobileLegendOpen && (
-                <div className="mt-1 grid grid-cols-3 gap-1">
+                <div className="grid grid-cols-3 gap-1">
                   {BUCKET_ORDER.map((b) => {
                     const on = enabledBuckets.has(b);
                     return (
                       <button
                         key={b}
-                        onClick={() => toggleBucket(b)}
+                        onClick={(e) => toggleBucket(b, e.shiftKey)}
                         aria-pressed={on}
                         className={cn(
                           "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
@@ -2003,6 +2003,51 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   })}
                 </div>
               )}
+
+              <div className="border-t border-border/60 pt-1.5">
+                <div className="flex items-center justify-between gap-2">
+                  <button
+                    onClick={() => setCategoryLegendOpen((v) => !v)}
+                    aria-expanded={categoryLegendOpen}
+                    className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground"
+                  >
+                    {categoryLegendOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                    {T.categoryLegend}
+                  </button>
+                  {categoryLegendOpen && (
+                    <button
+                      onClick={toggleAllCategories}
+                      className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                    >
+                      {enabledCategories.size === CATEGORY_ORDER.length ? T.clearSelection : T.showAll}
+                    </button>
+                  )}
+                </div>
+                {categoryLegendOpen && (
+                  <div className="mt-1 grid grid-cols-2 gap-1">
+                    {CATEGORY_ORDER.map((c) => {
+                      const on = enabledCategories.has(c);
+                      return (
+                        <button
+                          key={c}
+                          onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          aria-pressed={on}
+                          className={cn(
+                            "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] transition-opacity",
+                            on ? "opacity-100" : "opacity-40",
+                          )}
+                        >
+                          <span
+                            className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
+                            style={{ backgroundColor: CATEGORY_COLORS[c] }}
+                          />
+                          <span className="truncate">{T.categoryName[c]}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </>
