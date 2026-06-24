@@ -1157,16 +1157,22 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     setUezdFilter("");
     setShowResults(false);
     setEnabledBuckets(new Set(BUCKET_ORDER));
+    setEnabledCategories(new Set(CATEGORY_ORDER));
     const map = mapRef.current;
     if (map) {
       map.easeTo({ center: [43.5, 42.0], zoom: 6.4, duration: 700 });
     }
   }
 
-  function toggleBucket(b: string) {
-    // Isolate semantics: clicking a colour leaves only that colour on the map.
-    // Clicking the already-isolated colour restores the full set.
+  function toggleBucket(b: string, additive = false) {
     setEnabledBuckets(prev => {
+      if (additive) {
+        const next = new Set(prev);
+        if (next.has(b)) next.delete(b); else next.add(b);
+        if (next.size === 0) return new Set(BUCKET_ORDER);
+        return next;
+      }
+      // Click — isolate. Click already-isolated → restore all.
       if (prev.size === 1 && prev.has(b)) return new Set(BUCKET_ORDER);
       return new Set([b]);
     });
@@ -1174,6 +1180,23 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function toggleAllBuckets() {
     setEnabledBuckets(prev =>
       prev.size === BUCKET_ORDER.length ? new Set() : new Set(BUCKET_ORDER),
+    );
+  }
+  function toggleCategory(c: ParishCategory, additive = false) {
+    setEnabledCategories(prev => {
+      if (additive) {
+        const next = new Set(prev);
+        if (next.has(c)) next.delete(c); else next.add(c);
+        if (next.size === 0) return new Set(CATEGORY_ORDER);
+        return next;
+      }
+      if (prev.size === 1 && prev.has(c)) return new Set(CATEGORY_ORDER);
+      return new Set([c]);
+    });
+  }
+  function toggleAllCategories() {
+    setEnabledCategories(prev =>
+      prev.size === CATEGORY_ORDER.length ? new Set() : new Set(CATEGORY_ORDER),
     );
   }
 
