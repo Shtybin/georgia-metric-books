@@ -972,14 +972,19 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     }
   }, [data]);
 
-  // Bucket + category filter
+  // Bucket + category filter. `categories` is an array on each feature, so we
+  // need OR of `["in", category, ["get","categories"]]` across enabled cats.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady) return;
+    const enabledCats = [...enabledCategories];
+    const catExpr: any = enabledCats.length === CATEGORY_ORDER.length
+      ? true
+      : ["any", ...enabledCats.map((c) => ["in", c, ["get", "categories"]])];
     const filter: any = ["all",
       ["!", ["has", "point_count"]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
-      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
+      catExpr,
     ];
     if (map.getLayer("points")) map.setFilter("points", filter);
   }, [enabledBuckets, enabledCategories, styleReady]);
