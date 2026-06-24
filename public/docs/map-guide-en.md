@@ -246,3 +246,12 @@ the author are available on the main site.
 accompanying texts and design are an original work protected by copyright.
 When citing or republishing, please credit the author and link to
 <https://metrics.datatells.info>.
+
+---
+
+## 2026 updates: confession filter and collapsible legends
+
+- **Confession / community filter** (left side, above the circle-size scale). The same 8 categories as on the Tbilisi map: Georgians (Orthodox), Armenians, Russians, Military, Jews (synagogues), Catholics, Lutherans, Other. Click a category to isolate it on the map; **Shift+click** for multi-select; the top button is "Show all / Clear selection"; the arrow on the left collapses the legend.
+- **Year colour legend** (right side) now follows the same rules: click to isolate a period, **Shift+click** for multi-select, "Show all / Clear selection" button, arrow to collapse.
+- **"Where to find documents?" button** automatically slides closer to the collapsed legend so the gap between them stays constant.
+- **Big "How to use" button** (blue, top-right of the right column) opens a step-by-step tutorial for new users right on the map.
