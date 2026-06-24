@@ -236,6 +236,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [enabledBuckets, setEnabledBuckets] = useState<Set<string>>(
     new Set(BUCKET_ORDER),
   );
+  const [enabledCategories, setEnabledCategories] = useState<Set<ParishCategory>>(
+    new Set(CATEGORY_ORDER),
+  );
+  const [legendOpen, setLegendOpen] = useState(true);
+  const [categoryLegendOpen, setCategoryLegendOpen] = useState(true);
+  const [howToOpen, setHowToOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [regionFilter, setRegionFilter] = useState("");
