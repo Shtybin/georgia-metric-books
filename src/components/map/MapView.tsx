@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock, ChevronDown, ChevronUp, GripHorizontal } from "lucide-react";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock, ChevronDown, ChevronUp, GripHorizontal, BookOpen } from "lucide-react";
+import { CATEGORY_ORDER, CATEGORY_COLORS, categorizeParish, type ParishCategory } from "@/lib/parishCategory";
 
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
