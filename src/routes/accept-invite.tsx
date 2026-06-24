@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { acceptInvitationFn } from "@/lib/invitations.functions";
 
 export const Route = createFileRoute("/accept-invite")({
   head: () => ({
