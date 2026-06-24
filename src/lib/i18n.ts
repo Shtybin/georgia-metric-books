@@ -17,16 +17,7 @@ export const STRINGS = {
     expandLegend: "Развернуть легенду",
     multiSelectHint: "Клик — изолировать категорию. Shift+клик — мульти-выбор.",
     categoryLegend: "Конфессия / община",
-    categoryName: {
-      georgian: "Грузины (православие)",
-      armenian: "Армяне",
-      russian: "Русские",
-      military: "Военные",
-      jewish: "Иудеи (синагоги)",
-      catholic: "Католики",
-      lutheran: "Лютеране",
-      other: "Другое",
-    },
+    confessionField: "Конфессия",
     howToButton: "Как пользоваться",
     howToTitle: "Как пользоваться картой и проектом",
     howToBodyHtml:
