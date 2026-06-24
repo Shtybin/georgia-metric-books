@@ -401,7 +401,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "ai_audit", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "confessions", "sources", "users"] as const).filter((k) => k !== "users" || isAdmin).map((k) => (
+          {(["coords", "ai_orchestration", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "confessions", "sources", "users"] as const).filter((k) => k !== "users" || isAdmin).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -412,13 +412,9 @@ function AdminPage() {
                   : "border-transparent text-muted-foreground hover:text-foreground")
               }
             >
-              {k === "coords" ? "Координаты" : k === "ai" ? (
+              {k === "coords" ? "Координаты" : k === "ai_orchestration" ? (
                 <span className="inline-flex items-center gap-1">
-                  <Sparkles className="h-3.5 w-3.5" /> AI-геокодер
-                </span>
-              ) : k === "ai_audit" ? (
-                <span className="inline-flex items-center gap-1">
-                  <Activity className="h-3.5 w-3.5" /> AI-аудит
+                  <Bot className="h-3.5 w-3.5" /> AI-оркестрация
                 </span>
               ) : k === "tbilisi_edit" ? (
                 <span className="inline-flex items-center gap-1">
