@@ -90,12 +90,15 @@ export type Database = {
       }
       ai_audit_runs: {
         Row: {
+          agent_progress: Json
           budget_usd: number
           created_by: string | null
           finished_at: string | null
+          heartbeat_at: string
           id: string
           model: string
           notes: string | null
+          paused_at: string | null
           points_done: number
           points_total: number
           scope: string
@@ -103,14 +106,18 @@ export type Database = {
           started_at: string
           status: Database["public"]["Enums"]["ai_audit_run_status"]
           updated_at: string
+          watchdog_state: Json
         }
         Insert: {
+          agent_progress?: Json
           budget_usd?: number
           created_by?: string | null
           finished_at?: string | null
+          heartbeat_at?: string
           id?: string
           model?: string
           notes?: string | null
+          paused_at?: string | null
           points_done?: number
           points_total?: number
           scope?: string
@@ -118,14 +125,18 @@ export type Database = {
           started_at?: string
           status?: Database["public"]["Enums"]["ai_audit_run_status"]
           updated_at?: string
+          watchdog_state?: Json
         }
         Update: {
+          agent_progress?: Json
           budget_usd?: number
           created_by?: string | null
           finished_at?: string | null
+          heartbeat_at?: string
           id?: string
           model?: string
           notes?: string | null
+          paused_at?: string | null
           points_done?: number
           points_total?: number
           scope?: string
@@ -133,6 +144,7 @@ export type Database = {
           started_at?: string
           status?: Database["public"]["Enums"]["ai_audit_run_status"]
           updated_at?: string
+          watchdog_state?: Json
         }
         Relationships: []
       }
