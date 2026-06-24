@@ -594,50 +594,69 @@ export function TbilisiMap({
         }
       >
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-serif text-xs font-semibold sm:text-sm">{T.legendTitle}</h2>
+          <button
+            type="button"
+            onClick={() => setLegendOpen((v) => !v)}
+            aria-expanded={legendOpen}
+            className="flex items-center gap-1 text-left"
+            title={legendOpen ? Tcore.collapseLegend : Tcore.expandLegend}
+          >
+            {legendOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+            <h2 className="font-serif text-xs font-semibold sm:text-sm">{T.legendTitle}</h2>
+          </button>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() =>
-                setEnabled((prev) =>
-                  prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER),
-                )
-              }
-              className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-accent"
-            >
-              {enabled.size === CONFESSION_ORDER.length ? T.hideAll : T.showAll}
-            </button>
+            {legendOpen && (
+              <button
+                onClick={() =>
+                  setEnabled((prev) =>
+                    prev.size === CONFESSION_ORDER.length ? new Set() : new Set(CONFESSION_ORDER),
+                  )
+                }
+                className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-accent"
+              >
+                {enabled.size === CONFESSION_ORDER.length ? T.hideAll : T.showAll}
+              </button>
+            )}
             <span className="text-xs text-muted-foreground">
               {T.foundCount(filtered.length, totalCount)}
             </span>
           </div>
         </div>
-        <div className="flex flex-wrap gap-1.5">
-          {CONFESSION_ORDER.map((c) => {
-            const on = enabled.has(c);
-            const count = (rows || []).filter((r) => r.confession === c).length;
-            if (count === 0) return null;
-            return (
-              <button
-                key={c}
-                onClick={() => toggleConfession(c)}
-                className={
-                  "flex items-center gap-1.5 rounded-full border px-2 py-1 text-[11px] transition " +
-                  (on ? "border-border bg-background" : "border-border/40 bg-muted/40 opacity-50")
-                }
-                title={T.confessions[c]}
-                aria-label={T.confessions[c]}
-              >
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ background: CONFESSION_COLORS[c] }}
-                />
-                <span className="max-w-[120px] truncate lg:hidden">{T.confessionsShort[c]}</span>
-                <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
-                <span className="text-muted-foreground">{count}</span>
-              </button>
-            );
-          })}
-        </div>
+        {legendOpen && (
+          <>
+            <div className="flex flex-wrap gap-1.5">
+              {CONFESSION_ORDER.map((c) => {
+                const on = enabled.has(c);
+                const count = (rows || []).filter((r) => r.confession === c).length;
+                if (count === 0) return null;
+                return (
+                  <button
+                    key={c}
+                    onClick={(e) => toggleConfession(c, e.shiftKey)}
+                    className={
+                      "flex items-center gap-1.5 rounded-full border px-2 py-1 text-[11px] transition " +
+                      (on ? "border-border bg-background" : "border-border/40 bg-muted/40 opacity-50")
+                    }
+                    title={T.confessions[c]}
+                    aria-label={T.confessions[c]}
+                    aria-pressed={on}
+                  >
+                    <span
+                      className="h-2.5 w-2.5 rounded-full"
+                      style={{ background: CONFESSION_COLORS[c] }}
+                    />
+                    <span className="max-w-[120px] truncate lg:hidden">{T.confessionsShort[c]}</span>
+                    <span className="hidden max-w-[160px] truncate lg:inline">{T.confessions[c]}</span>
+                    <span className="text-muted-foreground">{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[10px] leading-tight text-muted-foreground">
+              {Tcore.multiSelectHint}
+            </p>
+          </>
+        )}
 
         <div className="hidden lg:block">
           <label className="text-xs font-medium">
