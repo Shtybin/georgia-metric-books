@@ -1779,6 +1779,32 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   ({sel.coverage} {T.coverage})
                 </span>
               </dd>
+              {(() => {
+                const cats: string[] = Array.isArray(selected?.properties?.categories)
+                  ? selected!.properties!.categories
+                  : [];
+                if (cats.length === 0) return null;
+                return (
+                  <>
+                    <dt className="text-muted-foreground">{T.confessionField}</dt>
+                    <dd className="flex flex-wrap items-center gap-1">
+                      {cats.map((c) => (
+                        <span
+                          key={c}
+                          title={tT(lang).confessions[c as keyof ReturnType<typeof tT>["confessions"]]}
+                          className="inline-flex items-center gap-1 rounded-full border border-border bg-background/60 px-1.5 py-0.5 text-[11px]"
+                        >
+                          <span
+                            className="h-2 w-2 rounded-full ring-1 ring-white"
+                            style={{ backgroundColor: CATEGORY_COLORS[c as keyof typeof CATEGORY_COLORS] }}
+                          />
+                          {tT(lang).confessionsShort[c as keyof ReturnType<typeof tT>["confessionsShort"]]}
+                        </span>
+                      ))}
+                    </dd>
+                  </>
+                );
+              })()}
               <dt className="text-muted-foreground">{T.missing}</dt>
               <dd className="tabular-nums text-xs">
                 {sel.missingRaw[lang] || sel.missingRaw.en
