@@ -22,7 +22,7 @@ KEYWORD_RULES = [
     (re.compile(r"баптистск|баптистов|baptist church|baptist community|ბაპტისტურ", re.I), "baptist"),
     (re.compile(r"ассир|айсор|assyrian|aysor|ასირი", re.I), "assyrian"),
     (re.compile(r"греческ|греч\.|греков|greek|ბერძნ|чудотвор|thaumat", re.I), "greek_orthodox"),
-    (re.compile(r"военн|полков|гарнизон|казач|military|regimental|garrison|cossack|სამხედრო", re.I), "orthodox_military"),
+    (re.compile(r"военн|полков|гарнизон|казач|гренадер|драгун|стрелков|кадет|юнкер|артиллер|саперн|кавалер|пехотн|резервн|military|regimental|garrison|cossack|grenadier|dragoon|სამხედრო", re.I), "orthodox_military"),
     (re.compile(r"единовер|старообряд|русский приход|русская церк|old believer|russian parish", re.I), "orthodox_russian"),
 ]
 

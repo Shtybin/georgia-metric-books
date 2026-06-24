@@ -41,7 +41,7 @@ const KEYWORD_RULES: KeywordRule[] = [
   // Греческая православная — явное упоминание + типичные маркеры (Греческого
   // общества, Григорий Чудотворец как греческий патронный святой Понта).
   { re: /греческ|греч\.|греков|greek|ბერძნ|чудотвор|thaumat|григория чудотвор/i, cat: "greek_orthodox" },
-  { re: /военн|полков|гарнизон|казач|military|regimental|garrison|cossack|სამხედრო/i, cat: "orthodox_military" },
+  { re: /военн|полков|гарнизон|казач|гренадер|драгун|стрелков|кадет|юнкер|артиллер|саперн|кавалер|пехотн|резервн|military|regimental|garrison|cossack|grenadier|dragoon|сამხედრო|სამხედრო/i, cat: "orthodox_military" },
   { re: /единовер|старообряд|русский приход|русская церк|old believer|russian parish/i, cat: "orthodox_russian" },
 ];
 
