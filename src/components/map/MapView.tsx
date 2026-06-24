@@ -3,7 +3,7 @@ import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
 import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock, ChevronDown, ChevronUp, GripHorizontal, BookOpen } from "lucide-react";
-import { CATEGORY_ORDER, CATEGORY_COLORS, categorizeParish, type ParishCategory } from "@/lib/parishCategory";
+import { CATEGORY_ORDER, CATEGORY_COLORS, MAIN_MAP_CATEGORIES, categorizeParish, type ParishCategory } from "@/lib/parishCategory";
 
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
@@ -2065,7 +2065,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 </div>
                 {categoryLegendOpen && (
                   <div className="mt-1 grid grid-cols-1 gap-1">
-                    {CATEGORY_ORDER.map((c) => {
+                    {MAIN_MAP_CATEGORIES.map((c) => {
                       const on = enabledCategories.has(c);
                       return (
                         <button
@@ -2240,7 +2240,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             {categoryLegendOpen && (
               <>
                 <ul className="space-y-1">
-                  {CATEGORY_ORDER.map((c) => {
+                  {MAIN_MAP_CATEGORIES.map((c) => {
                     const on = enabledCategories.has(c);
                     return (
                       <li key={c}>
