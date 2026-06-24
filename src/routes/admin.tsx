@@ -402,7 +402,7 @@ function AdminPage() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-3">{diagPanel}</div>
         <div className="mx-auto flex max-w-6xl gap-1 border-b border-border/60 px-4 text-xs">
-          {(["coords", "ai", "ai_audit", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "sources", "users"] as const).filter((k) => k !== "users" || isAdmin).map((k) => (
+          {(["coords", "ai", "ai_audit", "tbilisi_edit", "reports", "cards", "uezd", "log", "quality", "confessions", "sources", "users"] as const).filter((k) => k !== "users" || isAdmin).map((k) => (
             <button
               key={k}
               onClick={() => setTab(k)}
