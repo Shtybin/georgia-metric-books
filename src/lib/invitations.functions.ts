@@ -14,7 +14,7 @@ export const acceptInvitationFn = createServerFn({ method: "POST" })
       _token: data.token,
     });
     if (error) throw new Error(error.message);
-    return result as unknown;
+    return { ok: true, result: result as unknown as Record<string, unknown> | null };
   });
 
 export const rollbackFeatureOverrideFn = createServerFn({ method: "POST" })
