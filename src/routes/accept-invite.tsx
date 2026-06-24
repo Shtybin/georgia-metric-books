@@ -39,8 +39,7 @@ function AcceptInvitePage() {
     setBusy(true);
     setErr(null);
     try {
-      const { data, error } = await supabase.rpc("accept_invitation", { _token: token });
-      if (error) throw error;
+      const data = await acceptInvitationFn({ data: { token } });
       setMsg("Готово! Роль назначена. Открываем админ-панель…");
       setTimeout(() => navigate({ to: "/admin" }), 800);
       void data;
