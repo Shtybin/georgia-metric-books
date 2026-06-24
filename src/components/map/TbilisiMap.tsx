@@ -1017,6 +1017,25 @@ export function TbilisiMap({
         </DialogContent>
       </Dialog>
 
+      <Dialog open={howToOpen} onOpenChange={setHowToOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <HelpCircle className="h-5 w-5 text-primary" />
+              {Tcore.howToTitle}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription asChild>
+            <div
+              className="max-h-[70vh] overflow-y-auto pr-1 text-sm leading-relaxed text-foreground"
+              dangerouslySetInnerHTML={{ __html: Tcore.howToBodyHtml }}
+            />
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
+
+
+
       <MapAuthorBadge lang={lang} />
     </div>
   );
