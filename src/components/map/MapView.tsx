@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
-import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock, ChevronDown, ChevronUp, GripHorizontal } from "lucide-react";
+import { Search, X, Globe2, MapPin, Info, ListX, Undo2, HelpCircle, RotateCcw, Loader2, CalendarClock, ChevronDown, ChevronUp, GripHorizontal, BookOpen } from "lucide-react";
+import { CATEGORY_ORDER, CATEGORY_COLORS, categorizeParish, type ParishCategory } from "@/lib/parishCategory";
 
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
@@ -235,6 +236,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [enabledBuckets, setEnabledBuckets] = useState<Set<string>>(
     new Set(BUCKET_ORDER),
   );
+  const [enabledCategories, setEnabledCategories] = useState<Set<ParishCategory>>(
+    new Set(CATEGORY_ORDER),
+  );
+  const [legendOpen, setLegendOpen] = useState(true);
+  const [categoryLegendOpen, setCategoryLegendOpen] = useState(true);
+  const [howToOpen, setHowToOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [regionFilter, setRegionFilter] = useState("");
@@ -289,7 +296,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const data: FC | null = useMemo(() => {
     if (!baseData) return null;
     const effectiveOverrides = compareMode === "base" ? [] : overrides;
-    const overridden = normalizeAliases(applyOverrides(baseData, effectiveOverrides));
+    const overriddenRaw = normalizeAliases(applyOverrides(baseData, effectiveOverrides));
+    // Inject `category` property so MapLibre can filter by confession/community.
+    const overridden: FC = {
+      ...overriddenRaw,
+      features: overriddenRaw.features.map((f) => ({
+        ...f,
+        properties: {
+          ...(f.properties ?? {}),
+          category: categorizeParish(f.properties),
+        },
+      })),
+    };
     const baseLen = overridden.features.length;
     const userFeatures = Object.values(userCoords.records).map((rec, i) =>
       userRecordToFeature(rec, 1_000_000 + i + baseLen),
@@ -297,10 +315,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     const approvedFeatures = approved.map((s, i) =>
       approvedToFeature(s, 2_000_000 + i + baseLen),
     );
+    const withCat = (arr: Feature[]) =>
+      arr.map((f) => ({
+        ...f,
+        properties: { ...(f.properties ?? {}), category: categorizeParish(f.properties) },
+      }));
     if (userFeatures.length === 0 && approvedFeatures.length === 0) return overridden;
     return {
       ...overridden,
-      features: [...overridden.features, ...approvedFeatures, ...userFeatures],
+      features: [...overridden.features, ...withCat(approvedFeatures as Feature[]), ...withCat(userFeatures as Feature[])],
     };
   }, [baseData, userCoords.records, approved, overrides, compareMode]);
 
@@ -944,16 +967,17 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     }
   }, [data]);
 
-  // Bucket filter
+  // Bucket + category filter
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady) return;
     const filter: any = ["all",
       ["!", ["has", "point_count"]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
+      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
     ];
     if (map.getLayer("points")) map.setFilter("points", filter);
-  }, [enabledBuckets, styleReady]);
+  }, [enabledBuckets, enabledCategories, styleReady]);
 
   // Apply neighbor dimming + (for area) highlighted boost
   useEffect(() => {
@@ -986,8 +1010,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       "all",
       ["in", ["id"], ["literal", ids]],
       ["in", ["get", "bucket"], ["literal", [...enabledBuckets]]],
+      ["in", ["get", "category"], ["literal", [...enabledCategories]]],
     ]);
-  }, [neighborIds, highlightMode, styleReady, enabledBuckets]);
+  }, [neighborIds, highlightMode, styleReady, enabledBuckets, enabledCategories]);
 
   const pulseRafRef = useRef<number | null>(null);
   function pulseHalo() {
@@ -1132,16 +1157,22 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     setUezdFilter("");
     setShowResults(false);
     setEnabledBuckets(new Set(BUCKET_ORDER));
+    setEnabledCategories(new Set(CATEGORY_ORDER));
     const map = mapRef.current;
     if (map) {
       map.easeTo({ center: [43.5, 42.0], zoom: 6.4, duration: 700 });
     }
   }
 
-  function toggleBucket(b: string) {
-    // Isolate semantics: clicking a colour leaves only that colour on the map.
-    // Clicking the already-isolated colour restores the full set.
+  function toggleBucket(b: string, additive = false) {
     setEnabledBuckets(prev => {
+      if (additive) {
+        const next = new Set(prev);
+        if (next.has(b)) next.delete(b); else next.add(b);
+        if (next.size === 0) return new Set(BUCKET_ORDER);
+        return next;
+      }
+      // Click — isolate. Click already-isolated → restore all.
       if (prev.size === 1 && prev.has(b)) return new Set(BUCKET_ORDER);
       return new Set([b]);
     });
@@ -1149,6 +1180,23 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   function toggleAllBuckets() {
     setEnabledBuckets(prev =>
       prev.size === BUCKET_ORDER.length ? new Set() : new Set(BUCKET_ORDER),
+    );
+  }
+  function toggleCategory(c: ParishCategory, additive = false) {
+    setEnabledCategories(prev => {
+      if (additive) {
+        const next = new Set(prev);
+        if (next.has(c)) next.delete(c); else next.add(c);
+        if (next.size === 0) return new Set(CATEGORY_ORDER);
+        return next;
+      }
+      if (prev.size === 1 && prev.has(c)) return new Set(CATEGORY_ORDER);
+      return new Set([c]);
+    });
+  }
+  function toggleAllCategories() {
+    setEnabledCategories(prev =>
+      prev.size === CATEGORY_ORDER.length ? new Set() : new Set(CATEGORY_ORDER),
     );
   }
 
@@ -1884,6 +1932,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             className="pointer-events-none absolute z-10 flex flex-wrap items-center gap-1.5 sm:hidden"
           >
             <button
+              onClick={() => setHowToOpen(true)}
+              className="pointer-events-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-md"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              {T.howToButton}
+            </button>
+            <button
               onClick={() => setDocsOpen(true)}
               className="pointer-events-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-md backdrop-blur hover:bg-accent"
             >
@@ -1905,7 +1960,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             />
           </div>
           <div className="pointer-events-auto absolute inset-x-2 bottom-2 z-10 sm:hidden">
-            <div className="rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
+            <div className="space-y-1.5 rounded-2xl border border-border bg-card/95 px-2 py-1.5 shadow-lg backdrop-blur">
               <div className="flex items-center justify-between gap-2">
                 <button
                   onClick={() => setMobileLegendOpen((v) => !v)}
@@ -1920,18 +1975,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                     onClick={toggleAllBuckets}
                     className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
                   >
-                    {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+                    {enabledBuckets.size === BUCKET_ORDER.length ? T.clearSelection : T.showAll}
                   </button>
                 )}
               </div>
               {mobileLegendOpen && (
-                <div className="mt-1 grid grid-cols-3 gap-1">
+                <div className="grid grid-cols-3 gap-1">
                   {BUCKET_ORDER.map((b) => {
                     const on = enabledBuckets.has(b);
                     return (
                       <button
                         key={b}
-                        onClick={() => toggleBucket(b)}
+                        onClick={(e) => toggleBucket(b, e.shiftKey)}
                         aria-pressed={on}
                         className={cn(
                           "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] tabular-nums transition-opacity",
@@ -1948,13 +2003,68 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   })}
                 </div>
               )}
+
+              <div className="border-t border-border/60 pt-1.5">
+                <div className="flex items-center justify-between gap-2">
+                  <button
+                    onClick={() => setCategoryLegendOpen((v) => !v)}
+                    aria-expanded={categoryLegendOpen}
+                    className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground"
+                  >
+                    {categoryLegendOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                    {T.categoryLegend}
+                  </button>
+                  {categoryLegendOpen && (
+                    <button
+                      onClick={toggleAllCategories}
+                      className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                    >
+                      {enabledCategories.size === CATEGORY_ORDER.length ? T.clearSelection : T.showAll}
+                    </button>
+                  )}
+                </div>
+                {categoryLegendOpen && (
+                  <div className="mt-1 grid grid-cols-2 gap-1">
+                    {CATEGORY_ORDER.map((c) => {
+                      const on = enabledCategories.has(c);
+                      return (
+                        <button
+                          key={c}
+                          onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          aria-pressed={on}
+                          className={cn(
+                            "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] transition-opacity",
+                            on ? "opacity-100" : "opacity-40",
+                          )}
+                        >
+                          <span
+                            className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white"
+                            style={{ backgroundColor: CATEGORY_COLORS[c] }}
+                          />
+                          <span className="truncate">{T.categoryName[c]}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </>
       )}
 
-      {/* Desktop: docs button stacked above the legend (right side). */}
+      {/* Desktop: how-to + docs buttons stacked above the legend (right side).
+          The whole column is bottom-anchored, so when the legend collapses
+          the buttons slide down and the distance between them and the legend
+          stays constant. */}
       <div className="pointer-events-none absolute bottom-12 right-3 z-10 hidden w-[min(92vw,260px)] flex-col items-stretch gap-2 sm:flex">
+        <button
+          onClick={() => setHowToOpen(true)}
+          className="pointer-events-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-primary/40 bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-xl ring-1 ring-primary/30 transition-transform hover:-translate-y-0.5"
+        >
+          <BookOpen className="h-4 w-4" />
+          {T.howToButton}
+        </button>
         <button
           onClick={() => setDocsOpen(true)}
           className="pointer-events-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-card/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
@@ -1963,70 +2073,85 @@ export function MapView({ lang, onLangChange, embed }: Props) {
           {T.docsButton}
         </button>
 
-        {/* Desktop: full legend + stats panel. */}
+        {/* Desktop: full legend + stats panel — collapsible. */}
         <div className="pointer-events-auto rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
 
         <div className="mb-2 flex items-center justify-between gap-2">
-          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {T.legend}
-          </div>
           <button
-            onClick={toggleAllBuckets}
-            className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+            onClick={() => setLegendOpen((v) => !v)}
+            aria-expanded={legendOpen}
+            title={legendOpen ? T.collapseLegend : T.expandLegend}
+            className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground"
           >
-            {enabledBuckets.size === BUCKET_ORDER.length ? T.hideAll : T.showAll}
+            {legendOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+            {T.legend}
           </button>
+          {legendOpen && (
+            <button
+              onClick={toggleAllBuckets}
+              className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+            >
+              {enabledBuckets.size === BUCKET_ORDER.length ? T.clearSelection : T.showAll}
+            </button>
+          )}
         </div>
-        <ul className="space-y-1.5">
-          {BUCKET_ORDER.map(b => {
-            const on = enabledBuckets.has(b);
-            return (
-              <li key={b}>
-                <button
-                  onClick={() => toggleBucket(b)}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
-                    on ? "opacity-100" : "opacity-40",
-                  )}
-                  aria-pressed={on}
-                >
-                  <span
-                    className="h-3 w-3 rounded-full ring-2 ring-white"
-                    style={{ backgroundColor: BUCKET_COLORS[b] }}
-                  />
-                  <span className="tabular-nums">{T.bucket[b]}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        {stats && (
-          <div className="mt-3 border-t border-border pt-2.5">
-            <div className="mb-1.5 flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              <Info className="h-3 w-3" />{T.stats}
-            </div>
-            <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
-              {(() => {
-                const extra = addedKeys.size;
-                const total = stats.total;
-                const withC = Math.max(0, stats.total - stats.withoutCoords + extra);
-                const without = Math.max(0, stats.withoutCoords - extra);
-                const pct = (n: number) => total > 0 ? Math.round((n / total) * 100) : 0;
+        {legendOpen && (
+          <>
+            <ul className="space-y-1.5">
+              {BUCKET_ORDER.map(b => {
+                const on = enabledBuckets.has(b);
                 return (
-                  <>
-                    <dt className="text-muted-foreground">{T.total}</dt>
-                    <dd className="tabular-nums">{total.toLocaleString()}</dd>
-                    <dt className="text-muted-foreground">{T.withCoords}</dt>
-                    <dd className="tabular-nums">{withC.toLocaleString()} ({pct(withC)}%)</dd>
-                    <dt className="text-muted-foreground">{T.withoutCoords}</dt>
-                    <dd className="tabular-nums">{without.toLocaleString()} ({pct(without)}%)</dd>
-                  </>
+                  <li key={b}>
+                    <button
+                      onClick={(e) => toggleBucket(b, e.shiftKey)}
+                      className={cn(
+                        "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
+                        on ? "opacity-100" : "opacity-40",
+                      )}
+                      aria-pressed={on}
+                    >
+                      <span
+                        className="h-3 w-3 rounded-full ring-2 ring-white"
+                        style={{ backgroundColor: BUCKET_COLORS[b] }}
+                      />
+                      <span className="tabular-nums">{T.bucket[b]}</span>
+                    </button>
+                  </li>
                 );
-              })()}
-              <dt className="text-muted-foreground">{T.confidence}</dt>
-              <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
-            </dl>
-          </div>
+              })}
+            </ul>
+            <p className="mt-2 text-[10px] leading-tight text-muted-foreground">
+              {T.multiSelectHint}
+            </p>
+            {stats && (
+              <div className="mt-3 border-t border-border pt-2.5">
+                <div className="mb-1.5 flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <Info className="h-3 w-3" />{T.stats}
+                </div>
+                <dl className="grid grid-cols-[1fr_auto] gap-y-0.5 text-xs">
+                  {(() => {
+                    const extra = addedKeys.size;
+                    const total = stats.total;
+                    const withC = Math.max(0, stats.total - stats.withoutCoords + extra);
+                    const without = Math.max(0, stats.withoutCoords - extra);
+                    const pct = (n: number) => total > 0 ? Math.round((n / total) * 100) : 0;
+                    return (
+                      <>
+                        <dt className="text-muted-foreground">{T.total}</dt>
+                        <dd className="tabular-nums">{total.toLocaleString()}</dd>
+                        <dt className="text-muted-foreground">{T.withCoords}</dt>
+                        <dd className="tabular-nums">{withC.toLocaleString()} ({pct(withC)}%)</dd>
+                        <dt className="text-muted-foreground">{T.withoutCoords}</dt>
+                        <dd className="tabular-nums">{without.toLocaleString()} ({pct(without)}%)</dd>
+                      </>
+                    );
+                  })()}
+                  <dt className="text-muted-foreground">{T.confidence}</dt>
+                  <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
+                </dl>
+              </div>
+            )}
+          </>
         )}
         </div>
       </div>
@@ -2045,33 +2170,105 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </DialogContent>
       </Dialog>
 
-      {/* Size legend (bottom-left). Hidden when a point card is open
-          (the card occupies the same corner) and on mobile (cramped). */}
+      {/* Left-bottom column (desktop+tablet): category legend ABOVE size legend.
+          Bottom-anchored so collapsing the category panel keeps the size
+          scale in place. Hidden on mobile (we render an inline section
+          inside the bottom mobile legend instead). */}
       {!sel && (
-        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur md:block">
-          <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            {T.sizeLegend}
+        <div className="pointer-events-none absolute bottom-12 left-3 z-[5] hidden w-[min(92vw,240px)] flex-col items-stretch gap-2 md:flex">
+          <div className="pointer-events-auto rounded-2xl border border-border bg-card/98 p-3 shadow-2xl backdrop-blur">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <button
+                onClick={() => setCategoryLegendOpen((v) => !v)}
+                aria-expanded={categoryLegendOpen}
+                title={categoryLegendOpen ? T.collapseLegend : T.expandLegend}
+                className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground"
+              >
+                {categoryLegendOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+                {T.categoryLegend}
+              </button>
+              {categoryLegendOpen && (
+                <button
+                  onClick={toggleAllCategories}
+                  className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent"
+                >
+                  {enabledCategories.size === CATEGORY_ORDER.length ? T.clearSelection : T.showAll}
+                </button>
+              )}
+            </div>
+            {categoryLegendOpen && (
+              <>
+                <ul className="space-y-1">
+                  {CATEGORY_ORDER.map((c) => {
+                    const on = enabledCategories.has(c);
+                    return (
+                      <li key={c}>
+                        <button
+                          onClick={(e) => toggleCategory(c, e.shiftKey)}
+                          aria-pressed={on}
+                          className={cn(
+                            "flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left text-sm transition-opacity",
+                            on ? "opacity-100" : "opacity-40",
+                          )}
+                        >
+                          <span
+                            className="h-3 w-3 shrink-0 rounded-full ring-2 ring-white"
+                            style={{ backgroundColor: CATEGORY_COLORS[c] }}
+                          />
+                          <span className="truncate">{T.categoryName[c]}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className="mt-2 text-[10px] leading-tight text-muted-foreground">
+                  {T.multiSelectHint}
+                </p>
+              </>
+            )}
           </div>
-          <div className="flex items-end gap-3">
-            {[
-              { years: 1,   r: Math.max(4, Math.sqrt(1)   * 1.6) },
-              { years: 10,  r: Math.max(4, Math.sqrt(10)  * 1.6) },
-              { years: 25,  r: Math.max(4, Math.sqrt(25)  * 1.6) },
-              { years: 50,  r: Math.max(4, Math.sqrt(50)  * 1.6) },
-              { years: 100, r: Math.max(4, Math.sqrt(100) * 1.6) },
-              { years: 150, r: Math.max(4, Math.sqrt(150) * 1.6) },
-            ].map(({ years, r }) => (
-              <div key={years} className="flex flex-col items-center gap-1">
-                <span
-                  className="rounded-full bg-foreground ring-1 ring-white"
-                  style={{ width: r * 2, height: r * 2, opacity: 0.6 }}
-                />
-                <span className="text-[10px] tabular-nums text-muted-foreground">{years}</span>
-              </div>
-            ))}
+          <div className="pointer-events-auto rounded-2xl border border-border bg-card/95 px-3 py-2 shadow-lg backdrop-blur">
+            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {T.sizeLegend}
+            </div>
+            <div className="flex items-end gap-3">
+              {[
+                { years: 1,   r: Math.max(4, Math.sqrt(1)   * 1.6) },
+                { years: 10,  r: Math.max(4, Math.sqrt(10)  * 1.6) },
+                { years: 25,  r: Math.max(4, Math.sqrt(25)  * 1.6) },
+                { years: 50,  r: Math.max(4, Math.sqrt(50)  * 1.6) },
+                { years: 100, r: Math.max(4, Math.sqrt(100) * 1.6) },
+                { years: 150, r: Math.max(4, Math.sqrt(150) * 1.6) },
+              ].map(({ years, r }) => (
+                <div key={years} className="flex flex-col items-center gap-1">
+                  <span
+                    className="rounded-full bg-foreground ring-1 ring-white"
+                    style={{ width: r * 2, height: r * 2, opacity: 0.6 }}
+                  />
+                  <span className="text-[10px] tabular-nums text-muted-foreground">{years}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
+
+      <Dialog open={howToOpen} onOpenChange={setHowToOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" />
+              {T.howToTitle}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription asChild>
+            <div
+              className="max-h-[70vh] overflow-y-auto pr-1 text-sm leading-relaxed text-foreground"
+              dangerouslySetInnerHTML={{ __html: T.howToBodyHtml }}
+            />
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
       <MapAuthorBadge lang={lang} />
     </div>
   );

@@ -9,9 +9,36 @@ export const STRINGS = {
     legend: "С какого года ведутся книги",
     showAll: "Показать все",
     hideAll: "Скрыть все",
+    clearSelection: "Сбросить выбор",
     collapseCard: "Свернуть",
     expandCard: "Развернуть",
     dragCard: "Перетащить",
+    collapseLegend: "Свернуть легенду",
+    expandLegend: "Развернуть легенду",
+    multiSelectHint: "Клик — изолировать категорию. Shift+клик — мульти-выбор.",
+    categoryLegend: "Конфессия / община",
+    categoryName: {
+      georgian: "Грузины (православие)",
+      armenian: "Армяне",
+      russian: "Русские",
+      military: "Военные",
+      jewish: "Иудеи (синагоги)",
+      catholic: "Католики",
+      lutheran: "Лютеране",
+      other: "Другое",
+    },
+    howToButton: "Как пользоваться",
+    howToTitle: "Как пользоваться картой и проектом",
+    howToBodyHtml:
+      '<p class="mb-2"><b>Что это.</b> Интерактивный атлас метрических книг Грузии 1819–1930. Каждая точка — один приход с информацией о начале и пропусках ведения книг.</p>' +
+      '<p class="mb-2"><b>1. Поиск.</b> Введите название селения, церкви, уезда или региона (русский / English / ქართული, понимает часть слова). Под полем поиска — выпадающие фильтры по региону и уезду.</p>' +
+      '<p class="mb-2"><b>2. Цветовая легенда (справа).</b> Цвет точки = год начала ведения книги. Кликните по периоду, чтобы оставить только его. <b>Shift+клик</b> — мульти-выбор (несколько периодов). Кнопка «Показать все / Сбросить выбор» сверху. Легенду можно свернуть стрелкой.</p>' +
+      '<p class="mb-2"><b>3. Фильтр по конфессии (слева, над шкалой размеров).</b> Те же правила: клик — изолировать категорию (грузины, армяне, русские, военные, синагоги, католики, лютеране, другое); Shift+клик — мульти-выбор; кнопка очистки сверху; стрелка сворачивает.</p>' +
+      '<p class="mb-2"><b>4. Размер кружка.</b> Чем больше — тем дольше непрерывно велись книги.</p>' +
+      '<p class="mb-2"><b>5. Карточка прихода.</b> Кликните точку — увидите детали, исторические названия, ссылки на источники. Кнопка «Показать в радиусе 10 км» подсветит соседей. На мобильном карточку можно свернуть и перетащить за верх.</p>' +
+      '<p class="mb-2"><b>6. Тбилиси.</b> Зум в город — появится кнопка перехода на отдельную карту с привязкой к историческим планам 1898 / 1904 гг. и фильтром по конфессиям.</p>' +
+      '<p class="mb-2"><b>7. Вклад пользователя.</b> «Добавить координаты сёл» — список селений без координат; вы можете предложить точку. В карточке прихода — «Предложить корректировку пропущенных лет». Кнопка «Сообщить о проблеме» — общая обратная связь.</p>' +
+      '<p class="mb-1"><b>8. Где взять документы.</b> Кнопка «Где искать документы?» — ссылки на каталог Национального исторического архива Грузии.</p>',
     bucket: {
       "pre-1820": "до 1820",
       "1820-1835": "1821–1835",
@@ -156,9 +183,36 @@ export const STRINGS = {
     legend: "Records start year",
     showAll: "Show all",
     hideAll: "Hide all",
+    clearSelection: "Clear selection",
     collapseCard: "Collapse",
     expandCard: "Expand",
     dragCard: "Drag",
+    collapseLegend: "Collapse legend",
+    expandLegend: "Expand legend",
+    multiSelectHint: "Click — isolate a category. Shift+click — multi-select.",
+    categoryLegend: "Confession / community",
+    categoryName: {
+      georgian: "Georgians (Orthodox)",
+      armenian: "Armenians",
+      russian: "Russians",
+      military: "Military",
+      jewish: "Jews (synagogues)",
+      catholic: "Catholics",
+      lutheran: "Lutherans",
+      other: "Other",
+    },
+    howToButton: "How to use",
+    howToTitle: "How to use the map and the project",
+    howToBodyHtml:
+      '<p class="mb-2"><b>What it is.</b> An interactive atlas of Georgian parish registers, 1819–1930. Every point is one parish with info on when record-keeping started and which years are missing.</p>' +
+      '<p class="mb-2"><b>1. Search.</b> Type a settlement, church, district or region name (Russian / English / ქართული, partial matches OK). Below the search box — dropdown filters by region and district.</p>' +
+      '<p class="mb-2"><b>2. Colour legend (right).</b> Colour = year when record-keeping started. Click a period to isolate it. <b>Shift+click</b> — multi-select. The "Show all / Clear selection" button is on top. Use the arrow to collapse the legend.</p>' +
+      '<p class="mb-2"><b>3. Confession filter (left, above the size scale).</b> Same rules: click to isolate (Georgians, Armenians, Russians, Military, synagogues, Catholics, Lutherans, Other); Shift+click for multi-select; clear button on top; arrow collapses it.</p>' +
+      '<p class="mb-2"><b>4. Circle size.</b> Bigger = longer continuous record-keeping period.</p>' +
+      '<p class="mb-2"><b>5. Parish card.</b> Click a point to see details, historical names and source links. "Show within 10 km" highlights neighbours. On mobile the card can be collapsed and dragged by the top.</p>' +
+      '<p class="mb-2"><b>6. Tbilisi.</b> Zoom into the city — a button appears that opens a dedicated map georeferenced to the historical 1898 / 1904 plans, with a confession filter.</p>' +
+      '<p class="mb-2"><b>7. Contribute.</b> "Add settlement coords" lists unlocated settlements — you can suggest a point. From a parish card — "Suggest missing-years correction". "Report a problem" — general feedback.</p>' +
+      '<p class="mb-1"><b>8. Where to find documents.</b> The "Where to find documents?" button — links to the catalogue of the National Historical Archive of Georgia.</p>',
     bucket: {
       "pre-1820": "before 1820",
       "1820-1835": "1821–1835",
@@ -303,9 +357,36 @@ export const STRINGS = {
     legend: "რომელი წლიდან იწარმოება წიგნები",
     showAll: "ყველას ჩვენება",
     hideAll: "ყველას დამალვა",
+    clearSelection: "არჩევანის გასუფთავება",
     collapseCard: "ჩაკეცვა",
     expandCard: "გაშლა",
     dragCard: "გადატანა",
+    collapseLegend: "ლეგენდის ჩაკეცვა",
+    expandLegend: "ლეგენდის გაშლა",
+    multiSelectHint: "კლიკი — კატეგორიის იზოლირება. Shift+კლიკი — მრავალარჩევანი.",
+    categoryLegend: "კონფესია / თემი",
+    categoryName: {
+      georgian: "ქართველები (მართლმადიდებლები)",
+      armenian: "სომხები",
+      russian: "რუსები",
+      military: "სამხედრო",
+      jewish: "იუდეველები (სინაგოგები)",
+      catholic: "კათოლიკეები",
+      lutheran: "ლუთერანები",
+      other: "სხვა",
+    },
+    howToButton: "როგორ გამოვიყენო",
+    howToTitle: "როგორ გამოვიყენოთ რუკა და პროექტი",
+    howToBodyHtml:
+      '<p class="mb-2"><b>რა არის ეს.</b> საქართველოს მეტრიკული წიგნების ინტერაქტიული ატლასი 1819–1930. თითო წერტილი — ერთი სამრევლო წიგნთწარმოების დაწყებისა და გამოტოვებების შესახებ ინფორმაციით.</p>' +
+      '<p class="mb-2"><b>1. ძიება.</b> ჩაწერეთ სოფლის, ეკლესიის, მაზრის ან რეგიონის სახელი (რუსული / English / ქართული, ნაწილობრივი დამთხვევაც მუშაობს). ძიების ველის ქვემოთ — ფილტრები რეგიონისა და მაზრის მიხედვით.</p>' +
+      '<p class="mb-2"><b>2. ფერთა ლეგენდა (მარჯვნივ).</b> ფერი = წიგნის დაწყების წელი. დააწკაპუნეთ პერიოდს მის იზოლირებისთვის. <b>Shift+კლიკი</b> — მრავალარჩევანი. ღილაკი „ყველას ჩვენება / არჩევანის გასუფთავება“ ზემოთაა. ისარით ლეგენდის ჩაკეცვა შესაძლებელია.</p>' +
+      '<p class="mb-2"><b>3. კონფესიის ფილტრი (მარცხნივ, ზომის სკალის ზემოთ).</b> იგივე წესები: კლიკი იზოლირებისთვის (ქართველები, სომხები, რუსები, სამხედრო, სინაგოგები, კათოლიკეები, ლუთერანები, სხვა); Shift+კლიკი — მრავალარჩევანი; გასუფთავების ღილაკი ზემოთ; ისარი ჩაკეცავს.</p>' +
+      '<p class="mb-2"><b>4. წრის ზომა.</b> უფრო დიდი = წიგნთწარმოების უფრო ხანგრძლივი უწყვეტი პერიოდი.</p>' +
+      '<p class="mb-2"><b>5. სამრევლოს ბარათი.</b> დააწკაპუნეთ წერტილს დეტალების, ისტორიული სახელებისა და წყაროების სანახავად. „10 კმ რადიუსში ჩვენება“ მონიშნავს მეზობლებს. მობილზე ბარათი იკეცება და ზემოდან გადაიტანება.</p>' +
+      '<p class="mb-2"><b>6. თბილისი.</b> ქალაქში ზუმისას გამოჩნდება ღილაკი 1898 / 1904 წწ. ისტორიულ რუკებზე მიბმული ცალკე გვერდისთვის კონფესიების ფილტრით.</p>' +
+      '<p class="mb-2"><b>7. წვლილი.</b> „სოფლების კოორდინატების დამატება“ — ლოკალიზაციის გარეშე სოფლების სია; შეგიძლიათ შესთავაზოთ წერტილი. სამრევლოს ბარათში — „გამოტოვებული წლების კორექტირების შეთავაზება“. „პრობლემის შეტყობინება“ — ზოგადი უკუკავშირი.</p>' +
+      '<p class="mb-1"><b>8. სად ვიპოვო დოკუმენტები.</b> ღილაკი „სად ვეძებოთ დოკუმენტები?“ — ეროვნული ისტორიული არქივის კატალოგის ბმულები.</p>',
     bucket: {
       "pre-1820": "1820-მდე",
       "1820-1835": "1821–1835",
