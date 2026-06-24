@@ -347,16 +347,7 @@ export const STRINGS = {
     expandLegend: "ლეგენდის გაშლა",
     multiSelectHint: "კლიკი — კატეგორიის იზოლირება. Shift+კლიკი — მრავალარჩევანი.",
     categoryLegend: "კონფესია / თემი",
-    categoryName: {
-      georgian: "ქართველები (მართლმადიდებლები)",
-      armenian: "სომხები",
-      russian: "რუსები",
-      military: "სამხედრო",
-      jewish: "იუდეველები (სინაგოგები)",
-      catholic: "კათოლიკეები",
-      lutheran: "ლუთერანები",
-      other: "სხვა",
-    },
+    confessionField: "კონფესია",
     howToButton: "როგორ გამოვიყენო",
     howToTitle: "როგორ გამოვიყენოთ რუკა და პროექტი",
     howToBodyHtml:
