@@ -302,14 +302,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!baseData) return null;
     const effectiveOverrides = compareMode === "base" ? [] : overrides;
     const overriddenRaw = normalizeAliases(applyOverrides(baseData, effectiveOverrides));
-    // Inject `category` property so MapLibre can filter by confession/community.
+    // Inject `categories` (array) so MapLibre can filter by confession/community.
     const overridden: FC = {
       ...overriddenRaw,
       features: overriddenRaw.features.map((f) => ({
         ...f,
         properties: {
           ...(f.properties ?? {}),
-          category: categorizeParish(f.properties),
+          categories: categorizeParish(f.properties),
         },
       })),
     };
@@ -323,7 +323,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     const withCat = (arr: Feature[]) =>
       arr.map((f) => ({
         ...f,
-        properties: { ...(f.properties ?? {}), category: categorizeParish(f.properties) },
+        properties: { ...(f.properties ?? {}), categories: categorizeParish(f.properties) },
       }));
     if (userFeatures.length === 0 && approvedFeatures.length === 0) return overridden;
     return {
