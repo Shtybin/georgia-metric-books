@@ -14,22 +14,22 @@ DATA = ROOT / "public" / "data" / "parishes.geojson"
 OUT = ROOT / "public" / "data" / "confession-audit.json"
 
 KEYWORD_RULES = [
-    (re.compile(r"армян|григориан|haykakan|armenian|სომხ", re.I), "armenian_apostolic"),
+    (re.compile(r"армян|григориан|haykakan|armenian|სომხ|сурб|surb|surp|саркис|sargis|sarkis|карапет|karapet|месроп|mesrop|минас(?![а-я])|minas|эчмиадзин|etchmiadzin|просветител|lusavorich|арутин|harutyun|гевонд|gevond|нерсес|nerses|нарекаци|narekatsi|пркич|вардананц|vardanants|норашен|norashen|мугни|mughni|шамкори|шамхори|shamkhori|геворг|gevorg|ованес|hovhannes|степанос|stepanos|аствац|astvats|нашан|nshan|айастан|hayastan", re.I), "armenian_apostolic"),
     (re.compile(r"католич|римско\s*-?\s*католич|catholic|roman cath|კათოლიკ", re.I), "roman_catholic"),
     (re.compile(r"лютеран|кирх|lutheran|kirche|kirch|ლუთერ", re.I), "lutheran"),
     (re.compile(r"синагог|еврейск|иудей|jewish|hebrew|synagogue|სინაგოგ|იუდე", re.I), "jewish"),
     (re.compile(r"молокан|molokan|მოლოკან", re.I), "molokan"),
     (re.compile(r"баптистск|баптистов|baptist church|baptist community|ბაპტისტურ", re.I), "baptist"),
     (re.compile(r"ассир|айсор|assyrian|aysor|ასირი", re.I), "assyrian"),
-    (re.compile(r"греческ|греч\.|greek|ბერძნ", re.I), "greek_orthodox"),
+    (re.compile(r"греческ|греч\.|греков|greek|ბერძნ|чудотвор|thaumat", re.I), "greek_orthodox"),
     (re.compile(r"военн|полков|гарнизон|казач|military|regimental|garrison|cossack|სამხედრო", re.I), "orthodox_military"),
     (re.compile(r"единовер|старообряд|русский приход|русская церк|old believer|russian parish", re.I), "orthodox_russian"),
 ]
 
-ARM_SETTLEMENTS = {"хертвиси","хизабавра","цхалтбила","ниноцминда","богдановка","александрополь","лори","гюмри"}
+ARM_SETTLEMENTS = {"хертвиси","хизабавра","цхалтбила","ниноцминда","богдановка","александрополь","лори","гюмри","ахалцихе","ахалкалаки","бугашени","диди гондури","диди самсари","дилипи","абули","уриатубани","шаумиани","ходжабеги","нардевани","пока","молити","орали","бузавети","азаврети","ашкала","дилиска","гизани","гомани","гоми гомани"}
 GERMAN_COLONIES = {"екатериненфельд","katharinenfeld","болниси","элизабетталь","elisabethtal","асурети","мариенфельд","marienfeld","сартичала","александерсхильф","alexanderhilf","петерсдорф","petersdorf","анненфельд","annenfeld","тифлисская колония","новотифлисская колония"}
 MOLOKAN = {"гореловка","орловка","ефремовка","спасовка","ново михайловка","новомихайловка","михайловка молокан","воронцовка","башкичет","башкечет","привольное","родионовка","терновка","тамбовка"}
-GREEK = {"цалка","бешташени","авранло","триалет","сантас","квемо хараба","земо хараба","цинцкаро","тарсон"}
+GREEK = {"цалка","бешташени","авранло","триалет","триалети","сантас","сантаси","цинцкаро","тарсон","тарсони","имера","хадик","хадики","гумбати","дашбаши","карагах","квемо хараба","земо хараба","сафар хараба","башкой","башкои","аракова","ливади","кушчи","олянг","кьосало","хандо","бекташени","хараба","тетриqарани","тетрицкаро","тетри цкаро","шекветили","берта"}
 JEWISH = {"ахалцихе","они","кулаши","лайлаши","сачхере","цхинвал","цхинвали","карели"}
 RUS_PEASANT = {"бомборы","анастасиевка","свободное","михайловское","новогеоргиевское","александровское"}
 MILITARY = {"ананури","сурам","сурами","ахалкалаки крепость","хорошани","цхинвал гарнизон"}
@@ -67,6 +67,10 @@ def categorize(props):
         cats.add("armenian_apostolic"); area_applied="ахалкалакский регион"; keep_default=True
     elif re.search(r"греческ", u_n, re.I) or re.search(r"греческ", r_n, re.I):
         cats.add("greek_orthodox"); area_applied="греческое (этнотерр.)"; keep_default=False
+    elif re.search(r"^цалка$|цалкин", r_n, re.I):
+        cats.add("greek_orthodox"); area_applied="цалкинский регион"; keep_default=True
+    elif re.search(r"ниноцминд|богданов", r_n, re.I):
+        cats.add("armenian_apostolic"); cats.add("molokan"); area_applied="ниноцминда (смеш.)"; keep_default=True
     elif s_n in ARM_SETTLEMENTS:
         cats.add("armenian_apostolic"); area_applied="armenian village"; keep_default=False
     elif s_n in GERMAN_COLONIES:
