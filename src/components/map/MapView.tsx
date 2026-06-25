@@ -1798,7 +1798,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                             className="h-2 w-2 rounded-full ring-1 ring-white"
                             style={{ backgroundColor: CATEGORY_COLORS[c as keyof typeof CATEGORY_COLORS] }}
                           />
-                          {tT(lang).confessionsShort[c as keyof ReturnType<typeof tT>["confessionsShort"]]}
+                          {tT(lang).confessions[c as keyof ReturnType<typeof tT>["confessions"]]}
                         </span>
                       ))}
                     </dd>
