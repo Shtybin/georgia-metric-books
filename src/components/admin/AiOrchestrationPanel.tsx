@@ -99,6 +99,7 @@ export function AiOrchestrationPanel() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const runningRef = useRef(false);
+  const viewedRunIdRef = useRef<string | null>(null);
   const [startedAt, setStartedAt] = useState<number | null>(null);
 
   async function refreshRuns() {
@@ -128,6 +129,7 @@ export function AiOrchestrationPanel() {
         : await start({ data: { budgetUsd: budget, scope } } as any);
       setStartedAt(Date.now());
       await refreshRuns();
+      viewedRunIdRef.current = r.runId;
       await refreshStatus(r.runId);
       runningRef.current = true;
       runLoop(r.runId, task);
@@ -146,22 +148,25 @@ export function AiOrchestrationPanel() {
         const r = kind === "geolocate"
           ? await tickGeo({ data: { runId, size: 3 } } as any)
           : await tick({ data: { runId, size: 3 } } as any);
-        await refreshStatus(runId);
-        await reloadFindings(runId);
+        // Only refresh UI state if the user is still viewing this run.
+        // Otherwise keep polling silently so the user's selection isn't hijacked.
+        if (viewedRunIdRef.current === runId) {
+          await refreshStatus(runId);
+          await reloadFindings(runId);
+        }
         if (r.status !== "running") break;
         consecutiveErrors = 0;
         setError(null);
-        // Run watchdog check in background; do not block the loop
         if (kind === "audit") watchdog({ data: { runId } } as any).catch(() => {});
       } catch (e: any) {
         consecutiveErrors += 1;
-        setError(`${e?.message ?? String(e)} · продолжаем (попытка ${consecutiveErrors})`);
-        // Exponential backoff: 3s, 6s, 12s, 24s, capped at 30s. Never abort.
+        if (viewedRunIdRef.current === runId) {
+          setError(`${e?.message ?? String(e)} · продолжаем (попытка ${consecutiveErrors})`);
+        }
         const delay = Math.min(30_000, 3000 * 2 ** (consecutiveErrors - 1));
         await new Promise((r) => setTimeout(r, delay));
-        // Re-check run state — if user paused/cancelled, exit; else continue.
         try {
-          await refreshStatus(runId);
+          if (viewedRunIdRef.current === runId) await refreshStatus(runId);
         } catch { /* keep looping */ }
       }
     }
@@ -179,6 +184,7 @@ export function AiOrchestrationPanel() {
   async function doResume() {
     if (!currentRun) return;
     await resume({ data: { runId: currentRun.id } } as any);
+    viewedRunIdRef.current = currentRun.id;
     await refreshStatus(currentRun.id);
     runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
   }
@@ -195,16 +201,20 @@ export function AiOrchestrationPanel() {
     // We only flip status back to `running` and re-enter the polling loop;
     // no findings/progress are dropped.
     await resume({ data: { runId: currentRun.id } } as any).catch(() => {});
+    viewedRunIdRef.current = currentRun.id;
     await refreshStatus(currentRun.id);
     runningRef.current = true;
     runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
   }
 
   async function openRun(r: any) {
+    viewedRunIdRef.current = r.id;
     setCurrentRun(r);
     setStartedAt(new Date(r.started_at).getTime());
     await reloadFindings(r.id);
-    if (r.status === "running") { runningRef.current = true; runLoop(r.id, (r.task_kind as TaskKind) ?? "audit"); }
+    // Do NOT auto-start a polling loop here — only the run that the user
+    // explicitly starts/resumes drives the loop. Opening a historical run
+    // just shows its current state without taking over the view.
   }
 
 
