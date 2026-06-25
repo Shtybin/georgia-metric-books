@@ -615,18 +615,22 @@ export const getRunStatus = createServerFn({ method: "POST" })
     return row;
   });
 
-// Помечает зависшие "running" прогоны как cancelled, если по ним не было
-// активности дольше STALE_MS (вкладка закрыта, проц упал и т.п.).
-const STALE_RUN_MS = 3 * 60 * 1000;
+// Soft-pause длительно неактивных running-прогонов вместо отмены.
+// Прогон НИКОГДА не отменяется автоматически — только переводится в paused,
+// чтобы пользователь мог продолжить ровно с того же места (points_done сохраняется).
+// Порог намеренно большой (30 минут) и используется heartbeat_at,
+// а не updated_at, чтобы не реагировать на короткие провалы тиков.
+const STALE_RUN_MS = 30 * 60 * 1000;
 async function reapStaleRuns() {
   const cutoff = new Date(Date.now() - STALE_RUN_MS).toISOString();
   const now = new Date().toISOString();
   await supabaseAdmin
     .from("ai_audit_runs")
-    .update({ status: "cancelled", finished_at: now, updated_at: now })
+    .update({ status: "paused", paused_at: now, updated_at: now })
     .eq("status", "running")
-    .lt("updated_at", cutoff);
+    .lt("heartbeat_at", cutoff);
 }
+
 
 export const listAuditRuns = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
