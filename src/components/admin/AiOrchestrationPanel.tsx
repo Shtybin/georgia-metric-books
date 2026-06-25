@@ -71,6 +71,34 @@ function fmtDuration(ms: number) {
   return `${s}с`;
 }
 
+/**
+ * Derive a more honest status than the raw DB column. A run can stay
+ * `running` long after the worker actually stopped ticking (watchdog only
+ * does soft heartbeat bumps), so we surface `stalled` once the heartbeat
+ * is older than ~3 minutes. `paused_at` also wins over a stale `running`.
+ */
+function derivedStatus(r: any): { label: string; tone: "running" | "paused" | "done" | "cancelled" | "stalled" } {
+  const raw = r?.status as string | undefined;
+  const hb = r?.heartbeat_at ? new Date(r.heartbeat_at).getTime() : 0;
+  const ageMs = hb ? Date.now() - hb : Infinity;
+  if (raw === "done") return { label: "done", tone: "done" };
+  if (raw === "cancelled") return { label: "cancelled", tone: "cancelled" };
+  if (raw === "paused" || r?.paused_at) return { label: "paused", tone: "paused" };
+  if (raw === "running" && ageMs > 3 * 60_000) {
+    return { label: `stalled · ${fmtDuration(ageMs)}`, tone: "stalled" };
+  }
+  return { label: raw ?? "—", tone: "running" };
+}
+
+const TONE_CLASSES: Record<string, string> = {
+  running: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+  paused: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
+  done: "bg-muted text-muted-foreground",
+  cancelled: "bg-destructive/15 text-destructive",
+  stalled: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
+};
+
+
 export function AiOrchestrationPanel() {
   const start = useServerFn(startOrchestrationRun);
   const pause = useServerFn(pauseOrchestrationRun);
