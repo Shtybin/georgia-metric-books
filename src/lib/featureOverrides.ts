@@ -193,7 +193,8 @@ export function dataToFeature(
   d: FeatureData,
   id: number,
 ): GeoJSON.Feature<GeoJSON.Point, any> {
-  const years = parseYearsString(d.yearsRaw.ru || d.yearsRaw.en || "");
+  const yearsRaw = d.yearsRaw ?? { ru: "", en: "", ka: "" };
+  const years = parseYearsString(yearsRaw.ru || yearsRaw.en || "");
   const startYear = d.startYear || years[0] || 1900;
   const endYear = d.endYear || (years.length ? years[years.length - 1] : startYear);
   const hist = readMl(d.historicalName);
@@ -215,11 +216,11 @@ export function dataToFeature(
     id,
     geometry: { type: "Point", coordinates: [d.lon, d.lat] },
     properties: {
-      settlement: d.settlement,
-      church: d.church,
-      region: d.region,
-      uezd: d.uezd,
-      yearsRaw: d.yearsRaw,
+      settlement: d.settlement ?? emptyMultiLang(),
+      church: d.church ?? emptyMultiLang(),
+      region: d.region ?? emptyMultiLang(),
+      uezd: d.uezd ?? emptyMultiLang(),
+      yearsRaw,
       missingRaw: d.missingYearsRaw ?? { ru: "", en: "", ka: "" },
       startYear,
       endYear,
