@@ -33,6 +33,13 @@ import {
   listFindings,
   reviewFinding,
 } from "@/lib/aiAudit.functions";
+import {
+  startGeolocationRun,
+  processGeolocationTick,
+  getUnlocatedSummary,
+} from "@/lib/aiOrchestratorGeolocate.functions";
+
+type TaskKind = "audit" | "geolocate";
 
 const SCOPE_PRESETS = [
   { id: "all", label: "Все точки карты" },
@@ -43,6 +50,7 @@ const SCOPE_PRESETS = [
   { id: "uezd:dusheti", label: "Душетский" },
   { id: "uezd:kutaisi", label: "Кутаисский" },
 ];
+
 
 type AgentKey = "coordinator" | "geo" | "metrics" | "archive" | "reviewer";
 const AGENTS: { key: AgentKey; label: string; icon: any; desc: string }[] = [
@@ -70,13 +78,20 @@ export function AiOrchestrationPanel() {
   const cancel = useServerFn(cancelOrchestrationRun);
   const tick = useServerFn(processOrchestrationTick);
   const watchdog = useServerFn(watchdogCheck);
+  const startGeo = useServerFn(startGeolocationRun);
+  const tickGeo = useServerFn(processGeolocationTick);
+  const fetchUnloc = useServerFn(getUnlocatedSummary);
   const status = useServerFn(getRunStatus);
   const listRuns = useServerFn(listAuditRuns);
   const list = useServerFn(listFindings);
   const review = useServerFn(reviewFinding);
 
+  const [task, setTask] = useState<TaskKind>("audit");
   const [scope, setScope] = useState("all");
+  const [geoUezd, setGeoUezd] = useState<string>("");
+  const [unlocSummary, setUnlocSummary] = useState<{ total: number; byUezd: { uezd: string; count: number }[] } | null>(null);
   const [budget, setBudget] = useState(20);
+
   const [runs, setRuns] = useState<any[]>([]);
   const [currentRun, setCurrentRun] = useState<any | null>(null);
   const [findings, setFindings] = useState<any[]>([]);
