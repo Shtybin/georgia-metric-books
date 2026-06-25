@@ -562,18 +562,28 @@ export function AiOrchestrationPanel() {
           <p className="text-sm text-muted-foreground">Прогонов ещё не было.</p>
         ) : (
           <ul className="space-y-1 text-xs">
-            {runs.map((r) => (
-              <li key={r.id}>
-                <button onClick={() => openRun(r)} className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left hover:bg-accent">
-                  <span className="font-mono">{r.id.slice(0, 8)}</span>
-                  <span className="text-muted-foreground">{r.scope}</span>
-                  <span className="tabular-nums">{r.points_done}/{r.points_total}</span>
-                  <span className="tabular-nums">${Number(r.spent_usd).toFixed(4)}</span>
-                  <span className="rounded-full bg-muted px-2 py-0.5">{r.status}</span>
-                  <span className="text-muted-foreground">{new Date(r.started_at).toLocaleString("ru-RU")}</span>
-                </button>
-              </li>
-            ))}
+            {runs.map((r) => {
+              const d = derivedStatus(r);
+              return (
+                <li key={r.id}>
+                  <button onClick={() => openRun(r)} className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left hover:bg-accent">
+                    <span className="font-mono">{r.id.slice(0, 8)}</span>
+                    {r.task_kind && (
+                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase text-muted-foreground">{r.task_kind}</span>
+                    )}
+                    <span className="text-muted-foreground">{r.scope}</span>
+                    <span className="tabular-nums">{r.points_done}/{r.points_total}</span>
+                    <span className="tabular-nums">${Number(r.spent_usd).toFixed(4)}</span>
+                    <span className={"rounded-full px-2 py-0.5 " + (TONE_CLASSES[d.tone] || "bg-muted")}
+                          title={r.heartbeat_at ? `Heartbeat: ${new Date(r.heartbeat_at).toLocaleString("ru-RU")}` : undefined}>
+                      {d.label}
+                    </span>
+                    <span className="text-muted-foreground">{new Date(r.started_at).toLocaleString("ru-RU")}</span>
+                  </button>
+                </li>
+              );
+            })}
+
           </ul>
         )}
       </div>
