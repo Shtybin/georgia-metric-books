@@ -129,6 +129,7 @@ export function AiOrchestrationPanel() {
         : await start({ data: { budgetUsd: budget, scope } } as any);
       setStartedAt(Date.now());
       await refreshRuns();
+      viewedRunIdRef.current = r.runId;
       await refreshStatus(r.runId);
       runningRef.current = true;
       runLoop(r.runId, task);
