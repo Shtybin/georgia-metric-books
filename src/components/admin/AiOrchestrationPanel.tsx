@@ -247,24 +247,65 @@ export function AiOrchestrationPanel() {
         <div className="mb-3 flex items-center gap-2">
           <Bot className="h-5 w-5 text-primary" />
           <div>
-            <h2 className="font-medium">AI-оркестрация · тотальная перепроверка точек</h2>
+            <h2 className="font-medium">AI-оркестрация · автономные задачи</h2>
             <p className="text-xs text-muted-foreground">
               Coordinator → GeoAgent + MetricsAgent + ArchiveAgent → Reviewer · модель: <code>google/gemini-2.5-pro</code>
             </p>
           </div>
         </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <label className="text-xs">
-            <span className="mb-1 block text-muted-foreground">Область</span>
-            <select
-              value={scope}
-              onChange={(e) => setScope(e.target.value)}
-              className="w-full rounded-md border border-border bg-background px-2 py-1.5"
+        {/* Task switch */}
+        <div className="mb-3 inline-flex rounded-lg border border-border bg-muted/40 p-0.5 text-xs">
+          {([
+            { id: "audit", label: "Аудит точек" },
+            { id: "geolocate", label: "Геолокация селений без координат" },
+          ] as const).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => !runningRef.current && setTask(t.id)}
               disabled={runningRef.current}
+              className={
+                "rounded-md px-3 py-1.5 transition-colors " +
+                (task === t.id
+                  ? "bg-primary text-primary-foreground shadow"
+                  : "text-muted-foreground hover:bg-accent")
+              }
             >
-              {SCOPE_PRESETS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
-            </select>
-          </label>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {task === "audit" ? (
+            <label className="text-xs">
+              <span className="mb-1 block text-muted-foreground">Область</span>
+              <select
+                value={scope}
+                onChange={(e) => setScope(e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-2 py-1.5"
+                disabled={runningRef.current}
+              >
+                {SCOPE_PRESETS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+              </select>
+            </label>
+          ) : (
+            <label className="text-xs">
+              <span className="mb-1 block text-muted-foreground">
+                Уезд / район (опционально)
+                {unlocSummary && <span className="ml-1 text-muted-foreground/70">· всего {unlocSummary.total} селений</span>}
+              </span>
+              <select
+                value={geoUezd}
+                onChange={(e) => setGeoUezd(e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-2 py-1.5"
+                disabled={runningRef.current}
+              >
+                <option value="">— все уезды —</option>
+                {(unlocSummary?.byUezd ?? []).map((u) => (
+                  <option key={u.uezd} value={u.uezd}>{u.uezd} ({u.count})</option>
+                ))}
+              </select>
+            </label>
+          )}
           <label className="text-xs">
             <span className="mb-1 block text-muted-foreground">Бюджет, $</span>
             <input
@@ -280,10 +321,20 @@ export function AiOrchestrationPanel() {
             />
           </label>
           <div className="text-xs">
-            <span className="mb-1 block text-muted-foreground">База PDF метрических книг</span>
-            <PdfDbStatus />
+            <span className="mb-1 block text-muted-foreground">
+              {task === "audit" ? "База PDF метрических книг" : "Источники геолокации"}
+            </span>
+            {task === "audit" ? (
+              <PdfDbStatus />
+            ) : (
+              <span className="inline-flex items-center gap-2 text-muted-foreground">
+                <Globe className="h-3.5 w-3.5 text-emerald-600" />
+                Nominatim (OSM) → AI-арбитр → авто-слияние / очередь координат
+              </span>
+            )}
           </div>
         </div>
+
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {!currentRun || currentRun.status !== "running" ? (
             <Button onClick={doStart} disabled={busy} size="sm">
