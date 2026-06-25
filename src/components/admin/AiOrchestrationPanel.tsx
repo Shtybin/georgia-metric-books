@@ -71,6 +71,34 @@ function fmtDuration(ms: number) {
   return `${s}с`;
 }
 
+/**
+ * Derive a more honest status than the raw DB column. A run can stay
+ * `running` long after the worker actually stopped ticking (watchdog only
+ * does soft heartbeat bumps), so we surface `stalled` once the heartbeat
+ * is older than ~3 minutes. `paused_at` also wins over a stale `running`.
+ */
+function derivedStatus(r: any): { label: string; tone: "running" | "paused" | "done" | "cancelled" | "stalled" } {
+  const raw = r?.status as string | undefined;
+  const hb = r?.heartbeat_at ? new Date(r.heartbeat_at).getTime() : 0;
+  const ageMs = hb ? Date.now() - hb : Infinity;
+  if (raw === "done") return { label: "done", tone: "done" };
+  if (raw === "cancelled") return { label: "cancelled", tone: "cancelled" };
+  if (raw === "paused" || r?.paused_at) return { label: "paused", tone: "paused" };
+  if (raw === "running" && ageMs > 3 * 60_000) {
+    return { label: `stalled · ${fmtDuration(ageMs)}`, tone: "stalled" };
+  }
+  return { label: raw ?? "—", tone: "running" };
+}
+
+const TONE_CLASSES: Record<string, string> = {
+  running: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+  paused: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
+  done: "bg-muted text-muted-foreground",
+  cancelled: "bg-destructive/15 text-destructive",
+  stalled: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
+};
+
+
 export function AiOrchestrationPanel() {
   const start = useServerFn(startOrchestrationRun);
   const pause = useServerFn(pauseOrchestrationRun);
@@ -383,15 +411,20 @@ export function AiOrchestrationPanel() {
           <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="font-medium">
               Прогон <span className="font-mono text-xs text-muted-foreground">{currentRun.id.slice(0, 8)}</span>
+              {currentRun.task_kind && (
+                <span className="ml-2 rounded-md bg-muted px-1.5 py-0.5 text-[10px] uppercase text-muted-foreground">
+                  {currentRun.task_kind}
+                </span>
+              )}
               {" · "}
-              <span className={
-                "rounded-md px-1.5 py-0.5 text-xs " +
-                (currentRun.status === "running" ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
-                  : currentRun.status === "paused" ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
-                  : currentRun.status === "done" ? "bg-muted text-muted-foreground"
-                  : "bg-destructive/15 text-destructive")
-              }>{currentRun.status}</span>
+              {(() => { const d = derivedStatus(currentRun); return (
+                <span className={"rounded-md px-1.5 py-0.5 text-xs " + (TONE_CLASSES[d.tone] || TONE_CLASSES.running)}
+                      title={currentRun.heartbeat_at ? `Heartbeat: ${new Date(currentRun.heartbeat_at).toLocaleString("ru-RU")}` : undefined}>
+                  {d.label}
+                </span>
+              ); })()}
             </h3>
+
             <div className="text-xs tabular-nums text-muted-foreground">
               {currentRun.points_done} / {currentRun.points_total} ({pct}%) ·
               {" "}${Number(currentRun.spent_usd).toFixed(4)} / ${Number(currentRun.budget_usd).toFixed(2)} ·
@@ -529,18 +562,28 @@ export function AiOrchestrationPanel() {
           <p className="text-sm text-muted-foreground">Прогонов ещё не было.</p>
         ) : (
           <ul className="space-y-1 text-xs">
-            {runs.map((r) => (
-              <li key={r.id}>
-                <button onClick={() => openRun(r)} className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left hover:bg-accent">
-                  <span className="font-mono">{r.id.slice(0, 8)}</span>
-                  <span className="text-muted-foreground">{r.scope}</span>
-                  <span className="tabular-nums">{r.points_done}/{r.points_total}</span>
-                  <span className="tabular-nums">${Number(r.spent_usd).toFixed(4)}</span>
-                  <span className="rounded-full bg-muted px-2 py-0.5">{r.status}</span>
-                  <span className="text-muted-foreground">{new Date(r.started_at).toLocaleString("ru-RU")}</span>
-                </button>
-              </li>
-            ))}
+            {runs.map((r) => {
+              const d = derivedStatus(r);
+              return (
+                <li key={r.id}>
+                  <button onClick={() => openRun(r)} className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left hover:bg-accent">
+                    <span className="font-mono">{r.id.slice(0, 8)}</span>
+                    {r.task_kind && (
+                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase text-muted-foreground">{r.task_kind}</span>
+                    )}
+                    <span className="text-muted-foreground">{r.scope}</span>
+                    <span className="tabular-nums">{r.points_done}/{r.points_total}</span>
+                    <span className="tabular-nums">${Number(r.spent_usd).toFixed(4)}</span>
+                    <span className={"rounded-full px-2 py-0.5 " + (TONE_CLASSES[d.tone] || "bg-muted")}
+                          title={r.heartbeat_at ? `Heartbeat: ${new Date(r.heartbeat_at).toLocaleString("ru-RU")}` : undefined}>
+                      {d.label}
+                    </span>
+                    <span className="text-muted-foreground">{new Date(r.started_at).toLocaleString("ru-RU")}</span>
+                  </button>
+                </li>
+              );
+            })}
+
           </ul>
         )}
       </div>

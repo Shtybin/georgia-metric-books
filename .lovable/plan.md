@@ -1,72 +1,56 @@
-## Цель
+## Что показала диагностика прогона `f1ec3369`
 
-В админ-панели «AI-Оркестрация» появится **второй тип прогона** — «Геолокация неразмещённых селений». Он берёт все записи из `public/data/unlocated.json`, которым до сих пор не присвоены координаты (нет принятого `coord_suggestion` и нет ручной привязки в `feature_overrides`/`user_coords`), находит для них координаты с учётом географии, исторических уездов/районов и омонимов, ставит точку на карте и тут же прогоняет её через ту же аудит-цепочку, что и остальные точки (церкви, периоды, пропущенные годы, ссылки на архив и FamilySearch).
+- В `agent_progress` работает только `geo` (36 done / 34 fail). У `archive / metrics / reviewer / coordinator` — нули. Это не баг отображения: пайплайн `processGeolocationTick` действительно вызывает только Nominatim + Gemini-арбитра, а остальных агентов оркестра не дёргает. Поэтому «других ИИ» в карточке прогона не видно — их там нет.
+- Большинство фейлов — `lastError: "Nominatim empty"`. То есть Nominatim просто не находит исторических сёл по одному названию + bbox Грузии. `geocodeCandidates` к тому же **выходит из цикла на первом языке**, который дал хоть что-то — варианты на других языках не используются.
+- В «Истории прогонов» статус берётся буквально из колонки `status` в БД. Watchdog мягко продлевает heartbeat и не переводит зависшие прогоны в `paused/stalled` — поэтому ряд старых прогонов годами числится `running`, а `paused_at` / `finished_at` / `heartbeat_at` в UI вообще не отображаются. Отсюда ощущение «статусы неадекватные».
 
-## UX (вкладка AI-Оркестрация)
+## Что улучшаем
 
-- Селектор задачи сверху панели: **«Аудит существующих точек»** (текущий прогон) / **«Геолокация неразмещённых»** (новый).
-- Для новой задачи:
-  - счётчик «осталось неразмещённых» (всего / уже геолоцированных за этот прогон / отброшенных как неоднозначные);
-  - те же кнопки Play / Pause / Resume / Cancel, тот же watchdog и heartbeat;
-  - таблица находок с типом `geolocate`: координаты-кандидат, источник (OSM/Nominatim/исторический справочник/AI-вывод), confidence, обоснование, ссылки;
-  - кнопки Approve/Reject. Auto-approve при confidence ≥ 0.85 и единственном кандидате; иначе — ручная модерация.
+### 1. Качество поиска координат (`src/lib/aiGeocoder.functions.ts`)
 
-## Пайплайн агентов (повторно использует существующих)
+- `geocodeCandidates`: перебирать все три языка (ka / en / ru), объединять кандидатов, а не выходить на первом успешном — даёт больше материала арбитру.
+- Добавить варианты запроса для каждого имени:
+  - `<name>, <uezd>, Georgia` и `<name>, <region>, Georgia` — снимает многозначность одноимённых сёл;
+  - очистка префиксов «Верхний/Нижний/Старый/Новый/Большой/Малый» (RU/EN/KA) и поиск «голого» корня;
+  - транслитерация ka→latin (через простую таблицу) и latin→ka для случаев, когда заполнен только один язык.
+- Если bbox-поиск пуст — повторить **без `bounded=1`** и затем отфильтровать `inGeorgia()`. Nominatim иногда отбрасывает hamlet'ы на границе bbox.
+- Фолбэк на Overpass API (`node[place~"village|hamlet|town"]["name"~"…",i]` в Грузии) когда Nominatim не дал ничего — закрывает дыру по мелким сёлам.
+- Если все источники пусты — отдавать AI-арбитру **сам факт отсутствия** с просьбой предложить координаты по справочнику (Gemini Pro c web-grounding); сейчас мы такие точки сразу режектим.
+- Ре-ранкинг hits по близости адреса к историческому уезду (бонус за token-overlap), чтобы арбитр получал отсортированный шорт-лист.
 
-```text
-Coordinator → LocatorAgent → DisambiguatorAgent → MetricsAgent → ArchiveAgent → Reviewer
-```
+### 2. Подключение остальных агентов оркестра к геолокации
 
-1. **Coordinator** делит оставшиеся unlocated-записи на батчи (как сейчас в `aiOrchestrator.functions.ts`).
-2. **LocatorAgent** (новый, обёртка над уже существующим `aiGeocoder.functions.ts`):
-   - сначала Nominatim/OSM по `settlement + uezd + region` (готовая функция `geocodeCandidates`);
-   - если 0 или >1 кандидата — обращение к Lovable AI (Gemini Pro) с контекстом: исторический уезд/район XIX в., соседние уже размещённые селения, PDF-чанки `pdf_text_chunks`, ссылки `archival-services.gov.ge` (та же иерархия источников, что в текущем оркестраторе: сайт → PDF → NIAG).
-3. **DisambiguatorAgent**: если в Грузии есть несколько одноимённых сёл, выбирает то, чей уезд/район совпадает с историческим (использует `LOCATION_HINTS` и геометрию уже размещённых соседей того же уезда — bounding box ±N км).
-4. **MetricsAgent / ArchiveAgent / Reviewer** — уже существующие, запускаются на новой точке сразу после установки координат: проверяют названия церквей, период метрических книг, пропущенные годы, наличие ссылок на `archival-services.gov.ge` и `familysearch.org`, создают `missing_years_suggestions` и `external_sources`.
+Сейчас после auto-merge или создания `coord_suggestion` пайплайн останавливается. Дополним так, чтобы при `applied`/`approved` гео-находке планировался под-прогон обогащения карточки:
 
-## Применение результата
+- При успешном merge — сразу ставить feature_id в очередь `ArchiveAgent` → `MetricsAgent` → `Reviewer` (через те же функции, что вызываются в task=`audit`), но точечно по одному feature. Прогресс счётчиков `archive/metrics/reviewer` будет расти в той же строке `agent_progress`.
+- При создании coord_suggestion и его одобрении модератором — тот же хук в `approveFinding`/promote (или в `applySuggestion`).
+- На UI карточки агента подсветка «active», когда у него ненулевой `done` за последний тик.
 
-После approve (ручного или авто):
-- создаётся `feature_overrides` c `action: "merge_unlocated"` (механизм уже есть — `aiAudit.functions.ts` строка ~900), с заполнением координат, названий церквей, периода и т. д.;
-- запись помечается обработанной в `coord_suggestions` (status=approved, source=`ai-orchestration`);
-- точка немедленно появляется на основной карте (та же логика рендера, что и для существующих overrides);
-- параллельно дописываются `external_sources` (archive + FamilySearch) и `missing_years_suggestions`.
+Это закрывает изначальное требование «заполнить карточку также, как у действующих» и делает оркестр видимым.
 
-## База данных
+### 3. Статусы в Истории прогонов
 
-Дополнения к существующим таблицам, без новых сущностей:
-- `ai_audit_runs`: поле `task_kind` (`'audit' | 'geolocate'`, default `'audit'`), чтобы UI и watchdog различали типы прогонов.
-- `ai_audit_findings`: расширить enum `kind` значением `geolocate` (rationale, candidate lat/lon, confidence, источники — в существующем `data jsonb`).
-- `coord_suggestions`: добавить `origin text` (значения `manual | ai-geocoder | ai-orchestration`), чтобы видеть, какие точки пришли из новой задачи.
+- В `AiOrchestrationPanel.tsx` показывать **производный статус**, а не сырой `status`:
+  - `running` + `heartbeat_at` старше 90 с → бейдж `stalled`;
+  - `running` без heartbeat и с `paused_at` → `paused`;
+  - `done`/`cancelled` — как сейчас, плюс `finished_at`;
+  - подсказка (tooltip) с временем последнего тика и `agent_progress.lastError`.
+- В `aiAudit.functions.ts` (`reapStaleRuns`/watchdog) переводить прогоны без тиков > 10 минут в `paused` вместо бесшумного продления heartbeat — тогда сырой статус в БД тоже станет правдой.
+- В списке истории показать `task_kind` (audit / geolocate) и иконку — сейчас они визуально неотличимы.
 
-Все изменения — одной миграцией с GRANT/RLS, повторяющими существующие политики этих таблиц.
+### 4. Мелочи UX
 
-## Серверная часть
+- Кнопка «Повторить только фейлы» в карточке прогона: пере-загоняет в очередь только items, у которых последняя находка `kind=geolocate, status=rejected, reason ~ Nominatim`.
+- В строке агента `geo` показывать `lastError` под счётчиком (сейчас он попадает в `agent_progress.geo.lastError`, но не выводится).
 
-Новый файл `src/lib/aiOrchestratorGeolocate.functions.ts`:
-- `startGeolocationRun({ budgetUsd, scope, model })` — аналог `startOrchestrationRun`, но скоуп идёт по `unlocated.json` минус уже размещённые.
-- `processGeolocationTick({ runId })` — обрабатывает следующий батч: вызывает LocatorAgent → Disambiguator → создаёт finding.
-- `applyGeolocationFinding({ findingId })` — выполняет merge_unlocated через существующий механизм, затем синхронно прогоняет MetricsAgent/ArchiveAgent на новой точке.
-- Pause/Resume/Cancel/Watchdog — переиспользуют ту же логику, что и аудит-оркестратор (выделить общие helpers).
+## Технические детали (под капотом)
 
-## UI-изменения
+Файлы, которые правим:
+- `src/lib/aiGeocoder.functions.ts` — расширенный `geocodeCandidates`, варианты запросов, Overpass-фолбэк, ре-ранкер.
+- `src/lib/aiOrchestratorGeolocate.functions.ts` — после `applied` вызывать `runEnrichmentForFeature(feature_id, runId)` (новый общий хелпер в `aiOrchestrator.functions.ts`, выносим из tick'а audit-таска).
+- `src/lib/aiAudit.functions.ts` — `reapStaleRuns()` помечает зависшее как `paused` (текущий «soft resume» остаётся только для активно тикающих).
+- `src/components/admin/AiOrchestrationPanel.tsx` — производный статус, task_kind в истории, lastError у агента, кнопка «Повторить фейлы».
 
-- `src/components/admin/AiOrchestrationPanel.tsx`: добавить переключатель задач, отрисовку карточки находки `geolocate` (карта-мини, кандидаты, кнопки Approve/Reject/Open on map).
-- В таблице/легенде неразмещённых (`UnlocatedPanel`) — бейдж «AI нашёл координаты, ждёт модерации» для тех записей, по которым есть pending `coord_suggestions` с `origin = ai-orchestration`.
+Очерёдность: сначала (1) — даёт самый большой прирост качества; затем (3) — быстро чинит видимые статусы; (2) — самая большая работа, делаем после.
 
-## Технические детали
-
-- Модель по умолчанию: `google/gemini-2.5-pro` (та же, что в текущем оркестраторе). Для дешёвой первичной проверки кандидатов — `google/gemini-3-flash-preview`.
-- Все вызовы через Lovable AI Gateway, без новых секретов.
-- Nominatim уже используется в `aiGeocoder.functions.ts`; повторно используем с тем же User-Agent и rate-limit.
-- Auto-apply порог: confidence ≥ 0.85 AND единственный гео-кандидат AND уезд совпадает. Иначе — pending.
-- Идемпотентность: перед обработкой ticka — проверка, что для записи нет approved `coord_suggestion` или published `feature_override`.
-- Heartbeat/Watchdog/exponential backoff — переиспользуются как есть (мягкий resume, не cancel).
-
-## Этапы
-
-1. Миграция БД (`task_kind`, `coord_suggestions.origin`, enum extension).
-2. `aiOrchestratorGeolocate.functions.ts` + общие helpers вынести из `aiOrchestrator.functions.ts`.
-3. UI-переключатель задач и новая карточка находки в `AiOrchestrationPanel`.
-4. Бейдж pending-AI-координат в `UnlocatedPanel`.
-5. Прогон на 5–10 записях вручную, проверка корректности, затем полный запуск.
+Подтвердите план — начну с шагов 1 и 3 (быстрый прирост качества + правильные статусы), затем перейду к подключению остальных агентов.
