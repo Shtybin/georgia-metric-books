@@ -99,6 +99,7 @@ export function AiOrchestrationPanel() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const runningRef = useRef(false);
+  const viewedRunIdRef = useRef<string | null>(null);
   const [startedAt, setStartedAt] = useState<number | null>(null);
 
   async function refreshRuns() {
