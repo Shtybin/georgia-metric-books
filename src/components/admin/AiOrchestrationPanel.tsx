@@ -205,10 +205,13 @@ export function AiOrchestrationPanel() {
   }
 
   async function openRun(r: any) {
+    viewedRunIdRef.current = r.id;
     setCurrentRun(r);
     setStartedAt(new Date(r.started_at).getTime());
     await reloadFindings(r.id);
-    if (r.status === "running") { runningRef.current = true; runLoop(r.id, (r.task_kind as TaskKind) ?? "audit"); }
+    // Do NOT auto-start a polling loop here — only the run that the user
+    // explicitly starts/resumes drives the loop. Opening a historical run
+    // just shows its current state without taking over the view.
   }
 
 
