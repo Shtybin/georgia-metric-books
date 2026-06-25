@@ -48,7 +48,7 @@ export function fetchTbilisiChurches(): Promise<TbilisiChurch[]> {
   inflight = Promise.all([
     fetch("/data/tbilisi-churches.json").then((r) => r.json()),
     supabase
-      .from("tbilisi_coord_verifications")
+      .from("tbilisi_coord_verifications_public")
       .select("church_id, new_lat, new_lon")
       .eq("status", "approved")
       .then(({ data, error }) => {
