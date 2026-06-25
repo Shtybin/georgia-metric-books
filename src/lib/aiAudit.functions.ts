@@ -735,7 +735,7 @@ export const reviewFinding = createServerFn({ method: "POST" })
           if (suggestionId) {
             await supabaseAdmin
               .from("coord_suggestions")
-              .update({ status: "approved", reviewer_note: `AI-оркестрация одобрила: ${finding.rationale ?? ""}`.slice(0, 1000) })
+              .update({ status: "approved", notes: `AI-оркестрация одобрила: ${finding.rationale ?? ""}`.slice(0, 2000) })
               .eq("id", suggestionId);
             newStatus = "applied";
           }
