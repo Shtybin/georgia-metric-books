@@ -184,6 +184,7 @@ export function AiOrchestrationPanel() {
   async function doResume() {
     if (!currentRun) return;
     await resume({ data: { runId: currentRun.id } } as any);
+    viewedRunIdRef.current = currentRun.id;
     await refreshStatus(currentRun.id);
     runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
   }
@@ -200,6 +201,7 @@ export function AiOrchestrationPanel() {
     // We only flip status back to `running` and re-enter the polling loop;
     // no findings/progress are dropped.
     await resume({ data: { runId: currentRun.id } } as any).catch(() => {});
+    viewedRunIdRef.current = currentRun.id;
     await refreshStatus(currentRun.id);
     runningRef.current = true;
     runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
