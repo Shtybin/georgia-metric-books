@@ -411,15 +411,20 @@ export function AiOrchestrationPanel() {
           <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="font-medium">
               Прогон <span className="font-mono text-xs text-muted-foreground">{currentRun.id.slice(0, 8)}</span>
+              {currentRun.task_kind && (
+                <span className="ml-2 rounded-md bg-muted px-1.5 py-0.5 text-[10px] uppercase text-muted-foreground">
+                  {currentRun.task_kind}
+                </span>
+              )}
               {" · "}
-              <span className={
-                "rounded-md px-1.5 py-0.5 text-xs " +
-                (currentRun.status === "running" ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
-                  : currentRun.status === "paused" ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
-                  : currentRun.status === "done" ? "bg-muted text-muted-foreground"
-                  : "bg-destructive/15 text-destructive")
-              }>{currentRun.status}</span>
+              {(() => { const d = derivedStatus(currentRun); return (
+                <span className={"rounded-md px-1.5 py-0.5 text-xs " + (TONE_CLASSES[d.tone] || TONE_CLASSES.running)}
+                      title={currentRun.heartbeat_at ? `Heartbeat: ${new Date(currentRun.heartbeat_at).toLocaleString("ru-RU")}` : undefined}>
+                  {d.label}
+                </span>
+              ); })()}
             </h3>
+
             <div className="text-xs tabular-nums text-muted-foreground">
               {currentRun.points_done} / {currentRun.points_total} ({pct}%) ·
               {" "}${Number(currentRun.spent_usd).toFixed(4)} / ${Number(currentRun.budget_usd).toFixed(2)} ·
