@@ -147,22 +147,25 @@ export function AiOrchestrationPanel() {
         const r = kind === "geolocate"
           ? await tickGeo({ data: { runId, size: 3 } } as any)
           : await tick({ data: { runId, size: 3 } } as any);
-        await refreshStatus(runId);
-        await reloadFindings(runId);
+        // Only refresh UI state if the user is still viewing this run.
+        // Otherwise keep polling silently so the user's selection isn't hijacked.
+        if (viewedRunIdRef.current === runId) {
+          await refreshStatus(runId);
+          await reloadFindings(runId);
+        }
         if (r.status !== "running") break;
         consecutiveErrors = 0;
         setError(null);
-        // Run watchdog check in background; do not block the loop
         if (kind === "audit") watchdog({ data: { runId } } as any).catch(() => {});
       } catch (e: any) {
         consecutiveErrors += 1;
-        setError(`${e?.message ?? String(e)} · продолжаем (попытка ${consecutiveErrors})`);
-        // Exponential backoff: 3s, 6s, 12s, 24s, capped at 30s. Never abort.
+        if (viewedRunIdRef.current === runId) {
+          setError(`${e?.message ?? String(e)} · продолжаем (попытка ${consecutiveErrors})`);
+        }
         const delay = Math.min(30_000, 3000 * 2 ** (consecutiveErrors - 1));
         await new Promise((r) => setTimeout(r, delay));
-        // Re-check run state — if user paused/cancelled, exit; else continue.
         try {
-          await refreshStatus(runId);
+          if (viewedRunIdRef.current === runId) await refreshStatus(runId);
         } catch { /* keep looping */ }
       }
     }
