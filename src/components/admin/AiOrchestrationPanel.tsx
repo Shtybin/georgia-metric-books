@@ -33,6 +33,13 @@ import {
   listFindings,
   reviewFinding,
 } from "@/lib/aiAudit.functions";
+import {
+  startGeolocationRun,
+  processGeolocationTick,
+  getUnlocatedSummary,
+} from "@/lib/aiOrchestratorGeolocate.functions";
+
+type TaskKind = "audit" | "geolocate";
 
 const SCOPE_PRESETS = [
   { id: "all", label: "Все точки карты" },
@@ -43,6 +50,7 @@ const SCOPE_PRESETS = [
   { id: "uezd:dusheti", label: "Душетский" },
   { id: "uezd:kutaisi", label: "Кутаисский" },
 ];
+
 
 type AgentKey = "coordinator" | "geo" | "metrics" | "archive" | "reviewer";
 const AGENTS: { key: AgentKey; label: string; icon: any; desc: string }[] = [
@@ -70,13 +78,20 @@ export function AiOrchestrationPanel() {
   const cancel = useServerFn(cancelOrchestrationRun);
   const tick = useServerFn(processOrchestrationTick);
   const watchdog = useServerFn(watchdogCheck);
+  const startGeo = useServerFn(startGeolocationRun);
+  const tickGeo = useServerFn(processGeolocationTick);
+  const fetchUnloc = useServerFn(getUnlocatedSummary);
   const status = useServerFn(getRunStatus);
   const listRuns = useServerFn(listAuditRuns);
   const list = useServerFn(listFindings);
   const review = useServerFn(reviewFinding);
 
+  const [task, setTask] = useState<TaskKind>("audit");
   const [scope, setScope] = useState("all");
+  const [geoUezd, setGeoUezd] = useState<string>("");
+  const [unlocSummary, setUnlocSummary] = useState<{ total: number; byUezd: { uezd: string; count: number }[] } | null>(null);
   const [budget, setBudget] = useState(20);
+
   const [runs, setRuns] = useState<any[]>([]);
   const [currentRun, setCurrentRun] = useState<any | null>(null);
   const [findings, setFindings] = useState<any[]>([]);
@@ -90,6 +105,10 @@ export function AiOrchestrationPanel() {
     try { setRuns(await listRuns({ data: {} } as any)); } catch (e: any) { setError(e.message); }
   }
   useEffect(() => { refreshRuns(); }, []);
+  useEffect(() => {
+    if (task !== "geolocate") return;
+    fetchUnloc({ data: {} } as any).then((s) => setUnlocSummary(s as any)).catch(() => {});
+  }, [task]);
 
   async function refreshStatus(runId: string) {
     try {
@@ -104,17 +123,19 @@ export function AiOrchestrationPanel() {
   async function doStart() {
     setError(null); setBusy(true);
     try {
-      const r = await start({ data: { budgetUsd: budget, scope } } as any);
+      const r = task === "geolocate"
+        ? await startGeo({ data: { budgetUsd: budget, uezd: geoUezd || undefined } } as any)
+        : await start({ data: { budgetUsd: budget, scope } } as any);
       setStartedAt(Date.now());
       await refreshRuns();
       await refreshStatus(r.runId);
       runningRef.current = true;
-      runLoop(r.runId);
+      runLoop(r.runId, task);
     } catch (e: any) { setError(e.message); }
     finally { setBusy(false); }
   }
 
-  async function runLoop(runId: string) {
+  async function runLoop(runId: string, kind: TaskKind = "audit") {
     runningRef.current = true;
     // Priority: ALWAYS continue the current run rather than abort.
     // On errors we back off exponentially (max 30s) but never break out
@@ -122,14 +143,16 @@ export function AiOrchestrationPanel() {
     let consecutiveErrors = 0;
     while (runningRef.current) {
       try {
-        const r = await tick({ data: { runId, size: 3 } } as any);
+        const r = kind === "geolocate"
+          ? await tickGeo({ data: { runId, size: 3 } } as any)
+          : await tick({ data: { runId, size: 3 } } as any);
         await refreshStatus(runId);
         await reloadFindings(runId);
         if (r.status !== "running") break;
         consecutiveErrors = 0;
         setError(null);
         // Run watchdog check in background; do not block the loop
-        watchdog({ data: { runId } } as any).catch(() => {});
+        if (kind === "audit") watchdog({ data: { runId } } as any).catch(() => {});
       } catch (e: any) {
         consecutiveErrors += 1;
         setError(`${e?.message ?? String(e)} · продолжаем (попытка ${consecutiveErrors})`);
@@ -146,6 +169,7 @@ export function AiOrchestrationPanel() {
     await refreshRuns();
   }
 
+
   async function doPause() {
     if (!currentRun) return;
     runningRef.current = false;
@@ -156,7 +180,7 @@ export function AiOrchestrationPanel() {
     if (!currentRun) return;
     await resume({ data: { runId: currentRun.id } } as any);
     await refreshStatus(currentRun.id);
-    runLoop(currentRun.id);
+    runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
   }
   async function doCancel() {
     if (!currentRun) return;
@@ -173,15 +197,16 @@ export function AiOrchestrationPanel() {
     await resume({ data: { runId: currentRun.id } } as any).catch(() => {});
     await refreshStatus(currentRun.id);
     runningRef.current = true;
-    runLoop(currentRun.id);
+    runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
   }
 
   async function openRun(r: any) {
     setCurrentRun(r);
     setStartedAt(new Date(r.started_at).getTime());
     await reloadFindings(r.id);
-    if (r.status === "running") { runningRef.current = true; runLoop(r.id); }
+    if (r.status === "running") { runningRef.current = true; runLoop(r.id, (r.task_kind as TaskKind) ?? "audit"); }
   }
+
 
   async function doReview(id: string, decision: "approved" | "rejected") {
     await review({ data: { id, decision } } as any);
@@ -222,24 +247,65 @@ export function AiOrchestrationPanel() {
         <div className="mb-3 flex items-center gap-2">
           <Bot className="h-5 w-5 text-primary" />
           <div>
-            <h2 className="font-medium">AI-оркестрация · тотальная перепроверка точек</h2>
+            <h2 className="font-medium">AI-оркестрация · автономные задачи</h2>
             <p className="text-xs text-muted-foreground">
               Coordinator → GeoAgent + MetricsAgent + ArchiveAgent → Reviewer · модель: <code>google/gemini-2.5-pro</code>
             </p>
           </div>
         </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <label className="text-xs">
-            <span className="mb-1 block text-muted-foreground">Область</span>
-            <select
-              value={scope}
-              onChange={(e) => setScope(e.target.value)}
-              className="w-full rounded-md border border-border bg-background px-2 py-1.5"
+        {/* Task switch */}
+        <div className="mb-3 inline-flex rounded-lg border border-border bg-muted/40 p-0.5 text-xs">
+          {([
+            { id: "audit", label: "Аудит точек" },
+            { id: "geolocate", label: "Геолокация селений без координат" },
+          ] as const).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => !runningRef.current && setTask(t.id)}
               disabled={runningRef.current}
+              className={
+                "rounded-md px-3 py-1.5 transition-colors " +
+                (task === t.id
+                  ? "bg-primary text-primary-foreground shadow"
+                  : "text-muted-foreground hover:bg-accent")
+              }
             >
-              {SCOPE_PRESETS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
-            </select>
-          </label>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {task === "audit" ? (
+            <label className="text-xs">
+              <span className="mb-1 block text-muted-foreground">Область</span>
+              <select
+                value={scope}
+                onChange={(e) => setScope(e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-2 py-1.5"
+                disabled={runningRef.current}
+              >
+                {SCOPE_PRESETS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+              </select>
+            </label>
+          ) : (
+            <label className="text-xs">
+              <span className="mb-1 block text-muted-foreground">
+                Уезд / район (опционально)
+                {unlocSummary && <span className="ml-1 text-muted-foreground/70">· всего {unlocSummary.total} селений</span>}
+              </span>
+              <select
+                value={geoUezd}
+                onChange={(e) => setGeoUezd(e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-2 py-1.5"
+                disabled={runningRef.current}
+              >
+                <option value="">— все уезды —</option>
+                {(unlocSummary?.byUezd ?? []).map((u) => (
+                  <option key={u.uezd} value={u.uezd}>{u.uezd} ({u.count})</option>
+                ))}
+              </select>
+            </label>
+          )}
           <label className="text-xs">
             <span className="mb-1 block text-muted-foreground">Бюджет, $</span>
             <input
@@ -255,10 +321,20 @@ export function AiOrchestrationPanel() {
             />
           </label>
           <div className="text-xs">
-            <span className="mb-1 block text-muted-foreground">База PDF метрических книг</span>
-            <PdfDbStatus />
+            <span className="mb-1 block text-muted-foreground">
+              {task === "audit" ? "База PDF метрических книг" : "Источники геолокации"}
+            </span>
+            {task === "audit" ? (
+              <PdfDbStatus />
+            ) : (
+              <span className="inline-flex items-center gap-2 text-muted-foreground">
+                <Globe className="h-3.5 w-3.5 text-emerald-600" />
+                Nominatim (OSM) → AI-арбитр → авто-слияние / очередь координат
+              </span>
+            )}
           </div>
         </div>
+
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {!currentRun || currentRun.status !== "running" ? (
             <Button onClick={doStart} disabled={busy} size="sm">

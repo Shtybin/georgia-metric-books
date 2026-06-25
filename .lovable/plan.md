@@ -1,165 +1,72 @@
-# План: AI-оркестрация для тотальной перепроверки точек
-
 ## Цель
-Удалить вкладки **AI-геокодер** и **AI-аудит** из админки. Вместо них — одна вкладка **AI-оркестрация**, где группа из 4 ботов (Coordinator → GeoAgent / MetricsAgent / ArchiveAgent → Reviewer) автоматически проверяет каждую точку карты и кладёт находки на ручное ревью (human-in-the-loop).
 
-## Архитектура агентов
+В админ-панели «AI-Оркестрация» появится **второй тип прогона** — «Геолокация неразмещённых селений». Он берёт все записи из `public/data/unlocated.json`, которым до сих пор не присвоены координаты (нет принятого `coord_suggestion` и нет ручной привязки в `feature_overrides`/`user_coords`), находит для них координаты с учётом географии, исторических уездов/районов и омонимов, ставит точку на карте и тут же прогоняет её через ту же аудит-цепочку, что и остальные точки (церкви, периоды, пропущенные годы, ссылки на архив и FamilySearch).
 
-```text
-                ┌──────────────────────┐
-                │   Coordinator        │  делит N точек на батчи,
-                │   (Gemini 2.5 Flash) │  ставит задачи в очередь,
-                └──────────┬───────────┘  следит за watchdog
-                           │
-        ┌──────────────────┼──────────────────┐
-        ▼                  ▼                  ▼
- ┌─────────────┐   ┌──────────────┐   ┌──────────────┐
- │  GeoAgent   │   │ MetricsAgent │   │ ArchiveAgent │
- │ Gemini 2.5  │   │ Gemini 2.5   │   │ Gemini 2.5   │
- │   Pro       │   │   Pro        │   │   Flash      │
- │ координаты, │   │ годы МК,     │   │ ссылки на    │
- │ уезд, район │   │ церкви,      │   │ archival-    │
- │             │   │ пропуски     │   │ services.gov │
- └─────┬───────┘   └──────┬───────┘   └──────┬───────┘
-       └──────────────────┼──────────────────┘
-                          ▼
-                  ┌───────────────┐
-                  │   Reviewer    │ агрегирует, ставит
-                  │   GPT-5       │ confidence, эскалирует
-                  │ (эскалация)   │ спорные кейсы, пишет
-                  └───────┬───────┘ итоговое findings
-                          ▼
-                ai_audit_findings (status=pending)
-                     → ручное ревью
-```
+## UX (вкладка AI-Оркестрация)
 
-**Гибридная модель:** базовая работа на `google/gemini-2.5-pro`. Reviewer на `openai/gpt-5` запускается только если хотя бы один из под-агентов вернул `confidence < 0.7` или агенты противоречат друг другу (экономия токенов). ArchiveAgent — на быстрой `gemini-2.5-flash` (там только HTTP-проверки, не нужен Pro).
+- Селектор задачи сверху панели: **«Аудит существующих точек»** (текущий прогон) / **«Геолокация неразмещённых»** (новый).
+- Для новой задачи:
+  - счётчик «осталось неразмещённых» (всего / уже геолоцированных за этот прогон / отброшенных как неоднозначные);
+  - те же кнопки Play / Pause / Resume / Cancel, тот же watchdog и heartbeat;
+  - таблица находок с типом `geolocate`: координаты-кандидат, источник (OSM/Nominatim/исторический справочник/AI-вывод), confidence, обоснование, ссылки;
+  - кнопки Approve/Reject. Auto-approve при confidence ≥ 0.85 и единственном кандидате; иначе — ручная модерация.
 
-## Что проверяет каждый агент
-
-**GeoAgent** — координаты:
-- читает текущие `lat/lon`, название, `church`, `uezd`, `region`
-- если есть конкретный уезд (напр. Горийский) — проверяет, попадает ли точка в границы (используем bbox из существующих данных уездов)
-- если общий регион (Гурия, Имеретия) — сверяет с историческими bbox этих областей
-- учитывает однокоренные названия (Tsageri vs Tsaishi vs Tskhinvali), предлагает корректировку при mismatch
-- источник истины: `feature_overrides`, `uezd_corrections`, GeoJSON уездов 1898 г.
-
-**MetricsAgent** — данные метрических книг:
-- сверяет годы ведения МК в карточке с реальными годами из БД сайта (`features`) и из загруженных PDF
-- проверяет согласованность: периоды ведения ⊇ годы пропусков ∪ годы наличия
-- проверяет, что список церквей в карточке соответствует упоминаниям в PDF
-- источник: таблицы БД + парсинг PDF (см. ниже)
-
-**ArchiveAgent** — внешние ссылки:
-- если в `external_sources` есть ссылка на `archival-services.gov.ge/saeklesio/` — делает HEAD-запрос, проверяет 200 и что в URL фигурирует то же название/фонд
-- помечает битые ссылки и предлагает поиск по сайту архива
-
-**Reviewer** — финальный арбитр:
-- агрегирует находки 3 агентов
-- эскалирует на GPT-5 только при разногласиях или низкой уверенности
-- выставляет финальный `severity` и `confidence`
-- записывает в `ai_audit_findings` со `status='pending'`
-
-## Источники данных PDF
-
-Будем использовать **существующую инфраструктуру** + новый storage bucket:
-- `archival-services.gov.ge` — ArchiveAgent делает прямые HTTP-проверки через server fn
-- **новый bucket `metric-book-pdfs`** в Lovable Cloud Storage — туда пользователь загружает PDF через UI новой вкладки
-- при первой загрузке: запускаем извлечение текста через `document--parse_document` логику внутри server fn, сохраняем выжимку (год, церковь, район) в новую таблицу `pdf_extracted_records` для быстрого поиска агентами
-- старый скрипт `scripts/parse-niag-pdfs.py` остаётся для bulk-импорта вне UI
-
-## Структура вкладки UI
+## Пайплайн агентов (повторно использует существующих)
 
 ```text
-┌─ AI-оркестрация ─────────────────────────────────────────────┐
-│                                                              │
-│  [ Запустить ▶ ]  [ Пауза ⏸ ]  [ Стоп ⏹ ]  [ Перезапуск ↻ ] │
-│                                                              │
-│  Бюджет: $5.00 / $20.00       Модель: Gemini Pro + GPT-5     │
-│                                                              │
-│  ┌─ Прогресс ──────────────────────────────────────────┐    │
-│  │ 1247 / 4892 точек  (25.5%)   ETA: 38 мин            │    │
-│  │ ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░             │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌─ Боты ──────────────────────────────────────────────┐    │
-│  │ Coordinator   ● работает    очередь: 12 батчей      │    │
-│  │ GeoAgent      ● работает    1102/4892  fails: 3     │    │
-│  │ MetricsAgent  ● работает     987/4892  fails: 1     │    │
-│  │ ArchiveAgent  ● работает     834/4892  fails: 12    │    │
-│  │ Reviewer      ● ожидает      612/4892  fails: 0     │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌─ Watchdog ──────────────────────────────────────────┐    │
-│  │ Последняя активность: 3 сек назад                    │    │
-│  │ Зависшие задачи: 0  (порог 60 сек → auto-restart)   │    │
-│  │ [Подробный лог ▼]                                    │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌─ Проблемные кейсы (требуют внимания) ───────────────┐    │
-│  │ • Тбилиси, Сионский собор — GeoAgent vs MetricsAgent│    │
-│  │ • Кутаиси, Баграти — битая ссылка archive          │    │
-│  │ ...                                                  │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  [Загрузить PDF метрических книг ⬆]                          │
-│                                                              │
-│  [Перейти к ревью находок →]  (открывает старый UI findings)│
-└──────────────────────────────────────────────────────────────┘
+Coordinator → LocatorAgent → DisambiguatorAgent → MetricsAgent → ArchiveAgent → Reviewer
 ```
 
-Лог обновляется live через polling `ai_audit_runs` + `ai_audit_findings` каждые 2 сек (Supabase realtime — опционально, polling проще).
+1. **Coordinator** делит оставшиеся unlocated-записи на батчи (как сейчас в `aiOrchestrator.functions.ts`).
+2. **LocatorAgent** (новый, обёртка над уже существующим `aiGeocoder.functions.ts`):
+   - сначала Nominatim/OSM по `settlement + uezd + region` (готовая функция `geocodeCandidates`);
+   - если 0 или >1 кандидата — обращение к Lovable AI (Gemini Pro) с контекстом: исторический уезд/район XIX в., соседние уже размещённые селения, PDF-чанки `pdf_text_chunks`, ссылки `archival-services.gov.ge` (та же иерархия источников, что в текущем оркестраторе: сайт → PDF → NIAG).
+3. **DisambiguatorAgent**: если в Грузии есть несколько одноимённых сёл, выбирает то, чей уезд/район совпадает с историческим (использует `LOCATION_HINTS` и геометрию уже размещённых соседей того же уезда — bounding box ±N км).
+4. **MetricsAgent / ArchiveAgent / Reviewer** — уже существующие, запускаются на новой точке сразу после установки координат: проверяют названия церквей, период метрических книг, пропущенные годы, наличие ссылок на `archival-services.gov.ge` и `familysearch.org`, создают `missing_years_suggestions` и `external_sources`.
 
-## Watchdog
+## Применение результата
 
-Серверная функция `orchestratorTick`:
-- запускается каждые 30 сек, пока есть `running` run
-- проверяет `updated_at` каждой задачи в очереди
-- если задача висит > 60 сек без обновления → помечает `failed`, увеличивает счётчик попыток, возвращает в очередь (макс 3 попытки)
-- если 5+ задач подряд упали с одной ошибкой → ставит run в `paused`, уведомляет UI
-- кнопка «Перезапуск» в UI чистит зависшие задачи и продолжает с последней успешной точки
+После approve (ручного или авто):
+- создаётся `feature_overrides` c `action: "merge_unlocated"` (механизм уже есть — `aiAudit.functions.ts` строка ~900), с заполнением координат, названий церквей, периода и т. д.;
+- запись помечается обработанной в `coord_suggestions` (status=approved, source=`ai-orchestration`);
+- точка немедленно появляется на основной карте (та же логика рендера, что и для существующих overrides);
+- параллельно дописываются `external_sources` (archive + FamilySearch) и `missing_years_suggestions`.
 
-## Что удаляется
+## База данных
 
-- `src/components/admin/AiGeocoderPanel.tsx`
-- `src/components/admin/AiAuditPanel.tsx`
-- `src/lib/aiGeocoder.functions.ts`
-- `src/lib/aiAudit.functions.ts` (логика частично переносится в новые функции)
-- Соответствующие табы в `src/routes/admin.tsx`
+Дополнения к существующим таблицам, без новых сущностей:
+- `ai_audit_runs`: поле `task_kind` (`'audit' | 'geolocate'`, default `'audit'`), чтобы UI и watchdog различали типы прогонов.
+- `ai_audit_findings`: расширить enum `kind` значением `geolocate` (rationale, candidate lat/lon, confidence, источники — в существующем `data jsonb`).
+- `coord_suggestions`: добавить `origin text` (значения `manual | ai-geocoder | ai-orchestration`), чтобы видеть, какие точки пришли из новой задачи.
 
-## Что создаётся
+Все изменения — одной миграцией с GRANT/RLS, повторяющими существующие политики этих таблиц.
 
-**Frontend:**
-- `src/components/admin/AiOrchestrationPanel.tsx` — главный UI вкладки
-- `src/components/admin/orchestration/AgentStatusCard.tsx`
-- `src/components/admin/orchestration/WatchdogPanel.tsx`
-- `src/components/admin/orchestration/PdfUploadDialog.tsx`
-- `src/components/admin/orchestration/FindingsReviewLink.tsx` (переиспользует существующий UI ревью находок из `AiAuditPanel`, выносим в `FindingsReviewPanel.tsx`)
+## Серверная часть
 
-**Backend (server fns в `src/lib/`):**
-- `aiOrchestrator.functions.ts` — `startRun`, `pauseRun`, `resumeRun`, `restartRun`, `getRunStatus`
-- `aiOrchestrator.coordinator.server.ts` — логика батчинга и очереди
-- `aiOrchestrator.agents.server.ts` — реализация GeoAgent / MetricsAgent / ArchiveAgent / Reviewer через AI SDK + Lovable AI Gateway
-- `aiOrchestrator.watchdog.server.ts` — детект зависших задач
-- `pdfExtractor.functions.ts` — приём PDF и сохранение выжимок
+Новый файл `src/lib/aiOrchestratorGeolocate.functions.ts`:
+- `startGeolocationRun({ budgetUsd, scope, model })` — аналог `startOrchestrationRun`, но скоуп идёт по `unlocated.json` минус уже размещённые.
+- `processGeolocationTick({ runId })` — обрабатывает следующий батч: вызывает LocatorAgent → Disambiguator → создаёт finding.
+- `applyGeolocationFinding({ findingId })` — выполняет merge_unlocated через существующий механизм, затем синхронно прогоняет MetricsAgent/ArchiveAgent на новой точке.
+- Pause/Resume/Cancel/Watchdog — переиспользуют ту же логику, что и аудит-оркестратор (выделить общие helpers).
 
-**DB-миграции:**
-- `ai_orchestration_tasks` — очередь задач (run_id, feature_id, agent, status, attempts, last_heartbeat, payload)
-- `pdf_extracted_records` — извлечённые из PDF записи (pdf_id, year, church, region, raw_text)
-- расширение `ai_audit_runs`: добавить колонки `agent_progress jsonb`, `watchdog_state jsonb`, `paused_at`
-- storage bucket `metric-book-pdfs` (приватный, доступ только admin)
-- GRANT / RLS политики на всё новое
+## UI-изменения
+
+- `src/components/admin/AiOrchestrationPanel.tsx`: добавить переключатель задач, отрисовку карточки находки `geolocate` (карта-мини, кандидаты, кнопки Approve/Reject/Open on map).
+- В таблице/легенде неразмещённых (`UnlocatedPanel`) — бейдж «AI нашёл координаты, ждёт модерации» для тех записей, по которым есть pending `coord_suggestions` с `origin = ai-orchestration`.
 
 ## Технические детали
 
-- Все вызовы Gemini Pro/GPT-5 идут через **Lovable AI Gateway** (`@ai-sdk/openai-compatible`), читают `LOVABLE_API_KEY` в `process.env` внутри `.handler()`
-- Структурированный вывод через `Output.object` со Zod-схемами (по схеме на агента)
-- Стоимость считается per-call, агрегируется в `ai_audit_runs.spent_usd`, останавливаем run при превышении `budget_usd`
-- Долгие задачи: Coordinator не блокирует HTTP — он только ставит задачи в очередь и возвращается. Реальная работа агентов идёт через `pg_cron` → `/api/public/orchestrator/process-batch` (с подписанным секретом) каждые 10 сек, либо через `setTimeout`-чейн внутри одного long-running server fn (проще для MVP)
-- Для MVP стартую с `setTimeout`-цикла внутри одного `startRun` (Cloudflare Workers держит до 30 сек CPU, поэтому Coordinator перезапускается из watchdog tick)
+- Модель по умолчанию: `google/gemini-2.5-pro` (та же, что в текущем оркестраторе). Для дешёвой первичной проверки кандидатов — `google/gemini-3-flash-preview`.
+- Все вызовы через Lovable AI Gateway, без новых секретов.
+- Nominatim уже используется в `aiGeocoder.functions.ts`; повторно используем с тем же User-Agent и rate-limit.
+- Auto-apply порог: confidence ≥ 0.85 AND единственный гео-кандидат AND уезд совпадает. Иначе — pending.
+- Идемпотентность: перед обработкой ticka — проверка, что для записи нет approved `coord_suggestion` или published `feature_override`.
+- Heartbeat/Watchdog/exponential backoff — переиспользуются как есть (мягкий resume, не cancel).
 
-## Что мне нужно от вас перед стартом
+## Этапы
 
-Пришлите 1–2 примера PDF метрических книг прямо в следующем сообщении — мне нужно посмотреть на их реальную структуру, чтобы корректно настроить `pdfExtractor` (форматы названий церквей/годов в разных PDF могут отличаться, и я не хочу гадать).
-
-После реализации вы запустите run на полной карте, посмотрите на находки в pending, одобрите/отклоните, и одобренные применятся как `feature_overrides` (как сейчас в `AiAuditPanel`).
+1. Миграция БД (`task_kind`, `coord_suggestions.origin`, enum extension).
+2. `aiOrchestratorGeolocate.functions.ts` + общие helpers вынести из `aiOrchestrator.functions.ts`.
+3. UI-переключатель задач и новая карточка находки в `AiOrchestrationPanel`.
+4. Бейдж pending-AI-координат в `UnlocatedPanel`.
+5. Прогон на 5–10 записях вручную, проверка корректности, затем полный запуск.

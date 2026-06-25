@@ -728,12 +728,24 @@ export const reviewFinding = createServerFn({ method: "POST" })
             created_by: userId,
           });
           newStatus = "applied";
+        } else if (finding.kind === "geolocate") {
+          // Promote the linked coord_suggestion to 'approved' so the standard
+          // Suggestions workflow can place the point on the map.
+          const suggestionId = (proposed as any)?.coord_suggestion_id;
+          if (suggestionId) {
+            await supabaseAdmin
+              .from("coord_suggestions")
+              .update({ status: "approved", notes: `AI-оркестрация одобрила: ${finding.rationale ?? ""}`.slice(0, 2000) })
+              .eq("id", suggestionId);
+            newStatus = "applied";
+          }
         }
       } catch (e: any) {
         console.error("apply finding failed", e);
         // keep status='approved' if apply failed
       }
     }
+
 
     const { error: updErr } = await supabaseAdmin
       .from("ai_audit_findings")

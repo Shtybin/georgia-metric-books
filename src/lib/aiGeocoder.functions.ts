@@ -18,9 +18,9 @@ const parishesBundled = JSON.parse(parishesRaw) as GeoJSON.FeatureCollection<Geo
 
 // ---- Types -------------------------------------------------------------
 
-type LocaleStr = { en: string; ru: string; ka?: string };
+export type LocaleStr = { en: string; ru: string; ka?: string };
 
-interface UnlocatedItem {
+export interface UnlocatedItem {
   settlement: LocaleStr;
   church: LocaleStr;
   region: LocaleStr;
@@ -30,6 +30,7 @@ interface UnlocatedItem {
   endYear: number | null;
   count: number;
 }
+
 
 interface NominatimHit {
   lat: string;
@@ -78,11 +79,12 @@ function inGeorgia(lat: number, lon: number) {
   );
 }
 
-function key(it: { settlement: LocaleStr; uezd: LocaleStr }) {
+export function key(it: { settlement: LocaleStr; uezd: LocaleStr }) {
   const s = (it.settlement.ru || it.settlement.en || "").toLocaleLowerCase().trim();
   const u = (it.uezd.ru || it.uezd.en || "").toLocaleLowerCase().trim();
   return `${s}|${u}`;
 }
+
 
 async function nominatimSearch(q: string, viewbox = true): Promise<NominatimHit[]> {
   const params = new URLSearchParams({
@@ -211,7 +213,7 @@ interface ValidationResult {
  *    названием (RU/EN/KA) исторического селения
  * Returns ok=false если 2 critical-проверки не прошли (явная ошибка совпадения).
  */
-function validateOsmMatch(
+export function validateOsmMatch(
   item: UnlocatedItem,
   hit: NominatimHit,
   opts: { minTokenLen?: number; prefixLen?: number; geoStrict?: boolean } = {},
@@ -290,7 +292,7 @@ function validateOsmMatch(
   return { ok: (geoStrict ? geoOk : true) && nameOk, warnings, reasons };
 }
 
-async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
+export async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
   // Try names in priority order; stop at the first one that returns hits.
   // Fewer Nominatim calls = much shorter per-item time (worker timeout safety).
   const names = [item.settlement.ka, item.settlement.en, item.settlement.ru]
@@ -317,7 +319,7 @@ async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
   });
 }
 
-async function aiArbiter(
+export async function aiArbiter(
   item: UnlocatedItem,
   candidates: NominatimHit[],
 ): Promise<{ index: number; confidence: number; reason: string } | null> {
@@ -398,7 +400,7 @@ ${candidates.map((c, i) => `${i}. ${c.display_name} [${c.class}/${c.type}, lat=$
   }
 }
 
-async function fetchUnlocated(): Promise<UnlocatedItem[]> {
+export async function fetchUnlocated(): Promise<UnlocatedItem[]> {
   // Primary source: bundled JSON (works in both Node dev and Cloudflare worker).
   return unlocatedBundled as UnlocatedItem[];
 }
@@ -429,7 +431,7 @@ function bucketKey(lat: number, lon: number): string {
   return `${Math.floor(lat / BUCKET_DEG)}|${Math.floor(lon / BUCKET_DEG)}`;
 }
 
-function buildSpatialIndex(features: IndexedFeature[]): Map<string, IndexedFeature[]> {
+export function buildSpatialIndex(features: IndexedFeature[]): Map<string, IndexedFeature[]> {
   const idx = new Map<string, IndexedFeature[]>();
   for (const f of features) {
     const k = bucketKey(f.lat, f.lon);
@@ -452,7 +454,7 @@ function bucketNeighbours(lat: number, lon: number): string[] {
 }
 
 /** Apply published edit/delete overrides to bundled parishes and return an indexable list. */
-function buildFeatureIndex(overrides: FeatureOverride[]): IndexedFeature[] {
+export function buildFeatureIndex(overrides: FeatureOverride[]): IndexedFeature[] {
   const editMap = new Map<number, FeatureData>();
   const deleteSet = new Set<number>();
   for (const o of overrides) {
@@ -514,7 +516,7 @@ function adminMatches(item: UnlocatedItem, target: FeatureData): { ok: boolean; 
   return { ok: false, how: `admin расходится (ист. ${buckets.join("/") || "—"} vs ${tgtBuckets.join("/") || "—"})` };
 }
 
-function findMergeTarget(
+export function findMergeTarget(
   item: UnlocatedItem,
   lat: number,
   lon: number,
@@ -578,7 +580,7 @@ function mergeStr(existing: string, incoming: string): string {
   return `${a} / ${b}`;
 }
 
-function buildMergedFeatureData(existing: FeatureData, item: UnlocatedItem, osmName: string): FeatureData {
+export function buildMergedFeatureData(existing: FeatureData, item: UnlocatedItem, osmName: string): FeatureData {
   void osmName;
   const merged: FeatureData = {
     ...existing,

@@ -105,6 +105,7 @@ export type Database = {
           spent_usd: number
           started_at: string
           status: Database["public"]["Enums"]["ai_audit_run_status"]
+          task_kind: string
           updated_at: string
           watchdog_state: Json
         }
@@ -124,6 +125,7 @@ export type Database = {
           spent_usd?: number
           started_at?: string
           status?: Database["public"]["Enums"]["ai_audit_run_status"]
+          task_kind?: string
           updated_at?: string
           watchdog_state?: Json
         }
@@ -143,6 +145,7 @@ export type Database = {
           spent_usd?: number
           started_at?: string
           status?: Database["public"]["Enums"]["ai_audit_run_status"]
+          task_kind?: string
           updated_at?: string
           watchdog_state?: Json
         }
@@ -158,6 +161,7 @@ export type Database = {
           lat: number
           lon: number
           notes: string | null
+          origin: string
           region_en: string
           region_ru: string
           reviewed_at: string | null
@@ -180,6 +184,7 @@ export type Database = {
           lat: number
           lon: number
           notes?: string | null
+          origin?: string
           region_en?: string
           region_ru?: string
           reviewed_at?: string | null
@@ -202,6 +207,7 @@ export type Database = {
           lat?: number
           lon?: number
           notes?: string | null
+          origin?: string
           region_en?: string
           region_ru?: string
           reviewed_at?: string | null
@@ -750,6 +756,7 @@ export type Database = {
         | "missing_years"
         | "duplicate"
         | "other"
+        | "geolocate"
       ai_audit_finding_status: "pending" | "approved" | "rejected" | "applied"
       ai_audit_run_status:
         | "running"
@@ -900,6 +907,7 @@ export const Constants = {
         "missing_years",
         "duplicate",
         "other",
+        "geolocate",
       ],
       ai_audit_finding_status: ["pending", "approved", "rejected", "applied"],
       ai_audit_run_status: [
