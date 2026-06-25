@@ -105,6 +105,10 @@ export function AiOrchestrationPanel() {
     try { setRuns(await listRuns({ data: {} } as any)); } catch (e: any) { setError(e.message); }
   }
   useEffect(() => { refreshRuns(); }, []);
+  useEffect(() => {
+    if (task !== "geolocate") return;
+    fetchUnloc({ data: {} } as any).then((s) => setUnlocSummary(s as any)).catch(() => {});
+  }, [task]);
 
   async function refreshStatus(runId: string) {
     try {
@@ -119,17 +123,19 @@ export function AiOrchestrationPanel() {
   async function doStart() {
     setError(null); setBusy(true);
     try {
-      const r = await start({ data: { budgetUsd: budget, scope } } as any);
+      const r = task === "geolocate"
+        ? await startGeo({ data: { budgetUsd: budget, uezd: geoUezd || undefined } } as any)
+        : await start({ data: { budgetUsd: budget, scope } } as any);
       setStartedAt(Date.now());
       await refreshRuns();
       await refreshStatus(r.runId);
       runningRef.current = true;
-      runLoop(r.runId);
+      runLoop(r.runId, task);
     } catch (e: any) { setError(e.message); }
     finally { setBusy(false); }
   }
 
-  async function runLoop(runId: string) {
+  async function runLoop(runId: string, kind: TaskKind = "audit") {
     runningRef.current = true;
     // Priority: ALWAYS continue the current run rather than abort.
     // On errors we back off exponentially (max 30s) but never break out
@@ -137,14 +143,16 @@ export function AiOrchestrationPanel() {
     let consecutiveErrors = 0;
     while (runningRef.current) {
       try {
-        const r = await tick({ data: { runId, size: 3 } } as any);
+        const r = kind === "geolocate"
+          ? await tickGeo({ data: { runId, size: 3 } } as any)
+          : await tick({ data: { runId, size: 3 } } as any);
         await refreshStatus(runId);
         await reloadFindings(runId);
         if (r.status !== "running") break;
         consecutiveErrors = 0;
         setError(null);
         // Run watchdog check in background; do not block the loop
-        watchdog({ data: { runId } } as any).catch(() => {});
+        if (kind === "audit") watchdog({ data: { runId } } as any).catch(() => {});
       } catch (e: any) {
         consecutiveErrors += 1;
         setError(`${e?.message ?? String(e)} · продолжаем (попытка ${consecutiveErrors})`);
@@ -161,6 +169,7 @@ export function AiOrchestrationPanel() {
     await refreshRuns();
   }
 
+
   async function doPause() {
     if (!currentRun) return;
     runningRef.current = false;
@@ -171,7 +180,7 @@ export function AiOrchestrationPanel() {
     if (!currentRun) return;
     await resume({ data: { runId: currentRun.id } } as any);
     await refreshStatus(currentRun.id);
-    runLoop(currentRun.id);
+    runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
   }
   async function doCancel() {
     if (!currentRun) return;
@@ -188,15 +197,16 @@ export function AiOrchestrationPanel() {
     await resume({ data: { runId: currentRun.id } } as any).catch(() => {});
     await refreshStatus(currentRun.id);
     runningRef.current = true;
-    runLoop(currentRun.id);
+    runLoop(currentRun.id, (currentRun.task_kind as TaskKind) ?? "audit");
   }
 
   async function openRun(r: any) {
     setCurrentRun(r);
     setStartedAt(new Date(r.started_at).getTime());
     await reloadFindings(r.id);
-    if (r.status === "running") { runningRef.current = true; runLoop(r.id); }
+    if (r.status === "running") { runningRef.current = true; runLoop(r.id, (r.task_kind as TaskKind) ?? "audit"); }
   }
+
 
   async function doReview(id: string, decision: "approved" | "rejected") {
     await review({ data: { id, decision } } as any);
