@@ -293,31 +293,163 @@ export function validateOsmMatch(
   return { ok: (geoStrict ? geoOk : true) && nameOk, warnings, reasons };
 }
 
+/**
+ * Strip historical/locative prefixes ("Верхний/Нижний/Старый/Новый/Большой/Малый",
+ * "Upper/Lower/Old/New/Great/Little", "ზემო/ქვემო/დიდი/პატარა/ახალი/ძველი"),
+ * trailing "село/sel./с.", and the word "церковь/village/town" if mixed in.
+ */
+function stripDescriptors(name: string): string {
+  let s = name.trim();
+  const prefixes = [
+    /^(?:верхний|верхняя|верхнее|нижний|нижняя|нижнее|старый|старая|старое|новый|новая|новое|большой|большая|большое|малый|малая|малое|село|сел\.|с\.)\s+/i,
+    /^(?:upper|lower|old|new|great|greater|little|small|st\.?|saint|village of)\s+/i,
+    /^(?:ზემო|ქვემო|ახალი|ძველი|დიდი|პატარა)\s+/i,
+  ];
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const re of prefixes) {
+      const next = s.replace(re, "");
+      if (next !== s) { s = next; changed = true; }
+    }
+  }
+  // also drop trailing parenthetical comments
+  s = s.replace(/\s*\([^)]*\)\s*$/g, "").trim();
+  return s;
+}
+
+function uniqueNames(values: (string | undefined)[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of values) {
+    const v = (raw || "").trim();
+    if (!v) continue;
+    const k = v.toLocaleLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(v);
+  }
+  return out;
+}
+
+async function overpassSearch(name: string): Promise<NominatimHit[]> {
+  // Search Georgia (ISO ge) for any place node/way whose name~=name (case-insensitive).
+  // Returns at most ~10 results converted to NominatimHit shape.
+  const safe = name.replace(/["\\]/g, "");
+  const query = `[out:json][timeout:20];
+area["ISO3166-1"="GE"][admin_level=2]->.ge;
+(
+  node["place"~"village|hamlet|town|city|locality"]["name"~"${safe}",i](area.ge);
+  node["place"~"village|hamlet|town|city|locality"]["name:ru"~"${safe}",i](area.ge);
+  node["place"~"village|hamlet|town|city|locality"]["name:en"~"${safe}",i](area.ge);
+  node["place"~"village|hamlet|town|city|locality"]["name:ka"~"${safe}",i](area.ge);
+);
+out tags center 10;`;
+  try {
+    const res = await fetch("https://overpass-api.de/api/interpreter", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "georgia-metric-books-atlas/1.0" },
+      body: "data=" + encodeURIComponent(query),
+    });
+    if (!res.ok) return [];
+    const json = (await res.json()) as { elements?: any[] };
+    const out: NominatimHit[] = [];
+    for (const el of json.elements || []) {
+      const lat = el.lat ?? el.center?.lat;
+      const lon = el.lon ?? el.center?.lon;
+      if (typeof lat !== "number" || typeof lon !== "number") continue;
+      const tags = el.tags || {};
+      const display = [tags.name, tags["name:ru"], tags["name:en"], tags["name:ka"], "Georgia"]
+        .filter(Boolean).join(", ");
+      out.push({
+        lat: String(lat),
+        lon: String(lon),
+        display_name: display || `${tags.name ?? name}, Georgia`,
+        type: tags.place || "village",
+        class: "place",
+        address: { village: tags.name, country: "Georgia" },
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 export async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimHit[]> {
-  // Try names in priority order; stop at the first one that returns hits.
-  // Fewer Nominatim calls = much shorter per-item time (worker timeout safety).
-  const names = [item.settlement.ka, item.settlement.en, item.settlement.ru]
-    .map((s) => (s || "").trim())
-    .filter(Boolean);
+  // Build a richer pool of name variants across ka/en/ru, with descriptor
+  // stripping and admin-disambiguated queries. We merge candidates across
+  // all variants instead of stopping at the first hit — gives the AI arbiter
+  // more to compare and dramatically reduces "Nominatim empty" rejects.
+  const rawNames = uniqueNames([item.settlement.ka, item.settlement.en, item.settlement.ru]);
+  const stripped = uniqueNames(rawNames.map(stripDescriptors));
+  const baseNames = uniqueNames([...rawNames, ...stripped]);
+  const admin = uniqueNames([item.uezd.ru, item.uezd.en, item.uezd.ka, item.region.ru, item.region.en, item.region.ka]);
+
+  const queries: string[] = [];
+  for (const n of baseNames) {
+    queries.push(n);
+    for (const a of admin.slice(0, 2)) queries.push(`${n}, ${a}, Georgia`);
+    queries.push(`${n}, Georgia`);
+  }
+
   const seen = new Map<string, NominatimHit>();
-  for (let i = 0; i < names.length; i++) {
-    if (i > 0) await new Promise((r) => setTimeout(r, 1100)); // Nominatim 1 req/s
+  let calls = 0;
+  const MAX_CALLS = 6; // worker timeout safety: ≤6 sequential Nominatim calls
+  for (const q of uniqueNames(queries)) {
+    if (calls >= MAX_CALLS) break;
+    if (calls > 0) await new Promise((r) => setTimeout(r, 1100)); // 1 req/s
+    calls++;
     try {
-      const hits = await nominatimSearch(names[i], true);
+      const hits = await nominatimSearch(q, true);
       for (const h of hits) {
         const k = `${h.lat},${h.lon}`;
         if (!seen.has(k)) seen.set(k, h);
       }
-      if (seen.size > 0) break; // got something — don't waste more requests
-    } catch {
-      // try next name
+    } catch { /* try next */ }
+    if (seen.size >= 5) break; // enough material for the arbiter
+  }
+
+  // Fallback 1: unbounded search (drop bbox), keep only points inside Georgia
+  if (seen.size === 0 && baseNames.length > 0) {
+    await new Promise((r) => setTimeout(r, 1100));
+    try {
+      const hits = await nominatimSearch(baseNames[0], false);
+      for (const h of hits) {
+        const k = `${h.lat},${h.lon}`;
+        if (!seen.has(k)) seen.set(k, h);
+      }
+    } catch { /* ignore */ }
+  }
+
+  // Fallback 2: Overpass — covers small hamlets Nominatim ranks too low to return.
+  if (seen.size === 0 && baseNames.length > 0) {
+    const op = await overpassSearch(baseNames[0]);
+    for (const h of op) {
+      const k = `${h.lat},${h.lon}`;
+      if (!seen.has(k)) seen.set(k, h);
     }
   }
-  return [...seen.values()].filter((h) => {
+
+  let pool = [...seen.values()].filter((h) => {
     const lat = parseFloat(h.lat);
     const lon = parseFloat(h.lon);
     return Number.isFinite(lat) && Number.isFinite(lon) && inGeorgia(lat, lon);
   });
+
+  // Re-rank: prefer candidates whose address mentions the historical uezd/region.
+  if (admin.length > 0 && pool.length > 1) {
+    const adminLc = admin.map((a) => a.toLocaleLowerCase());
+    pool = pool
+      .map((h) => {
+        const hay = (h.display_name + " " + Object.values(h.address || {}).join(" ")).toLocaleLowerCase();
+        const score = adminLc.reduce((acc, a) => acc + (hay.includes(a.slice(0, Math.min(5, a.length))) ? 1 : 0), 0);
+        return { h, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .map((x) => x.h);
+  }
+  return pool;
 }
 
 export async function aiArbiter(
