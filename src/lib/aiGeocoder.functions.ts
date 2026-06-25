@@ -93,6 +93,7 @@ async function nominatimSearch(q: string, viewbox = true): Promise<NominatimHit[
     addressdetails: "1",
     limit: "5",
     countrycodes: "ge",
+    "accept-language": "ka,en,ru",
   });
   if (viewbox) {
     // left,top,right,bottom
