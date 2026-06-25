@@ -722,7 +722,63 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      tbilisi_coord_verifications_public: {
+        Row: {
+          church_id: number | null
+          created_at: string | null
+          distance_m: number | null
+          id: string | null
+          model_confidence: number | null
+          new_lat: number | null
+          new_lon: number | null
+          old_lat: number | null
+          old_lon: number | null
+          osm_candidates: Json | null
+          reasoning: string | null
+          sources: Json | null
+          status:
+            | Database["public"]["Enums"]["tbilisi_coord_verif_status"]
+            | null
+          updated_at: string | null
+        }
+        Insert: {
+          church_id?: number | null
+          created_at?: string | null
+          distance_m?: number | null
+          id?: string | null
+          model_confidence?: number | null
+          new_lat?: number | null
+          new_lon?: number | null
+          old_lat?: number | null
+          old_lon?: number | null
+          osm_candidates?: Json | null
+          reasoning?: string | null
+          sources?: Json | null
+          status?:
+            | Database["public"]["Enums"]["tbilisi_coord_verif_status"]
+            | null
+          updated_at?: string | null
+        }
+        Update: {
+          church_id?: number | null
+          created_at?: string | null
+          distance_m?: number | null
+          id?: string | null
+          model_confidence?: number | null
+          new_lat?: number | null
+          new_lon?: number | null
+          old_lat?: number | null
+          old_lon?: number | null
+          osm_candidates?: Json | null
+          reasoning?: string | null
+          sources?: Json | null
+          status?:
+            | Database["public"]["Enums"]["tbilisi_coord_verif_status"]
+            | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_invitation: { Args: { _token: string }; Returns: Json }
