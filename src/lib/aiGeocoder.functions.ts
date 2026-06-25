@@ -18,9 +18,9 @@ const parishesBundled = JSON.parse(parishesRaw) as GeoJSON.FeatureCollection<Geo
 
 // ---- Types -------------------------------------------------------------
 
-type LocaleStr = { en: string; ru: string; ka?: string };
+export type LocaleStr = { en: string; ru: string; ka?: string };
 
-interface UnlocatedItem {
+export interface UnlocatedItem {
   settlement: LocaleStr;
   church: LocaleStr;
   region: LocaleStr;
@@ -30,6 +30,7 @@ interface UnlocatedItem {
   endYear: number | null;
   count: number;
 }
+
 
 interface NominatimHit {
   lat: string;
@@ -78,11 +79,12 @@ function inGeorgia(lat: number, lon: number) {
   );
 }
 
-function key(it: { settlement: LocaleStr; uezd: LocaleStr }) {
+export function key(it: { settlement: LocaleStr; uezd: LocaleStr }) {
   const s = (it.settlement.ru || it.settlement.en || "").toLocaleLowerCase().trim();
   const u = (it.uezd.ru || it.uezd.en || "").toLocaleLowerCase().trim();
   return `${s}|${u}`;
 }
+
 
 async function nominatimSearch(q: string, viewbox = true): Promise<NominatimHit[]> {
   const params = new URLSearchParams({
