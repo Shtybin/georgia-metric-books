@@ -114,11 +114,26 @@ export const resumeOrchestrationRun = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertEditor((context as any).userId as string);
     const now = new Date().toISOString();
+    // Read current watchdog so we can reset stallCount on resume — otherwise
+    // the next watchdog tick can immediately re-pause if the counter is still
+    // at the MAX_SOFT_RESUMES threshold.
+    const { data: cur } = await supabaseAdmin
+      .from("ai_audit_runs")
+      .select("watchdog_state")
+      .eq("id", data.runId)
+      .single();
+    const wd = { ...((cur?.watchdog_state as any) ?? {}), stallCount: 0, lastResumeAt: now };
     const { error } = await supabaseAdmin
       .from("ai_audit_runs")
-      .update({ status: "running", paused_at: null, heartbeat_at: now, updated_at: now })
+      .update({
+        status: "running",
+        paused_at: null,
+        heartbeat_at: now,
+        updated_at: now,
+        watchdog_state: wd as any,
+      })
       .eq("id", data.runId)
-      .eq("status", "paused");
+      .in("status", ["paused", "running"]);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
