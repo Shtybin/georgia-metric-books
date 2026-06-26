@@ -139,34 +139,44 @@ export function AiOrchestrationPanel() {
     fetchUnloc({ data: {} } as any).then((s) => setUnlocSummary(s as any)).catch(() => {});
   }, [task]);
 
-  // Auto-resume: if any run is `running` in DB but its heartbeat is stale
-  // (>2 min), the browser-driven loop died (tab closed, Vite reload, etc.).
-  // Resume it from current `points_done` without resetting progress.
-  const autoResumedRef = useRef(false);
+  // Auto-resume policy: ALWAYS prefer continuing an in-progress run over
+  // leaving it parked. We re-evaluate on every `runs` poll, not just once.
+  //   - `running` with stale heartbeat (>2 min): browser loop died — restart it.
+  //   - `paused` and healthy (points left + budget left): treat the pause as
+  //     a watchdog false-positive and resume automatically. Per-run cooldown
+  //     (45s) prevents tight resume/pause loops if something is actually wrong.
+  const autoResumeCooldownRef = useRef<Map<string, number>>(new Map());
   useEffect(() => {
-    if (autoResumedRef.current) return;
     if (runningRef.current) return;
     if (!runs || runs.length === 0) return;
     const STALE_MS = 2 * 60 * 1000;
+    const COOLDOWN_MS = 45 * 1000;
     const now = Date.now();
-    const stale = runs.find((r) => {
-      if (r.status !== "running") return false;
-      const hb = r.heartbeat_at ? new Date(r.heartbeat_at).getTime() : 0;
-      return !hb || now - hb > STALE_MS;
+    const candidate = runs.find((r) => {
+      const last = autoResumeCooldownRef.current.get(r.id) ?? 0;
+      if (now - last < COOLDOWN_MS) return false;
+      const pointsLeft = (r.points_total ?? 0) > (r.points_done ?? 0);
+      const budgetLeft = Number(r.spent_usd ?? 0) < Number(r.budget_usd ?? 0);
+      if (r.status === "paused" && pointsLeft && budgetLeft) return true;
+      if (r.status === "running") {
+        const hb = r.heartbeat_at ? new Date(r.heartbeat_at).getTime() : 0;
+        return !hb || now - hb > STALE_MS;
+      }
+      return false;
     });
-    if (!stale) return;
-    autoResumedRef.current = true;
+    if (!candidate) return;
+    autoResumeCooldownRef.current.set(candidate.id, now);
     (async () => {
       try {
-        await resume({ data: { runId: stale.id } } as any).catch(() => {});
+        await resume({ data: { runId: candidate.id } } as any).catch(() => {});
         if (!viewedRunIdRef.current) {
-          viewedRunIdRef.current = stale.id;
-          setCurrentRun(stale);
-          setStartedAt(new Date(stale.started_at).getTime());
-          await reloadFindings(stale.id);
+          viewedRunIdRef.current = candidate.id;
+          setCurrentRun(candidate);
+          setStartedAt(new Date(candidate.started_at).getTime());
+          await reloadFindings(candidate.id);
         }
         runningRef.current = true;
-        runLoop(stale.id, (stale.task_kind as TaskKind) ?? "audit");
+        runLoop(candidate.id, (candidate.task_kind as TaskKind) ?? "audit");
       } catch (e: any) {
         setError(`Авто-возобновление не удалось: ${e?.message ?? e}`);
       }
