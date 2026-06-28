@@ -13,6 +13,7 @@ import { ReportProblemButton } from "./ReportProblemButton";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
+import { mergeColocatedFeatures } from "@/lib/mergeColocated";
 import { usePublishedOverrides, applyOverrides } from "@/lib/featureOverrides";
 import { MissingYearsSuggestionDialog } from "./MissingYearsSuggestionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -325,11 +326,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         ...f,
         properties: { ...(f.properties ?? {}), categories: categorizeParish(f.properties) },
       }));
-    if (userFeatures.length === 0 && approvedFeatures.length === 0) return overridden;
-    return {
-      ...overridden,
-      features: [...overridden.features, ...withCat(approvedFeatures as Feature[]), ...withCat(userFeatures as Feature[])],
-    };
+    const merged = (userFeatures.length === 0 && approvedFeatures.length === 0)
+      ? mergeColocatedFeatures(overridden.features)
+      : mergeColocatedFeatures([
+          ...overridden.features,
+          ...withCat(approvedFeatures as Feature[]),
+          ...withCat(userFeatures as Feature[]),
+        ]);
+    return { ...overridden, features: merged };
   }, [baseData, userCoords.records, approved, overrides, compareMode]);
 
   const dataRef = useRef<FC | null>(null);
@@ -1844,8 +1848,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
             {manyChurches && (
               <div className="mt-3">
-                <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {T.churches} ({churchList.length})
+                <div className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <span>{T.churches} ({churchList.length})</span>
+                  {Number(sel.mergedCount) > 1 && (
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium normal-case text-primary">
+                      {sel.mergedCount}× @ {lang === "en" ? "same point" : lang === "ka" ? "ერთ წერტილში" : "в одной точке"}
+                    </span>
+                  )}
                 </div>
                 <ul className="max-h-48 space-y-0.5 overflow-y-auto overscroll-contain rounded-md border border-border bg-background/50 p-2 text-sm">
                   {churchList.map((c: string, i: number) => (
