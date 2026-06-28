@@ -10,6 +10,8 @@ import { describe, expect, it } from "vitest";
 import { approvedToFeature, type ApprovedSuggestion } from "@/lib/communityCoords";
 import { categorizeParish } from "@/lib/confessionRules";
 import { MAIN_MAP_CATEGORIES } from "@/lib/parishCategory";
+import { BUCKET_COLORS, BUCKET_ORDER } from "@/lib/map-style";
+import { bucketOf, parseYearsString } from "@/lib/userCoords";
 import type { Confession } from "@/lib/i18n-tbilisi";
 
 function mkApproved(overrides: Partial<ApprovedSuggestion> = {}): ApprovedSuggestion {
