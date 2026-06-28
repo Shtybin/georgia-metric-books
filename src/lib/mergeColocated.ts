@@ -61,8 +61,48 @@ function mergeCategories(features: Feature[]): string[] {
   return [...set];
 }
 
+function buildMembers(group: Feature[]): any[] {
+  const out: any[] = [];
+  for (const f of group) {
+    const p = f.properties ?? {};
+    // Each source feature may itself bundle multiple "|"-separated churches —
+    // expand them so each church row is independently filterable. Year/category
+    // metadata is shared across the expanded rows (we don't have per-church
+    // granularity at this point).
+    const ru = splitChurches(p.church?.ru);
+    const en = splitChurches(p.church?.en);
+    const ka = splitChurches(p.church?.ka);
+    const n = Math.max(ru.length, en.length, ka.length, 1);
+    const startYear = Number(p.startYear);
+    const endYear = Number(p.endYear);
+    const bucket = typeof p.bucket === "string"
+      ? p.bucket
+      : (Number.isFinite(startYear) ? bucketOf(startYear) : undefined);
+    const categories: string[] = Array.isArray(p.categories) ? p.categories : [];
+    for (let i = 0; i < n; i++) {
+      out.push({
+        church: { ru: ru[i] || "", en: en[i] || "", ka: ka[i] || "" },
+        startYear: Number.isFinite(startYear) ? startYear : null,
+        endYear: Number.isFinite(endYear) ? endYear : null,
+        bucket,
+        categories,
+        yearsRaw: { ru: p.yearsRaw?.ru || "", en: p.yearsRaw?.en || "" },
+      });
+    }
+  }
+  return out;
+}
+
 function mergeFeatureGroup(group: Feature[]): Feature {
-  if (group.length === 1) return group[0];
+  if (group.length === 1) {
+    const base = group[0];
+    // Even single-feature points expose `members` so the card has a uniform
+    // shape and per-church filter chips work consistently.
+    return {
+      ...base,
+      properties: { ...(base.properties ?? {}), members: buildMembers(group) },
+    };
+  }
   const base = group[0];
 
   // Union of all calendar years across members.
@@ -106,6 +146,7 @@ function mergeFeatureGroup(group: Feature[]): Feature {
       categories: mergeCategories(group),
       mergedCount: group.length,
       mergedIds: group.map((f) => f.id),
+      members: buildMembers(group),
     },
   };
 }
