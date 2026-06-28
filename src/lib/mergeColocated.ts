@@ -13,8 +13,11 @@ type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 
 const PRECISION = 4;
 
-function coordKey(f: Feature): string {
-  const [lon, lat] = f.geometry.coordinates;
+function coordKey(f: Feature): string | null {
+  const coords = f.geometry?.coordinates;
+  if (!Array.isArray(coords) || coords.length < 2) return null;
+  const [lon, lat] = coords;
+  if (typeof lon !== "number" || typeof lat !== "number" || !Number.isFinite(lon) || !Number.isFinite(lat)) return null;
   return `${lon.toFixed(PRECISION)}|${lat.toFixed(PRECISION)}`;
 }
 
@@ -155,6 +158,7 @@ export function mergeColocatedFeatures(features: Feature[]): Feature[] {
   const groups = new Map<string, Feature[]>();
   for (const f of features) {
     const k = coordKey(f);
+    if (!k) continue; // skip features without valid coordinates
     const arr = groups.get(k);
     if (arr) arr.push(f);
     else groups.set(k, [f]);
