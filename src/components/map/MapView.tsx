@@ -13,6 +13,7 @@ import { ReportProblemButton } from "./ReportProblemButton";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
 import { useApprovedSuggestions, approvedToFeature, submitSuggestion } from "@/lib/communityCoords";
+import { mergeColocatedFeatures } from "@/lib/mergeColocated";
 import { usePublishedOverrides, applyOverrides } from "@/lib/featureOverrides";
 import { MissingYearsSuggestionDialog } from "./MissingYearsSuggestionDialog";
 import { supabase } from "@/integrations/supabase/client";
