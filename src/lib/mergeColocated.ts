@@ -13,8 +13,11 @@ type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 
 const PRECISION = 4;
 
-function coordKey(f: Feature): string {
-  const [lon, lat] = f.geometry.coordinates;
+function coordKey(f: Feature): string | null {
+  const coords = f.geometry?.coordinates;
+  if (!Array.isArray(coords) || coords.length < 2) return null;
+  const [lon, lat] = coords;
+  if (typeof lon !== "number" || typeof lat !== "number" || !Number.isFinite(lon) || !Number.isFinite(lat)) return null;
   return `${lon.toFixed(PRECISION)}|${lat.toFixed(PRECISION)}`;
 }
 
