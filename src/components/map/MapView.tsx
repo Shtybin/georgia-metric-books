@@ -326,11 +326,14 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         ...f,
         properties: { ...(f.properties ?? {}), categories: categorizeParish(f.properties) },
       }));
-    if (userFeatures.length === 0 && approvedFeatures.length === 0) return overridden;
-    return {
-      ...overridden,
-      features: [...overridden.features, ...withCat(approvedFeatures as Feature[]), ...withCat(userFeatures as Feature[])],
-    };
+    const merged = (userFeatures.length === 0 && approvedFeatures.length === 0)
+      ? mergeColocatedFeatures(overridden.features)
+      : mergeColocatedFeatures([
+          ...overridden.features,
+          ...withCat(approvedFeatures as Feature[]),
+          ...withCat(userFeatures as Feature[]),
+        ]);
+    return { ...overridden, features: merged };
   }, [baseData, userCoords.records, approved, overrides, compareMode]);
 
   const dataRef = useRef<FC | null>(null);
