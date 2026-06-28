@@ -1846,23 +1846,162 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               </section>
             )}
 
-            {manyChurches && (
-              <div className="mt-3">
-                <div className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  <span>{T.churches} ({churchList.length})</span>
-                  {Number(sel.mergedCount) > 1 && (
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium normal-case text-primary">
-                      {sel.mergedCount}× @ {lang === "en" ? "same point" : lang === "ka" ? "ერთ წერტილში" : "в одной точке"}
-                    </span>
-                  )}
+            {(() => {
+              const members: any[] = Array.isArray(sel.members) ? sel.members : [];
+              const mergedCount = Number(sel.mergedCount || 0);
+              const showMembers = mergedCount > 1 || (manyChurches && members.length > 0);
+              if (!showMembers) {
+                if (!manyChurches) return null;
+                // Fallback: simple churches list when we don't have structured members.
+                return (
+                  <div className="mt-3">
+                    <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      {T.churches} ({churchList.length})
+                    </div>
+                    <ul className="max-h-48 space-y-0.5 overflow-y-auto overscroll-contain rounded-md border border-border bg-background/50 p-2 text-sm">
+                      {churchList.map((c: string, i: number) => (
+                        <li key={i} className="leading-snug">{c}</li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              }
+              const hiddenLabel = lang === "en"
+                ? "Hidden by active filters"
+                : lang === "ka"
+                  ? "ფილტრით დამალულია"
+                  : "Скрыто активными фильтрами";
+              const samePointLabel = lang === "en"
+                ? "at the same point"
+                : lang === "ka"
+                  ? "ერთ წერტილში"
+                  : "в одной точке";
+              const listLabel = lang === "en"
+                ? `${members.length} records at this location, use arrow keys to navigate`
+                : lang === "ka"
+                  ? `${members.length} ჩანაწერი ამ ადგილზე, ისრებით ნავიგაცია`
+                  : `${members.length} записей в этой точке, перемещение стрелками`;
+              const matchedCount = members.filter((m) => {
+                const bucketOk = !m.bucket || enabledBuckets.has(m.bucket);
+                const catsArr: string[] = Array.isArray(m.categories) ? m.categories : [];
+                const catOk = catsArr.length === 0 || catsArr.some((c) => enabledCategories.has(c as ParishCategory));
+                return bucketOk && catOk;
+              }).length;
+              return (
+                <div className="mt-3">
+                  <div className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <span>{T.churches} ({members.length})</span>
+                    {mergedCount > 1 && (
+                      <span
+                        className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium normal-case text-primary"
+                        aria-label={
+                          lang === "en"
+                            ? `${mergedCount} records merged ${samePointLabel}`
+                            : lang === "ka"
+                              ? `${mergedCount} ჩანაწერი გაერთიანებულია ${samePointLabel}`
+                              : `${mergedCount} записей объединены ${samePointLabel}`
+                        }
+                      >
+                        {mergedCount}× @ {samePointLabel}
+                      </span>
+                    )}
+                    {matchedCount !== members.length && (
+                      <span
+                        className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium normal-case text-muted-foreground"
+                        aria-live="polite"
+                      >
+                        {matchedCount}/{members.length}
+                      </span>
+                    )}
+                  </div>
+                  <ul
+                    role="list"
+                    aria-label={listLabel}
+                    className="max-h-56 space-y-1 overflow-y-auto overscroll-contain rounded-md border border-border bg-background/50 p-2 text-sm focus:outline-none"
+                    onKeyDown={(e) => {
+                      if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "Home" && e.key !== "End") return;
+                      const items = Array.from(
+                        (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="listitem"]'),
+                      );
+                      if (items.length === 0) return;
+                      const active = document.activeElement as HTMLElement | null;
+                      const idx = active ? items.indexOf(active) : -1;
+                      let next = idx;
+                      if (e.key === "ArrowDown") next = idx < 0 ? 0 : Math.min(items.length - 1, idx + 1);
+                      else if (e.key === "ArrowUp") next = idx <= 0 ? items.length - 1 : idx - 1;
+                      else if (e.key === "Home") next = 0;
+                      else if (e.key === "End") next = items.length - 1;
+                      if (next !== idx) {
+                        e.preventDefault();
+                        items[next]?.focus();
+                      }
+                    }}
+                  >
+                    {members.map((m, i) => {
+                      const name = (m.church?.[lang] || m.church?.en || m.church?.ru || churchList[i] || "—").trim() || "—";
+                      const bucketOk = !m.bucket || enabledBuckets.has(m.bucket);
+                      const catsArr: string[] = Array.isArray(m.categories) ? m.categories : [];
+                      const catOk = catsArr.length === 0 || catsArr.some((c) => enabledCategories.has(c as ParishCategory));
+                      const visible = bucketOk && catOk;
+                      const yrs = m.startYear && m.endYear
+                        ? (m.startYear === m.endYear ? `${m.startYear}` : `${m.startYear}–${m.endYear}`)
+                        : "";
+                      const describeId = `member-desc-${selected!.id}-${i}`;
+                      return (
+                        <li
+                          key={i}
+                          role="listitem"
+                          tabIndex={i === 0 ? 0 : -1}
+                          aria-describedby={describeId}
+                          aria-disabled={!visible}
+                          data-hidden-by-filter={visible ? undefined : "true"}
+                          className={cn(
+                            "rounded px-1.5 py-1 leading-snug outline-none transition-opacity focus-visible:ring-2 focus-visible:ring-primary",
+                            visible ? "opacity-100" : "opacity-40 grayscale",
+                          )}
+                          title={visible ? undefined : hiddenLabel}
+                        >
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            {m.bucket && (
+                              <span
+                                aria-hidden="true"
+                                className="h-2 w-2 shrink-0 rounded-full ring-1 ring-white"
+                                style={{ backgroundColor: BUCKET_COLORS[m.bucket as keyof typeof BUCKET_COLORS] || "#888" }}
+                              />
+                            )}
+                            <span className="min-w-0 break-words">{name}</span>
+                            {yrs && <span className="tabular-nums text-xs text-muted-foreground">{yrs}</span>}
+                            {!visible && (
+                              <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                {hiddenLabel}
+                              </span>
+                            )}
+                          </div>
+                          {catsArr.length > 0 && (
+                            <div className="mt-0.5 flex flex-wrap items-center gap-1">
+                              {catsArr.map((c) => (
+                                <span
+                                  key={c}
+                                  aria-hidden="true"
+                                  className="h-1.5 w-1.5 rounded-full"
+                                  style={{ backgroundColor: CATEGORY_COLORS[c as ParishCategory] }}
+                                  title={tT(lang).confessions[c as keyof ReturnType<typeof tT>["confessions"]]}
+                                />
+                              ))}
+                            </div>
+                          )}
+                          <span id={describeId} className="sr-only">
+                            {visible
+                              ? `${name}${yrs ? `, ${yrs}` : ""}`
+                              : `${name}${yrs ? `, ${yrs}` : ""}. ${hiddenLabel}`}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
-                <ul className="max-h-48 space-y-0.5 overflow-y-auto overscroll-contain rounded-md border border-border bg-background/50 p-2 text-sm">
-                  {churchList.map((c: string, i: number) => (
-                    <li key={i} className="leading-snug">{c}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              );
+            })()}
 
             {hasHistory && (
               <details
