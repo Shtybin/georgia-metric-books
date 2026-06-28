@@ -146,6 +146,7 @@ function mergeFeatureGroup(group: Feature[]): Feature {
       categories: mergeCategories(group),
       mergedCount: group.length,
       mergedIds: group.map((f) => f.id),
+      members: buildMembers(group),
     },
   };
 }
