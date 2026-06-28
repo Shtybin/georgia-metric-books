@@ -577,7 +577,7 @@ export function TbilisiCoordEditorPanel() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-4">
       <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-border bg-card p-3 text-xs">
-        <label className="flex items-center gap-2" title={selectedMap?.notes ?? ""}>
+        <label className="flex items-center gap-2" title={selectedMap?.notes?.ru ?? ""}>
           <span className="text-muted-foreground">Подложка:</span>
           <select
             value={mapId}
@@ -587,7 +587,7 @@ export function TbilisiCoordEditorPanel() {
             <option value="none">Без подложки</option>
             {AVAILABLE_MAPS.map((m) => (
               <option key={m.id} value={m.id}>
-                {m.title}
+                {m.title.ru}
               </option>
             ))}
           </select>
