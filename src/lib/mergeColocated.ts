@@ -158,6 +158,7 @@ export function mergeColocatedFeatures(features: Feature[]): Feature[] {
   const groups = new Map<string, Feature[]>();
   for (const f of features) {
     const k = coordKey(f);
+    if (!k) continue; // skip features without valid coordinates
     const arr = groups.get(k);
     if (arr) arr.push(f);
     else groups.set(k, [f]);
