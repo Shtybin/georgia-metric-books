@@ -748,7 +748,7 @@ export function TbilisiMap({
             <Layers className="h-3.5 w-3.5" />
             <span>
               {historicalOn && activeHistMap
-                ? `${activeHistMap.year ?? activeHistMap.title}`
+                ? `${activeHistMap.year ?? localizeHistorical(activeHistMap.title, lang)}`
                 : T.historical.toggle}
             </span>
           </button>
@@ -770,7 +770,7 @@ export function TbilisiMap({
                 type="button"
                 onClick={() => setHistPanelOpen(false)}
                 className="rounded p-0.5 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
-                aria-label="Закрыть"
+                aria-label={lang === "en" ? "Close" : lang === "ka" ? "დახურვა" : "Закрыть"}
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -778,7 +778,9 @@ export function TbilisiMap({
 
             {hasAnyHistMap && (
               <>
-                <label className="block text-[11px] text-muted-foreground">Подложка</label>
+                <label className="block text-[11px] text-muted-foreground">
+                  {lang === "en" ? "Layer" : lang === "ka" ? "ფენა" : "Подложка"}
+                </label>
                 <select
                   value={historicalOn ? historicalMapId : "none"}
                   onChange={(e) => {
@@ -791,14 +793,26 @@ export function TbilisiMap({
                     }
                   }}
                   className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  title={
+                    historicalOn && activeHistMap?.notes
+                      ? localizeHistorical(activeHistMap.notes, lang)
+                      : undefined
+                  }
                 >
-                  <option value="none">Без старой карты</option>
+                  <option value="none">
+                    {lang === "en"
+                      ? "No old map"
+                      : lang === "ka"
+                        ? "ძველი რუკის გარეშე"
+                        : "Без старой карты"}
+                  </option>
                   {TILE_MAPS.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.title}
+                    <option key={m.id} value={m.id} title={localizeHistorical(m.notes, lang)}>
+                      {localizeHistorical(m.title, lang)}
                     </option>
                   ))}
                 </select>
+
 
                 {historicalOn && (
                   <div className="mt-2">
