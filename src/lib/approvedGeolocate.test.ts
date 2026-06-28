@@ -216,3 +216,88 @@ describe("approved geolocate suggestions on the period legend (size + color)", (
     expect(BUCKET_COLORS[f.properties.bucket]).toBeTruthy();
   });
 });
+
+describe("missing years / gaps in metric-book coverage", () => {
+  // The "years" string for a church may contain gaps (lost or never-kept books).
+  // Coverage counts only the years actually preserved — that's what drives the
+  // circle radius. The bucket is keyed on the EARLIEST preserved year.
+  function feat(years: string) {
+    return approvedToFeature(
+      {
+        id: "z",
+        settlement_ru: "S", settlement_en: "S",
+        uezd_ru: "", uezd_en: "", region_ru: "", region_en: "",
+        church_ru: "Ц", church_en: "C",
+        years,
+        start_year: null,
+        end_year: null,
+        lat: 0, lon: 0,
+      },
+      1,
+    );
+  }
+
+  it("range with mid-gap: coverage = sum of segments, bucket = earliest year", () => {
+    // Real case: Дихашхо — 1842-1846, 1848-1851, 1853-1855, 1857-1859,
+    // 1861-1866, 1869-1870 → 24 years preserved, bucket '1835-1860'.
+    const f = feat("1842-1846, 1848-1851, 1853-1855, 1857-1859, 1861-1866, 1869-1870");
+    expect(f.properties.startYear).toBe(1842);
+    expect(f.properties.endYear).toBe(1870);
+    expect(f.properties.bucket).toBe("1835-1860");
+    expect(f.properties.coverage).toBe(5 + 4 + 3 + 3 + 6 + 2);
+    expect(BUCKET_COLORS[f.properties.bucket]).toBe("#009E73");
+  });
+
+  it("single isolated years + gaps (Лакатхеви pattern)", () => {
+    const years = "1827-1828, 1830-1836, 1838-1845, 1847-1853, 1858, 1860-1861, 1865, 1867-1870";
+    const f = feat(years);
+    expect(f.properties.startYear).toBe(1827);
+    expect(f.properties.bucket).toBe("1820-1835");
+    // Coverage = parsed unique years.
+    expect(f.properties.coverage).toBe(parseYearsString(years).length);
+    expect(f.properties.coverage).toBeGreaterThan(20);
+  });
+
+  it("partial overlap across two buckets uses earliest year for bucket", () => {
+    // 1855-1865 straddles 1835-1860 and 1860-1880 → must pick the earlier bucket.
+    const f = feat("1855-1865");
+    expect(f.properties.startYear).toBe(1855);
+    expect(f.properties.bucket).toBe("1835-1860");
+    expect(f.properties.coverage).toBe(11);
+  });
+
+  it("only sparse isolated years still yields valid bucket and coverage>=1", () => {
+    const f = feat("1881, 1884, 1899");
+    expect(f.properties.coverage).toBe(3);
+    expect(f.properties.bucket).toBe("1880-1900");
+    expect(BUCKET_COLORS[f.properties.bucket]).toMatch(/^#[0-9A-Fa-f]{6}$/);
+  });
+
+  it("empty / unparseable years string → coverage clamped to 1, fallback bucket", () => {
+    // Defensive: bucketOf(1900) → 'post-1900' (note: <1901 boundary is exclusive
+    // of 1901, but communityCoords uses startYear ?? 1900, and bucketOf(1900)
+    // returns '1880-1900'). This pins the fallback so a UI change can't
+    // silently shift the default into 'post-1900'.
+    const f = feat("");
+    expect(f.properties.coverage).toBe(1);
+    expect(f.properties.startYear).toBe(1900);
+    expect(f.properties.bucket).toBe("1880-1900");
+  });
+
+  it("bucket boundary years map exactly per bucketOf() contract", () => {
+    // Boundary regression: each table entry is the FIRST year of its bucket.
+    expect(bucketOf(1819)).toBe("pre-1820");
+    expect(bucketOf(1820)).toBe("1820-1835");
+    expect(bucketOf(1835)).toBe("1820-1835");
+    expect(bucketOf(1836)).toBe("1835-1860");
+    expect(bucketOf(1860)).toBe("1835-1860");
+    expect(bucketOf(1861)).toBe("1860-1880");
+    expect(bucketOf(1880)).toBe("1860-1880");
+    expect(bucketOf(1881)).toBe("1880-1900");
+    expect(bucketOf(1900)).toBe("1880-1900");
+    expect(bucketOf(1901)).toBe("post-1900");
+    // Every bucket has a unique color in the legend.
+    const colors = BUCKET_ORDER.map((b) => BUCKET_COLORS[b]);
+    expect(new Set(colors).size).toBe(BUCKET_ORDER.length);
+  });
+});
