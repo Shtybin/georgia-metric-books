@@ -153,3 +153,66 @@ describe("approved geolocate suggestions on the main map", () => {
     }
   });
 });
+
+describe("approved geolocate suggestions on the period legend (size + color)", () => {
+  // Bucket = legend filter key; BUCKET_COLORS[bucket] drives circle color;
+  // properties.coverage drives Flannery-scaled circle radius on the map.
+  const cases: Array<{ years: string; start: number; bucket: string; coverage: number }> = [
+    { years: "1810-1815", start: 1810, bucket: "pre-1820", coverage: 6 },
+    { years: "1825-1830", start: 1825, bucket: "1820-1835", coverage: 6 },
+    { years: "1840-1855", start: 1840, bucket: "1835-1860", coverage: 16 },
+    { years: "1865-1875", start: 1865, bucket: "1860-1880", coverage: 11 },
+    { years: "1885-1895", start: 1885, bucket: "1880-1900", coverage: 11 },
+    { years: "1905-1916", start: 1905, bucket: "post-1900", coverage: 12 },
+  ];
+
+  it.each(cases)(
+    "years '$years' → bucket $bucket with color and coverage-driven radius",
+    ({ years, start, bucket, coverage }) => {
+      const f = approvedToFeature(
+        {
+          id: "x",
+          settlement_ru: "S", settlement_en: "S",
+          uezd_ru: "", uezd_en: "", region_ru: "", region_en: "",
+          church_ru: "Церковь Св. Николая", church_en: "St. Nicholas",
+          years,
+          start_year: start,
+          end_year: start + (coverage - 1),
+          lat: 41.7, lon: 44.8,
+        },
+        1,
+      );
+
+      // Bucket assigned from start_year and matches bucketOf().
+      expect(f.properties.bucket).toBe(bucket);
+      expect(bucketOf(start)).toBe(bucket);
+      // Bucket is a real legend filter key.
+      expect(BUCKET_ORDER).toContain(bucket);
+      // Has a color in the period palette (size + color legend driver).
+      expect(BUCKET_COLORS[bucket]).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      // Coverage matches the parsed years length → used by circle-radius expr.
+      expect(f.properties.coverage).toBe(parseYearsString(years).length);
+      expect(f.properties.coverage).toBeGreaterThan(0);
+    },
+  );
+
+  it("missing start_year falls back to parsed years and still gets a bucket", () => {
+    const f = approvedToFeature(
+      {
+        id: "y",
+        settlement_ru: "S", settlement_en: "S",
+        uezd_ru: "", uezd_en: "", region_ru: "", region_en: "",
+        church_ru: "Ц", church_en: "C",
+        years: "1872, 1873, 1875",
+        start_year: null,
+        end_year: null,
+        lat: 0, lon: 0,
+      },
+      1,
+    );
+    expect(f.properties.startYear).toBe(1872);
+    expect(f.properties.bucket).toBe("1860-1880");
+    expect(f.properties.coverage).toBe(3);
+    expect(BUCKET_COLORS[f.properties.bucket]).toBeTruthy();
+  });
+});
