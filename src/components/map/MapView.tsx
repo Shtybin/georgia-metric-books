@@ -1736,7 +1736,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                    )}
                  </div>
                )}
-              {!cardCollapsed && !manyChurches && churchList.length > 0 && (
+              {!cardCollapsed && !manyChurches && Number(sel.mergedCount || 1) <= 1 && churchList.length > 0 && (
                 <p className="mt-0.5 text-sm italic text-muted-foreground">
                   {churchList.join(" · ")}
                 </p>
