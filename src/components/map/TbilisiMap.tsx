@@ -20,6 +20,7 @@ import {
 import {
   DISTRICTS_1898_URL,
   HISTORICAL_MAPS,
+  localizeHistorical,
   type District1898Properties,
   type HistoricalConfig,
 } from "@/lib/tbilisi-historical";
