@@ -181,15 +181,30 @@ export const processGeolocationTick = createServerFn({ method: "POST" })
       if (o.action === "edit" && o.feature_id != null) editOverrideByFid.set(o.feature_id, o);
     }
 
-    // Existing coord-suggestions to avoid re-queueing
+    // Existing coord-suggestions to avoid re-queueing — both the
+    // (settlement|uezd) key (so we don't re-ask the same place) and the
+    // narrower (settlement|church|years) key (so we don't queue something
+    // that would collide with the approved-unique index on approve).
     const { data: existing } = await supabaseAdmin
       .from("coord_suggestions")
-      .select("settlement_ru, settlement_en, uezd_ru, uezd_en");
+      .select("settlement_ru, settlement_en, uezd_ru, uezd_en, church_ru, years, status");
     const existingKeys = new Set(
       (existing || []).map((e) =>
         `${(e.settlement_ru || e.settlement_en || "").toLocaleLowerCase().trim()}|${(e.uezd_ru || e.uezd_en || "").toLocaleLowerCase().trim()}`,
       ),
     );
+    // Approved-natural-key set mirrors coord_suggestions_approved_unique_natural
+    // (settlement_ru + church_ru + years). Skip items whose approved twin
+    // already exists — approving a duplicate would 23505 on the unique index.
+    const approvedNaturalKeys = new Set(
+      (existing || [])
+        .filter((e) => e.status === "approved")
+        .map((e) =>
+          `${(e.settlement_ru || "").toLocaleLowerCase().trim()}|${(e.church_ru || "").toLocaleLowerCase().trim()}|${e.years || ""}`,
+        ),
+    );
+    const itemApprovedKey = (it: { settlement: { ru: string }; church: { ru: string }; years: string }) =>
+      `${(it.settlement.ru || "").toLocaleLowerCase().trim()}|${(it.church.ru || "").toLocaleLowerCase().trim()}|${it.years || ""}`;
 
     let processed = 0;
     let merged = 0;
@@ -224,6 +239,22 @@ export const processGeolocationTick = createServerFn({ method: "POST" })
             status: "rejected",
             confidence: 0,
             rationale: `Уже есть запись в очереди координат: ${label} (${uezdLabel || "без уезда"})`,
+            current: { settlement: item.settlement, uezd: item.uezd, region: item.region },
+            proposed: null,
+            sources: [],
+          });
+          rejected++; processed++;
+          continue;
+        }
+        // Skip items whose approved twin already exists — queueing them
+        // would lead to a 23505 on coord_suggestions_approved_unique_natural at approve time.
+        if (approvedNaturalKeys.has(itemApprovedKey(item))) {
+          await insertFinding(run.id, {
+            kind: "geolocate",
+            severity: "info",
+            status: "rejected",
+            confidence: 0,
+            rationale: `Уже есть одобренная точка с такими же селением/церковью/годами: ${label}. Повторное одобрение нарушило бы уникальный индекс.`,
             current: { settlement: item.settlement, uezd: item.uezd, region: item.region },
             proposed: null,
             sources: [],
