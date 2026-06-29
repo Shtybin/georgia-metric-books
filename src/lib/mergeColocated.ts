@@ -240,7 +240,10 @@ export function mergeColocatedFeatures(features: Feature[]): Feature[] {
     // Find an existing nearby cluster to merge into.
     let merged = false;
     for (const existing of list) {
-      if (distanceKm(existing.centroid, c) <= SAME_SETTLEMENT_MAX_KM) {
+      if (
+        distanceKm(existing.centroid, c) <= SAME_SETTLEMENT_MAX_KM &&
+        adminCompatible(existing.features[0], group[0])
+      ) {
         existing.features.push(...group);
         merged = true;
         break;
