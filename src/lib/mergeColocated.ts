@@ -172,9 +172,27 @@ function settlementKey(f: Feature): string | null {
   const p = f.properties ?? {};
   const s = (p.settlement?.ru || p.settlement?.en || "").toLocaleLowerCase().trim();
   if (!s) return null;
-  const u = (p.uezd?.ru || p.uezd?.en || "").toLocaleLowerCase().trim();
-  const r = (p.region?.ru || p.region?.en || "").toLocaleLowerCase().trim();
-  return `${s}|${u}|${r}`;
+  // Settlement-only key. Uezd/region spellings frequently disagree between
+  // the bundled dataset and approved geocoder suggestions for the same
+  // village (or one side is empty), so requiring them to match exactly
+  // leaves obvious duplicates split. Real conflicts are blocked by
+  // `adminCompatible` + the SAME_SETTLEMENT_MAX_KM distance check.
+  return s;
+}
+
+function norm(s: unknown): string {
+  return typeof s === "string" ? s.toLocaleLowerCase().trim() : "";
+}
+
+function adminCompatible(a: Feature, b: Feature): boolean {
+  const pa = a.properties ?? {}, pb = b.properties ?? {};
+  const ua = norm(pa.uezd?.ru) || norm(pa.uezd?.en);
+  const ub = norm(pb.uezd?.ru) || norm(pb.uezd?.en);
+  const ra = norm(pa.region?.ru) || norm(pa.region?.en);
+  const rb = norm(pb.region?.ru) || norm(pb.region?.en);
+  if (ua && ub && ua !== ub) return false;
+  if (ra && rb && ra !== rb) return false;
+  return true;
 }
 
 /**
