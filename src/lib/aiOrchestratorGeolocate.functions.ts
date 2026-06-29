@@ -431,6 +431,8 @@ export const processGeolocationTick = createServerFn({ method: "POST" })
         });
         rejected++; processed++;
       }
+      // Heartbeat after each settlement so the watchdog never flags a long-but-progressing tick.
+      await beat();
     }
 
     const newDone = start + slice.length;
