@@ -198,6 +198,19 @@ export const processGeolocationTick = createServerFn({ method: "POST" })
     let lastError: string | undefined;
     let progress: any = run.agent_progress ?? {};
 
+    const beat = async () => {
+      const ts = new Date().toISOString();
+      try {
+        await supabaseAdmin
+          .from("ai_audit_runs")
+          .update({ heartbeat_at: ts, updated_at: ts })
+          .eq("id", run.id)
+          .eq("status", "running");
+      } catch {
+        /* heartbeat is best-effort */
+      }
+    };
+
     for (const item of slice) {
       const label = item.settlement.ru || item.settlement.en;
       const uezdLabel = item.uezd.ru || item.uezd.en || "";
@@ -418,6 +431,8 @@ export const processGeolocationTick = createServerFn({ method: "POST" })
         });
         rejected++; processed++;
       }
+      // Heartbeat after each settlement so the watchdog never flags a long-but-progressing tick.
+      await beat();
     }
 
     const newDone = start + slice.length;

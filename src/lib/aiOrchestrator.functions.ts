@@ -340,7 +340,7 @@ export const processOrchestrationTick = createServerFn({ method: "POST" })
 //   1. bump heartbeat_at + stallCount + autoRestartCount  (keeps status=running)
 //   2. only after 3 consecutive unresolved stalls do we flip status to "paused"
 //      so the operator can intervene. We never reset points_done / findings.
-const STALL_MS = 60_000;
+const STALL_MS = 180_000;
 const MAX_SOFT_RESUMES = 3;
 
 export const watchdogCheck = createServerFn({ method: "POST" })
