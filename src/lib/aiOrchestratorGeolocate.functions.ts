@@ -246,6 +246,22 @@ export const processGeolocationTick = createServerFn({ method: "POST" })
           rejected++; processed++;
           continue;
         }
+        // Skip items whose approved twin already exists — queueing them
+        // would lead to a 23505 on coord_suggestions_approved_unique_natural at approve time.
+        if (approvedNaturalKeys.has(itemApprovedKey(item))) {
+          await insertFinding(run.id, {
+            kind: "geolocate",
+            severity: "info",
+            status: "rejected",
+            confidence: 0,
+            rationale: `Уже есть одобренная точка с такими же селением/церковью/годами: ${label}. Повторное одобрение нарушило бы уникальный индекс.`,
+            current: { settlement: item.settlement, uezd: item.uezd, region: item.region },
+            proposed: null,
+            sources: [],
+          });
+          rejected++; processed++;
+          continue;
+        }
 
         const cands = await geocodeCandidates(item);
         if (cands.length === 0) {
