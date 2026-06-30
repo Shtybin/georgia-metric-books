@@ -1,9 +1,9 @@
-# Архивный атлас Грузии XIX века
+# Georgia Metric Books Atlas — 19th-century Georgia
 
-**Georgia Metric Books Atlas** — интерактивная карта селений, церквей и приходов Грузии XIX века, построенная на основе метрических книг Российской империи. Открытый исследовательский инструмент для историков, генеалогов и краеведов.
+**Georgia Metric Books Atlas** is an interactive map of settlements, churches and parishes of 19th-century Georgia, built from the metric books of the Russian Empire. An open research tool for historians, genealogists and local-history enthusiasts.
 
-👤 **Автор / Author:** Виталий Штыбин (Vitalii Shtybin) — независимый исследователь · [datatells.info](https://datatells.info)
-© 2025 Виталий Штыбин. Карты, сборки данных и сопроводительные тексты — авторский проект, защищены авторским правом. Подробности — см. [`COPYRIGHT.md`](./COPYRIGHT.md).
+👤 **Author:** Vitalii Shtybin — independent researcher · [datatells.info](https://datatells.info)
+© 2025 Vitalii Shtybin. Maps, data compilations and accompanying texts are an authored project protected by copyright. See [`COPYRIGHT.md`](./COPYRIGHT.md) for details.
 
 🌐 **Live:** [metrics.datatells.info](https://metrics.datatells.info) · 🗺️ Mirror: [georgia-metric-books.lovable.app](https://georgia-metric-books.lovable.app)
 
@@ -11,187 +11,187 @@
 
 ---
 
-## Содержание / Contents
+## Contents
 
-- [Возможности](#возможности)
-- [Технологический стек](#технологический-стек)
-- [Структура проекта](#структура-проекта)
-- [Быстрый старт](#быстрый-старт)
-- [Переменные окружения](#переменные-окружения)
-- [Подготовка данных](#подготовка-данных)
-- [База данных и роли](#база-данных-и-роли)
-- [Публикация на GitHub — пошагово](#публикация-на-github--пошагово)
-- [Деплой](#деплой)
-- [Контрибьютинг](#контрибьютинг)
-- [Лицензия и благодарности](#лицензия-и-благодарности)
-
----
-
-## Возможности / Features
-
-- 🗺️ **Интерактивная карта** на MapLibre GL с ~5 000+ исторических точек.
-- 🌐 **Три языка интерфейса:** русский, английский, грузинский (с фолбэком `ka → en → ru`).
-- 🔎 **Умный поиск** по селениям и церквям (Fuse.js, многоязычный).
-- 🎚️ **Фильтры** по региону, уезду, периоду, радиусу.
-- 📍 **Панель «без координат»** — точки, которые ещё ждут локализации.
-- 🛠️ **Репортинг проблем** прямо с карточки точки.
-- 🧩 **Embed-режим** (`/embed`) для встраивания карты на сторонние сайты.
-- 🔐 **Админ-панель** с серверной ролевой моделью (RLS + `has_role`).
-- 🩺 **Диагностика сессии** в админке для быстрой проверки прав.
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
+- [Quick start](#quick-start)
+- [Environment variables](#environment-variables)
+- [Data preparation](#data-preparation)
+- [Database and roles](#database-and-roles)
+- [Publishing to GitHub — step by step](#publishing-to-github--step-by-step)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License and credits](#license-and-credits)
 
 ---
 
-## Технологический стек / Stack
+## Features
 
-| Слой        | Технологии                                                                 |
+- 🗺️ **Interactive map** built on MapLibre GL with 5,000+ historical points.
+- 🌐 **Three UI languages:** Russian, English, Georgian (with `ka → en → ru` fallback).
+- 🔎 **Smart search** for settlements and churches (Fuse.js, multilingual).
+- 🎚️ **Filters** by region, uezd, period and radius.
+- 📍 **“Unlocated” panel** — points still waiting to be geolocated.
+- 🛠️ **In-card problem reporting** straight from a point.
+- 🧩 **Embed mode** (`/embed`) for embedding the map on third-party sites.
+- 🔐 **Admin panel** with a server-side role model (RLS + `has_role`).
+- 🩺 **Session diagnostics** in the admin panel for quick permission checks.
+
+---
+
+## Tech stack
+
+| Layer       | Technologies                                                               |
 |-------------|----------------------------------------------------------------------------|
 | Frontend    | React 19, TanStack Start / Router, Tailwind CSS v4, shadcn/ui, Lucide      |
-| Карта       | MapLibre GL JS, кастомные стили, тайлы OpenStreetMap                       |
-| Поиск       | Fuse.js (fuzzy multilingual)                                               |
-| Backend     | **Lovable Cloud** (Supabase под капотом): Postgres + RLS + Auth            |
-| Сборка      | Vite 7, Cloudflare Workers runtime (`wrangler.jsonc`)                      |
-| AI-перевод  | Lovable AI Gateway, `google/gemini-2.5-pro` (офлайн-скрипт)                |
-| Тесты       | Vitest                                                                     |
-| Линт/формат | ESLint 9, Prettier 3                                                       |
+| Map         | MapLibre GL JS, custom styles, OpenStreetMap tiles                         |
+| Search      | Fuse.js (multilingual fuzzy)                                               |
+| Backend     | **Lovable Cloud** (Supabase under the hood): Postgres + RLS + Auth         |
+| Build       | Vite 7, Cloudflare Workers runtime (`wrangler.jsonc`)                      |
+| AI translation | Lovable AI Gateway, `google/gemini-2.5-pro` (offline script)            |
+| Tests       | Vitest                                                                     |
+| Lint/format | ESLint 9, Prettier 3                                                       |
 
 ---
 
-## Структура проекта
+## Project structure
 
 ```
 .
 ├── src/
-│   ├── routes/               # Файловая маршрутизация TanStack
-│   │   ├── __root.tsx        # Корневой layout (html/head/body)
-│   │   ├── index.tsx         # Лендинг
-│   │   ├── map.tsx           # Основная карта
-│   │   ├── embed.tsx         # Встраиваемая версия
-│   │   ├── login.tsx         # Авторизация
-│   │   └── admin.tsx         # Админ-панель + диагностика
+│   ├── routes/               # TanStack file-based routing
+│   │   ├── __root.tsx        # Root layout (html/head/body)
+│   │   ├── index.tsx         # Landing page
+│   │   ├── map.tsx           # Main map
+│   │   ├── embed.tsx         # Embeddable version
+│   │   ├── login.tsx         # Authentication
+│   │   └── admin.tsx         # Admin panel + diagnostics
 │   ├── components/
 │   │   ├── map/              # MapView, UnlocatedPanel, ReportProblemButton
-│   │   └── ui/               # shadcn/ui компоненты
+│   │   └── ui/               # shadcn/ui components
 │   ├── lib/
-│   │   ├── i18n.ts           # Переводы UI (ru/en/ka)
-│   │   ├── geo.ts            # Геометрия и работа с координатами
-│   │   └── map-style.ts      # Стиль карты MapLibre
-│   ├── integrations/supabase/  # Авто-генерируется, не править
-│   └── server.ts             # SSR entry с обёрткой ошибок
+│   │   ├── i18n.ts           # UI translations (ru/en/ka)
+│   │   ├── geo.ts            # Geometry and coordinate helpers
+│   │   └── map-style.ts      # MapLibre map style
+│   ├── integrations/supabase/  # Auto-generated, do not edit
+│   └── server.ts             # SSR entry with error wrapping
 ├── scripts/
-│   ├── build-geojson.ts      # Сборка GeoJSON из CSV
-│   ├── translate-ka.ts       # AI-перевод данных на грузинский
-│   ├── check-unlocated.ts    # Аудит точек без координат
-│   └── data/                 # Исходные CSV (ru/en/ka) + glossary
+│   ├── build-geojson.ts      # Build GeoJSON from CSV
+│   ├── translate-ka.ts       # AI translation of data into Georgian
+│   ├── check-unlocated.ts    # Audit of points without coordinates
+│   └── data/                 # Source CSV files (ru/en/ka) + glossary
 ├── supabase/
 │   ├── config.toml
-│   └── migrations/           # SQL-миграции (роли, has_role, RLS)
-├── public/data/              # Сгенерированный GeoJSON и stats
-└── wrangler.jsonc            # Конфиг Cloudflare Workers
+│   └── migrations/           # SQL migrations (roles, has_role, RLS)
+├── public/data/              # Generated GeoJSON and stats
+└── wrangler.jsonc            # Cloudflare Workers config
 ```
 
 ---
 
-## Быстрый старт / Quick start
+## Quick start
 
-**Требования:** Node.js ≥ 20 или Bun ≥ 1.1, Git.
+**Requirements:** Node.js ≥ 20 or Bun ≥ 1.1, Git.
 
 ```bash
 git clone https://github.com/<your-user>/<repo>.git
 cd <repo>
 
-# Установка зависимостей (Bun быстрее, npm тоже работает)
+# Install dependencies (Bun is faster, npm also works)
 bun install
-# или: npm install
+# or: npm install
 
-# Скопируйте пример env и заполните ключами Lovable Cloud
+# Copy the example env file and fill in Lovable Cloud keys
 cp .env.example .env
 
-# Запуск dev-сервера
+# Start the dev server
 bun run dev
 # → http://localhost:5173
 ```
 
-### Полезные команды
+### Useful commands
 
-| Команда              | Что делает                                |
+| Command              | What it does                              |
 |----------------------|-------------------------------------------|
-| `bun run dev`        | Dev-сервер с HMR                          |
-| `bun run build`      | Production-сборка                         |
-| `bun run build:dev`  | Dev-сборка (для отладки SSR)              |
-| `bun run preview`    | Просмотр production-сборки локально       |
+| `bun run dev`        | Dev server with HMR                       |
+| `bun run build`      | Production build                          |
+| `bun run build:dev`  | Dev build (for debugging SSR)             |
+| `bun run preview`    | Preview a production build locally        |
 | `bun run lint`       | ESLint                                    |
 | `bun run format`     | Prettier                                  |
-| `bun run test`       | Vitest (один прогон)                      |
-| `bun run test:watch` | Vitest в watch-режиме                     |
-| `bun run test:e2e`   | Playwright e2e: проверка overflow оверлеев `/map` и `/tbilisi` на 375/390/1280 px. Перед первым запуском: `npx playwright install chromium`. По умолчанию поднимает `vite dev` сам; для уже запущенного: `PLAYWRIGHT_BASE_URL=http://localhost:8080 bun run test:e2e`. |
+| `bun run test`       | Vitest (single run)                       |
+| `bun run test:watch` | Vitest in watch mode                      |
+| `bun run test:e2e`   | Playwright e2e: overlay overflow checks for `/map` and `/tbilisi` at 375/390/1280 px. Before the first run: `npx playwright install chromium`. Spins up `vite dev` by default; to reuse a running one: `PLAYWRIGHT_BASE_URL=http://localhost:8080 bun run test:e2e`. |
 
 ---
 
-## Переменные окружения
+## Environment variables
 
-Файл `.env` (локально) **никогда не коммитится**. Пример — `.env.example`:
+The `.env` file (local) **must never be committed**. The template is `.env.example`:
 
 ```dotenv
-# Клиентские (попадают в бандл — безопасно публиковать anon-ключ)
+# Client-side (bundled into the build — safe to publish the anon key)
 VITE_SUPABASE_URL=https://<project-ref>.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=<anon-key>
 VITE_SUPABASE_PROJECT_ID=<project-ref>
 
-# Серверные (для SSR / edge-функций — НЕ публиковать service_role)
+# Server-side (for SSR / edge functions — DO NOT publish service_role)
 SUPABASE_URL=https://<project-ref>.supabase.co
 SUPABASE_PUBLISHABLE_KEY=<anon-key>
-SUPABASE_SERVICE_ROLE_KEY=<service-role-key>   # ⚠️ секрет!
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>   # ⚠️ secret!
 ```
 
-> При работе через Lovable Cloud файл `.env` создаётся и обновляется автоматически — править его вручную не нужно.
+> When working through Lovable Cloud the `.env` file is created and updated automatically — there is no need to edit it manually.
 
 ---
 
-## Подготовка данных
+## Data preparation
 
-Все исторические данные хранятся в `scripts/data/*.csv` и собираются в GeoJSON для карты.
+All historical data lives in `scripts/data/*.csv` and is compiled into GeoJSON for the map.
 
 ```bash
-# 1. Собрать GeoJSON из CSV (ru/en/ka) → public/data/
+# 1. Build GeoJSON from CSVs (ru/en/ka) → public/data/
 bun run scripts/build-geojson.ts
 
-# 2. Проверить, какие точки остались без координат
+# 2. Check which points are still missing coordinates
 bun run scripts/check-unlocated.ts
 
-# 3. (опционально) Догенерировать грузинский перевод через AI
+# 3. (optional) Generate the Georgian translation via AI
 bun run scripts/translate-ka.ts
 ```
 
-> `translate-ka.ts` использует Lovable AI Gateway и идемпотентен — уже переведённые строки не дёргает повторно.
+> `translate-ka.ts` uses the Lovable AI Gateway and is idempotent — already-translated strings are not requested again.
 
 ---
 
-## База данных и роли
+## Database and roles
 
-Все изменения схемы — через миграции в `supabase/migrations/`.
+All schema changes go through migrations in `supabase/migrations/`.
 
-**Ролевая модель** (важно для безопасности):
+**Role model** (important for security):
 
-- Роли хранятся в **отдельной** таблице `public.user_roles` — НЕ в `profiles` и НЕ в `auth.users` (защита от privilege escalation).
-- Тип роли — enum `public.app_role` (`admin`, `moderator`, `user`).
-- Проверка прав — через `SECURITY DEFINER` функции `public.has_role(uuid, app_role)` и её зеркало `private.has_role(uuid, app_role)`, чтобы не упираться в RLS-рекурсию. RLS-политики используют именно `private.has_role(auth.uid(), 'admin')`.
-- Все админ-операции (изменение `feature_overrides`, модерация `problem_reports`, `coord_suggestions`, `uezd_corrections`, `missing_years_suggestions`, правка `guide_content`) защищены RLS-политиками `private.has_role(auth.uid(), 'admin')`.
-- Серверная функция `public.rollback_feature_override(uuid)` дополнительно проверяет роль внутри тела (`RAISE EXCEPTION 'Forbidden'`).
+- Roles are stored in a **separate** `public.user_roles` table — NOT on `profiles` and NOT on `auth.users` (privilege-escalation protection).
+- Role type is the enum `public.app_role` (`admin`, `moderator`, `user`).
+- Permission checks go through the `SECURITY DEFINER` function `public.has_role(uuid, app_role)` and its mirror `private.has_role(uuid, app_role)` to avoid RLS recursion. RLS policies use `private.has_role(auth.uid(), 'admin')`.
+- All admin operations (editing `feature_overrides`, moderating `problem_reports`, `coord_suggestions`, `uezd_corrections`, `missing_years_suggestions`, editing `guide_content`) are guarded by RLS policies using `private.has_role(auth.uid(), 'admin')`.
+- The server function `public.rollback_feature_override(uuid)` additionally checks the role in its body (`RAISE EXCEPTION 'Forbidden'`).
 
-**Доступы (`GRANT` / `REVOKE`) к `SECURITY DEFINER` функциям:**
+**Permissions (`GRANT` / `REVOKE`) on `SECURITY DEFINER` functions:**
 
-| Функция | `anon` | `authenticated` | Назначение |
+| Function | `anon` | `authenticated` | Purpose |
 |---|---|---|---|
-| `public.log_problem_report_status_change()` | ❌ | ❌ | trigger-only (вызывается Postgres) |
+| `public.log_problem_report_status_change()` | ❌ | ❌ | trigger-only (called by Postgres) |
 | `public.log_feature_override_change()` | ❌ | ❌ | trigger-only |
 | `public.update_updated_at_column()` | ❌ | ❌ | trigger-only |
-| `public.rollback_feature_override(uuid)` | ❌ | ✅ | внутри проверяется `private.has_role(..., 'admin')` |
-| `public.has_role(uuid, app_role)` | ❌ | ✅ | проверка прав в приложении |
-| `private.has_role(uuid, app_role)` | ❌ | ✅ | используется RLS-политиками |
+| `public.rollback_feature_override(uuid)` | ❌ | ✅ | internally checks `private.has_role(..., 'admin')` |
+| `public.has_role(uuid, app_role)` | ❌ | ✅ | permission check in the app |
+| `private.has_role(uuid, app_role)` | ❌ | ✅ | used by RLS policies |
 
-`anon` и `PUBLIC` не имеют `EXECUTE` ни на одной из них. Линтер Supabase помечает `rollback_feature_override` и `has_role` как доступные авторизованным — это **by design**: без этого приложение не сможет вызвать их через PostgREST/SDK; защита обеспечивается внутренней проверкой роли и/или RLS.
+`anon` and `PUBLIC` have no `EXECUTE` on any of them. The Supabase linter flags `rollback_feature_override` and `has_role` as accessible to authenticated users — that is **by design**: without it the app cannot call them via PostgREST/SDK; protection is enforced by the internal role check and/or RLS.
 
-**Назначить администратора вручную:**
+**Grant an administrator manually:**
 
 ```sql
 insert into public.user_roles (user_id, role)
@@ -201,80 +201,80 @@ on conflict do nothing;
 
 ---
 
-## Публикация на GitHub — пошагово
+## Publishing to GitHub — step by step
 
-### Вариант A. Через интеграцию Lovable ↔ GitHub (рекомендуется)
+### Option A. Through the Lovable ↔ GitHub integration (recommended)
 
-1. В редакторе Lovable откройте меню **«+» → GitHub → Connect project**.
-2. Авторизуйте **Lovable GitHub App** (один раз на аккаунт).
-3. Выберите аккаунт или организацию, нажмите **Create Repository**.
-4. Готово: настроена двунаправленная синхронизация. Любые правки в Lovable пушатся в `main`, и наоборот — push в GitHub автоматически прилетает в Lovable.
+1. In the Lovable editor open the **“+” → GitHub → Connect project** menu.
+2. Authorize the **Lovable GitHub App** (once per account).
+3. Pick an account or organization and click **Create Repository**.
+4. Done: two-way sync is configured. Edits made in Lovable are pushed to `main`, and pushes to GitHub flow back into Lovable automatically.
 
-> Если у вас уже есть пустой репозиторий и нужно «привязать» — пока импорт существующих репо не поддерживается. Создайте новый через интеграцию, затем перенесите код вручную.
+> If you already have an empty repository and want to “attach” it — importing existing repos is not supported yet. Create a new one through the integration and migrate the code manually.
 
-### Вариант B. Вручную, с нуля
+### Option B. Manual, from scratch
 
 ```bash
-# 1. Скачайте код из Lovable: Code Editor → Download codebase
+# 1. Download the code from Lovable: Code Editor → Download codebase
 unzip codebase.zip && cd <project>
 
-# 2. Инициализируйте git
+# 2. Initialize git
 git init
 git branch -M main
 
-# 3. Убедитесь, что .env НЕ попадёт в коммит (он уже в .gitignore)
-git status   # .env не должно быть в списке
+# 3. Make sure .env does NOT land in the commit (it's already in .gitignore)
+git status   # .env must not appear in the list
 
-# 4. Первый коммит
+# 4. First commit
 git add .
 git commit -m "Initial commit: Georgia Metric Books Atlas"
 
-# 5a. Создайте репозиторий через GitHub CLI
+# 5a. Create the repository through GitHub CLI
 gh repo create <user>/georgia-metric-books \
   --public \
-  --description "Архивный атлас Грузии XIX века по метрическим книгам" \
+  --description "Atlas of 19th-century Georgia from metric books" \
   --source=. --remote=origin --push
 
-# 5b. ИЛИ создайте репо в веб-интерфейсе github.com/new и затем:
+# 5b. OR create the repo via github.com/new and then:
 git remote add origin https://github.com/<user>/georgia-metric-books.git
 git push -u origin main
 ```
 
-### Что обязательно проверить перед `git push`
+### What to check before `git push`
 
-- ✅ В `.gitignore` есть `.env`, `node_modules`, `dist`, `.wrangler/`, `.dev.vars`.
-- ✅ В коде нет хардкода `SUPABASE_SERVICE_ROLE_KEY` или других секретов.
-- ✅ `bun run build` проходит без ошибок.
-- ✅ `bun run lint` без критики.
+- ✅ `.gitignore` contains `.env`, `node_modules`, `dist`, `.wrangler/`, `.dev.vars`.
+- ✅ No hard-coded `SUPABASE_SERVICE_ROLE_KEY` or other secrets in the code.
+- ✅ `bun run build` finishes without errors.
+- ✅ `bun run lint` is clean.
 
-### Защита секретов
+### Secret protection
 
-| Ключ                          | Можно публиковать? |
+| Key                           | Safe to publish?   |
 |-------------------------------|--------------------|
-| `VITE_SUPABASE_URL`           | ✅ да              |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` (anon) | ✅ да     |
-| `SUPABASE_SERVICE_ROLE_KEY`   | ❌ **нет, никогда** |
-| `LOVABLE_API_KEY` (если есть) | ❌ нет             |
+| `VITE_SUPABASE_URL`           | ✅ yes             |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` (anon) | ✅ yes    |
+| `SUPABASE_SERVICE_ROLE_KEY`   | ❌ **no, never**   |
+| `LOVABLE_API_KEY` (if present)| ❌ no              |
 
-Если секрет случайно попал в репозиторий:
+If a secret accidentally ends up in the repository:
 
 ```bash
-# 1. Сразу же ротируйте ключ в Lovable Cloud (Connectors → Lovable Cloud).
-# 2. Удалите из истории:
+# 1. Rotate the key in Lovable Cloud immediately (Connectors → Lovable Cloud).
+# 2. Remove it from history:
 git filter-repo --path .env --invert-paths
 git push --force
 ```
 
-### Настройки репозитория после создания
+### Repository settings after creation
 
-- **About** → ссылка на `https://metrics.datatells.info`.
+- **About** → link to `https://metrics.datatells.info`.
 - **Topics:** `georgia`, `history`, `metric-books`, `genealogy`, `maplibre`, `tanstack-start`, `react`, `supabase`.
-- **Branch protection** для `main`: запретить force-push, требовать PR-ревью.
-- Включите **Issues** и **Discussions** для обратной связи.
+- **Branch protection** for `main`: forbid force-push, require PR review.
+- Enable **Issues** and **Discussions** for feedback.
 
-### CI на GitHub Actions (опционально)
+### CI on GitHub Actions (optional)
 
-Создайте `.github/workflows/ci.yml`:
+Create `.github/workflows/ci.yml`:
 
 ```yaml
 name: CI
@@ -295,37 +295,37 @@ jobs:
 
 ---
 
-## Деплой
+## Deployment
 
-- **Lovable (по умолчанию):** автодеплой на каждый push в `main`. Кнопка **Publish** публикует на `*.lovable.app`. Кастомный домен `metrics.datatells.info` подключён через DNS на Netlify (A-запись `185.158.133.1` + TXT `_lovable.<sub>`).
-- **Self-hosting:** проект собирается под Cloudflare Workers (см. `wrangler.jsonc`). Подробности — в [docs.lovable.dev/tips-tricks/self-hosting](https://docs.lovable.dev/tips-tricks/self-hosting).
+- **Lovable (default):** auto-deploy on every push to `main`. The **Publish** button publishes to `*.lovable.app`. The custom domain `metrics.datatells.info` is wired up via DNS on Netlify (A record `185.158.133.1` + TXT `_lovable.<sub>`).
+- **Self-hosting:** the project builds for Cloudflare Workers (see `wrangler.jsonc`). Details: [docs.lovable.dev/tips-tricks/self-hosting](https://docs.lovable.dev/tips-tricks/self-hosting).
 
-> **Frontend** изменения требуют клика **Update** в диалоге Publish.
-> **Backend** изменения (миграции, edge-функции) деплоятся автоматически.
-
----
-
-## Контрибьютинг
-
-1. Заведите issue с описанием задачи.
-2. Создайте ветку: `git checkout -b feat/<short-name>`.
-3. Перед PR: `bun run lint && bun run test && bun run build`.
-4. Conventional Commits приветствуются (`feat:`, `fix:`, `docs:`, `chore:`).
-5. Откройте PR в `main`, опишите изменения.
+> **Frontend** changes require clicking **Update** in the Publish dialog.
+> **Backend** changes (migrations, edge functions) deploy automatically.
 
 ---
 
-## Лицензия и благодарности
+## Contributing
 
-- **Код** проекта распространяется по лицензии **MIT** (см. [`LICENSE`](./LICENSE)).
-- **Карты, сборки данных (GeoJSON), тексты гайда, дизайн и оформление** — © 2025 **Виталий Штыбин**, все права защищены. Использование, цитирование и перепечатка допускаются только с указанием автора и активной ссылкой на <https://metrics.datatells.info>. Подробности — в [`COPYRIGHT.md`](./COPYRIGHT.md).
-- **Данные:** метрические книги XIX в. (Национальный архив Грузии и др.).
-- **Карта:** © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors, рендер — [MapLibre GL](https://maplibre.org).
-- **Платформа:** сделано на [Lovable](https://lovable.dev) с Lovable Cloud.
+1. Open an issue describing the task.
+2. Create a branch: `git checkout -b feat/<short-name>`.
+3. Before the PR: `bun run lint && bun run test && bun run build`.
+4. Conventional Commits are welcome (`feat:`, `fix:`, `docs:`, `chore:`).
+5. Open a PR against `main` describing your changes.
 
-## Об авторе
+---
 
-**Виталий Штыбин** — независимый исследователь, автор сайта [datatells.info](https://datatells.info). На основном сайте — другие проекты и статьи автора по истории и краеведению Кавказа.
+## License and credits
+
+- The project **code** is distributed under the **MIT** license (see [`LICENSE`](./LICENSE)).
+- **Maps, data compilations (GeoJSON), guide texts, design and presentation** — © 2025 **Vitalii Shtybin**, all rights reserved. Use, citation and republication are allowed only with author attribution and an active link to <https://metrics.datatells.info>. See [`COPYRIGHT.md`](./COPYRIGHT.md) for details.
+- **Data:** 19th-century metric books (National Archives of Georgia and others).
+- **Map:** © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors, rendered with [MapLibre GL](https://maplibre.org).
+- **Platform:** built with [Lovable](https://lovable.dev) and Lovable Cloud.
+
+## About the author
+
+**Vitalii Shtybin** is an independent researcher and author of [datatells.info](https://datatells.info). The main site hosts other projects and articles on the history and local studies of the Caucasus.
 
 ---
 
