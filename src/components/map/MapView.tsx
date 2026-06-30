@@ -2332,11 +2332,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                         <dd className="tabular-nums">{withC.toLocaleString()} ({pct(withC)}%)</dd>
                         <dt className="text-muted-foreground">{T.withoutCoords}</dt>
                         <dd className="tabular-nums">{without.toLocaleString()} ({pct(without)}%)</dd>
+                        <dt className="text-muted-foreground">{T.confidence}</dt>
+                        <dd className="tabular-nums">{pct(withC)}%</dd>
                       </>
                     );
                   })()}
-                  <dt className="text-muted-foreground">{T.confidence}</dt>
-                  <dd className="tabular-nums">{Math.round(stats.geocodingConfidence * 100)}%</dd>
+
                 </dl>
               </div>
             )}
