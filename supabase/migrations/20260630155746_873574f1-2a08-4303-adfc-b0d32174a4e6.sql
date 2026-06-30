@@ -1,0 +1,1 @@
+UPDATE public.coord_suggestions SET status='rejected', notes=COALESCE(NULLIF(notes,''),'') || 'Авто-отклонено: дубликат уже одобренной записи (settlement/church/years/lat/lon)' WHERE id IN ('967cecb6-9cc4-4e38-baf5-70a511f85c8d','4cee3f51-51ed-41fc-a9f9-0bddd18bcca7','a748e336-b8e4-466a-9eaa-51f892624fc9');
