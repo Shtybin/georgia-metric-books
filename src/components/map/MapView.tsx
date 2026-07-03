@@ -175,17 +175,66 @@ function applyBasemapLabels(map: MLMap, lang: Lang) {
             primary,
           ];
 
+    // Basemap labels we never want to render: Abkhazia and South Ossetia
+    // (region/country labels on the OpenMapTiles vector source). Match by
+    // exact name in every localized field the tiles expose.
+    const BANNED_NAMES = [
+      "Abkhazia",
+      "Republic of Abkhazia",
+      "Autonomous Republic of Abkhazia",
+      "Аҧсны",
+      "Аҧсны Аҳәынҭқарра",
+      "Абхазия",
+      "Республика Абхазия",
+      "აფხაზეთი",
+      "South Ossetia",
+      "Republic of South Ossetia",
+      "South Ossetia – the State of Alania",
+      "Южная Осетия",
+      "Республика Южная Осетия",
+      "Хуссар Ирыстон",
+      "სამხრეთი ოსეთი",
+      "სამხრეთ ოსეთი",
+      "შიდა ქართლი",
+    ];
+    const bannedLiteral: any = ["literal", BANNED_NAMES];
+    const excludeBanned: any = [
+      "!",
+      [
+        "any",
+        ["in", ["get", "name"], bannedLiteral],
+        ["in", ["get", "name:en"], bannedLiteral],
+        ["in", ["get", "name:ru"], bannedLiteral],
+        ["in", ["get", "name:ka"], bannedLiteral],
+        ["in", ["get", "name:latin"], bannedLiteral],
+        ["in", ["get", "name_en"], bannedLiteral],
+      ],
+    ];
+
     for (const layer of style.layers || []) {
       if (layer.type !== "symbol") continue;
       const layout: any = (layer as any).layout;
       if (!layout || !("text-field" in layout)) continue;
       map.setLayoutProperty(layer.id, "text-field", expr);
+      // Compose with the layer's existing filter so we don't wipe out
+      // Stadia's own class/subclass rules.
+      const existing = (layer as any).filter;
+      const combined: any = existing
+        ? ["all", existing, excludeBanned]
+        : excludeBanned;
+      try {
+        map.setFilter(layer.id, combined);
+      } catch {
+        // Some layers use legacy filter shapes that reject expression-style
+        // combinators — skip those quietly.
+      }
     }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn("[maplibre] label localization failed", e);
   }
 }
+
 
 interface Stats {
   total: number;
