@@ -947,14 +947,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     };
 
     loadPatchedStyle(BASEMAP_STYLE, langRef.current)
-      .then((patched) => init(patched))
+      .then((patched) => init(patched, true))
       .catch((err) => {
         // eslint-disable-next-line no-console
         console.warn("[maplibre] style prefetch failed, falling back", err);
         // Fallback: hand MapLibre the URL directly; the styledata hook
         // above will rewrite labels once the style loads.
-        init(BASEMAP_STYLE);
+        init(BASEMAP_STYLE, false);
       });
+
 
     return () => {
       cancelled = true;
