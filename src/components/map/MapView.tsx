@@ -831,119 +831,142 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   const styleLoadedRef = useRef(false);
 
-  // Effect A: create map once on mount, independent of data
+  // Effect A: create map once on mount, independent of data.
+  //
+  // We prefetch the Stadia style JSON and patch every symbol layer's
+  // `text-field` BEFORE handing it to MapLibre. This eliminates the
+  // 1–2 s flash of Abkhazia / South Ossetia labels: the very first paint
+  // already renders with our banned-label expression applied. If the
+  // prefetch fails (network / cache miss), we fall back to the raw URL
+  // and let the styledata rewrite hook cover the flash.
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: BASEMAP_STYLE,
-      center: [43.5, 42.0],
-      zoom: 6.4,
-      attributionControl: { compact: true },
-    });
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-    attachBasemapFallback(map);
-    collapseAttribution(map);
-    map.on("error", (e) => {
-      // surface MapLibre errors instead of leaving a white canvas
-      // eslint-disable-next-line no-console
-      console.error("[maplibre]", e.error || e);
-    });
-    // Rewrite banned labels as soon as the style JSON is parsed, before the
-    // first tile render. `styledata` fires earlier than `load` (which waits
-    // for tiles too), so this catches the initial paint and eliminates the
-    // 1–2 s flash of Abkhazia / South Ossetia labels on cold open.
-    // MapLibre re-emits `styledata` after every setLayoutProperty, so we
-    // guard with a ref to avoid an infinite rewrite loop; the guard is
-    // cleared on `style.load` so a language switch (which reloads the
-    // style) triggers a fresh rewrite.
-    let labelsApplied = false;
-    const rewriteLabels = () => {
-      if (labelsApplied) return;
-      if (!map.isStyleLoaded()) return;
-      labelsApplied = true;
-      applyBasemapLabels(map, langRef.current);
+    let cancelled = false;
+    let ro: ResizeObserver | null = null;
+
+    const init = (styleForMap: any) => {
+      if (cancelled || !containerRef.current) return;
+
+      const map = new maplibregl.Map({
+        container: containerRef.current,
+        style: styleForMap,
+        center: [43.5, 42.0],
+        zoom: 6.4,
+        attributionControl: { compact: true },
+      });
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+      attachBasemapFallback(map);
+      collapseAttribution(map);
+      map.on("error", (e) => {
+        // surface MapLibre errors instead of leaving a white canvas
+        // eslint-disable-next-line no-console
+        console.error("[maplibre]", e.error || e);
+      });
+      // Safety net: if the style ever reloads (language switch, HMR) and
+      // arrives unpatched, rewrite labels post-load. Guarded to avoid an
+      // infinite loop since setLayoutProperty re-emits `styledata`.
+      let labelsApplied = true; // initial style is already patched
+      const rewriteLabels = () => {
+        if (labelsApplied) return;
+        if (!map.isStyleLoaded()) return;
+        labelsApplied = true;
+        applyBasemapLabels(map, langRef.current);
+      };
+      map.on("styledata", rewriteLabels);
+      map.on("style.load", () => {
+        labelsApplied = false;
+        rewriteLabels();
+      });
+      map.on("load", () => {
+        styleLoadedRef.current = true;
+        rewriteLabels();
+
+        // Selected halo / radius sources are independent of parishes data — add them now.
+        if (!map.getSource("selected")) {
+          map.addSource("selected", {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] } as any,
+          });
+          map.addLayer({
+            id: "selected-halo",
+            type: "circle",
+            source: "selected",
+            paint: {
+              "circle-color": "transparent",
+              "circle-radius": 22,
+              "circle-stroke-color": "#0f172a",
+              "circle-stroke-width": 3,
+              "circle-stroke-opacity": 0.9,
+            },
+          });
+          map.addLayer({
+            id: "selected-point",
+            type: "circle",
+            source: "selected",
+            paint: {
+              "circle-color": colorExpression,
+              "circle-radius": 9,
+              "circle-stroke-color": "#fff",
+              "circle-stroke-width": 2,
+            },
+          });
+        }
+        if (!map.getSource("radius")) {
+          map.addSource("radius", {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] } as any,
+          });
+          map.addLayer({
+            id: "radius-fill",
+            type: "fill",
+            source: "radius",
+            paint: { "fill-color": "#0072B2", "fill-opacity": 0.06 },
+          });
+          map.addLayer({
+            id: "radius-line",
+            type: "line",
+            source: "radius",
+            paint: {
+              "line-color": "#0072B2",
+              "line-opacity": 0.35,
+              "line-width": 1.5,
+              "line-dasharray": [2, 2],
+            },
+          });
+        }
+        // Trigger data effect by bumping a render
+        setStyleReady(true);
+      });
+
+      mapRef.current = map;
+
+      // Resize observer guards against 0×0 init / late layout (SSR hydration, HMR)
+      ro = new ResizeObserver(() => map.resize());
+      ro.observe(containerRef.current);
     };
-    map.on("styledata", rewriteLabels);
-    map.on("style.load", () => {
-      labelsApplied = false;
-      rewriteLabels();
-    });
-    map.on("load", () => {
-      styleLoadedRef.current = true;
-      rewriteLabels();
 
-
-      // Selected halo / radius sources are independent of parishes data — add them now.
-      if (!map.getSource("selected")) {
-        map.addSource("selected", {
-          type: "geojson",
-          data: { type: "FeatureCollection", features: [] } as any,
-        });
-        map.addLayer({
-          id: "selected-halo",
-          type: "circle",
-          source: "selected",
-          paint: {
-            "circle-color": "transparent",
-            "circle-radius": 22,
-            "circle-stroke-color": "#0f172a",
-            "circle-stroke-width": 3,
-            "circle-stroke-opacity": 0.9,
-          },
-        });
-        map.addLayer({
-          id: "selected-point",
-          type: "circle",
-          source: "selected",
-          paint: {
-            "circle-color": colorExpression,
-            "circle-radius": 9,
-            "circle-stroke-color": "#fff",
-            "circle-stroke-width": 2,
-          },
-        });
-      }
-      if (!map.getSource("radius")) {
-        map.addSource("radius", {
-          type: "geojson",
-          data: { type: "FeatureCollection", features: [] } as any,
-        });
-        map.addLayer({
-          id: "radius-fill",
-          type: "fill",
-          source: "radius",
-          paint: { "fill-color": "#0072B2", "fill-opacity": 0.06 },
-        });
-        map.addLayer({
-          id: "radius-line",
-          type: "line",
-          source: "radius",
-          paint: {
-            "line-color": "#0072B2",
-            "line-width": 1.5,
-            "line-dasharray": [2, 2],
-          },
-        });
-      }
-      // Trigger data effect by bumping a render
-      setStyleReady(true);
-    });
-
-    mapRef.current = map;
-
-    // Resize observer guards against 0×0 init / late layout (SSR hydration, HMR)
-    const ro = new ResizeObserver(() => map.resize());
-    ro.observe(containerRef.current);
+    loadPatchedStyle(BASEMAP_STYLE, langRef.current)
+      .then((patched) => init(patched))
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.warn("[maplibre] style prefetch failed, falling back", err);
+        // Fallback: hand MapLibre the URL directly; the styledata hook
+        // above will rewrite labels once the style loads.
+        init(BASEMAP_STYLE);
+      });
 
     return () => {
-      ro.disconnect();
-      map.remove();
-      mapRef.current = null;
+      cancelled = true;
+      ro?.disconnect();
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
       styleLoadedRef.current = false;
     };
   }, []);
+
 
   const [styleReady, setStyleReady] = useState(false);
 
