@@ -866,7 +866,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       // Safety net: if the style ever reloads (language switch, HMR) and
       // arrives unpatched, rewrite labels post-load. Guarded to avoid an
       // infinite loop since setLayoutProperty re-emits `styledata`.
-      let labelsApplied = true; // initial style is already patched
+      let labelsApplied = prePatched; // initial style is already patched
       const rewriteLabels = () => {
         if (labelsApplied) return;
         if (!map.isStyleLoaded()) return;
