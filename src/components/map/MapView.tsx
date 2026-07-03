@@ -195,8 +195,8 @@ function applyBasemapLabels(map: MLMap, lang: Lang) {
       "Хуссар Ирыстон",
       "სამხრეთი ოსეთი",
       "სამხრეთ ოსეთი",
-      "შიდა ქართლი",
     ];
+
     const bannedLiteral: any = ["literal", BANNED_NAMES];
     const excludeBanned: any = [
       "!",
