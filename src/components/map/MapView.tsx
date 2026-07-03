@@ -825,17 +825,27 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     // Rewrite banned labels as soon as the style JSON is parsed, before the
     // first tile render. `styledata` fires earlier than `load` (which waits
     // for tiles too), so this catches the initial paint and eliminates the
-    // 1–2 s flash of Abkhazia / South Ossetia labels on cold open. It also
-    // re-fires after every style/source change, so labels stay rewritten
-    // if MapLibre rebuilds the style internally.
+    // 1–2 s flash of Abkhazia / South Ossetia labels on cold open.
+    // MapLibre re-emits `styledata` after every setLayoutProperty, so we
+    // guard with a ref to avoid an infinite rewrite loop; the guard is
+    // cleared on `style.load` so a language switch (which reloads the
+    // style) triggers a fresh rewrite.
+    let labelsApplied = false;
     const rewriteLabels = () => {
+      if (labelsApplied) return;
       if (!map.isStyleLoaded()) return;
+      labelsApplied = true;
       applyBasemapLabels(map, langRef.current);
     };
     map.on("styledata", rewriteLabels);
+    map.on("style.load", () => {
+      labelsApplied = false;
+      rewriteLabels();
+    });
     map.on("load", () => {
       styleLoadedRef.current = true;
       rewriteLabels();
+
 
       // Selected halo / radius sources are independent of parishes data — add them now.
       if (!map.getSource("selected")) {
