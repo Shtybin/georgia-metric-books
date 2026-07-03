@@ -678,34 +678,24 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       .slice(0, RESULT_LIMIT);
   }, [fuse, debouncedQuery, minQueryLen, RESULT_LIMIT]);
 
-  // Build uezd/region → feature ids index for "highlight all in area" search.
-  // Some historical uezd / region labels reference territories outside modern
-  // Georgia proper (Abkhazia, South Ossetia). Per project policy those are
-  // omitted from the picker/search area dropdowns in every language.
-  const EXCLUDED_AREA_RE = /(abkhaz|osset|аbхаз|абхаз|осет|ფხაზ|ოსეთ|samurzaka|самурзака)/i;
+  // Build uezd/region → feature ids index for "highlight all in area" search
   const areaIndex = useMemo(() => {
     type Entry = { label: string; ids: number[] };
     const uezdMap = new Map<string, Entry>();
     const regionMap = new Map<string, Entry>();
     if (!data) return { uezds: [] as Array<{ key: string } & Entry>, regions: [] as Array<{ key: string } & Entry> };
-    const isExcluded = (p: any, kind: "uezd" | "region") => {
-      const v = p?.[kind] || {};
-      return EXCLUDED_AREA_RE.test(
-        [v.ru, v.en, v.ka].filter(Boolean).join(" "),
-      );
-    };
     for (const f of data.features) {
       const p: any = f.properties;
       const id = f.id as number;
       const uLabel: string | undefined = p.uezd?.[lang] || p.uezd?.en || p.uezd?.ru;
-      if (uLabel && !isExcluded(p, "uezd")) {
+      if (uLabel) {
         const key = uLabel.toLocaleLowerCase();
         const entry: Entry = uezdMap.get(key) || { label: uLabel, ids: [] };
         entry.ids.push(id);
         uezdMap.set(key, entry);
       }
       const rLabel: string | undefined = p.region?.[lang] || p.region?.en || p.region?.ru;
-      if (rLabel && !isExcluded(p, "region")) {
+      if (rLabel) {
         const key = rLabel.toLocaleLowerCase();
         const entry: Entry = regionMap.get(key) || { label: rLabel, ids: [] };
         entry.ids.push(id);
@@ -717,6 +707,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       regions: [...regionMap.entries()].map(([k, v]) => ({ key: k, ...v })),
     };
   }, [data, lang]);
+
 
 
   const areaMatches = useMemo(() => {
