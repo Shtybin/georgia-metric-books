@@ -130,117 +130,145 @@ function normalizeAliases(fc: FC): FC {
   return changed ? { ...fc, features: next as any } : fc;
 }
 
-// Set basemap label fields based on current UI language.
+// Build the `text-field` expression used for every symbol layer on the
+// basemap. Extracted so we can reuse the exact same expression both when
+// rewriting labels on a live map (setLayoutProperty) and when patching the
+// raw style JSON we prefetch before the map exists (see `loadPatchedStyle`).
 // ka → name:ka, ru → name:ru, en → name:en, each with sensible fallbacks.
+function buildLabelExpr(lang: Lang): any {
+  // Primary localized label (with sensible fallbacks).
+  const basePrimary: any = lang === "ka"
+    ? ["coalesce", ["get", "name:ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
+    : lang === "ru"
+    ? ["coalesce", ["get", "name:ru"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
+    : ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]];
+
+  // Manual overrides for ru/en (keep ka as-is). Matched by Georgian name.
+  const overrideRu = lang === "ru"
+    ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Сухум-Кале", basePrimary]
+    : null;
+  const overrideEn = lang === "en"
+    ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Sukhum-Kale", basePrimary]
+    : null;
+  const primary: any = overrideRu ?? overrideEn ?? basePrimary;
+
+  // For ru/en: append the Georgian name on a second line when it exists
+  // and differs from the primary label. For ka: show only the Georgian name.
+  const expr: any =
+    lang === "ka"
+      ? primary
+      : [
+          "case",
+          [
+            "all",
+            ["has", "name:ka"],
+            ["!=", ["get", "name:ka"], primary],
+          ],
+          [
+            "format",
+            primary,
+            {},
+            "\n",
+            {},
+            ["get", "name:ka"],
+            { "font-scale": 0.8 },
+          ],
+          primary,
+        ];
+
+  // Basemap labels we never want to render: Abkhazia and South Ossetia
+  // (region/country labels on the OpenMapTiles vector source). We match
+  // by exact name across every localized field the tiles expose, then
+  // rewrite the label to an empty string so MapLibre skips symbol layout
+  // for that feature entirely.
+  const BANNED_NAMES = [
+    "Abkhazia",
+    "Republic of Abkhazia",
+    "Autonomous Republic of Abkhazia",
+    "Abkhaz Autonomous Soviet Socialist Republic",
+    "Аҧсны",
+    "Аҧсны Аҳәынҭқарра",
+    "Аҧсуа",
+    "Абхазия",
+    "Республика Абхазия",
+    "აფხაზეთი",
+    "South Ossetia",
+    "Republic of South Ossetia",
+    "South Ossetia – the State of Alania",
+    "South Ossetia-Alania",
+    "Южная Осетия",
+    "Республика Южная Осетия",
+    "Хуссар Ирыстон",
+    "სამხრეთი ოსეთი",
+    "სამხრეთ ოსეთი",
+  ];
+
+  // Case-insensitive "starts with Abkhazia / South Ossetia" catches all
+  // remaining transliterations we haven't enumerated above.
+  const startsWithBanned = (field: string): any => {
+    const val: any = ["downcase", ["coalesce", ["get", field], ""]];
+    return [
+      "any",
+      ["==", ["slice", val, 0, 8], "abkhazia"],
+      ["==", ["slice", val, 0, 13], "south ossetia"],
+    ];
+  };
+
+  const bannedLiteral: any = ["literal", BANNED_NAMES];
+  const isBanned: any = [
+    "any",
+    ["in", ["coalesce", ["get", "name"], ""], bannedLiteral],
+    ["in", ["coalesce", ["get", "name:en"], ""], bannedLiteral],
+    ["in", ["coalesce", ["get", "name:ru"], ""], bannedLiteral],
+    ["in", ["coalesce", ["get", "name:ka"], ""], bannedLiteral],
+    ["in", ["coalesce", ["get", "name:latin"], ""], bannedLiteral],
+    ["in", ["coalesce", ["get", "name_en"], ""], bannedLiteral],
+    startsWithBanned("name:en"),
+    startsWithBanned("name:latin"),
+    startsWithBanned("name"),
+  ];
+
+  return ["case", isBanned, "", expr];
+}
+
+// Rewrite `text-field` on every symbol layer of a *live* map.
 function applyBasemapLabels(map: MLMap, lang: Lang) {
   try {
+    const labelExpr = buildLabelExpr(lang);
     const style = map.getStyle();
-    // Primary localized label (with sensible fallbacks).
-    const basePrimary: any = lang === "ka"
-      ? ["coalesce", ["get", "name:ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
-      : lang === "ru"
-      ? ["coalesce", ["get", "name:ru"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
-      : ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]];
-
-    // Manual overrides for ru/en (keep ka as-is). Matched by Georgian name.
-    const overrideRu = lang === "ru"
-      ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Сухум-Кале", basePrimary]
-      : null;
-    const overrideEn = lang === "en"
-      ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Sukhum-Kale", basePrimary]
-      : null;
-    const primary: any = overrideRu ?? overrideEn ?? basePrimary;
-
-    // For ru/en: append the Georgian name on a second line when it exists
-    // and differs from the primary label. For ka: show only the Georgian name.
-    const expr: any =
-      lang === "ka"
-        ? primary
-        : [
-            "case",
-            [
-              "all",
-              ["has", "name:ka"],
-              ["!=", ["get", "name:ka"], primary],
-            ],
-            [
-              "format",
-              primary,
-              {},
-              "\n",
-              {},
-              ["get", "name:ka"],
-              { "font-scale": 0.8 },
-            ],
-            primary,
-          ];
-
-    // Basemap labels we never want to render: Abkhazia and South Ossetia
-    // (region/country labels on the OpenMapTiles vector source). We match
-    // by exact name across every localized field the tiles expose, then
-    // rewrite the label to an empty string so MapLibre skips symbol layout
-    // for that feature entirely.
-    const BANNED_NAMES = [
-      "Abkhazia",
-      "Republic of Abkhazia",
-      "Autonomous Republic of Abkhazia",
-      "Abkhaz Autonomous Soviet Socialist Republic",
-      "Аҧсны",
-      "Аҧсны Аҳәынҭқарра",
-      "Аҧсуа",
-      "Абхазия",
-      "Республика Абхазия",
-      "აფხაზეთი",
-      "South Ossetia",
-      "Republic of South Ossetia",
-      "South Ossetia – the State of Alania",
-      "South Ossetia-Alania",
-      "Южная Осетия",
-      "Республика Южная Осетия",
-      "Хуссар Ирыстон",
-      "სამხრეთი ოსეთი",
-      "სამხრეთ ოსეთი",
-    ];
-
-    // Case-insensitive "starts with Abkhazia / South Ossetia" catches all
-    // remaining transliterations we haven't enumerated above.
-    const startsWithBanned = (field: string): any => {
-      const val: any = ["downcase", ["coalesce", ["get", field], ""]];
-      return [
-        "any",
-        ["==", ["slice", val, 0, 8], "abkhazia"],
-        ["==", ["slice", val, 0, 13], "south ossetia"],
-      ];
-    };
-
-    const bannedLiteral: any = ["literal", BANNED_NAMES];
-    const isBanned: any = [
-      "any",
-      ["in", ["coalesce", ["get", "name"], ""], bannedLiteral],
-      ["in", ["coalesce", ["get", "name:en"], ""], bannedLiteral],
-      ["in", ["coalesce", ["get", "name:ru"], ""], bannedLiteral],
-      ["in", ["coalesce", ["get", "name:ka"], ""], bannedLiteral],
-      ["in", ["coalesce", ["get", "name:latin"], ""], bannedLiteral],
-      ["in", ["coalesce", ["get", "name_en"], ""], bannedLiteral],
-      startsWithBanned("name:en"),
-      startsWithBanned("name:latin"),
-      startsWithBanned("name"),
-    ];
-
-    const labelExpr: any = ["case", isBanned, "", expr];
-
     for (const layer of style.layers || []) {
       if (layer.type !== "symbol") continue;
       const layout: any = (layer as any).layout;
       if (!layout || !("text-field" in layout)) continue;
       map.setLayoutProperty(layer.id, "text-field", labelExpr);
     }
-
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn("[maplibre] label localization failed", e);
   }
 }
+
+// Prefetch the Stadia style JSON, rewrite every symbol layer's text-field
+// with our banned-label expression, and hand the *patched* JSON to MapLibre
+// as its initial style. This guarantees that the first paint already omits
+// Abkhazia / South Ossetia labels — no post-load rewrite, no flash.
+async function loadPatchedStyle(
+  styleRef: string | any,
+  lang: Lang,
+): Promise<any> {
+  const json = typeof styleRef === "string"
+    ? await fetch(styleRef).then((r) => r.json())
+    : JSON.parse(JSON.stringify(styleRef));
+  const labelExpr = buildLabelExpr(lang);
+  for (const layer of json.layers || []) {
+    if (layer.type !== "symbol") continue;
+    const layout = layer.layout;
+    if (!layout || !("text-field" in layout)) continue;
+    layout["text-field"] = labelExpr;
+  }
+  return json;
+}
+
 
 
 interface Stats {
