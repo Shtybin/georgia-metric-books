@@ -176,20 +176,25 @@ function applyBasemapLabels(map: MLMap, lang: Lang) {
           ];
 
     // Basemap labels we never want to render: Abkhazia and South Ossetia
-    // (region/country labels on the OpenMapTiles vector source). Match by
-    // exact name in every localized field the tiles expose.
+    // (region/country labels on the OpenMapTiles vector source). We match
+    // by exact name across every localized field the tiles expose, then
+    // rewrite the label to an empty string so MapLibre skips symbol layout
+    // for that feature entirely.
     const BANNED_NAMES = [
       "Abkhazia",
       "Republic of Abkhazia",
       "Autonomous Republic of Abkhazia",
+      "Abkhaz Autonomous Soviet Socialist Republic",
       "Аҧсны",
       "Аҧсны Аҳәынҭқарра",
+      "Аҧсуа",
       "Абхазия",
       "Республика Абхазия",
       "აფხაზეთი",
       "South Ossetia",
       "Republic of South Ossetia",
       "South Ossetia – the State of Alania",
+      "South Ossetia-Alania",
       "Южная Осетия",
       "Республика Южная Осетия",
       "Хуссар Ирыстон",
@@ -197,38 +202,40 @@ function applyBasemapLabels(map: MLMap, lang: Lang) {
       "სამხრეთ ოსეთი",
     ];
 
-    const bannedLiteral: any = ["literal", BANNED_NAMES];
-    const excludeBanned: any = [
-      "!",
-      [
+    // Case-insensitive "starts with Abkhazia / South Ossetia" catches all
+    // remaining transliterations we haven't enumerated above.
+    const startsWithBanned = (field: string): any => {
+      const val: any = ["downcase", ["coalesce", ["get", field], ""]];
+      return [
         "any",
-        ["in", ["get", "name"], bannedLiteral],
-        ["in", ["get", "name:en"], bannedLiteral],
-        ["in", ["get", "name:ru"], bannedLiteral],
-        ["in", ["get", "name:ka"], bannedLiteral],
-        ["in", ["get", "name:latin"], bannedLiteral],
-        ["in", ["get", "name_en"], bannedLiteral],
-      ],
+        ["==", ["slice", val, 0, 8], "abkhazia"],
+        ["==", ["slice", val, 0, 13], "south ossetia"],
+      ];
+    };
+
+    const bannedLiteral: any = ["literal", BANNED_NAMES];
+    const isBanned: any = [
+      "any",
+      ["in", ["coalesce", ["get", "name"], ""], bannedLiteral],
+      ["in", ["coalesce", ["get", "name:en"], ""], bannedLiteral],
+      ["in", ["coalesce", ["get", "name:ru"], ""], bannedLiteral],
+      ["in", ["coalesce", ["get", "name:ka"], ""], bannedLiteral],
+      ["in", ["coalesce", ["get", "name:latin"], ""], bannedLiteral],
+      ["in", ["coalesce", ["get", "name_en"], ""], bannedLiteral],
+      startsWithBanned("name:en"),
+      startsWithBanned("name:latin"),
+      startsWithBanned("name"),
     ];
+
+    const labelExpr: any = ["case", isBanned, "", expr];
 
     for (const layer of style.layers || []) {
       if (layer.type !== "symbol") continue;
       const layout: any = (layer as any).layout;
       if (!layout || !("text-field" in layout)) continue;
-      map.setLayoutProperty(layer.id, "text-field", expr);
-      // Compose with the layer's existing filter so we don't wipe out
-      // Stadia's own class/subclass rules.
-      const existing = (layer as any).filter;
-      const combined: any = existing
-        ? ["all", existing, excludeBanned]
-        : excludeBanned;
-      try {
-        map.setFilter(layer.id, combined);
-      } catch {
-        // Some layers use legacy filter shapes that reject expression-style
-        // combinators — skip those quietly.
-      }
+      map.setLayoutProperty(layer.id, "text-field", labelExpr);
     }
+
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn("[maplibre] label localization failed", e);
