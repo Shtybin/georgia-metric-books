@@ -845,7 +845,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     let cancelled = false;
     let ro: ResizeObserver | null = null;
 
-    const init = (styleForMap: any) => {
+    const init = (styleForMap: any, prePatched: boolean) => {
       if (cancelled || !containerRef.current) return;
 
       const map = new maplibregl.Map({
