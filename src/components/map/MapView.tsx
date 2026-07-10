@@ -1938,7 +1938,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               />
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="truncate font-serif text-lg font-semibold leading-tight">
+              <h3 id={cardTitleId} className="truncate font-serif text-lg font-semibold leading-tight">
                 {sel.settlement[lang] || sel.settlement.en || "—"}
               </h3>
               {!cardCollapsed && (histName || extraAliases.length > 0 || mismatches.length > 0) && (
