@@ -1648,6 +1648,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             onClick={() => {
               const map = mapRef.current;
               if (!map) return;
+              trackEvent("map_preset_click", { preset: "tbilisi" }, lang);
               map.fitBounds(
                 [[TBILISI_BBOX[0], TBILISI_BBOX[1]], [TBILISI_BBOX[2], TBILISI_BBOX[3]]],
                 { padding: 60, duration: 1100, essential: true },
@@ -1664,6 +1665,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             <Link
               to="/guide"
               search={{ lang }}
+              onClick={() => trackEvent("map_guide_click", {}, lang)}
               title={T.guideButton}
               aria-label={T.guideButton}
               className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
