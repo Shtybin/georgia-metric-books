@@ -48,7 +48,7 @@ function MapPage() {
   const navigate = useNavigate({ from: "/map" });
 
   return (
-    <main className="h-screen w-screen overflow-hidden bg-background">
+    <main className="h-dvh w-screen overflow-hidden bg-background">
       <MapView
         lang={lang as Lang}
         onLangChange={(l) => navigate({ search: (p: any) => ({ ...p, lang: l }) })}
