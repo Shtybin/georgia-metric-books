@@ -80,6 +80,42 @@ export function FeatureCardsEditor() {
     setOverrides((data as unknown as FeatureOverride[]) || []);
   }
 
+  // Merge a possibly-partial override.data onto a full-shaped fallback so
+  // downstream renderers can safely read d.settlement.ru etc. Older overrides
+  // may miss keys (settlement/uezd/region/church/yearsRaw) and crash RowCard.
+  function normalizeData(
+    partial: FeatureData | null | undefined,
+    fallback: FeatureData,
+  ): FeatureData {
+    if (!partial) return fallback;
+    const ml = (a: any, b: any) => ({
+      ru: a?.ru ?? b?.ru ?? "",
+      en: a?.en ?? b?.en ?? "",
+      ka: a?.ka ?? b?.ka ?? "",
+    });
+    return {
+      ...fallback,
+      ...partial,
+      settlement: ml(partial.settlement, fallback.settlement),
+      church: ml(partial.church, fallback.church),
+      region: ml(partial.region, fallback.region),
+      uezd: ml(partial.uezd, fallback.uezd),
+      yearsRaw: {
+        ru: partial.yearsRaw?.ru ?? fallback.yearsRaw?.ru ?? "",
+        en: partial.yearsRaw?.en ?? fallback.yearsRaw?.en ?? "",
+        ka: partial.yearsRaw?.ka ?? fallback.yearsRaw?.ka ?? "",
+      },
+      historicalName: ml(partial.historicalName, fallback.historicalName),
+      aliases: ml(partial.aliases, fallback.aliases),
+      discrepancyNote: ml(partial.discrepancyNote, fallback.discrepancyNote),
+      missingYearsRaw: {
+        ru: partial.missingYearsRaw?.ru ?? fallback.missingYearsRaw?.ru ?? "",
+        en: partial.missingYearsRaw?.en ?? fallback.missingYearsRaw?.en ?? "",
+        ka: partial.missingYearsRaw?.ka ?? fallback.missingYearsRaw?.ka ?? "",
+      },
+    };
+  }
+
   // Compute effective rows
   const rows: EffectiveRow[] = useMemo(() => {
     if (!base) return [];
@@ -96,11 +132,12 @@ export function FeatureCardsEditor() {
       const fid = f.id as number;
       const del = deleteById.get(fid);
       const ed = editById.get(fid);
+      const baseData = featureToData(f);
       if (del) {
         out.push({
           feature_id: fid,
           key: `f-${fid}`,
-          data: ed?.data ?? featureToData(f),
+          data: normalizeData(ed?.data, baseData),
           override: del,
           source: "deleted",
         });
@@ -108,7 +145,7 @@ export function FeatureCardsEditor() {
         out.push({
           feature_id: fid,
           key: `f-${fid}`,
-          data: ed.data ?? featureToData(f),
+          data: normalizeData(ed.data, baseData),
           override: ed,
           source: "edited",
         });
@@ -116,7 +153,7 @@ export function FeatureCardsEditor() {
         out.push({
           feature_id: fid,
           key: `f-${fid}`,
-          data: featureToData(f),
+          data: baseData,
           override: null,
           source: "original",
         });
@@ -127,13 +164,15 @@ export function FeatureCardsEditor() {
       out.push({
         feature_id: null,
         key: `a-${o.id}`,
-        data: o.data,
+        data: normalizeData(o.data, emptyFeatureData()),
         override: o,
         source: "added",
       });
     }
     return out;
   }, [base, overrides]);
+
+
 
   const filtered = useMemo(() => {
     const q = search.trim().toLocaleLowerCase();
