@@ -1409,6 +1409,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
       )}
 
+      {!embed && <MapOnboarding lang={lang} />}
       {/* Floating CTA — appears when zoomed into Tbilisi */}
       {showTbilisiCta && (
         <Link
