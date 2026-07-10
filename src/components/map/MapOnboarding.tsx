@@ -106,13 +106,21 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={close}
+              onClick={() => close("skip")}
               className="rounded-md px-2.5 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
             >
               {c.skip}
             </button>
             <button
-              onClick={() => (isLast ? close() : setStep((s) => s + 1))}
+              onClick={() => {
+                if (isLast) {
+                  close("done");
+                } else {
+                  const next = step + 1;
+                  setStep(next);
+                  trackEvent("map_onboarding_step", { step: next }, lang);
+                }
+              }}
               className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
             >
               {isLast ? c.done : c.next}
