@@ -37,6 +37,7 @@ import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
 import { DonateButton } from "@/components/DonateButton";
 import { Link } from "@tanstack/react-router";
 import { Landmark } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -317,6 +318,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     setCardCollapsed(false);
     setCardOffset({ x: 0, y: 0 });
   }, [selected?.id]);
+  // Pageview on mount (once per mount, tagged by embed/lang)
+  useEffect(() => {
+    trackEvent("map_pageview", { embed: !!embed }, lang);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [neighborIds, setNeighborIds] = useState<Set<number>>(new Set());
   const [highlightMode, setHighlightMode] = useState<"radius" | "area" | null>(null);
   const [enabledBuckets, setEnabledBuckets] = useState<Set<string>>(
@@ -1198,6 +1204,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   function selectFeature(f: Feature) {
     setSelected(f);
+    try {
+      trackEvent(
+        "map_point_click",
+        { id: f.id ?? f.properties?.id, name: f.properties?.settlement?.en ?? f.properties?.name?.en },
+        lang,
+      );
+    } catch { /* noop */ }
     // Если активен фильтр по региону/уезду — сохраняем подсветку района,
     // чтобы выбор отдельной точки не сбрасывал контекст. Иначе сбрасываем
     // прежний радиус/районную подсветку, как и раньше.
@@ -1464,6 +1477,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
+                  trackEvent("map_search_submit", { q: query.slice(0, 80) }, lang);
                   if (searchResults[0]) {
                     const f = searchResults[0].feature;
                     selectFeature(f);
@@ -1640,6 +1654,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             onClick={() => {
               const map = mapRef.current;
               if (!map) return;
+              trackEvent("map_preset_click", { preset: "tbilisi" }, lang);
               map.fitBounds(
                 [[TBILISI_BBOX[0], TBILISI_BBOX[1]], [TBILISI_BBOX[2], TBILISI_BBOX[3]]],
                 { padding: 60, duration: 1100, essential: true },
@@ -1656,6 +1671,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             <Link
               to="/guide"
               search={{ lang }}
+              onClick={() => trackEvent("map_guide_click", {}, lang)}
               title={T.guideButton}
               aria-label={T.guideButton}
               className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"

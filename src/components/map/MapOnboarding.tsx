@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import type { Lang } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 const STORAGE_KEY = "map_onboarding_v1";
 
@@ -48,24 +49,28 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
     try {
       if (typeof window === "undefined") return;
       if (!window.localStorage.getItem(STORAGE_KEY)) {
-        const id = window.setTimeout(() => setVisible(true), 600);
+        const id = window.setTimeout(() => {
+          setVisible(true);
+          trackEvent("map_onboarding_start", {}, lang);
+        }, 600);
         return () => window.clearTimeout(id);
       }
     } catch {
       /* ignore */
     }
-  }, []);
+  }, [lang]);
 
   if (!visible) return null;
   const c = COPY[lang] ?? COPY.ru;
   const isLast = step >= c.steps.length - 1;
 
-  const close = () => {
+  const close = (reason: "skip" | "done" = "skip") => {
     try {
       window.localStorage.setItem(STORAGE_KEY, "1");
     } catch {
       /* ignore */
     }
+    trackEvent(reason === "done" ? "map_onboarding_done" : "map_onboarding_skip", { step }, lang);
     setVisible(false);
   };
 
@@ -79,7 +84,7 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
         <div className="mb-3 flex items-start justify-between gap-2">
           <h2 className="text-sm font-semibold text-foreground">{c.title}</h2>
           <button
-            onClick={close}
+            onClick={() => close("skip")}
             aria-label={c.skip}
             className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
           >
@@ -101,13 +106,21 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={close}
+              onClick={() => close("skip")}
               className="rounded-md px-2.5 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
             >
               {c.skip}
             </button>
             <button
-              onClick={() => (isLast ? close() : setStep((s) => s + 1))}
+              onClick={() => {
+                if (isLast) {
+                  close("done");
+                } else {
+                  const next = step + 1;
+                  setStep(next);
+                  trackEvent("map_onboarding_step", { step: next }, lang);
+                }
+              }}
               className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
             >
               {isLast ? c.done : c.next}
