@@ -1472,6 +1472,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
+                  trackEvent("map_search_submit", { q: query.slice(0, 80) }, lang);
                   if (searchResults[0]) {
                     const f = searchResults[0].feature;
                     selectFeature(f);
