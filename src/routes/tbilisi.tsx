@@ -35,7 +35,13 @@ export const Route = createFileRoute("/tbilisi")({
         { name: "twitter:title", content: T.metaTitle },
         { name: "twitter:description", content: T.metaDesc },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hrefLang: "ru", href: "https://metrics.datatells.info/tbilisi?lang=ru" },
+        { rel: "alternate", hrefLang: "en", href: "https://metrics.datatells.info/tbilisi?lang=en" },
+        { rel: "alternate", hrefLang: "ka", href: "https://metrics.datatells.info/tbilisi?lang=ka" },
+        { rel: "alternate", hrefLang: "x-default", href: "https://metrics.datatells.info/tbilisi" },
+      ],
     };
   },
   component: TbilisiPage,
