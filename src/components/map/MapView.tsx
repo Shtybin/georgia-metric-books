@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
 import { MapOnboarding } from "./MapOnboarding";
+import { SimilarParishes } from "./SimilarParishes";
 import { ReportProblemButton } from "./ReportProblemButton";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
