@@ -151,6 +151,39 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_events: {
+        Row: {
+          created_at: string
+          event: string
+          id: string
+          lang: string | null
+          path: string | null
+          payload: Json
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          id?: string
+          lang?: string | null
+          path?: string | null
+          payload?: Json
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          id?: string
+          lang?: string | null
+          path?: string | null
+          payload?: Json
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       coord_suggestions: {
         Row: {
           church_en: string
