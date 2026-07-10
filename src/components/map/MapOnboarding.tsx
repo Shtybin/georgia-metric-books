@@ -84,7 +84,7 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
         <div className="mb-3 flex items-start justify-between gap-2">
           <h2 className="text-sm font-semibold text-foreground">{c.title}</h2>
           <button
-            onClick={close}
+            onClick={() => close("skip")}
             aria-label={c.skip}
             className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
           >
