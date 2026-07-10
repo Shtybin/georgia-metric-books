@@ -51,7 +51,7 @@ function TbilisiPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/tbilisi" });
   return (
-    <main className="h-screen w-screen overflow-hidden bg-background">
+    <main className="h-dvh w-screen overflow-hidden bg-background">
       <TbilisiMap
         lang={search.lang as Lang}
         onLangChange={(l) => navigate({ search: (p: any) => ({ ...p, lang: l }) })}

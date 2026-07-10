@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import type { Lang } from "@/lib/i18n";
 import { trackEvent } from "@/lib/analytics";
@@ -44,6 +44,9 @@ const COPY: Record<Lang, { title: string; steps: string[]; skip: string; next: s
 export function MapOnboarding({ lang }: { lang: Lang }) {
   const [step, setStep] = useState(0);
   const [visible, setVisible] = useState(false);
+  const primaryRef = useRef<HTMLButtonElement>(null);
+  const titleId = "map-onboarding-title";
+  const descId = "map-onboarding-desc";
 
   useEffect(() => {
     try {
@@ -59,6 +62,24 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
       /* ignore */
     }
   }, [lang]);
+
+  // Autofocus the primary action & handle Escape to skip.
+  useEffect(() => {
+    if (!visible) return;
+    const t = window.setTimeout(() => primaryRef.current?.focus(), 30);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close("skip");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("keydown", onKey);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, step]);
 
   if (!visible) return null;
   const c = COPY[lang] ?? COPY.ru;
@@ -79,21 +100,23 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
       <div
         className="pointer-events-auto w-full max-w-sm rounded-2xl border border-border bg-card/98 p-5 shadow-2xl backdrop-blur"
         role="dialog"
-        aria-label={c.title}
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descId}
       >
         <div className="mb-3 flex items-start justify-between gap-2">
-          <h2 className="text-sm font-semibold text-foreground">{c.title}</h2>
+          <h2 id={titleId} className="text-sm font-semibold text-foreground">{c.title}</h2>
           <button
             onClick={() => close("skip")}
             aria-label={c.skip}
-            className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
+            className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
-        <p className="text-sm leading-relaxed text-foreground/90">{c.steps[step]}</p>
+        <p id={descId} className="text-sm leading-relaxed text-foreground/90">{c.steps[step]}</p>
         <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5" aria-hidden="true">
             {c.steps.map((_, i) => (
               <span
                 key={i}
@@ -107,11 +130,12 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => close("skip")}
-              className="rounded-md px-2.5 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
+              className="rounded-md px-2.5 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {c.skip}
             </button>
             <button
+              ref={primaryRef}
               onClick={() => {
                 if (isLast) {
                   close("done");
@@ -121,7 +145,7 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
                   trackEvent("map_onboarding_step", { step: next }, lang);
                 }
               }}
-              className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
+              className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {isLast ? c.done : c.next}
             </button>

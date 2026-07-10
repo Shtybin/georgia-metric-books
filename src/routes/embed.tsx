@@ -27,7 +27,7 @@ function EmbedPage() {
   const navigate = useNavigate({ from: "/embed" });
 
   return (
-    <main className="h-screen w-screen overflow-hidden bg-background">
+    <main className="h-dvh w-screen overflow-hidden bg-background">
       <MapView
         embed
         lang={lang as Lang}
