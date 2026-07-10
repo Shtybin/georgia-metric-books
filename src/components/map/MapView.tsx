@@ -1208,6 +1208,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }
 
   function selectFeature(f: Feature) {
+    // Capture keyboard/UI trigger to restore focus on close.
+    try {
+      const ae = typeof document !== "undefined" ? (document.activeElement as HTMLElement | null) : null;
+      if (ae && ae !== document.body && !cardRef.current?.contains(ae)) {
+        lastTriggerRef.current = ae;
+      }
+    } catch { /* noop */ }
     setSelected(f);
     try {
       trackEvent(
