@@ -37,4 +37,643 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/abasha</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/abasha?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/abasha?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/abasha?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/abasha"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/adigeni</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/adigeni?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/adigeni?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/adigeni?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/adigeni"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/akhalkalaki</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/akhalkalaki?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/akhalkalaki?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/akhalkalaki?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/akhalkalaki"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/akhaltsikhe</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/akhaltsikhe?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/akhaltsikhe?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/akhaltsikhe?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/akhaltsikhe"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/akhaltsikhe-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/akhaltsikhe-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/akhaltsikhe-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/akhaltsikhe-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/akhaltsikhe-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/akhmeta</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/akhmeta?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/akhmeta?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/akhmeta?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/akhmeta"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/ambrolauri</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/ambrolauri?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/ambrolauri?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/ambrolauri?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/ambrolauri"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/aspindza</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/aspindza?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/aspindza?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/aspindza?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/aspindza"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/baghdati</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/baghdati?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/baghdati?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/baghdati?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/baghdati"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/bolnisi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/bolnisi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/bolnisi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/bolnisi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/bolnisi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/borjomi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/borjomi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/borjomi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/borjomi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/borjomi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/chiatura</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/chiatura?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/chiatura?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/chiatura?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/chiatura"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/chkhorotsqu</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/chkhorotsqu?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/chkhorotsqu?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/chkhorotsqu?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/chkhorotsqu"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/chokhatauri</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/chokhatauri?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/chokhatauri?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/chokhatauri?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/chokhatauri"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/dedoplistskaro</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/dedoplistskaro?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/dedoplistskaro?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/dedoplistskaro?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/dedoplistskaro"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/dmanisi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/dmanisi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/dmanisi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/dmanisi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/dmanisi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/dusheti</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/dusheti?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/dusheti?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/dusheti?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/dusheti"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/dusheti-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/dusheti-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/dusheti-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/dusheti-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/dusheti-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/gardabani</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/gardabani?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/gardabani?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/gardabani?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/gardabani"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/garetubani</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/garetubani?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/garetubani?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/garetubani?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/garetubani"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/gori</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/gori?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/gori?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/gori?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/gori"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/gori-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/gori-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/gori-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/gori-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/gori-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/gurjaani</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/gurjaani?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/gurjaani?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/gurjaani?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/gurjaani"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/imereti-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/imereti-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/imereti-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/imereti-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/imereti-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/kareli</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/kareli?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/kareli?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/kareli?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/kareli"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/kaspi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/kaspi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/kaspi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/kaspi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/kaspi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/kharagauli</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/kharagauli?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/kharagauli?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/kharagauli?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/kharagauli"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/khashuri</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/khashuri?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/khashuri?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/khashuri?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/khashuri"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/khobi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/khobi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/khobi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/khobi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/khobi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/khoni</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/khoni?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/khoni?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/khoni?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/khoni"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/kutaisi-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/kutaisi-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/kutaisi-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/kutaisi-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/kutaisi-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/kvareli</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/kvareli?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/kvareli?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/kvareli?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/kvareli"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/lagodekhi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/lagodekhi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/lagodekhi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/lagodekhi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/lagodekhi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/lanchkhuti</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/lanchkhuti?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/lanchkhuti?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/lanchkhuti?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/lanchkhuti"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/lechkhumi-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/lechkhumi-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/lechkhumi-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/lechkhumi-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/lechkhumi-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/lentekhi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/lentekhi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/lentekhi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/lentekhi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/lentekhi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/marneuli</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/marneuli?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/marneuli?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/marneuli?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/marneuli"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/martvili</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/martvili?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/martvili?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/martvili?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/martvili"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/mestia</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/mestia?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/mestia?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/mestia?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/mestia"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/mtskheta</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/mtskheta?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/mtskheta?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/mtskheta?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/mtskheta"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/ninotsminda</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/ninotsminda?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/ninotsminda?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/ninotsminda?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/ninotsminda"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/oni</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/oni?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/oni?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/oni?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/oni"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/ozurgeti</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/ozurgeti?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/ozurgeti?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/ozurgeti?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/ozurgeti"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/ozurgeti-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/ozurgeti-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/ozurgeti-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/ozurgeti-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/ozurgeti-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/racha-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/racha-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/racha-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/racha-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/racha-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/sachkhere</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/sachkhere?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/sachkhere?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/sachkhere?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/sachkhere"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/sagarejo</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/sagarejo?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/sagarejo?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/sagarejo?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/sagarejo"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/samtredia</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/samtredia?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/samtredia?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/samtredia?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/samtredia"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/senaki</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/senaki?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/senaki?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/senaki?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/senaki"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/senaki-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/senaki-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/senaki-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/senaki-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/senaki-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/shorapani-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/shorapani-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/shorapani-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/shorapani-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/shorapani-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/sighnaghi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/sighnaghi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/sighnaghi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/sighnaghi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/sighnaghi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/sighnaghi-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/sighnaghi-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/sighnaghi-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/sighnaghi-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/sighnaghi-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/stepantsminda</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/stepantsminda?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/stepantsminda?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/stepantsminda?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/stepantsminda"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/telavi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/telavi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/telavi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/telavi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/telavi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/telavi-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/telavi-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/telavi-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/telavi-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/telavi-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/terjola</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/terjola?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/terjola?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/terjola?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/terjola"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tetritskaro</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tetritskaro?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tetritskaro?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tetritskaro?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tetritskaro"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tianeti</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tianeti?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tianeti?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tianeti?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tianeti"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tiflis-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tiflis-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tiflis-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tiflis-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tiflis-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tkibuli</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tkibuli?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tkibuli?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tkibuli?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tkibuli"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tsageri</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tsageri?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tsageri?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tsageri?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tsageri"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tsalenjikha</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tsalenjikha?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tsalenjikha?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tsalenjikha?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tsalenjikha"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tsalka</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tsalka?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tsalka?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tsalka?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tsalka"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/tskaltubo</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/tskaltubo?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/tskaltubo?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/tskaltubo?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/tskaltubo"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/vani</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/vani?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/vani?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/vani?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/vani"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/vani-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/vani-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/vani-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/vani-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/vani-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/zaqatala-okrug</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/zaqatala-okrug?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/zaqatala-okrug?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/zaqatala-okrug?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/zaqatala-okrug"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/zestafoni</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/zestafoni?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/zestafoni?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/zestafoni?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/zestafoni"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/zugdidi</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/zugdidi?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/zugdidi?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/zugdidi?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/zugdidi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://metrics.datatells.info/region/zugdidi-region</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://metrics.datatells.info/region/zugdidi-region?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://metrics.datatells.info/region/zugdidi-region?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://metrics.datatells.info/region/zugdidi-region?lang=ka"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://metrics.datatells.info/region/zugdidi-region"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
