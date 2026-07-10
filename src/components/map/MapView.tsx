@@ -1974,16 +1974,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <button
                 type="button"
                 onClick={() => setCardCollapsed((v) => !v)}
-                className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+                className="rounded-md p-1 text-muted-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={cardCollapsed ? T.expandCard : T.collapseCard}
+                aria-expanded={!cardCollapsed}
                 title={cardCollapsed ? T.expandCard : T.collapseCard}
               >
                 {cardCollapsed ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </button>
               <button
+                ref={closeBtnRef}
                 type="button"
                 onClick={clearSelection}
-                className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+                className="rounded-md p-1 text-muted-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={T.clear}
               >
                 <X className="h-4 w-4" />
