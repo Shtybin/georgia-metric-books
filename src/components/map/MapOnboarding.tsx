@@ -64,12 +64,13 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
   const c = COPY[lang] ?? COPY.ru;
   const isLast = step >= c.steps.length - 1;
 
-  const close = () => {
+  const close = (reason: "skip" | "done" = "skip") => {
     try {
       window.localStorage.setItem(STORAGE_KEY, "1");
     } catch {
       /* ignore */
     }
+    trackEvent(reason === "done" ? "map_onboarding_done" : "map_onboarding_skip", { step }, lang);
     setVisible(false);
   };
 
