@@ -37,6 +37,7 @@ import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
 import { DonateButton } from "@/components/DonateButton";
 import { Link } from "@tanstack/react-router";
 import { Landmark } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 type Feature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
