@@ -31,7 +31,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
-import { isInsideTbilisi, tT } from "@/lib/i18n-tbilisi";
+import { isInsideTbilisi, tT, TBILISI_BBOX } from "@/lib/i18n-tbilisi";
 import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
 import { DonateButton } from "@/components/DonateButton";
 import { Link } from "@tanstack/react-router";
