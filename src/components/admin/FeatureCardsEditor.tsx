@@ -391,22 +391,23 @@ function RowCard({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="font-medium">
-            {d.settlement.ru || d.settlement.en || d.settlement.ka || "—"}
+            {d.settlement?.ru || d.settlement?.en || d.settlement?.ka || "—"}
             <span className="ml-2 text-xs text-muted-foreground">
-              {[d.uezd.ru || d.uezd.en, d.region.ru || d.region.en].filter(Boolean).join(" · ")}
+              {[d.uezd?.ru || d.uezd?.en, d.region?.ru || d.region?.en].filter(Boolean).join(" · ")}
             </span>
             <span className="ml-2">{statusBadge}</span>
           </div>
-          {(d.church.ru || d.church.en) && (
+          {(d.church?.ru || d.church?.en) && (
             <div className="text-xs italic text-muted-foreground">
-              {(d.church.ru || d.church.en).replace(/\|/g, " · ")}
+              {(d.church?.ru || d.church?.en || "").replace(/\|/g, " · ")}
             </div>
           )}
           <div className="mt-1 flex flex-wrap gap-x-3 text-xs tabular-nums text-muted-foreground">
             <span>id {row.feature_id ?? "новый"}</span>
             <span>lat {typeof d.lat === "number" ? d.lat.toFixed(4) : "—"}, lon {typeof d.lon === "number" ? d.lon.toFixed(4) : "—"}</span>
-            {d.yearsRaw.ru && <span>{d.yearsRaw.ru}</span>}
+            {d.yearsRaw?.ru && <span>{d.yearsRaw.ru}</span>}
           </div>
+
         </div>
         <div className="flex shrink-0 flex-wrap gap-1">
           {row.override && (
