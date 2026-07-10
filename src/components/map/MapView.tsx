@@ -314,6 +314,10 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [cardOffset, setCardOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [mobileLegendOpen, setMobileLegendOpen] = useState(false);
   const dragStateRef = useRef<{ startX: number; startY: number; baseX: number; baseY: number; pointerId: number } | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
+  const cardTitleId = useId();
   // Reset collapse/position when a new feature is selected
   useEffect(() => {
     setCardCollapsed(false);
