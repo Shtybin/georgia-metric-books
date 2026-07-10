@@ -1286,6 +1286,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
       setNeighborIds(new Set());
       setHighlightMode(null);
     }
+    // Restore focus to the element that opened the card (keyboard users).
+    const prev = lastTriggerRef.current;
+    lastTriggerRef.current = null;
+    if (prev && typeof prev.focus === "function" && document.contains(prev)) {
+      try { prev.focus(); } catch { /* noop */ }
+    }
   }
 
   function showRadius() {
