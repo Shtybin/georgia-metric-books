@@ -318,6 +318,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     setCardCollapsed(false);
     setCardOffset({ x: 0, y: 0 });
   }, [selected?.id]);
+  // Pageview on mount (once per mount, tagged by embed/lang)
+  useEffect(() => {
+    trackEvent("map_pageview", { embed: !!embed }, lang);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [neighborIds, setNeighborIds] = useState<Set<number>>(new Set());
   const [highlightMode, setHighlightMode] = useState<"radius" | "area" | null>(null);
   const [enabledBuckets, setEnabledBuckets] = useState<Set<string>>(
