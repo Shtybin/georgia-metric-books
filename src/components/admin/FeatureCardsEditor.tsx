@@ -191,11 +191,12 @@ export function FeatureCardsEditor() {
         if (!q) return true;
         const d = r.data;
         const haystack = [
-          d.settlement.ru, d.settlement.en, d.settlement.ka,
-          d.region.ru, d.region.en, d.region.ka,
-          d.uezd.ru, d.uezd.en, d.uezd.ka,
-          d.church.ru, d.church.en, d.church.ka,
-        ].join(" ").toLocaleLowerCase();
+          d.settlement?.ru, d.settlement?.en, d.settlement?.ka,
+          d.region?.ru, d.region?.en, d.region?.ka,
+          d.uezd?.ru, d.uezd?.en, d.uezd?.ka,
+          d.church?.ru, d.church?.en, d.church?.ka,
+        ].filter(Boolean).join(" ").toLocaleLowerCase();
+
         return haystack.includes(q);
       })
       .slice(0, 200);
