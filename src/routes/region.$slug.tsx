@@ -22,7 +22,7 @@ type Region = {
   count: number;
 };
 
-const REGIONS = (regionsData as { regions: Record<string, Region> }).regions;
+const REGIONS = (regionsData as unknown as { regions: Record<string, Region> }).regions;
 
 const searchSchema = z.object({
   lang: fallback(z.enum(["ru", "en", "ka"]), "ru").default("ru"),
