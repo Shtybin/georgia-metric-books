@@ -17,6 +17,7 @@ import { Route as EmbedRouteImport } from './routes/embed'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegionSlugRouteImport } from './routes/region.$slug'
 
 const TbilisiRoute = TbilisiRouteImport.update({
   id: '/tbilisi',
@@ -58,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegionSlugRoute = RegionSlugRouteImport.update({
+  id: '/region/$slug',
+  path: '/region/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/tbilisi': typeof TbilisiRoute
+  '/region/$slug': typeof RegionSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/tbilisi': typeof TbilisiRoute
+  '/region/$slug': typeof RegionSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/tbilisi': typeof TbilisiRoute
+  '/region/$slug': typeof RegionSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/map'
     | '/tbilisi'
+    | '/region/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/map'
     | '/tbilisi'
+    | '/region/$slug'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/map'
     | '/tbilisi'
+    | '/region/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MapRoute: typeof MapRoute
   TbilisiRoute: typeof TbilisiRoute
+  RegionSlugRoute: typeof RegionSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/region/$slug': {
+      id: '/region/$slug'
+      path: '/region/$slug'
+      fullPath: '/region/$slug'
+      preLoaderRoute: typeof RegionSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MapRoute: MapRoute,
   TbilisiRoute: TbilisiRoute,
+  RegionSlugRoute: RegionSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
