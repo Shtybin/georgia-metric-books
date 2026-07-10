@@ -2249,6 +2249,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               uezdRu={(sel.uezd as { ru?: string; en?: string; ka?: string })?.ru ?? null}
               uezdEn={(sel.uezd as { ru?: string; en?: string; ka?: string })?.en ?? null}
             />
+
+            {baseData?.features && (
+              <SimilarParishes
+                lang={lang}
+                selected={selected}
+                all={baseData.features as Feature[]}
+                onPick={(f) => selectFeature(f)}
+              />
+            )}
           </div>
 
           {/* Sticky footer */}
