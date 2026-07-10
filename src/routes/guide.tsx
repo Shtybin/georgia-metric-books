@@ -15,12 +15,40 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/guide")({
   validateSearch: zodValidator(searchSchema),
-  head: () => ({
-    meta: [
-      { title: "Инструкция к карте — Метрические книги Грузии" },
-      { name: "description", content: "Путеводитель по интерактивной карте метрических книг Грузии 1819–1930." },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = ((match.search as any)?.lang ?? "ru") as "ru" | "en" | "ka";
+    const titles = {
+      ru: "Инструкция к карте — Метрические книги Грузии",
+      en: "Map guide — Metric Books of Georgia",
+      ka: "რუკის ინსტრუქცია — საქართველოს სამრევლო წიგნები",
+    } as const;
+    const descs = {
+      ru: "Путеводитель по интерактивной карте метрических книг Грузии 1819–1930: фильтры, поиск, работа с приходами.",
+      en: "Guide to the interactive map of Georgia's metric books 1819–1930: filters, search, parishes.",
+      ka: "საქართველოს სამრევლო წიგნების ინტერაქტიული რუკის სახელმძღვანელო (1819–1930).",
+    } as const;
+    const url = `https://metrics.datatells.info/guide?lang=${lang}`;
+    return {
+      meta: [
+        { title: titles[lang] },
+        { name: "description", content: descs[lang] },
+        { property: "og:title", content: titles[lang] },
+        { property: "og:description", content: descs[lang] },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: titles[lang] },
+        { name: "twitter:description", content: descs[lang] },
+      ],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hrefLang: "ru", href: "https://metrics.datatells.info/guide?lang=ru" },
+        { rel: "alternate", hrefLang: "en", href: "https://metrics.datatells.info/guide?lang=en" },
+        { rel: "alternate", hrefLang: "ka", href: "https://metrics.datatells.info/guide?lang=ka" },
+        { rel: "alternate", hrefLang: "x-default", href: "https://metrics.datatells.info/guide" },
+      ],
+    };
+  },
   component: GuidePage,
 });
 

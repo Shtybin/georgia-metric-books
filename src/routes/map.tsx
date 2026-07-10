@@ -31,7 +31,13 @@ export const Route = createFileRoute("/map")({
         { name: "twitter:description", content: L.metaDesc },
         { name: "twitter:image", content: image },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hrefLang: "ru", href: "https://metrics.datatells.info/map?lang=ru" },
+        { rel: "alternate", hrefLang: "en", href: "https://metrics.datatells.info/map?lang=en" },
+        { rel: "alternate", hrefLang: "ka", href: "https://metrics.datatells.info/map?lang=ka" },
+        { rel: "alternate", hrefLang: "x-default", href: "https://metrics.datatells.info/map" },
+      ],
     };
   },
   component: MapPage,

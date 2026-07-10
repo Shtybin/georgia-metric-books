@@ -9,6 +9,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
 import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
+import { MapOnboarding } from "./MapOnboarding";
 import { ReportProblemButton } from "./ReportProblemButton";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
@@ -31,7 +32,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { normalizeName, normalizeAdmin, isProbableMatch, similarity } from "@/lib/fuzzyMatch";
 import { ExternalSourcesList } from "@/components/map/ExternalSourcesList";
-import { isInsideTbilisi, tT } from "@/lib/i18n-tbilisi";
+import { isInsideTbilisi, tT, TBILISI_BBOX } from "@/lib/i18n-tbilisi";
 import { MapAuthorBadge, MapHomeButton } from "@/components/AuthorCredit";
 import { DonateButton } from "@/components/DonateButton";
 import { Link } from "@tanstack/react-router";
@@ -1408,6 +1409,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
         </div>
       )}
 
+      {!embed && <MapOnboarding lang={lang} />}
       {/* Floating CTA — appears when zoomed into Tbilisi */}
       {showTbilisiCta && (
         <Link
@@ -1634,6 +1636,35 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
         <div className="pointer-events-auto flex items-center gap-1.5">
           {!embed && <MapHomeButton lang={lang} />}
+          <button
+            onClick={() => {
+              const map = mapRef.current;
+              if (!map) return;
+              map.fitBounds(
+                [[TBILISI_BBOX[0], TBILISI_BBOX[1]], [TBILISI_BBOX[2], TBILISI_BBOX[3]]],
+                { padding: 60, duration: 1100, essential: true },
+              );
+            }}
+            title={T.tbilisiButton}
+            aria-label={T.tbilisiButton}
+            className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+          >
+            <Landmark className="h-3.5 w-3.5 shrink-0" />
+            <span className="hidden lg:inline">{T.tbilisiButton}</span>
+          </button>
+          {!embed && (
+            <Link
+              to="/guide"
+              search={{ lang }}
+              title={T.guideButton}
+              aria-label={T.guideButton}
+              className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 text-xs font-medium text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
+            >
+              <BookOpen className="h-3.5 w-3.5 shrink-0" />
+              <span className="hidden lg:inline">{T.guideButton}</span>
+              <span className="lg:hidden sm:inline hidden">{T.guideButtonShort}</span>
+            </Link>
+          )}
           <button
             onClick={resetView}
             title={T.resetView}
