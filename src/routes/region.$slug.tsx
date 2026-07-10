@@ -232,7 +232,7 @@ function RegionPage() {
       <section className="mx-auto max-w-4xl px-6 pb-12">
         <h2 className="mb-4 text-xl font-semibold">{L.parishes}</h2>
         <ul className="divide-y divide-border/60 rounded-xl border border-border/60 bg-card/40">
-          {region.parishes.map((p) => {
+          {region.parishes.map((p: Parish) => {
             const settlement = pickName(p.settlement, lang as Lang);
             const church = pickName(p.church, lang as Lang);
             const uezd = pickName(p.uezd, lang as Lang);
