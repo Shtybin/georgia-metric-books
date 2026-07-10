@@ -1199,6 +1199,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   function selectFeature(f: Feature) {
     setSelected(f);
+    try {
+      trackEvent(
+        "map_point_click",
+        { id: f.id ?? f.properties?.id, name: f.properties?.settlement?.en ?? f.properties?.name?.en },
+        lang,
+      );
+    } catch { /* noop */ }
     // Если активен фильтр по региону/уезду — сохраняем подсветку района,
     // чтобы выбор отдельной точки не сбрасывал контекст. Иначе сбрасываем
     // прежний радиус/районную подсветку, как и раньше.
