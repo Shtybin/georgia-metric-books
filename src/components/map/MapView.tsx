@@ -2256,7 +2256,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                 lang={lang}
                 selected={selected}
                 all={baseData.features as Feature[]}
-                onPick={(f) => selectFeature(f)}
+                onPick={(f: Feature) => selectFeature(f)}
               />
             )}
           </div>
