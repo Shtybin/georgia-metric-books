@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { UnlocatedPanel, UnlocatedItem } from "./UnlocatedPanel";
 import { MapOnboarding } from "./MapOnboarding";
+import { SimilarParishes } from "./SimilarParishes";
 import { ReportProblemButton } from "./ReportProblemButton";
 import { Lang, t, compactYears } from "@/lib/i18n";
 import { useUserCoords, userRecordToFeature, unlocatedKey } from "@/lib/userCoords";
@@ -2249,6 +2250,15 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               uezdRu={(sel.uezd as { ru?: string; en?: string; ka?: string })?.ru ?? null}
               uezdEn={(sel.uezd as { ru?: string; en?: string; ka?: string })?.en ?? null}
             />
+
+            {baseData?.features && (
+              <SimilarParishes
+                lang={lang}
+                selected={selected}
+                all={baseData.features as Feature[]}
+                onPick={(f: Feature) => selectFeature(f)}
+              />
+            )}
           </div>
 
           {/* Sticky footer */}
