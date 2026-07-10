@@ -323,6 +323,32 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     setCardCollapsed(false);
     setCardOffset({ x: 0, y: 0 });
   }, [selected?.id]);
+  // A11y: ESC closes the card and restores focus; when opened via keyboard,
+  // move focus into the card so it becomes the next tab stop.
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        clearSelection();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    // If focus was on a keyboard-reachable trigger (search result button,
+    // similar-parish button, etc.), move it into the card. Skip when the
+    // click originated on the map canvas (mouse users).
+    const prev = lastTriggerRef.current;
+    const shouldMoveFocus = !!prev && prev.tagName !== "CANVAS";
+    if (shouldMoveFocus) {
+      // Defer until the card is in the DOM.
+      const id = window.setTimeout(() => {
+        (closeBtnRef.current ?? cardRef.current)?.focus();
+      }, 0);
+      return () => { window.clearTimeout(id); window.removeEventListener("keydown", onKey); };
+    }
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected?.id]);
   // Pageview on mount (once per mount, tagged by embed/lang)
   useEffect(() => {
     trackEvent("map_pageview", { embed: !!embed }, lang);
