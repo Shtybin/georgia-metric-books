@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import maplibregl, { Map as MLMap, MapGeoJSONFeature, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Fuse from "fuse.js";
@@ -314,10 +314,40 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [cardOffset, setCardOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [mobileLegendOpen, setMobileLegendOpen] = useState(false);
   const dragStateRef = useRef<{ startX: number; startY: number; baseX: number; baseY: number; pointerId: number } | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
+  const cardTitleId = useId();
   // Reset collapse/position when a new feature is selected
   useEffect(() => {
     setCardCollapsed(false);
     setCardOffset({ x: 0, y: 0 });
+  }, [selected?.id]);
+  // A11y: ESC closes the card and restores focus; when opened via keyboard,
+  // move focus into the card so it becomes the next tab stop.
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        clearSelection();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    // If focus was on a keyboard-reachable trigger (search result button,
+    // similar-parish button, etc.), move it into the card. Skip when the
+    // click originated on the map canvas (mouse users).
+    const prev = lastTriggerRef.current;
+    const shouldMoveFocus = !!prev && prev.tagName !== "CANVAS";
+    if (shouldMoveFocus) {
+      // Defer until the card is in the DOM.
+      const id = window.setTimeout(() => {
+        (closeBtnRef.current ?? cardRef.current)?.focus();
+      }, 0);
+      return () => { window.clearTimeout(id); window.removeEventListener("keydown", onKey); };
+    }
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected?.id]);
   // Pageview on mount (once per mount, tagged by embed/lang)
   useEffect(() => {
@@ -1204,6 +1234,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   }
 
   function selectFeature(f: Feature) {
+    // Capture keyboard/UI trigger to restore focus on close.
+    try {
+      const ae = typeof document !== "undefined" ? (document.activeElement as HTMLElement | null) : null;
+      if (ae && ae !== document.body && !cardRef.current?.contains(ae)) {
+        lastTriggerRef.current = ae;
+      }
+    } catch { /* noop */ }
     setSelected(f);
     try {
       trackEvent(
@@ -1274,6 +1311,12 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     } else {
       setNeighborIds(new Set());
       setHighlightMode(null);
+    }
+    // Restore focus to the element that opened the card (keyboard users).
+    const prev = lastTriggerRef.current;
+    lastTriggerRef.current = null;
+    if (prev && typeof prev.focus === "function" && document.contains(prev)) {
+      try { prev.focus(); } catch { /* noop */ }
     }
   }
 
@@ -1832,8 +1875,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
          const hasHistory = !!(histName || noteText || mismatches.length || extraAliases.length);
         return (
         <div
+          ref={cardRef}
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby={cardTitleId}
+          tabIndex={-1}
           className={cn(
-            "pointer-events-auto absolute bottom-3 left-3 z-10 flex flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur transition-[max-height,width] duration-200",
+            "pointer-events-auto absolute bottom-3 left-3 z-10 flex flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur transition-[max-height,width] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             cardCollapsed
               ? "w-[min(88vw,320px)] max-h-[88px]"
               : "w-[min(92vw,360px)] max-h-[min(70vh,560px)]",
@@ -1890,7 +1938,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               />
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="truncate font-serif text-lg font-semibold leading-tight">
+              <h3 id={cardTitleId} className="truncate font-serif text-lg font-semibold leading-tight">
                 {sel.settlement[lang] || sel.settlement.en || "—"}
               </h3>
               {!cardCollapsed && (histName || extraAliases.length > 0 || mismatches.length > 0) && (
@@ -1926,16 +1974,18 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               <button
                 type="button"
                 onClick={() => setCardCollapsed((v) => !v)}
-                className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+                className="rounded-md p-1 text-muted-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={cardCollapsed ? T.expandCard : T.collapseCard}
+                aria-expanded={!cardCollapsed}
                 title={cardCollapsed ? T.expandCard : T.collapseCard}
               >
                 {cardCollapsed ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </button>
               <button
+                ref={closeBtnRef}
                 type="button"
                 onClick={clearSelection}
-                className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+                className="rounded-md p-1 text-muted-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={T.clear}
               >
                 <X className="h-4 w-4" />
