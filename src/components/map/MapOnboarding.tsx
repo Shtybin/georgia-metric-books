@@ -49,13 +49,16 @@ export function MapOnboarding({ lang }: { lang: Lang }) {
     try {
       if (typeof window === "undefined") return;
       if (!window.localStorage.getItem(STORAGE_KEY)) {
-        const id = window.setTimeout(() => setVisible(true), 600);
+        const id = window.setTimeout(() => {
+          setVisible(true);
+          trackEvent("map_onboarding_start", {}, lang);
+        }, 600);
         return () => window.clearTimeout(id);
       }
     } catch {
       /* ignore */
     }
-  }, []);
+  }, [lang]);
 
   if (!visible) return null;
   const c = COPY[lang] ?? COPY.ru;
