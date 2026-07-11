@@ -406,7 +406,7 @@ export const STRINGS = {
     embed: "ჩაშენება",
     notFoundTitle: "ვერაფერი მოიძებნა",
     churches: "ეკლესიები",
-    unlocatedButton: "სოფლების კოორდინატების დამატება",
+    unlocatedButton: "კოორდინატების დამატება",
     unlocatedButtonShort: "კოორდინატები",
     unlocatedTitle: "სოფლები კოორდინატების გარეშე",
     unlocatedHint: "ჩანაწერები, რომელთა კოორდინატები ვერ დადგინდა. დააწკაპუნეთ ხატულას სოფლის ხელით რუკაზე მისაბმელად.",
