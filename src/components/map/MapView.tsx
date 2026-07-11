@@ -148,10 +148,20 @@ function buildLabelExpr(lang: Lang): any {
 
   // Manual overrides for ru/en (keep ka as-is). Matched by Georgian name.
   const overrideRu = lang === "ru"
-    ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Сухум-Кале", basePrimary]
+    ? [
+        "case",
+        ["==", ["get", "name:ka"], "სოხუმი"], "Сухум-Кале",
+        ["==", ["get", "name:ka"], "ცხინვალი"], "Цхинвали",
+        basePrimary,
+      ]
     : null;
   const overrideEn = lang === "en"
-    ? ["case", ["==", ["get", "name:ka"], "სოხუმი"], "Sukhum-Kale", basePrimary]
+    ? [
+        "case",
+        ["==", ["get", "name:ka"], "სოხუმი"], "Sukhum-Kale",
+        ["==", ["get", "name:ka"], "ცხინვალი"], "Tskhinvali",
+        basePrimary,
+      ]
     : null;
   const primary: any = overrideRu ?? overrideEn ?? basePrimary;
 
