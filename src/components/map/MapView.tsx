@@ -139,27 +139,38 @@ function normalizeAliases(fc: FC): FC {
 // raw style JSON we prefetch before the map exists (see `loadPatchedStyle`).
 // ka → name:ka, ru → name:ru, en → name:en, each with sensible fallbacks.
 function buildLabelExpr(lang: Lang): any {
+  const matchesAnyName = (names: string[]): any => {
+    const fields = ["name", "name:ru", "name:en", "name:ka", "name:latin", "name_en", "name_ru", "name_ka", "name_latin"];
+    const literal: any = ["literal", names];
+    return [
+      "any",
+      ...fields.map((field) => ["in", ["coalesce", ["get", field], ""], literal]),
+    ];
+  };
+
   // Primary localized label (with sensible fallbacks).
   const basePrimary: any = lang === "ka"
-    ? ["coalesce", ["get", "name:ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
+    ? ["coalesce", ["get", "name:ka"], ["get", "name_ka"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
     : lang === "ru"
-    ? ["coalesce", ["get", "name:ru"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
-    : ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]];
+    ? ["coalesce", ["get", "name:ru"], ["get", "name_ru"], ["get", "name:en"], ["get", "name:latin"], ["get", "name_en"], ["get", "name"]]
+    : ["coalesce", ["get", "name:en"], ["get", "name_en"], ["get", "name:latin"], ["get", "name_latin"], ["get", "name"]];
 
-  // Manual overrides for ru/en (keep ka as-is). Matched by Georgian name.
+  // Manual overrides for ru/en (keep ka as-is). Matched by all common tile name fields.
+  const isSukhumi = matchesAnyName(["სოხუმი", "Сухум", "Сухуми", "Sukhum", "Sukhumi"]);
+  const isTskhinvali = matchesAnyName(["ცხინვალი", "Цхинвал", "Цхинвали", "Tskhinval", "Tskhinvali"]);
   const overrideRu = lang === "ru"
     ? [
         "case",
-        ["==", ["get", "name:ka"], "სოხუმი"], "Сухум-Кале",
-        ["==", ["get", "name:ka"], "ცხინვალი"], "Цхинвали",
+        isSukhumi, "Сухум-Кале",
+        isTskhinvali, "Цхинвали",
         basePrimary,
       ]
     : null;
   const overrideEn = lang === "en"
     ? [
         "case",
-        ["==", ["get", "name:ka"], "სოხუმი"], "Sukhum-Kale",
-        ["==", ["get", "name:ka"], "ცხინვალი"], "Tskhinvali",
+        isSukhumi, "Sukhum-Kale",
+        isTskhinvali, "Tskhinvali",
         basePrimary,
       ]
     : null;
