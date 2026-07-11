@@ -1773,27 +1773,23 @@ export function MapView({ lang, onLangChange, embed }: Props) {
               );
             })()}
           </button>
-          {/* Compact language switcher: single globe icon + 3 letter buttons */}
-          <div className="flex h-8 items-center overflow-hidden rounded-lg border border-border bg-card/95 shadow-lg backdrop-blur">
-            <span className="hidden items-center pl-1.5 pr-0.5 text-muted-foreground sm:flex">
-              <Globe2 className="h-3 w-3" />
-            </span>
-            {(["ru", "en", "ka"] as const).map(l => (
+          {/* Compact language switcher: single cycling button */}
+          {(() => {
+            const order = ["ru", "en", "ka"] as const;
+            const labels: Record<Lang, string> = { ru: "RU", en: "EN", ka: "ქარ" };
+            const next = order[(order.indexOf(lang) + 1) % order.length];
+            return (
               <button
-                key={l}
-                onClick={() => onLangChange(l)}
-                className={cn(
-                  "h-full px-2 text-xs font-medium uppercase tracking-wide transition-colors",
-                  lang === l
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-accent",
-                )}
-                aria-pressed={lang === l}
+                onClick={() => onLangChange(next)}
+                title={`${labels[lang]} → ${labels[next]}`}
+                aria-label={`Language: ${labels[lang]}. Click to switch to ${labels[next]}`}
+                className="flex h-8 items-center gap-1 rounded-lg border border-border bg-card/95 px-2 text-xs font-medium uppercase tracking-wide text-foreground shadow-lg backdrop-blur transition-colors hover:bg-accent"
               >
-                {l === "ka" ? "ქა" : l}
+                <Globe2 className="h-3 w-3 shrink-0 text-muted-foreground" />
+                <span className="min-w-[1.75rem] text-center">{labels[lang]}</span>
               </button>
-            ))}
-          </div>
+            );
+          })()}
           {/* Donate — hidden on mobile (shown in bottom row instead) */}
           <div className="hidden sm:block">
             <DonateButton lang={lang} variant="compact" />
