@@ -1,60 +1,43 @@
-# План: пункты 3–11 из UX-отчёта
+# Plan: fix mobile search results overlay
 
-Объём большой, поэтому разбиваю на фазы. После каждой фазы можно остановиться и проверить.
+## Goal
+On mobile, the search results list should open below the functional buttons row, so the first result is fully visible and tappable when the on-screen keyboard is open.
 
-## Фаза A — быстрые фронтенд-победы (1 итерация)
+## Confirmed current issue
+In `MapView.tsx`, the search results dropdown is absolutely positioned inside the search input wrapper. The functional buttons row is a separate sibling rendered immediately after that wrapper. Because the dropdown is absolute and has no layout height, it starts under the input while the buttons row is painted over the same area on mobile.
 
-**3. Онбординг на /map**
-- 3-шаговый tooltip-tур: «Фильтры → Поиск → Карточка точки».
-- Триггер: первый визит (флаг `map_onboarding_v1` в `localStorage`).
-- Кнопка «Пропустить» + «Показать снова» в меню.
-- Локализация ru/en/ka.
+Current simplified structure:
 
-**4. Кнопка «Тбилиси» на /map**
-- Кнопка в верхней панели карты → плавный `flyTo` на bbox Тбилиси + подсветка слоя города.
-- Рядом добавить пресеты «Кутаиси», «Батуми» (если пользователь одобрит — иначе только Тбилиси).
+```text
+Top bar
+  Search/filter column
+    Region/Uezd selects
+    Search input wrapper
+      input
+      absolute results dropdown  <- starts here
+  Functional buttons row          <- overlaps first dropdown result on mobile
+```
 
-**8. Ссылка на /guide в шапке /map**
-- Добавить пункт «Руководство» в верхнюю панель карты (сейчас только в футере/меню).
+## Changes to make
+1. Restructure only the top-bar JSX in `src/components/map/MapView.tsx`:
+   - Keep Region/Uezd filters and search input in the same visual order.
+   - Keep the functional buttons row in the same visual position.
+   - Render the search results dropdown after the buttons row on mobile, while preserving the desktop/tablet behavior.
 
-**5. Мобильная оптимизация первого экрана /map**
-- Более компактная шапка на `<sm` (скрыть подписи, оставить иконки).
-- Панель фильтров — bottom-sheet вместо боковой.
-- Проверка тач-таргетов ≥44px.
+2. Use responsive layout classes instead of hard offsets:
+   - Mobile top bar: single-column grid/flex stack.
+   - Search result list: normal-flow or explicitly placed below the full top controls on mobile.
+   - Desktop/tablet: retain the compact floating dropdown under the search field.
 
-## Фаза B — SEO (2 итерация)
+3. Preserve behavior:
+   - Existing search selection, area highlighting, Enter/Escape handling, blur delay, analytics events, and language/embed behavior stay unchanged.
+   - Keep the result list scrollable with viewport-bounded max height, accounting for the mobile keyboard as much as CSS can.
 
-**6. Мета-теги `/tbilisi` и `/guide`**
-- Уникальные `title`, `description`, `og:title`, `og:description`, `og:image`, `twitter:card` в `head()` каждого роута.
+4. Accessibility check:
+   - Keep `role="combobox"`, `aria-expanded`, and `role="listbox" / role="option"`.
+   - Ensure the list remains keyboard/touch selectable.
 
-**11. Локализация SEO для грузинской аудитории**
-- Добавить `<link rel="alternate" hreflang="ka|ru|en|x-default">` во все ключевые роуты.
-- В `/tbilisi` и `/guide` — грузинские заголовки/описания при `lang=ka`.
-- Обновить `sitemap.xml` — добавить локализованные URL.
-
-**7. SEO-лендинги районов/городов**
-- Динамический роут `/region/$slug` (Тбилиси, Кутаиси, Батуми, Рустави, Гори, Телави, Ахалцихе, Зугдиди).
-- SSR-рендер: краткое описание региона + индексируемый список приходов со ссылками на карточки.
-- JSON-LD `Place` + `ItemList`.
-- Добавить в sitemap.
-
-## Фаза C — аналитика и рекомендации (3 итерация)
-
-**9. Event-tracking внутри /map**
-- События: `map_point_click`, `map_filter_change`, `map_search_submit`, `map_search_result_click`, `map_preset_click` (Тбилиси и др.), `map_onboarding_step`, `map_onboarding_skip`.
-- Отправка через существующий analytics endpoint (тот же, что уже пишет pageviews).
-
-**10. Персональные рекомендации**
-- Блок «Похожие приходы» в карточке точки: по региону + периоду метрических книг.
-- Данные из уже загружаемого списка (клиентский расчёт, без миграций БД).
-- Показывать 3–5 карточек с миниатюрой + ссылкой.
-
-## Порядок выполнения
-Начну с Фазы A (пункты 3, 4, 5, 8). После — Фаза B и C.
-
-## Открытые вопросы
-1. Пресеты городов кроме Тбилиси на /map — добавлять сразу («Кутаиси», «Батуми») или только Тбилиси?
-2. Аналитика событий: слать в тот же endpoint, что и pageviews (Plausible/self-hosted?), или нужен отдельный?
-3. Для «Похожих приходов» — критерий: тот же uezd, тот же период, или комбинация?
-
-Могу начать с Фазы A по дефолтам (только Тбилиси; аналитика — в существующий endpoint; похожие — по uezd+период), а по ходу уточним.
+5. Verify:
+   - Reproduce on a narrow mobile viewport with a query like `све`.
+   - Confirm the first result is not covered by the buttons row.
+   - Check no horizontal overflow and no build errors.
