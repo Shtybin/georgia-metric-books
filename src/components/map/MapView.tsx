@@ -1599,7 +1599,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             {showResults && query.trim().length >= minQueryLen && (
               <div
                 role="listbox"
-                className="absolute mt-2 w-full overflow-y-auto overscroll-contain rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl animate-fade-in max-h-[50vh] sm:max-h-[70vh]"
+                className="absolute z-30 mt-20 max-h-[min(42dvh,360px)] w-full overflow-y-auto overscroll-contain rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl animate-fade-in sm:mt-2 sm:max-h-[70vh]"
               >
                 {(areaMatches.uezds.length > 0 || areaMatches.regions.length > 0) && (
                   <div className="border-b border-border bg-muted/40">
@@ -1709,8 +1709,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                   );
                 })}
               </div>
-        )}
-      </div>
+            )}
+          </div>
         </div>
 
         <div className="pointer-events-auto flex items-center gap-1.5">
