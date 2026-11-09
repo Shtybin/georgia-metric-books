@@ -718,6 +718,29 @@ export const reviewFinding = createServerFn({ method: "POST" })
             created_by: userId,
           });
           newStatus = "applied";
+        } else if ((proposed as any)?.edit_patch && finding.feature_id != null) {
+          // Deep-check (screening + Gemini) correction: merge name/coords into the
+          // latest published card and publish it as a full "edit" override.
+          const { data: prev } = await supabaseAdmin
+            .from("feature_overrides")
+            .select("data")
+            .eq("feature_id", finding.feature_id)
+            .eq("action", "edit")
+            .eq("published", true)
+            .order("updated_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          const base = ((prev?.data as any) ?? (proposed as any).base) || {};
+          const merged = { ...base, ...(proposed as any).edit_patch };
+          await supabaseAdmin.from("feature_overrides").insert({
+            feature_id: finding.feature_id,
+            action: "edit",
+            data: merged,
+            published: true,
+            notes: `AI-проверка (Gemini 2.5 Pro) #${finding.id.slice(0, 8)}: ${finding.rationale ?? ""}`.slice(0, 1000),
+            created_by: userId,
+          });
+          newStatus = "applied";
         } else if (["settlement", "church", "years"].includes(finding.kind)) {
           await supabaseAdmin.from("feature_overrides").insert({
             feature_id: finding.feature_id,
