@@ -168,7 +168,7 @@ export const Route = createFileRoute("/region/$slug")({
   errorComponent: ({ error }) => (
     <div className="mx-auto max-w-2xl p-8">
       <h1 className="text-xl font-semibold">Failed to load region</h1>
-      <p className="mt-2 text-sm text-muted-foreground">{String(error?.message ?? error)}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{String((error as Error)?.message ?? error)}</p>
     </div>
   ),
 });
