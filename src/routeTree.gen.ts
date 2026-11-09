@@ -18,7 +18,6 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegionSlugRouteImport } from './routes/region.$slug'
-import { Route as ApiDeepCheckImportRouteImport } from './routes/api/deep-check-import'
 
 const TbilisiRoute = TbilisiRouteImport.update({
   id: '/tbilisi',
@@ -65,11 +64,6 @@ const RegionSlugRoute = RegionSlugRouteImport.update({
   path: '/region/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDeepCheckImportRoute = ApiDeepCheckImportRouteImport.update({
-  id: '/api/deep-check-import',
-  path: '/api/deep-check-import',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,7 +74,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/tbilisi': typeof TbilisiRoute
-  '/api/deep-check-import': typeof ApiDeepCheckImportRoute
   '/region/$slug': typeof RegionSlugRoute
 }
 export interface FileRoutesByTo {
@@ -92,7 +85,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/tbilisi': typeof TbilisiRoute
-  '/api/deep-check-import': typeof ApiDeepCheckImportRoute
   '/region/$slug': typeof RegionSlugRoute
 }
 export interface FileRoutesById {
@@ -105,7 +97,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/tbilisi': typeof TbilisiRoute
-  '/api/deep-check-import': typeof ApiDeepCheckImportRoute
   '/region/$slug': typeof RegionSlugRoute
 }
 export interface FileRouteTypes {
@@ -119,7 +110,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/map'
     | '/tbilisi'
-    | '/api/deep-check-import'
     | '/region/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -131,7 +121,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/map'
     | '/tbilisi'
-    | '/api/deep-check-import'
     | '/region/$slug'
   id:
     | '__root__'
@@ -143,7 +132,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/map'
     | '/tbilisi'
-    | '/api/deep-check-import'
     | '/region/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -156,7 +144,6 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MapRoute: typeof MapRoute
   TbilisiRoute: typeof TbilisiRoute
-  ApiDeepCheckImportRoute: typeof ApiDeepCheckImportRoute
   RegionSlugRoute: typeof RegionSlugRoute
 }
 
@@ -225,13 +212,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegionSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/deep-check-import': {
-      id: '/api/deep-check-import'
-      path: '/api/deep-check-import'
-      fullPath: '/api/deep-check-import'
-      preLoaderRoute: typeof ApiDeepCheckImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -244,7 +224,6 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MapRoute: MapRoute,
   TbilisiRoute: TbilisiRoute,
-  ApiDeepCheckImportRoute: ApiDeepCheckImportRoute,
   RegionSlugRoute: RegionSlugRoute,
 }
 export const routeTree = rootRouteImport
