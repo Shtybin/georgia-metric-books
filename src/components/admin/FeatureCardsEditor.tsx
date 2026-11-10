@@ -21,6 +21,7 @@ import {
 } from "@/lib/featureOverrides";
 import { Pencil, Trash2, Plus, Eye, EyeOff, RotateCcw, Save, X as XIcon, AlertTriangle, Download, Upload } from "lucide-react";
 import { FeatureImportDialog } from "./FeatureImportDialog";
+import { readAllRows } from "@/lib/paginatedRows";
 
 type BaseFeature = GeoJSON.Feature<GeoJSON.Point, any>;
 type FC = GeoJSON.FeatureCollection<GeoJSON.Point, any>;
@@ -52,15 +53,16 @@ export function FeatureCardsEditor() {
       setLoading(true);
       const [baseRes, ovRes] = await Promise.all([
         fetch("/data/parishes.geojson").then((r) => r.json() as Promise<FC>),
-        supabase
+        readAllRows((from, to) => supabase
           .from("feature_overrides")
           .select("id, feature_id, action, data, published, notes, created_at, updated_at")
-          .order("updated_at", { ascending: false }),
+          .order("updated_at", { ascending: false })
+          .order("id", { ascending: true })
+          .range(from, to)),
       ]);
       if (!mounted) return;
-      if (ovRes.error) console.error(ovRes.error);
       setBase(baseRes);
-      setOverrides((ovRes.data as unknown as FeatureOverride[]) || []);
+      setOverrides(ovRes as unknown as FeatureOverride[]);
       setLoading(false);
     })();
     return () => {
@@ -69,15 +71,15 @@ export function FeatureCardsEditor() {
   }, []);
 
   async function reloadOverrides() {
-    const { data, error } = await supabase
+    try {
+    const data = await readAllRows((from, to) => supabase
       .from("feature_overrides")
       .select("id, feature_id, action, data, published, notes, created_at, updated_at")
-      .order("updated_at", { ascending: false });
-    if (error) {
-      alert(error.message);
-      return;
-    }
+      .order("updated_at", { ascending: false })
+      .order("id", { ascending: true })
+      .range(from, to));
     setOverrides((data as unknown as FeatureOverride[]) || []);
+    } catch (error) { alert(error instanceof Error ? error.message : String(error)); }
   }
 
   // Merge a possibly-partial override.data onto a full-shaped fallback so
