@@ -267,6 +267,7 @@ export type Database = {
           provider: string
           requires_auth: boolean
           scope: string
+          suggestion_id: string | null
           title: string
           uezd_en: string | null
           uezd_ru: string | null
@@ -283,6 +284,7 @@ export type Database = {
           provider?: string
           requires_auth?: boolean
           scope: string
+          suggestion_id?: string | null
           title?: string
           uezd_en?: string | null
           uezd_ru?: string | null
@@ -299,6 +301,7 @@ export type Database = {
           provider?: string
           requires_auth?: boolean
           scope?: string
+          suggestion_id?: string | null
           title?: string
           uezd_en?: string | null
           uezd_ru?: string | null

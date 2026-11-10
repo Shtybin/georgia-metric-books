@@ -44,6 +44,7 @@ export function approvedToFeature(
       missingCount: 0,
       bucket: bucketOf(startYear),
       communityAdded: true,
+      suggestionId: s.id,
     },
   };
 }

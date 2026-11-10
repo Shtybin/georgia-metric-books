@@ -74,9 +74,11 @@ interface Props {
   featureId: number | null;
   uezdRu: string | null;
   uezdEn: string | null;
+  suggestionIds?: string[];
 }
 
-export function ExternalSourcesList({ lang, featureId, uezdRu, uezdEn }: Props) {
+export function ExternalSourcesList({ lang, featureId, uezdRu, uezdEn, suggestionIds = [] }: Props) {
+  const sugKey = suggestionIds.join(",");
   const t = L[lang];
   const [sources, setSources] = useState<ExternalSource[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +87,7 @@ export function ExternalSourcesList({ lang, featureId, uezdRu, uezdEn }: Props) 
 
   async function reload() {
     setLoading(true);
-    const data = await fetchSourcesForFeature(featureId, uezdRu, uezdEn);
+    const data = await fetchSourcesForFeature(featureId, uezdRu, uezdEn, suggestionIds);
     setSources(data);
     setLoading(false);
   }
@@ -93,7 +95,7 @@ export function ExternalSourcesList({ lang, featureId, uezdRu, uezdEn }: Props) 
   useEffect(() => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [featureId, uezdRu, uezdEn]);
+  }, [featureId, uezdRu, uezdEn, sugKey]);
 
   useEffect(() => {
     let cancelled = false;
