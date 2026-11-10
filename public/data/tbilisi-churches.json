@@ -1134,10 +1134,10 @@
   "lon": 44.7887,
   "preserved": "yes",
   "active": "yes",
-  "recordYears": "1826-1921",
+  "recordYears": "1826-1877, 1903",
   "startYear": 1826,
-  "endYear": 1921,
-  "missingYears": "1878-1902, 1904-1918",
+  "endYear": 1903,
+  "missingYears": "1878-1902",
   "note": {
    "ru": "",
    "en": "",
@@ -1155,7 +1155,7 @@
    {
     "n": 29,
     "type": null,
-    "years": "1826-1921"
+    "years": "1826-1877, 1903"
    }
   ]
  },

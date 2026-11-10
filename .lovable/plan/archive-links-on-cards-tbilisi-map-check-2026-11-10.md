@@ -5,9 +5,9 @@
 1. **Check what's there now:** go through all 1,376 points on the main map (and their published edits). For each church, check whether it has a link to archival-services.gov.ge/saeklesio and whether the link opens the right page (settlement or church, not the main catalogue page).
 2. **Download the archive structure:** the list of districts (left column, after 1871) and the list of uyezds (მაზრა, right column, data up to 1870), with every settlement and church page.
 3. **Match:** link each card to its archive page by settlement name, church and years.
-   - Years up to 1870: link to the page in that uyezd's list.
-   - Years 1871 and later: link to the district page.
-   - If a parish has both periods, the card shows both links, labelled "up to 1870 (uyezd)" and "from 1871 (district)".
+  - Years up to 1870: link to the page in that uyezd's list.
+  - Years 1871 and later: link to the district page.
+  - If a parish has both periods, the card shows both links, labelled "up to 1870 (uyezd)" and "from 1871 (district)".
 4. **Hard cases:** cards with no clear match go to the model (Gemini 4 Argon) along with the archive candidates. Links are added only at confidence of 0.9 or higher; the rest go into a report.
 5. **Apply:** add links through the existing card-edit mechanism. Copies of the old cards are saved first.
 6. **Show it on the card:** if the card doesn't yet show two separate links, add a clear "Open in the archive" button, with the period labelled, in all three languages.
@@ -24,6 +24,8 @@
 
 - Report (CSV): which cards got links, which links were fixed, and which are still unresolved and why.
 - Report on Tbilisi: what was fixed and what is still doubtful.
+- All reports in Russian langauge.
+- Storng matches should be matched automatically without manual approvement.
 
 ## Technical details
 
