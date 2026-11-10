@@ -2313,7 +2313,20 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
             <ExternalSourcesList
               lang={lang}
-              featureId={typeof selected.id === "number" ? (selected.id as number) : null}
+              featureId={
+                typeof (sel as any).baseFeatureId === "number"
+                  ? ((sel as any).baseFeatureId as number)
+                  : typeof selected.id === "number" && (selected.id as number) < 1_000_000
+                    ? (selected.id as number)
+                    : null
+              }
+              suggestionIds={
+                Array.isArray((sel as any).suggestionIds)
+                  ? ((sel as any).suggestionIds as string[])
+                  : typeof (sel as any).suggestionId === "string"
+                    ? [(sel as any).suggestionId as string]
+                    : []
+              }
               uezdRu={(sel.uezd as { ru?: string; en?: string; ka?: string })?.ru ?? null}
               uezdEn={(sel.uezd as { ru?: string; en?: string; ka?: string })?.en ?? null}
             />

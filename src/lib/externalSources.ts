@@ -43,9 +43,12 @@ export async function fetchSourcesForFeature(
   featureId: number | null,
   uezdRu: string | null,
   uezdEn: string | null,
+  suggestionIds: string[] = [],
 ): Promise<ExternalSource[]> {
   const orParts: string[] = [];
   if (featureId != null) orParts.push(`feature_id.eq.${featureId}`);
+  const uuids = suggestionIds.filter((s) => /^[0-9a-f-]{36}$/i.test(s));
+  if (uuids.length) orParts.push(`suggestion_id.in.(${uuids.join(",")})`);
   if (uezdRu) orParts.push(`uezd_ru.ilike.${uezdRu.replace(/[,()]/g, " ")}`);
   if (uezdEn) orParts.push(`uezd_en.ilike.${uezdEn.replace(/[,()]/g, " ")}`);
   if (orParts.length === 0) return [];
@@ -59,7 +62,13 @@ export async function fetchSourcesForFeature(
     console.error("fetchSourcesForFeature", error);
     return [];
   }
-  return (data as ExternalSource[]) || [];
+  // Same archive page may be linked from both the base card and an AI-added point.
+  const seen = new Set<string>();
+  return ((data as ExternalSource[]) || []).filter((s) => {
+    if (seen.has(s.url)) return false;
+    seen.add(s.url);
+    return true;
+  });
 }
 
 /** Admin: list everything. */

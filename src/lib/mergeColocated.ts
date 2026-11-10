@@ -149,6 +149,12 @@ function mergeFeatureGroup(group: Feature[]): Feature {
       categories: mergeCategories(group),
       mergedCount: group.length,
       mergedIds: group.map((f) => f.id),
+      // Archive links for AI-added points are keyed by suggestion uuid.
+      suggestionIds: group
+        .map((f) => f.properties?.suggestionId)
+        .filter((x): x is string => typeof x === "string"),
+      // Real (geojson) feature id of the group, if any, for feature-scoped links.
+      baseFeatureId: group.map((f) => f.id).find((id) => typeof id === "number" && id < 1_000_000) ?? null,
       members: buildMembers(group),
     },
   };
