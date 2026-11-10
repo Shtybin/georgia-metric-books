@@ -5,5 +5,5 @@
 - [x] Repair 11 published card corrections that lacked coordinates.
 - [x] Godogani: fix Terjola card, add Martvili St. George point, resolve report.
 - [x] Reject 2 missing-year suggestions contradicted by the archive.
-- [ ] Re-screen all points against OpenStreetMap, save the suspect list, deep-review with Argon, apply confident fixes.
-- [ ] Verify Godogani and a few corrected points on the public map.
+- [x] Re-screen all points against OpenStreetMap, save the suspect list, deep-review with Argon, apply confident fixes.
+- [x] Verify Godogani and a few corrected points on the public map.
