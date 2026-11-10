@@ -455,6 +455,7 @@ export async function geocodeCandidates(item: UnlocatedItem): Promise<NominatimH
 export async function aiArbiter(
   item: UnlocatedItem,
   candidates: NominatimHit[],
+  model = "google/gemini-2.5-flash",
 ): Promise<{ index: number; confidence: number; reason: string } | null> {
   if (candidates.length === 0) return null;
 
@@ -494,7 +495,7 @@ ${candidates.map((c, i) => `${i}. ${c.display_name} [${c.class}/${c.type}, lat=$
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model,
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
       }),

@@ -16,6 +16,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
 import { processNextBatch, startAuditRun, cancelAuditRun } from "@/lib/aiAudit.functions";
+import { ORCHESTRATION_AUDIT_MODEL } from "./orchestrationModels";
 
 // ---------- helpers ----------
 
@@ -57,8 +58,7 @@ const orchStartSchema = z.object({
   budgetUsd: z.number().min(0.1).max(1000).default(20),
   scope: z.string().default("all"),
   notes: z.string().max(500).optional(),
-  // Phase 1 fixes model to Gemini Pro per approved plan.
-  model: z.string().default("google/gemini-2.5-pro"),
+  model: z.string().default(ORCHESTRATION_AUDIT_MODEL),
 });
 
 export const startOrchestrationRun = createServerFn({ method: "POST" })

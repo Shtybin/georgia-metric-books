@@ -692,12 +692,18 @@ export const reviewFinding = createServerFn({ method: "POST" })
 
     let newStatus: "approved" | "rejected" | "applied" = data.decision;
 
-    if (data.decision === "approved" && finding.feature_id != null) {
+    if (data.decision === "approved") {
       // Apply to existing moderation surfaces depending on kind.
       const proposed = (finding.proposed ?? {}) as Record<string, any>;
       const current = (finding.current ?? {}) as Record<string, any>;
       try {
-        if (finding.kind === "missing_years" && proposed.missingRaw != null) {
+        if (finding.kind === "geolocate" && proposed.coord_suggestion_id) {
+          const { error } = await supabaseAdmin.from("coord_suggestions")
+            .update({ status: "approved", notes: `AI-оркестрация одобрила: ${finding.rationale ?? ""}`.slice(0, 2000) })
+            .eq("id", proposed.coord_suggestion_id);
+          if (error) throw new Error(error.message);
+          newStatus = "applied";
+        } else if (finding.kind === "missing_years" && proposed.missingRaw != null && finding.feature_id != null) {
           await supabaseAdmin.from("missing_years_suggestions").insert({
             feature_id: finding.feature_id,
             current_missing: String(current.missingRaw ?? ""),
@@ -732,14 +738,15 @@ export const reviewFinding = createServerFn({ method: "POST" })
             .maybeSingle();
           const base = ((prev?.data as any) ?? (proposed as any).base) || {};
           const merged = { ...base, ...(proposed as any).edit_patch };
-          await supabaseAdmin.from("feature_overrides").insert({
+          const { error: applyError } = await supabaseAdmin.from("feature_overrides").insert({
             feature_id: finding.feature_id,
             action: "edit",
             data: merged,
             published: true,
-            notes: `AI-проверка (Gemini 2.5 Pro) #${finding.id.slice(0, 8)}: ${finding.rationale ?? ""}`.slice(0, 1000),
+            notes: `AI-проверка #${finding.id.slice(0, 8)}: ${finding.rationale ?? ""}`.slice(0, 1000),
             created_by: userId,
           });
+          if (applyError) throw new Error(applyError.message);
           newStatus = "applied";
         } else if (["settlement", "church", "years"].includes(finding.kind)) {
           await supabaseAdmin.from("feature_overrides").insert({
@@ -765,7 +772,7 @@ export const reviewFinding = createServerFn({ method: "POST" })
         }
       } catch (e: any) {
         console.error("apply finding failed", e);
-        // keep status='approved' if apply failed
+        throw e;
       }
     }
 

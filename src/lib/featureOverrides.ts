@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { bucketOf, parseYearsString } from "@/lib/userCoords";
+import { readAllRows } from "./paginatedRows";
 
 export interface MultiLang {
   ru: string;
@@ -275,18 +276,16 @@ export function usePublishedOverrides() {
   const [overrides, setOverrides] = useState<FeatureOverride[]>([]);
   useEffect(() => {
     let mounted = true;
-    supabase
+    readAllRows((from, to) => supabase
       .from("feature_overrides")
       .select("id, feature_id, action, data, published, notes, created_at, updated_at")
       .eq("published", true)
       .order("updated_at", { ascending: true })
-      .then(({ data, error }) => {
-        if (error) {
-          console.error("[published overrides]", error);
-          return;
-        }
-        if (mounted && data) setOverrides(data as unknown as FeatureOverride[]);
-      });
+      .order("id", { ascending: true })
+      .range(from, to))
+      .then((data) => {
+        if (mounted) setOverrides(data as unknown as FeatureOverride[]);
+      }).catch((error) => console.error("[published overrides]", error));
     return () => {
       mounted = false;
     };
