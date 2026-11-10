@@ -38,6 +38,7 @@ import {
   processGeolocationTick,
   getUnlocatedSummary,
 } from "@/lib/aiOrchestratorGeolocate.functions";
+import { ORCHESTRATION_AUDIT_MODEL, ORCHESTRATION_GEO_MODEL } from "@/lib/orchestrationModels";
 
 type TaskKind = "audit" | "geolocate";
 
@@ -331,7 +332,7 @@ export function AiOrchestrationPanel() {
           <div>
             <h2 className="font-medium">AI-оркестрация · автономные задачи</h2>
             <p className="text-xs text-muted-foreground">
-              Coordinator → GeoAgent + MetricsAgent + ArchiveAgent → Reviewer · модель: <code>google/gemini-2.5-pro</code>
+              Coordinator → GeoAgent + MetricsAgent + ArchiveAgent → Reviewer · модель: <code>{task === "geolocate" ? ORCHESTRATION_GEO_MODEL : ORCHESTRATION_AUDIT_MODEL}</code>
             </p>
           </div>
         </div>

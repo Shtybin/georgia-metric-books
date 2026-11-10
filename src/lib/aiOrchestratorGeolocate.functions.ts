@@ -17,6 +17,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
 import type { FeatureOverride } from "@/lib/featureOverrides";
+import { ORCHESTRATION_GEO_MODEL } from "./orchestrationModels";
 import {
   fetchUnlocated,
   geocodeCandidates,
@@ -74,7 +75,7 @@ export const startGeolocationRun = createServerFn({ method: "POST" })
     const { data: row, error } = await supabaseAdmin
       .from("ai_audit_runs")
       .insert({
-        model: "google/gemini-2.5-pro",
+        model: ORCHESTRATION_GEO_MODEL,
         budget_usd: data.budgetUsd,
         scope,
         task_kind: "geolocate",
@@ -280,7 +281,7 @@ export const processGeolocationTick = createServerFn({ method: "POST" })
           continue;
         }
 
-        const arb = await aiArbiter(item, cands);
+        const arb = await aiArbiter(item, cands, ORCHESTRATION_GEO_MODEL);
         if (!arb || arb.index === -1) {
           await insertFinding(run.id, {
             kind: "geolocate",
