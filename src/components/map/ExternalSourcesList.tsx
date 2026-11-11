@@ -171,6 +171,11 @@ export function ExternalSourcesList({ lang, featureId, uezdRu, uezdEn, suggestio
               >
                 <div className="flex items-center gap-1 text-xs font-medium text-foreground group-hover:text-primary">
                   <span className="truncate">{localizeTitle(s.title || s.url, lang)}</span>
+                  {s.record_nos && s.record_nos.length > 0 && (
+                    <span className="shrink-0 rounded bg-primary/10 px-1 font-mono text-[10px] font-semibold text-primary">
+                      {s.record_nos.map((n) => `№${n}`).join(", ")}
+                    </span>
+                  )}
                   <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
                 </div>
                 <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
