@@ -404,9 +404,13 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     const m = mapRef.current;
     if (!m || !selected) return;
     let start: { x: number; y: number; z: number } | null = null;
+    let lastInput = 0;
+    const el = m.getCanvasContainer();
+    const mark = () => { lastInput = Date.now(); };
+    const evs = ["wheel", "mousedown", "touchstart", "pointerdown", "dblclick"] as const;
+    evs.forEach((n) => el.addEventListener(n, mark, { passive: true }));
     const onStart = (e: { originalEvent?: unknown }) => {
-      console.log("AC start", !!e.originalEvent);
-      if (!e.originalEvent) return;
+      if (!e.originalEvent && Date.now() - lastInput > 600) return;
       const p = m.project(m.getCenter());
       start = { x: p.x, y: p.y, z: m.getZoom() };
     };
@@ -423,7 +427,11 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     };
     m.on("movestart", onStart);
     m.on("moveend", onEnd);
-    return () => { m.off("movestart", onStart); m.off("moveend", onEnd); };
+    return () => {
+      m.off("movestart", onStart);
+      m.off("moveend", onEnd);
+      evs.forEach((n) => el.removeEventListener(n, mark));
+    };
   }, [selected]);
   const [howToOpen, setHowToOpen] = useState(false);
   const [query, setQuery] = useState("");
