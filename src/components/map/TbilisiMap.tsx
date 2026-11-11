@@ -143,7 +143,7 @@ export function TbilisiMap({
   const rowsRef = useRef<TbilisiChurch[] | null>(null);
   const filteredRef = useRef<TbilisiChurch[]>([]);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
-  const [mapReady, setMapReady] = useState(true);
+  const [mapReady, setMapReady] = useState(false);
   const [selected, setSelected] = useState<TbilisiChurch | null>(null);
   const [query, setQuery] = useState("");
   const [enabled, setEnabled] = useState<Set<Confession>>(new Set(CONFESSION_ORDER));
