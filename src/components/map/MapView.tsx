@@ -1971,7 +1971,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                        className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-700/90 dark:text-amber-300/90"
                        title={T.historyBadgeFormer}
                      >
-                       бывш. {a}
+                       {lang === "ka" ? "ყოფ." : lang === "en" ? "formerly" : "бывш."} {a}
                      </span>
                    ))}
                    {mismatches.length > 0 && (
@@ -2067,9 +2067,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </dl>
 
             {hasAliasBlock && (
-              <section className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-2" aria-label="Бывшие названия">
+              <section className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-2" aria-label={lang === "ka" ? "ყოფილი სახელები" : lang === "en" ? "Former names" : "Бывшие названия"}>
                 <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
-                  Бывшие названия
+                  {lang === "ka" ? "ყოფილი სახელები" : lang === "en" ? "Former names" : "Бывшие названия"}
                 </div>
                 <ul className="space-y-1.5">
                   {aliasByLang.map((g) => (
