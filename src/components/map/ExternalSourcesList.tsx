@@ -69,6 +69,14 @@ const L: Record<Lang, Record<string, string>> = {
   },
 };
 
+const NIAG_LABEL: Record<Lang, string> = { ru: "НИАГ", en: "NAG", ka: "საქ. ეროვნული არქივი" };
+function providerLabel(p: ExternalProvider, lang: Lang): string {
+  return p === "niag" ? NIAG_LABEL[lang] : PROVIDER_LABELS[p];
+}
+function localizeTitle(title: string, lang: Lang): string {
+  return title.startsWith("НИАГ") ? NIAG_LABEL[lang] + title.slice(4) : title;
+}
+
 interface Props {
   lang: Lang;
   featureId: number | null;
@@ -162,11 +170,11 @@ export function ExternalSourcesList({ lang, featureId, uezdRu, uezdEn, suggestio
                 className="min-w-0 flex-1"
               >
                 <div className="flex items-center gap-1 text-xs font-medium text-foreground group-hover:text-primary">
-                  <span className="truncate">{s.title || s.url}</span>
+                  <span className="truncate">{localizeTitle(s.title || s.url, lang)}</span>
                   <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
                 </div>
                 <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
-                  <span>{PROVIDER_LABELS[s.provider]}</span>
+                  <span>{providerLabel(s.provider, lang)}</span>
                   {s.requires_auth && (
                     <span className="inline-flex items-center gap-0.5">
                       <Lock className="h-2.5 w-2.5" />
