@@ -195,7 +195,7 @@
  * with the language switcher so all top-right controls form a single column.
  * On desktop/tablet they sit BELOW the "Report a problem" button. */
 .maplibregl-map .maplibregl-ctrl-top-right {
-  top: calc(var(--map-safe-top) + 6.25rem);
+  top: calc(var(--map-safe-top) + 9rem);
   right: var(--map-overlay-gap-right);
 }
 
