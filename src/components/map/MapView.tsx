@@ -1901,7 +1901,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             "pointer-events-auto absolute bottom-3 left-3 z-10 flex flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur transition-[max-height,width] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             cardCollapsed
               ? "w-[min(88vw,320px)] max-h-[88px]"
-              : "w-[min(92vw,360px)] max-h-[min(70vh,560px)]",
+              : "w-[min(92vw,360px)] max-h-[min(62dvh,560px)]",
           )}
           style={{
             transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)`,
