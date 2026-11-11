@@ -143,7 +143,7 @@ export function TbilisiMap({
   const rowsRef = useRef<TbilisiChurch[] | null>(null);
   const filteredRef = useRef<TbilisiChurch[]>([]);
   const [rows, setRows] = useState<TbilisiChurch[] | null>(null);
-  const [mapReady, setMapReady] = useState(false);
+  const [mapReady, setMapReady] = useState(true);
   const [selected, setSelected] = useState<TbilisiChurch | null>(null);
   const [query, setQuery] = useState("");
   const [enabled, setEnabled] = useState<Set<Confession>>(new Set(CONFESSION_ORDER));
@@ -151,7 +151,7 @@ export function TbilisiMap({
   const [yearMax, setYearMax] = useState(TBILISI_YEAR_MAX);
   const [onlyPreserved, setOnlyPreserved] = useState(false);
   const [onlyActive, setOnlyActive] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(true);
   const [docsOpen, setDocsOpen] = useState(false);
   const [howToOpen, setHowToOpen] = useState(false);
   /** Раскрыта ли сама палитра конфессий внутри легенды.
@@ -519,8 +519,10 @@ export function TbilisiMap({
           </div>
           <button
             onClick={() => setFiltersOpen((v) => !v)}
-            className="shrink-0 rounded-lg border border-border bg-card/95 p-2 text-foreground shadow-lg backdrop-blur hover:bg-accent lg:hidden"
+            className={"shrink-0 rounded-lg border p-2 shadow-lg backdrop-blur lg:hidden " + (filtersOpen ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card/95 text-foreground hover:bg-accent")}
             aria-label={T.showFilters}
+            aria-pressed={filtersOpen}
+            title={T.showFilters}
           >
             <Filter className="h-4 w-4" />
           </button>
@@ -591,7 +593,7 @@ export function TbilisiMap({
           "left-3 right-3 top-[3.25rem] max-h-[7.5rem] gap-1.5 overflow-auto p-2 " +
           "sm:left-3 sm:right-3 sm:top-[4.75rem] sm:max-h-[7rem] sm:w-auto sm:p-2 " +
           "lg:left-auto lg:right-4 lg:top-20 lg:w-80 lg:max-h-none lg:gap-3 lg:bottom-20 lg:p-3 " +
-          "flex"
+          (filtersOpen ? "flex" : "hidden lg:flex")
         }
       >
         <div className="flex items-center justify-between gap-2">

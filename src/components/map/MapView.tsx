@@ -390,6 +390,40 @@ export function MapView({ lang, onLangChange, embed }: Props) {
   const [categoryLegendOpen, setCategoryLegendOpen] = useState(() =>
     typeof window === "undefined" || !window.matchMedia("(max-width: 639px)").matches,
   );
+
+  // Auto-close the selected card when the user filters/toggles legends.
+  const filterSigRef = useRef<string | null>(null);
+  useEffect(() => {
+    const sig = [[...enabledBuckets].sort().join(","), [...enabledCategories].sort().join(","), legendOpen, categoryLegendOpen, mobileLegendOpen].join("|");
+    if (filterSigRef.current !== null && filterSigRef.current !== sig) setSelected(null);
+    filterSigRef.current = sig;
+  }, [enabledBuckets, enabledCategories, legendOpen, categoryLegendOpen, mobileLegendOpen]);
+
+  // Auto-close the card on user zoom or significant user pan (>150px).
+  useEffect(() => {
+    const m = mapRef.current;
+    if (!m || !selected) return;
+    let start: { x: number; y: number; z: number } | null = null;
+    const onStart = (e: { originalEvent?: unknown }) => {
+      if (!e.originalEvent) return;
+      const p = m.project(m.getCenter());
+      start = { x: p.x, y: p.y, z: m.getZoom() };
+    };
+    const onEnd = (e: { originalEvent?: unknown }) => {
+      if (!start) return;
+      const c = m.getCenter();
+      const ref = m.unproject([start.x, start.y]);
+      const p = m.project(ref);
+      const q = m.project(c);
+      const moved = Math.hypot(p.x - q.x, p.y - q.y);
+      if (Math.abs(m.getZoom() - start.z) > 0.25 || moved > 150) setSelected(null);
+      start = null;
+      void e;
+    };
+    m.on("movestart", onStart);
+    m.on("moveend", onEnd);
+    return () => { m.off("movestart", onStart); m.off("moveend", onEnd); };
+  }, [selected]);
   const [howToOpen, setHowToOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
