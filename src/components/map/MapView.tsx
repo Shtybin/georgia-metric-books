@@ -405,6 +405,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
     if (!m || !selected) return;
     let start: { x: number; y: number; z: number } | null = null;
     const onStart = (e: { originalEvent?: unknown }) => {
+      console.log("AC start", !!e.originalEvent);
       if (!e.originalEvent) return;
       const p = m.project(m.getCenter());
       start = { x: p.x, y: p.y, z: m.getZoom() };
