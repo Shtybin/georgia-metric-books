@@ -1,0 +1,2 @@
+ALTER TABLE public.external_sources ADD COLUMN IF NOT EXISTS record_nos integer[];
+COMMENT ON COLUMN public.external_sources.record_nos IS 'Row numbers (№) of the matched rows on the archive catalog page';

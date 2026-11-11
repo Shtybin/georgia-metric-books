@@ -714,8 +714,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   // Load data once
   useEffect(() => {
-    fetch("/data/parishes.geojson").then(r => r.json()).then(setBaseData);
-    fetch("/data/stats.json").then(r => r.json()).then(setStats);
+    fetch("/data/parishes.geojson", { cache: "no-cache" }).then(r => r.json()).then(setBaseData);
+    fetch("/data/stats.json", { cache: "no-cache" }).then(r => r.json()).then(setStats);
   }, []);
 
   // Fuse index across both languages
@@ -1901,7 +1901,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             "pointer-events-auto absolute bottom-3 left-3 z-10 flex flex-col overflow-hidden rounded-2xl border border-border bg-card/98 shadow-2xl backdrop-blur transition-[max-height,width] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             cardCollapsed
               ? "w-[min(88vw,320px)] max-h-[88px]"
-              : "w-[min(92vw,360px)] max-h-[min(70vh,560px)]",
+              : "w-[min(92vw,360px)] max-h-[min(62dvh,560px)]",
           )}
           style={{
             transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)`,
@@ -1971,7 +1971,7 @@ export function MapView({ lang, onLangChange, embed }: Props) {
                        className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-700/90 dark:text-amber-300/90"
                        title={T.historyBadgeFormer}
                      >
-                       бывш. {a}
+                       {lang === "ka" ? "ყოფ." : lang === "en" ? "formerly" : "бывш."} {a}
                      </span>
                    ))}
                    {mismatches.length > 0 && (
@@ -2067,9 +2067,9 @@ export function MapView({ lang, onLangChange, embed }: Props) {
             </dl>
 
             {hasAliasBlock && (
-              <section className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-2" aria-label="Бывшие названия">
+              <section className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-2" aria-label={lang === "ka" ? "ყოფილი სახელები" : lang === "en" ? "Former names" : "Бывшие названия"}>
                 <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
-                  Бывшие названия
+                  {lang === "ka" ? "ყოფილი სახელები" : lang === "en" ? "Former names" : "Бывшие названия"}
                 </div>
                 <ul className="space-y-1.5">
                   {aliasByLang.map((g) => (

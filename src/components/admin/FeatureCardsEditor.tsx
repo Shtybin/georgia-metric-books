@@ -52,7 +52,7 @@ export function FeatureCardsEditor() {
     (async () => {
       setLoading(true);
       const [baseRes, ovRes] = await Promise.all([
-        fetch("/data/parishes.geojson").then((r) => r.json() as Promise<FC>),
+        fetch("/data/parishes.geojson", { cache: "no-cache" }).then((r) => r.json() as Promise<FC>),
         readAllRows((from, to) => supabase
           .from("feature_overrides")
           .select("id, feature_id, action, data, published, notes, created_at, updated_at")

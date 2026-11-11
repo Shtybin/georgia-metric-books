@@ -856,6 +856,7 @@ export function TbilisiMap({
           пересекается с панелью «Слои» слева и с языковым переключателем.
           Desktop: bottom-4 right-4 — ниже панели фильтров (lg:bottom-20)
           и правее карточки выбранной церкви (она центрирована). */}
+      {!selected && (
       <button
         type="button"
         onClick={() => setHowToOpen(true)}
@@ -866,6 +867,7 @@ export function TbilisiMap({
         <HelpCircle className="h-3.5 w-3.5" />
         <span className="hidden sm:inline">{Tcore.howToButton}</span>
       </button>
+      )}
 
 
       {/* Bottom action bar.

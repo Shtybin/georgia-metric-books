@@ -15,6 +15,7 @@ export interface ExternalSource {
   description: string | null;
   place_query: string | null;
   requires_auth: boolean;
+  record_nos?: number[] | null;
   created_at: string;
   updated_at: string;
 }

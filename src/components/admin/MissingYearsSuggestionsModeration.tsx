@@ -70,7 +70,7 @@ export function MissingYearsSuggestionsModeration() {
 
     let base: any = null;
     try {
-      const fc = await fetch("/data/parishes.geojson").then((r) => r.json());
+      const fc = await fetch("/data/parishes.geojson", { cache: "no-cache" }).then((r) => r.json());
       base = fc.features.find((f: any) => f.id === c.feature_id);
     } catch {
       alert("Не удалось загрузить базовый geojson"); return;

@@ -517,7 +517,7 @@ export function TbilisiCoordEditorPanel() {
       return;
     }
     // Re-fetch base JSON coords for this church so marker snaps back.
-    const base = await fetch("/data/tbilisi-churches.json").then((r) => r.json());
+    const base = await fetch("/data/tbilisi-churches.json", { cache: "no-cache" }).then((r) => r.json());
     const orig = (base as TbilisiChurch[]).find((c) => c.id === church.id);
     if (!orig) return;
     setRows((prev) =>
@@ -541,7 +541,7 @@ export function TbilisiCoordEditorPanel() {
   async function exportJson() {
     if (!rows) return;
     const [base, { data: overrides }] = await Promise.all([
-      fetch("/data/tbilisi-churches.json").then((r) => r.json()),
+      fetch("/data/tbilisi-churches.json", { cache: "no-cache" }).then((r) => r.json()),
       supabase
         .from("tbilisi_coord_verifications")
         .select("church_id, new_lat, new_lon")

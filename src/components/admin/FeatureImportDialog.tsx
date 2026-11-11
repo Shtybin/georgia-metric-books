@@ -272,7 +272,7 @@ export function FeatureImportDialog({
     const baseById = new Map<number, FeatureData>();
     if (featureIds.length) {
       try {
-        const fc = await fetch("/data/parishes.geojson").then((r) => r.json());
+        const fc = await fetch("/data/parishes.geojson", { cache: "no-cache" }).then((r) => r.json());
         for (const f of (fc.features ?? []) as GeoJSON.Feature<GeoJSON.Point, any>[]) {
           if (typeof f.id === "number" && featureIds.includes(f.id)) {
             baseById.set(f.id, featureToData(f));

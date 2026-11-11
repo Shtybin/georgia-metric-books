@@ -265,6 +265,7 @@ export type Database = {
           id: string
           place_query: string | null
           provider: string
+          record_nos: number[] | null
           requires_auth: boolean
           scope: string
           suggestion_id: string | null
@@ -282,6 +283,7 @@ export type Database = {
           id?: string
           place_query?: string | null
           provider?: string
+          record_nos?: number[] | null
           requires_auth?: boolean
           scope: string
           suggestion_id?: string | null
@@ -299,6 +301,7 @@ export type Database = {
           id?: string
           place_query?: string | null
           provider?: string
+          record_nos?: number[] | null
           requires_auth?: boolean
           scope?: string
           suggestion_id?: string | null

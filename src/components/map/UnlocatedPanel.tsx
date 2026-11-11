@@ -71,7 +71,7 @@ export function UnlocatedPanel({
   // Lazy load on first open
   useEffect(() => {
     if (!open || items) return;
-    fetch("/data/unlocated.json")
+    fetch("/data/unlocated.json", { cache: "no-cache" })
       .then((r) => r.json())
       .then(setItems)
       .catch(() => setItems([]));
