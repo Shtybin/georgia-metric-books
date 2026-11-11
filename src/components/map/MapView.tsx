@@ -714,8 +714,8 @@ export function MapView({ lang, onLangChange, embed }: Props) {
 
   // Load data once
   useEffect(() => {
-    fetch("/data/parishes.geojson").then(r => r.json()).then(setBaseData);
-    fetch("/data/stats.json").then(r => r.json()).then(setStats);
+    fetch("/data/parishes.geojson", { cache: "no-cache" }).then(r => r.json()).then(setBaseData);
+    fetch("/data/stats.json", { cache: "no-cache" }).then(r => r.json()).then(setStats);
   }, []);
 
   // Fuse index across both languages

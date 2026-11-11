@@ -14,7 +14,7 @@ export function DataQualitySummary() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/data/parishes.geojson")
+    fetch("/data/parishes.geojson", { cache: "no-cache" })
       .then((r) => r.json())
       .then((data) => {
         const counts: Record<string, number> = {};
