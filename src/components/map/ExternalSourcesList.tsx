@@ -190,7 +190,7 @@ export function ExternalSourcesList({ lang, featureId, uezdRu, uezdEn, suggestio
                     <span>· {s.uezd_ru || s.uezd_en}</span>
                   )}
                 </div>
-                {s.description && (
+                {s.description && !s.description.startsWith("auto-match") && (
                   <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground/90">
                     {s.description}
                   </p>
